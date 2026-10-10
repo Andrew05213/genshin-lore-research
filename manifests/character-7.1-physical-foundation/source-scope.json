@@ -1,0 +1,303 @@
+{
+  "condition_fields": {
+    "FetterInfoExcelConfigData.json": [
+      "finishConds"
+    ],
+    "FetterStoryExcelConfigData.json": [
+      "finishConds",
+      "openConds"
+    ],
+    "FettersExcelConfigData.json": [
+      "openConds"
+    ]
+  },
+  "consumed_integer_fields": {
+    "AvatarCostumeExcelConfigData.json": [
+      "skinId",
+      "characterId",
+      "nameTextMapHash",
+      "descTextMapHash"
+    ],
+    "AvatarExcelConfigData.json": [
+      "id",
+      "nameTextMapHash",
+      "descTextMapHash"
+    ],
+    "AvatarRenameExcelConfigData.json": [
+      "renameID",
+      "relatedAvatarID"
+    ],
+    "FetterInfoExcelConfigData.json": [
+      "avatarId",
+      "fetterId",
+      "avatarConstellationAfterTextMapHash",
+      "avatarConstellationBeforTextMapHash",
+      "avatarDetailTextMapHash",
+      "avatarNativeTextMapHash",
+      "avatarTitleTextMapHash",
+      "avatarVisionAfterTextMapHash",
+      "avatarVisionBeforTextMapHash",
+      "cvChineseTextMapHash",
+      "cvEnglishTextMapHash",
+      "cvJapaneseTextMapHash",
+      "cvKoreanTextMapHash"
+    ],
+    "FetterStoryExcelConfigData.json": [
+      "avatarId",
+      "fetterId",
+      "storyContext2TextMapHash",
+      "storyContextTextMapHash",
+      "storyTitle2TextMapHash",
+      "storyTitleLockedTextMapHash",
+      "storyTitleTextMapHash"
+    ],
+    "FettersExcelConfigData.json": [
+      "avatarId",
+      "fetterId",
+      "voiceFileTextTextMapHash",
+      "voiceTitleLockedTextMapHash",
+      "voiceTitleTextMapHash"
+    ],
+    "ProfilePictureExcelConfigData.json": [
+      "id",
+      "nameTextMapHash",
+      "unlockDescTextMapHash",
+      "priority"
+    ]
+  },
+  "contract": "character-7.1-physical-foundation-scope-v1",
+  "coordinate_policy": {
+    "audio_variant": "Items object key plus zero-based physical array index",
+    "primary_rows": "source path plus zero-based JSON array ordinal",
+    "voice_item": "Items source path plus object key",
+    "voice_lut": "LUT object key"
+  },
+  "files": [
+    {
+      "blob": "c000924c1f80f0e5b2744f2d5ee87116f4505bd2",
+      "path": "BinOutput/Voice/Items/1248787199.json",
+      "physical_delta": "modified",
+      "sha256": "dec7c994bf4b175db187317f2efa1b35b4d8fbfaef61dbb2310fd9e6e28fbe3b",
+      "size_bytes": 18089,
+      "snapshot_7_0_blob": "86ed38c4a6570be2c0eaa59fcc4508b1f1ed8531"
+    },
+    {
+      "blob": "256d020a029b7405aade1f14a6ee22e8d3d7989e",
+      "path": "BinOutput/Voice/Items/1560160621.json",
+      "physical_delta": "modified",
+      "sha256": "a15509ac2df9db49cd6cf4db8558560e1de7b88a780d15579e70ecd28a23de67",
+      "size_bytes": 136607,
+      "snapshot_7_0_blob": "5dac892ff80b06c6c7eaa5e29c34a81eade6dd61"
+    },
+    {
+      "blob": "c9e30e024af66c94aae725e2f7fa9c99be76c391",
+      "path": "BinOutput/Voice/Items/2939652103.json",
+      "physical_delta": "modified",
+      "sha256": "fbdba00a6b2e14e9907bf66af3fe61a2370ef74c6aea9cd874fcaf7f0e98b99f",
+      "size_bytes": 1161531,
+      "snapshot_7_0_blob": "26cfbfafa9513c2dcf4a53181875c9a9b3af4f7d"
+    },
+    {
+      "blob": "3dc8b33c30b3f0da08b8fc94b7a5c347c7fd36a3",
+      "path": "BinOutput/Voice/Items/750982387.json",
+      "physical_delta": "modified",
+      "sha256": "e51258db7559d779aa719a61ed2a0e372da57df576fda9d84a109ebf64fa768a",
+      "size_bytes": 697864,
+      "snapshot_7_0_blob": "91587284faafd9c7979e7229c5177df366c1dd5a"
+    },
+    {
+      "blob": "de13030968d16bba99acc588c90147edd3e43275",
+      "path": "BinOutput/Voice/Lut/Lut.json",
+      "physical_delta": "modified",
+      "sha256": "fa623c1a2da1a0ad049fa9d72b47753bbdb1dca419a78a48760fc421455e73a1",
+      "size_bytes": 16666724,
+      "snapshot_7_0_blob": "88a750578198f89aa93ad6ad19addc5e582f9832"
+    },
+    {
+      "blob": "e053bd5cc8505e83a8b24fd029557c2906b54867",
+      "path": "ExcelBinOutput/AvatarCostumeExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "e789f5f4cd86ccadd77e00c34adfa523d6b28571589751b3bb7231a1503f7792",
+      "size_bytes": 48796,
+      "snapshot_7_0_blob": "cf7f7204ecb04620b95cdca62aaa0caa5f9ea3ac"
+    },
+    {
+      "blob": "b9376cd637d59deb46fd0e7d6dc29c10c1eb3685",
+      "path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "a0ac92f1abb48e2ef6552cae2fefad95d51973dec9632f15dc51d85594efcfaf",
+      "size_bytes": 351799,
+      "snapshot_7_0_blob": "6fdcf920522b8f69462438c98461b3a46247f90d"
+    },
+    {
+      "blob": "b192681a7b11740d1be846b0d868ca607ddf8ee0",
+      "path": "ExcelBinOutput/AvatarRenameExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "953b64b566ae7995e7ba2144ef3d96cfea0c2e4b2c6ea8484504fa4ecbcc97d9",
+      "size_bytes": 5344,
+      "snapshot_7_0_blob": "c27b742a02b102c3e06edd05087fbf7544a634bb"
+    },
+    {
+      "blob": "05f748cded5df9521ecaaba6fb01f568960da9a8",
+      "path": "ExcelBinOutput/FetterInfoExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "f76e8f2711e96afdf8b8329afc374fb68ccdf7420c3b36eb78cb5f8d185b242f",
+      "size_bytes": 103405,
+      "snapshot_7_0_blob": "d6d25cab78e06a0caea249301f6d5d71ab94df9b"
+    },
+    {
+      "blob": "2bd4b1e5336c70773e6de8d8b3933779bfbddb16",
+      "path": "ExcelBinOutput/FetterStoryExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "29d02d7efe0aead8ac81221619350315770ad24c990cdb095be12997890e628d",
+      "size_bytes": 550307,
+      "snapshot_7_0_blob": "2be90bb70d77422271833ac1eba0e83a5ebe5b29"
+    },
+    {
+      "blob": "449bd58cae47acb8494f07f4f6c0659a13d4181c",
+      "path": "ExcelBinOutput/FettersExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "2cac007f147752cdd8eefdcb2542b8fa672dd5fa4eb8b5e69b55055f5369fd4a",
+      "size_bytes": 3916362,
+      "snapshot_7_0_blob": "12a8c36a0aec11a9c4b294fcfa138e77e97f6781"
+    },
+    {
+      "blob": "74906c5eea5e031d7193cca9e0d954def63c96c3",
+      "path": "ExcelBinOutput/ProfilePictureExcelConfigData.json",
+      "physical_delta": "modified",
+      "sha256": "0e54540347e82543dc9a3c67d6e61adaf8da5f5ab97435979ddf8491532d69bf",
+      "size_bytes": 48960,
+      "snapshot_7_0_blob": "66cf78424581387a5039e07a1c9436ad1f78e61f"
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "physical_delta": "modified",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231,
+      "snapshot_7_0_blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881"
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "physical_delta": "modified",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620,
+      "snapshot_7_0_blob": "e4f6094219e7609b8145cd7835034b1717880092"
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "physical_delta": "modified",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300,
+      "snapshot_7_0_blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea"
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "physical_delta": "modified",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724,
+      "snapshot_7_0_blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4"
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "physical_delta": "modified",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568,
+      "snapshot_7_0_blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a"
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "physical_delta": "modified",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132,
+      "snapshot_7_0_blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990"
+    }
+  ],
+  "identity_policy": "snapshot/parser/run/physical coordinate only; no cross-snapshot logical Character merge",
+  "physical_delta_counts": {
+    "modified": 18
+  },
+  "primary_row_total": 10801,
+  "primary_rows": {
+    "ExcelBinOutput/AvatarCostumeExcelConfigData.json": 162,
+    "ExcelBinOutput/AvatarExcelConfigData.json": 167,
+    "ExcelBinOutput/AvatarRenameExcelConfigData.json": 3,
+    "ExcelBinOutput/FetterInfoExcelConfigData.json": 124,
+    "ExcelBinOutput/FetterStoryExcelConfigData.json": 974,
+    "ExcelBinOutput/FettersExcelConfigData.json": 9183,
+    "ExcelBinOutput/ProfilePictureExcelConfigData.json": 188
+  },
+  "product_accepted": false,
+  "scope_basis": [
+    "manifests/character/anime-game-data-7.0-phase4c5b-character-fetter-full.json",
+    "manifests/character-lore/scope.json",
+    "7.1 Fetter-category Voice LUT selected Items paths"
+  ],
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "status": "prepublication_source_scope",
+  "textmap_owner_fields": {
+    "AvatarCostumeExcelConfigData.json": [
+      "nameTextMapHash",
+      "descTextMapHash"
+    ],
+    "AvatarExcelConfigData.json": [
+      "nameTextMapHash",
+      "descTextMapHash"
+    ],
+    "FetterInfoExcelConfigData.json": [
+      "avatarConstellationAfterTextMapHash",
+      "avatarConstellationBeforTextMapHash",
+      "avatarDetailTextMapHash",
+      "avatarNativeTextMapHash",
+      "avatarTitleTextMapHash",
+      "avatarVisionAfterTextMapHash",
+      "avatarVisionBeforTextMapHash",
+      "cvChineseTextMapHash",
+      "cvEnglishTextMapHash",
+      "cvJapaneseTextMapHash",
+      "cvKoreanTextMapHash"
+    ],
+    "FetterStoryExcelConfigData.json": [
+      "storyContext2TextMapHash",
+      "storyContextTextMapHash",
+      "storyTitle2TextMapHash",
+      "storyTitleLockedTextMapHash",
+      "storyTitleTextMapHash"
+    ],
+    "FettersExcelConfigData.json": [
+      "voiceFileTextTextMapHash",
+      "voiceTitleLockedTextMapHash",
+      "voiceTitleTextMapHash"
+    ],
+    "ProfilePictureExcelConfigData.json": [
+      "nameTextMapHash",
+      "unlockDescTextMapHash"
+    ]
+  },
+  "voice_scope": {
+    "attachment_states": {
+      "unique": 9183
+    },
+    "audio_variants": 9770,
+    "fetter_owner_rows": 9183,
+    "full_binoutput_voice_tree_files": 10394,
+    "items_with_missing_variant_array": 1,
+    "scope_note": "all Fetter-category LUT records and their exact Items files selected by the accepted Character/Fetter consumer; other Voice categories outside this family-specific foundation",
+    "selected_fetter_item_files": [
+      "BinOutput/Voice/Items/1248787199.json",
+      "BinOutput/Voice/Items/1560160621.json",
+      "BinOutput/Voice/Items/2939652103.json",
+      "BinOutput/Voice/Items/750982387.json"
+    ],
+    "selected_fetter_item_records": 375,
+    "selected_fetter_lut_records": 375,
+    "unattached_fetter_lut_slots": 8
+  }
+}

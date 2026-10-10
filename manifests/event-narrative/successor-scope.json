@@ -1,0 +1,179 @@
+{
+  "contract": "event-narrative-source-v2",
+  "family_contract_version": "event-narrative-evidence-v2",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "files": [
+    {
+      "path": "ExcelBinOutput/ActivityTanukiTravelDataExcelConfigData.json",
+      "size_bytes": 367,
+      "sha256": "720bd76a69da58a2f0554ef548c562e1f8b55c37db4ae08a690d457ebe227758",
+      "blob": "b74d0ea172e21ce21d07542cf7e3d8e40b75105a"
+    },
+    {
+      "path": "ExcelBinOutput/ActivityTanukiTravelRouteDataExcelConfigData.json",
+      "size_bytes": 2317,
+      "sha256": "07d2af70b7caad6f33706a778bc2b22e8281856f7c8e57bfed06596ecde07ec1",
+      "blob": "98decdb4d656c2b91ca38e1a89d77355d52ad923"
+    },
+    {
+      "path": "ExcelBinOutput/ActivityADShootingExcelConfigData.json",
+      "size_bytes": 266,
+      "sha256": "6610c8c23690a404b8643dca99bc8e661a1d8bfe3002cac9b832a3f42c4da451",
+      "blob": "8f11f6666e99066f160e00941d1ecc64fab9504b"
+    },
+    {
+      "path": "ExcelBinOutput/ActivityADShootingLevelExcelConfigData.json",
+      "size_bytes": 4271,
+      "sha256": "81fdb48e0fa8f164189c0985056734a954ffa791a50f5e4fbdd7823517f9293d",
+      "blob": "9562c278599f61973799f8b4f9288c729b35258a"
+    },
+    {
+      "path": "ExcelBinOutput/ActivityADShootingSlotExcelConfigData.json",
+      "size_bytes": 9503,
+      "sha256": "38b6e3f389863ed999fcb72eaf6e999241b6b694f8760bd46a68471cf6323370",
+      "blob": "7c5cdca67b3735c6e87b5952b9dcd098fee5863e"
+    },
+    {
+      "path": "ExcelBinOutput/ActivityADShootingFrameExcelConfigData.json",
+      "size_bytes": 9682,
+      "sha256": "3be095616425831a1cc363ba97b8eb7d7c93143d81b2aa5312c2646ccac9ff62",
+      "blob": "976fd44d7712d486ffb448d02f2a452951aa316d"
+    },
+    {
+      "path": "TextMap/TextMapCHS.json",
+      "size_bytes": 48771857,
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881"
+    },
+    {
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "size_bytes": 18550916,
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4"
+    },
+    {
+      "path": "TextMap/TextMapEN.json",
+      "size_bytes": 54368516,
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092"
+    },
+    {
+      "path": "TextMap/TextMap_MediumEN.json",
+      "size_bytes": 20424271,
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a"
+    },
+    {
+      "path": "TextMap/TextMapJP.json",
+      "size_bytes": 61908087,
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea"
+    },
+    {
+      "path": "TextMap/TextMap_MediumJP.json",
+      "size_bytes": 22744816,
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "tanuki_travel_root",
+      "boundary": "complete two-table Tanuki Travel archive",
+      "path": "ExcelBinOutput/ActivityTanukiTravelDataExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "tanuki_travel_route",
+      "boundary": "complete two-table Tanuki Travel archive",
+      "path": "ExcelBinOutput/ActivityTanukiTravelRouteDataExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": [
+        "titleTextMapHash",
+        "descTextMapHash",
+        "regionTextMapHash",
+        "reviewTextMapHash"
+      ]
+    },
+    {
+      "kind": "ad_shooting_root",
+      "boundary": "complete four-table AD Shooting archive",
+      "path": "ExcelBinOutput/ActivityADShootingExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "ad_shooting_level",
+      "boundary": "complete four-table AD Shooting archive",
+      "path": "ExcelBinOutput/ActivityADShootingLevelExcelConfigData.json",
+      "native_id_field": "levelId",
+      "text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "CICBGGGLNOL",
+        "HKLJPFMMDFI",
+        "LJLBOBMAPAP",
+        "MJGADPEEAHD",
+        "MKBJGPAODOF",
+        "PKOFIHAFEBH"
+      ],
+      "owner_roles": {
+        "CICBGGGLNOL": "mapping_unresolved",
+        "HKLJPFMMDFI": "mapping_unresolved",
+        "LJLBOBMAPAP": "mapping_unresolved",
+        "MJGADPEEAHD": "mapping_unresolved",
+        "MKBJGPAODOF": "mapping_unresolved",
+        "PKOFIHAFEBH": "mapping_unresolved"
+      }
+    },
+    {
+      "kind": "ad_shooting_slot",
+      "boundary": "complete four-table AD Shooting archive",
+      "path": "ExcelBinOutput/ActivityADShootingSlotExcelConfigData.json",
+      "native_id_field": "slotId",
+      "text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "kind": "ad_shooting_frame",
+      "boundary": "complete four-table AD Shooting archive",
+      "path": "ExcelBinOutput/ActivityADShootingFrameExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "descTextMapHash"
+      ]
+    }
+  ],
+  "row_denominator": {
+    "tanuki_travel_root": 1,
+    "tanuki_travel_route": 7,
+    "ad_shooting_root": 1,
+    "ad_shooting_level": 5,
+    "ad_shooting_slot": 59,
+    "ad_shooting_frame": 59
+  },
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "text_lookup": "all physical main candidates first; Medium only when main has no candidate",
+  "declared_relations": [],
+  "relationship_policy": "quest/talk/watcher/gameplay and obfuscated equality-like fields remain raw; zero cross-family semantic relations declared",
+  "current_product_physical_overlap": {
+    "event_narrative_v1": 0,
+    "ActivityExcelConfigData": 0,
+    "Mail": 0,
+    "Document": 0,
+    "Quest/Talk/Review": 0
+  },
+  "coverage": "complete two-table Tanuki Travel and four-table AD Shooting physical/text projection",
+  "corpus_complete": true,
+  "full_activity": false,
+  "full_7_0": false
+}

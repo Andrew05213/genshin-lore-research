@@ -1,0 +1,303 @@
+{
+  "contract": "event-narrative-filmfest-source-v1",
+  "corpus_complete": true,
+  "coverage": "complete four-table Filmfest Shooting Level/Slot/Frame/Line physical narrative graph, declared text locators, and source-authored internal/Talk relations",
+  "excluded_adjacent_sources": [
+    {
+      "path": "ExcelBinOutput/ActivityFilmfestOverallExcelConfigData.json",
+      "reason": "mixed Filmfest schedule/battle/watcher/quest/UI root spanning Shooting and other gameplay modes; not a Shooting narrative record container"
+    }
+  ],
+  "family_contract_version": "event-narrative-evidence-v3",
+  "files": [
+    {
+      "blob": "761afc18d765862f5bf9642d9da2c0bd1e894ad6",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingLevelExcelConfigData.json",
+      "sha256": "6afb2f73e84cc969f7d53d4334637c1f398a6e2cb8497f46df2ab5c2168e77f1",
+      "size_bytes": 4491
+    },
+    {
+      "blob": "d5e7a34d4a8e864ef93038d102919b094c75cc71",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingSlotExcelConfigData.json",
+      "sha256": "d1fac9ed746cf1975e32d38eba5eaff4cbdbe676085f59214706be3e7abdc0aa",
+      "size_bytes": 7736
+    },
+    {
+      "blob": "b1c3303d6331bfb9122cd90d8571343bc8b3cc7c",
+      "path": "ExcelBinOutput/ActivityFilmfestFrameExcelConfigData.json",
+      "sha256": "3fb041f5fca94d4671c736843b2ff2f03e8f7775f48dfc37e4ee861c991cf85d",
+      "size_bytes": 11803
+    },
+    {
+      "blob": "8c09408327feeaa79407ffba634baf25586c3c20",
+      "path": "ExcelBinOutput/ActivityFilmfestLineExcelConfigData.json",
+      "sha256": "63b60b2a1f66c734492a633d69ecf6d46d168e3098c59895d295c791cf1e4fde",
+      "size_bytes": 1851
+    },
+    {
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "size_bytes": 48771857
+    },
+    {
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "size_bytes": 18550916
+    },
+    {
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "size_bytes": 54368516
+    },
+    {
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "size_bytes": 20424271
+    },
+    {
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "size_bytes": 61908087
+    },
+    {
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "size_bytes": 22744816
+    },
+    {
+      "blob": "25bca2be783700369a7ed14dc9a49911a0cd8072",
+      "path": "BinOutput/Talk/Activity/7467520.json",
+      "sha256": "38bb86d88fdc1fb2cf6f3534561efd56933499f6383f85437cdf093ac5a7ce76",
+      "size_bytes": 78
+    },
+    {
+      "blob": "63c7de10181c03b4618393b27d7299c72000ab1e",
+      "path": "BinOutput/Talk/Activity/7467525.json",
+      "sha256": "5de950a6722ccb1547b6d5fd6cd12342c70182bef7e70a29940bc804dca2d1e5",
+      "size_bytes": 78
+    },
+    {
+      "blob": "0789a6cb75d8af4ab190827933a9c0f666d0737d",
+      "path": "BinOutput/Talk/Activity/7467526.json",
+      "sha256": "3c7c74e602a986031cf6b76c5712919645aa6546443f3d2af8ba96acf670bf5c",
+      "size_bytes": 78
+    },
+    {
+      "blob": "6475353de05a4095a3a1d9ff8c5bef0d87b961d8",
+      "path": "BinOutput/Talk/Activity/7467527.json",
+      "sha256": "cec00815c143ed19900155b7aa890d1ca507418b400536190b2d527ea2b574ff",
+      "size_bytes": 78
+    },
+    {
+      "blob": "ae04bf356dfd0cc2a99e2f6756549d8419a03dca",
+      "path": "BinOutput/Talk/Quest/4013217.json",
+      "sha256": "df02f02487a0d8fe41eb943e2375fefc713234fdb1c03d0aefaf4faa4ae221e3",
+      "size_bytes": 711
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_shooting": false,
+  "full_talk": false,
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "row_denominator": {
+    "filmfest_shooting_frame": 72,
+    "filmfest_shooting_level": 5,
+    "filmfest_shooting_line": 32,
+    "filmfest_shooting_slot": 24
+  },
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "sources": [
+    {
+      "boundary": "filmfest_shooting_level",
+      "internal_relations": [
+        {
+          "field": "APFLKHGBAEH",
+          "relation_kind": "source_authored_slot_reference",
+          "shape": "array_scalar",
+          "target_kind": "filmfest_shooting_slot"
+        }
+      ],
+      "kind": "filmfest_shooting_level",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingLevelExcelConfigData.json",
+      "talk_relation_field": "talkID",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GIOBHINBDBC",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "KDPPHJKMOKN",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "AKNFEMILMHI",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "JPEPMOCCIHD",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        }
+      ]
+    },
+    {
+      "boundary": "filmfest_shooting_slot",
+      "internal_relations": [
+        {
+          "field": "HJKLFNBKGJA",
+          "relation_kind": "source_authored_frame_reference",
+          "shape": "array_object_id",
+          "target_kind": "filmfest_shooting_frame"
+        },
+        {
+          "field": "JBKNLOIJHPH",
+          "relation_kind": "source_authored_line_reference",
+          "shape": "array_object_id_optional",
+          "target_kind": "filmfest_shooting_line"
+        }
+      ],
+      "kind": "filmfest_shooting_slot",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingSlotExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "filmfest_shooting_frame",
+      "internal_relations": [],
+      "kind": "filmfest_shooting_frame",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestFrameExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "filmfest_shooting_line",
+      "internal_relations": [],
+      "kind": "filmfest_shooting_line",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestLineExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ],
+  "talk_candidate_namespace": {
+    "artifacts": [
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:a5c566f94d8d9d8af19c0073b0d51cc38e550ad6",
+        "scope_kind": "quest_linked",
+        "sha256": "3f7cd77283e7c9507646d6902dd798eaaede620e67572bd7b8ff4b2305676065",
+        "size_bytes": 2171842560
+      },
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+        "scope_kind": "mapped_complement",
+        "sha256": "4aff314d945ade7f885c9cf948b7b1ee46d55c6dd6f22f720fe1c137c91fea21",
+        "size_bytes": 727257088
+      }
+    ],
+    "kind": "accepted_mapped_talk_program_roots_v7",
+    "mapped_program_denominator": 50862,
+    "search_complete": true
+  },
+  "talk_candidates": [
+    {
+      "raw_locator": "4013217",
+      "scope_kind": "quest_linked",
+      "target_occurrence_id": "qt-container:6bcb6ba505ee9d341952a3d67caee17e76b14dc6",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:a5c566f94d8d9d8af19c0073b0d51cc38e550ad6",
+      "target_source_path": "BinOutput/Talk/Quest/4013217.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467520",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:db95de0c2eaaddea7dda193a67ce2c9b72399db9",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/7467520.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467525",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:08a4ce5b1a478792bbba6899aca1eb0a2354af83",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/7467525.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467526",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:a0acb5c221f65fff5362ed3003a4ce85a7781c0a",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/7467526.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467527",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:d20c56b306037e79d9a6590a4a383f350c50c559",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/7467527.json",
+      "target_source_pointer": "/"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+CREATE TABLE loading_tip_row(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,ordinal INTEGER NOT NULL UNIQUE,native_id TEXT NOT NULL,source_path TEXT NOT NULL,pointer TEXT NOT NULL,raw_json TEXT NOT NULL) WITHOUT ROWID;
+CREATE TABLE loading_tip_slot(id TEXT PRIMARY KEY,row_id TEXT NOT NULL REFERENCES loading_tip_row(id),field TEXT NOT NULL,locale TEXT NOT NULL,raw_locator TEXT,status TEXT NOT NULL CHECK(status IN ('resolved','missing','ambiguous')),UNIQUE(row_id,field,locale)) WITHOUT ROWID;
+CREATE TABLE loading_tip_text(id TEXT PRIMARY KEY,slot_id TEXT NOT NULL REFERENCES loading_tip_slot(id),source_path TEXT NOT NULL,pair_ordinal INTEGER NOT NULL,pointer TEXT NOT NULL,raw_text TEXT NOT NULL,UNIQUE(slot_id,source_path,pair_ordinal)) WITHOUT ROWID;
+CREATE TABLE loading_tip_release(manifest_json TEXT NOT NULL);
+CREATE INDEX loading_tip_slot_parent ON loading_tip_slot(row_id);
+CREATE INDEX loading_tip_text_slot ON loading_tip_text(slot_id);
+CREATE TRIGGER loading_tip_row_i BEFORE INSERT ON loading_tip_row WHEN EXISTS(SELECT 1 FROM loading_tip_row WHERE id=NEW.id OR ordinal=NEW.ordinal) BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_row_u BEFORE UPDATE ON loading_tip_row BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_row_d BEFORE DELETE ON loading_tip_row BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_slot_i BEFORE INSERT ON loading_tip_slot WHEN EXISTS(SELECT 1 FROM loading_tip_slot WHERE id=NEW.id OR (row_id=NEW.row_id AND field=NEW.field AND locale=NEW.locale)) BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_slot_u BEFORE UPDATE ON loading_tip_slot BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_slot_d BEFORE DELETE ON loading_tip_slot BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_text_i BEFORE INSERT ON loading_tip_text WHEN EXISTS(SELECT 1 FROM loading_tip_text WHERE id=NEW.id OR (slot_id=NEW.slot_id AND source_path=NEW.source_path AND pair_ordinal=NEW.pair_ordinal)) BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_text_u BEFORE UPDATE ON loading_tip_text BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_text_d BEFORE DELETE ON loading_tip_text BEGIN SELECT RAISE(ABORT,'immutable');END;
+CREATE TRIGGER loading_tip_release_i BEFORE INSERT ON loading_tip_release WHEN EXISTS(SELECT 1 FROM loading_tip_release) BEGIN SELECT RAISE(ABORT,'immutable release');END;
+CREATE TRIGGER loading_tip_release_u BEFORE UPDATE ON loading_tip_release BEGIN SELECT RAISE(ABORT,'immutable release');END;
+CREATE TRIGGER loading_tip_release_d BEFORE DELETE ON loading_tip_release BEGIN SELECT RAISE(ABORT,'immutable release');END;

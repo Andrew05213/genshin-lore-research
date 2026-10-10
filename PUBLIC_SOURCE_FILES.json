@@ -1,0 +1,2132 @@
+{
+  "files": {
+    ".gitignore": {
+      "sha256": "aa7bb0be7ab9741d971b55768314e9b528c333c76479bd3c262c16f642e24291",
+      "size_bytes": 1217
+    },
+    "AGENTS.md": {
+      "sha256": "a4eb6b078808c3a573b3470fd42f9e7dc42c7cca641aba172b602e350147d494",
+      "size_bytes": 1852
+    },
+    "LICENSE": {
+      "sha256": "41c454984ccb03e15b90fecd4ac64405dddb1b61e8aaba7e6aadb6e54a34456e",
+      "size_bytes": 34021
+    },
+    "README.md": {
+      "sha256": "5e28d5b0cd4a03791f9e08b2bbd0d63ebd29fcebb7dc13a61337e4d15d84a967",
+      "size_bytes": 3801
+    },
+    "docs/ARCHITECTURE.md": {
+      "sha256": "d1463b40944170952fca21d2bbdec96e54d096d5f07a8099cab0f883fe52b7d7",
+      "size_bytes": 3030
+    },
+    "docs/BUILD_VALIDATION.json": {
+      "sha256": "750b3f1782739445ad41bc7b89ae50a7a70c563922e92b406563615122ce41d6",
+      "size_bytes": 1008
+    },
+    "docs/COMPLETE_REBUILD.md": {
+      "sha256": "53baff946cf7053af82d5530c8f4053ff09194dac4bc79da063c3c64c90ad14f",
+      "size_bytes": 4934
+    },
+    "docs/COMPLETE_REBUILD_EXPERIMENT.json": {
+      "sha256": "424d9d2bae0a52c3ab3a8ccaef4a6c972786736016564b1dfb82043576ae1c34",
+      "size_bytes": 2347
+    },
+    "docs/COMPLETE_REBUILD_EXPERIMENT.md": {
+      "sha256": "1833cb9dd3c561268ff4ad204d1587929035e74c1a80dead52873b6d20ec0dd7",
+      "size_bytes": 5861
+    },
+    "docs/DEVELOPMENT.md": {
+      "sha256": "429617c51e7cc6915337e4e784faf2ce0954197699e63abbdd6fbe2a80cbfe4a",
+      "size_bytes": 2193
+    },
+    "docs/PUBLICATION.md": {
+      "sha256": "d3c612a36f2596a793e1027d2f6b2eb6f0973f6c54aa15f72a55863bb1383c60",
+      "size_bytes": 2109
+    },
+    "docs/README.md": {
+      "sha256": "c8734881c53d9ef83b966af0718971fbd9fde85cfd1f2e0bf0804cfb1050039c",
+      "size_bytes": 1562
+    },
+    "docs/REBUILDING.md": {
+      "sha256": "87b1d49133c58284ed2eb70ba6e51d7e60963b974840a3ca77a156682134f01b",
+      "size_bytes": 8220
+    },
+    "docs/REBUILD_EXPERIMENT.json": {
+      "sha256": "d133f26e83448c4fff086ceda3c57c9e5562d9e4bcd99bd60bb2a8f593a1572a",
+      "size_bytes": 14710
+    },
+    "docs/REBUILD_EXPERIMENT.md": {
+      "sha256": "6baf00efe45b6895e18174dd2b760fb4805702937c1477279dee03eee3594b8c",
+      "size_bytes": 3474
+    },
+    "docs/STATUS.md": {
+      "sha256": "1723a670a234fffce03ead910aba84cc9f0398e14815091d2ac014907a4cd2c5",
+      "size_bytes": 3360
+    },
+    "manifests/character-7.1-physical-foundation/source-scope.json": {
+      "sha256": "5b7020dc5cbd9b709b606f4bb3f80ee31288424ba36db67e9c81bd0e286b2c73",
+      "size_bytes": 11175
+    },
+    "manifests/character-lore/scope.json": {
+      "sha256": "75bf8b25ec9ee7b1fa95e1a54f4ab5bbfc860a62c532bd77fc887c4d84a8df30",
+      "size_bytes": 660
+    },
+    "manifests/character/anime-game-data-7.0-phase4c5b-character-fetter-full.json": {
+      "sha256": "35cb32d1646b68c5e105fbf4e9d947a2d6a9f9ca3e71516cb74897cd98dfc562",
+      "size_bytes": 1109
+    },
+    "manifests/direct-text-7.1/subtitle-scope.json": {
+      "sha256": "dfe7f9be038a20b0922ef791783821f5aa423b6791391164c48aef1b10ea830a",
+      "size_bytes": 1142007
+    },
+    "manifests/document-readable-7.1/source-scope.json": {
+      "sha256": "d0db1e8deaa974fcf68731d8fb6d3125902625a779d447b0864d304e7bcb7e32",
+      "size_bytes": 4131
+    },
+    "manifests/event-narrative-7.1/component-10-scope-v1.json": {
+      "sha256": "56d9dd76c0932864dc90ed2c8c7d3e01fb4bf4caed9f1ce5761965639366dab9",
+      "size_bytes": 13687
+    },
+    "manifests/event-narrative-7.1/component-11-scope-v1.json": {
+      "sha256": "c2fb4160c7882bfd30f02b531269e979febabf121e24c5aa0cf33b0a53f5bc5f",
+      "size_bytes": 8147
+    },
+    "manifests/event-narrative-7.1/component-12-scope-v1.json": {
+      "sha256": "dad62a0df6de5c75c37ca33be20ac2bbed3addafae851e903a39dee94fdedbdf",
+      "size_bytes": 13519
+    },
+    "manifests/event-narrative-7.1/component-13-physical-scope-v1.json": {
+      "sha256": "3e741ee2ceaa588ea2a25353c68ea89a1ea921aea543f84b5de280a857626b19",
+      "size_bytes": 14774
+    },
+    "manifests/event-narrative-7.1/component-14-scope-v1.json": {
+      "sha256": "55f812530c7908823685eb38ac55a543a22e968fefae067702f02b6c656083e0",
+      "size_bytes": 13376
+    },
+    "manifests/event-narrative-7.1/component-15-scope-v1.json": {
+      "sha256": "7446a36a5ac6a6928aea43c91fc6d0420f333f23e5dfdb9f1b12c885abb455b4",
+      "size_bytes": 10201
+    },
+    "manifests/event-narrative-7.1/component-16-18-physical-scope-v1.json": {
+      "sha256": "3ae811c8d56ca3ed40f0c21fdf33524ce6e1285957554c8083db4ead2f61f66b",
+      "size_bytes": 13166
+    },
+    "manifests/event-narrative-7.1/native-text-wave-scope-v1.json": {
+      "sha256": "ca6e5f223d88a2af0a240efee881c811aca489652d67dcb6f97fd94ede9a3a7f",
+      "size_bytes": 17921
+    },
+    "manifests/event-narrative/archive-wave-scope.json": {
+      "sha256": "0f2027627a9a4a6547b42e6b3e829c755746e920c92558dc0ca3dd683940c139",
+      "size_bytes": 52370
+    },
+    "manifests/event-narrative/filmfest-scope.json": {
+      "sha256": "3490ed82520bc40421b761c0d646da83badb7a16560f23cef7042026340f9963",
+      "size_bytes": 10924
+    },
+    "manifests/event-narrative/generic-dialog-reminder-scope.json": {
+      "sha256": "456e756072d1a9b18666e93e3e5154c7339ce6476697052648a0ca51889f749c",
+      "size_bytes": 4282129
+    },
+    "manifests/event-narrative/native-text-archive-wave-scope.json": {
+      "sha256": "ed2b34a6732d635b2f946641f09b40e3b35e91d4bfe7caa3838f49e98da82bc5",
+      "size_bytes": 15731
+    },
+    "manifests/event-narrative/photo-echo-delta-scope.json": {
+      "sha256": "b610fba2bb381f5b4091e8b6c518fe7fd11728253e8e1ab607a1bb40aa6471e3",
+      "size_bytes": 43972
+    },
+    "manifests/event-narrative/photo-echo-scope.json": {
+      "sha256": "8103d7125fe3dd47d29538dcb2c8970b163e88edafc410b8c7985f114f6137a3",
+      "size_bytes": 9701
+    },
+    "manifests/event-narrative/scope.json": {
+      "sha256": "eb52a666d50c7dc51872bd77c9e0d6c835a09b3c4dbc4a5c43b7276bebee7af5",
+      "size_bytes": 10630
+    },
+    "manifests/event-narrative/successor-scope.json": {
+      "sha256": "02966294a6ef982ce49e6d76b5d10bb504be8e88f536204811000c50515f686d",
+      "size_bytes": 6281
+    },
+    "manifests/event-narrative/tps-glasses-chat-scope.json": {
+      "sha256": "4c02c5a9ea32c6b7bed6a1544184339bea90941391abc1e5c5cd5ca94a1b945c",
+      "size_bytes": 9992
+    },
+    "manifests/gcg-card-7.1/scope.json": {
+      "sha256": "3ae580aba85e421ae8a31cada6629401d77b5016a56a2b5391efb57d76172ef4",
+      "size_bytes": 2883
+    },
+    "manifests/loading-tips-7.1/scope.json": {
+      "sha256": "674d369eb1432bd8bd809148975386112dc3ed7226f1b9170f3c51c7e81a40a8",
+      "size_bytes": 2108
+    },
+    "manifests/m3-7.1-provider/input-contract-v1.json": {
+      "sha256": "2eefff40ab24111e6600f0c9f2e01b407c06c38ff2255a9697d7239bde45921d",
+      "size_bytes": 20205
+    },
+    "manifests/mail-archive-7.1/source-scope-v1.json": {
+      "sha256": "95d7ed7ae4d868b337ddd90513afbd91f7df0b450771f0cf775e1448f8430ca7",
+      "size_bytes": 3772
+    },
+    "manifests/narrative-7.1/physical-scope.json": {
+      "sha256": "cb46d08b18bb0493ef398fea54d840a7a5ad03fbd1cc23366db6cfb6ad0e759a",
+      "size_bytes": 8095
+    },
+    "manifests/native-archive-7.1/aux-quest-scope-v1.json": {
+      "sha256": "fd25db0145436d21054b1ab229dc53a845caf48eb1853d4c097756645afde9a5",
+      "size_bytes": 14542067
+    },
+    "manifests/native-archive-7.1/aux-quest-selection-v1.json": {
+      "sha256": "097411b3049db1a8d955a6c03fc3de6a5b0e6b7aea3630fe4ffc05c5e65f86ec",
+      "size_bytes": 22136
+    },
+    "manifests/native-archive-7.1/book-music-scope-v1.json": {
+      "sha256": "4f93461b996f8ce6b13c921b8d57ec5b76490038c96e29d02c084fe10911e9b4",
+      "size_bytes": 10781
+    },
+    "manifests/native-archive-7.1/book-music-selection-v1.json": {
+      "sha256": "b393b83fd08c4be16dde4130ed2187ea840ef3ec26dd21ee8880e467b67427d3",
+      "size_bytes": 3539
+    },
+    "manifests/native-archive-7.1/bulk-scope.json": {
+      "sha256": "bdb1c3b145c9550f7a6950c2804b43e90372b7b9cf0f8dc5005b8f66eb66819c",
+      "size_bytes": 37593
+    },
+    "manifests/native-archive-7.1/high-value-scope-v1.json": {
+      "sha256": "12ee596e91e9f1140d9d60f5b6fda3d45c0d1de8201205c66233f54b978cdb91",
+      "size_bytes": 188051
+    },
+    "manifests/native-archive-7.1/message-scope-v1.json": {
+      "sha256": "ca19632b97ba2e3d90d79249f620200a98ed351406c42dd1a741e0fe9f339696",
+      "size_bytes": 17754
+    },
+    "manifests/native-archive-7.1/successor-scope-v1.json": {
+      "sha256": "ec7b55836e70f2b82d1a29c218f201aeafce1324ce9672065ca79dc94ab5c49f",
+      "size_bytes": 42973
+    },
+    "manifests/native-archive/bulk-selection.json": {
+      "sha256": "2491040ce90b76e74ae94129e010c3fbfa9a58ca7e59530ebbac30cbe3c17da6",
+      "size_bytes": 23694
+    },
+    "manifests/native-archive/high-value-open-selection.json": {
+      "sha256": "c3f9c0abefe7ebde9db3ca8b99c3a4f38d0beb1e10a5d9821359d79ca7681f22",
+      "size_bytes": 425054
+    },
+    "manifests/native-archive/message-selection.json": {
+      "sha256": "7485b4ef55d5dd734a15c7373a364d52a30f1cb111ba88f468ede28a82eccc57",
+      "size_bytes": 5238
+    },
+    "manifests/quest-derived-7.1/review-field-continuity-v1.json": {
+      "sha256": "309cae0fafb10236e3aa3b16288b5b74a82ed49a50f23a60ed871ddcde2819bb",
+      "size_bytes": 2543
+    },
+    "manifests/quest-talk-7.1/root-signature-digests.json": {
+      "sha256": "951bc056186b5d410b41f9fec755ce73ed025a9d49cb57aa1b695db030543783",
+      "size_bytes": 105698
+    },
+    "manifests/quest-talk-7.1/source-scope.json": {
+      "sha256": "b904bbaae56bd12f0a5420d4a67998de07abb0d18b91fdce94661b343777796d",
+      "size_bytes": 3728
+    },
+    "manifests/quest-talk-physical/shapes-v1.json": {
+      "sha256": "5e5c1038de4f09485a9a050db4077bc223163ac76b40efcd8bca65bb0723b1c5",
+      "size_bytes": 9230
+    },
+    "manifests/source/upstream.json": {
+      "sha256": "5bb2e6d6f37cfe71a524668b4e10031f094090b32d68f3188cacb6b79efab0a5",
+      "size_bytes": 260
+    },
+    "manifests/special-core-7.1/historical-rules-v1.json": {
+      "sha256": "747ad400a13e9f19984b2efa9a36c2c3d66c6e61432315069d708792016d7b5b",
+      "size_bytes": 3107
+    },
+    "manifests/special-core-7.1/input-contract-v1.json": {
+      "sha256": "8c568121c83689760a35ca392cbbeef4bdc93328b41d72c5b9c2848b2efa8f07",
+      "size_bytes": 80271
+    },
+    "migrations/0001_initial.sql": {
+      "sha256": "bc64ddd00dbf1adf08ba6080d7bba8139100e75ccc2c98ec6133bae0c5c19b53",
+      "size_bytes": 7337
+    },
+    "migrations/0002_identity.sql": {
+      "sha256": "9bec1217b2040d177fbf3fae7f8170cef03b6ca9676018e46199b358b563c192",
+      "size_bytes": 2185
+    },
+    "migrations/0003_phase31_identity_provenance.sql": {
+      "sha256": "2e91a6992a3b38fe094ea75c52274273d840dfa10799313b8cda6d910506c7cb",
+      "size_bytes": 6084
+    },
+    "migrations/0004_phase31_source_provenance.sql": {
+      "sha256": "279c2ca7a37b0e37c8a085bb2276488fcdcee84855b8ce47657a2b940bf82515",
+      "size_bytes": 1816
+    },
+    "migrations/0005_phase31b_document_evidence_resolution.sql": {
+      "sha256": "049060f95131d0962845f952773c29438662ddc6e7b042f97c23326d8e1838be",
+      "size_bytes": 2494
+    },
+    "migrations/0006_phase31b2_document_evidence_hardening.sql": {
+      "sha256": "acaf0848551ec9b49b503f1148e9226bc45878b2da42004a4494c934cca891a0",
+      "size_bytes": 12129
+    },
+    "migrations/0007_phase31c_comparison_foundation.sql": {
+      "sha256": "87837972bd66ef954c74f013766f35d9b6e5ca04b2c2f049144de99d6eb85f1a",
+      "size_bytes": 30995
+    },
+    "migrations/0008_phase4b1_static_evidence.sql": {
+      "sha256": "d7b6a263ec0a239831b2632b21a274e123be773343a173bbf78bebc50c6e8adc",
+      "size_bytes": 8311
+    },
+    "migrations/0009_phase4b2_static_text_evidence.sql": {
+      "sha256": "43eed32b2e4479ffb2b1b3ea30b0cd1cabe44930a5692abaa24f2f90adc7c2ae",
+      "size_bytes": 6451
+    },
+    "migrations/0010_phase4c2_character_canary_evidence.sql": {
+      "sha256": "2a05408ed353385cc41e40bd701de46267036abc2f4e2fcb8e898092bfaee7d4",
+      "size_bytes": 20326
+    },
+    "migrations/0011_phase4d2a_tutorial_canary_evidence.sql": {
+      "sha256": "d852e4646c29d9844d43de1f7e069a9fb4df449182343925acd8147cc7395a91",
+      "size_bytes": 20823
+    },
+    "migrations/0012_phase4e2_world_archive_canary_evidence.sql": {
+      "sha256": "b722dc2ca288c20cd65a784e60adff7b95f8417d55f17e9b14c094760f4f5717",
+      "size_bytes": 14382
+    },
+    "migrations/0013_phase4f2_quest_codex_canary_evidence.sql": {
+      "sha256": "605b91f96b76b446774c4036a7438e565b1d9ee7152a6137398605b3c36011b6",
+      "size_bytes": 15297
+    },
+    "migrations/0014_phase4g2_avatar_codex_canary_evidence.sql": {
+      "sha256": "abc905d8fcb1d1e1507fa7a1cd4447748bcf42d5dc06454a1aaa1f62566f1e48",
+      "size_bytes": 10220
+    },
+    "migrations/0015_batch_projection_foundation.sql": {
+      "sha256": "be90d86a5363e7af99fed5ebc5780775b9481c3cf6bf58a4acf25fe237b6a18e",
+      "size_bytes": 8283
+    },
+    "migrations/0016_batch_wave01_family_projection.sql": {
+      "sha256": "a4566887f3a1773486f8725ca2efbf58a7ea0a1efbd41ca49fba92608509d5db",
+      "size_bytes": 11546
+    },
+    "migrations/0017_batch_wave02_family_projection.sql": {
+      "sha256": "ec8e41402b0c07b5b94aece97607a066c452de12d65c2ee0c49f486df9474c36",
+      "size_bytes": 102041
+    },
+    "migrations/0018_batch_wave02_write_once_correction.sql": {
+      "sha256": "685e04f15de3cfc7773f4f17ca52367f723a096b243245773ffd7f8420bad22a",
+      "size_bytes": 28088
+    },
+    "migrations/0019_batch_r1_wave01_text_projection.sql": {
+      "sha256": "05a36070107dcbb04859cdf4278fe1744712fb4e8e7a43d2ed8a7435d25bf16f",
+      "size_bytes": 23129
+    },
+    "migrations/0020_batch_r4_wave01_text_projection.sql": {
+      "sha256": "5924df5bb34253da2ef061a16c0de3b4921d96bf430ec041863b96de5801e356",
+      "size_bytes": 38016
+    },
+    "pyproject.toml": {
+      "sha256": "fff2ca3dc9212ecdc881be9373b62002211cfe14835dc7cc9a05953fa9640b98",
+      "size_bytes": 593
+    },
+    "recipes/capability-names.json": {
+      "sha256": "ba07f14a59478f79832d5e2eff86fac1f89a98e4002931f1a19915a5c941b19c",
+      "size_bytes": 22602
+    },
+    "recipes/character-foundation.json": {
+      "sha256": "044bc6c89d820637dee7a271fb855e987d7d82edc0321d59c3718ceed20e0860",
+      "size_bytes": 1219
+    },
+    "recipes/event13-snez-binding.json": {
+      "sha256": "c266f6dc6a85aae335d39271e1458d95c15fa6dc23a431e03a658edc9dfbdc7c",
+      "size_bytes": 2981
+    },
+    "recipes/m3-7.1-provider-mappings.json": {
+      "sha256": "92ce116f7edd04c06a5c41f38cd9218bf45c6ddfcc2c4ac4e9710482e6e168b4",
+      "size_bytes": 24082
+    },
+    "recipes/special-core-7.1-mappings.json": {
+      "sha256": "de285f1ba92fba21bd8c1f284c7448d4edd6a57bd6f0505499777bbb4fe1643e",
+      "size_bytes": 21514
+    },
+    "requirements-build.txt": {
+      "sha256": "0b9b69875b65e2579a7a4dc12acb7246a80bf575541616e051ec168712257479",
+      "size_bytes": 189
+    },
+    "requirements-dev.txt": {
+      "sha256": "2f2989883e612f4d32a8f7ab6ed7b68c97cd35f249b4f0fef00e8665a644921f",
+      "size_bytes": 40
+    },
+    "schemas/character-7.1-lore-v1.sql": {
+      "sha256": "9c812fa07a7d1b2a1ad24228f357ad0ac91f7bd5c882fb283db922b9b7a8ffd9",
+      "size_bytes": 1706
+    },
+    "schemas/character-7.1-physical-foundation-v1.sql": {
+      "sha256": "bbbcc65539ff44689743f28ef6d90df95eac9c7c46c14e41a770449d80404f2d",
+      "size_bytes": 4861
+    },
+    "schemas/character-7.1-text-v1.sql": {
+      "sha256": "6ac6042c21e8801878882d0fb0c427dee95794184e54338cbeb60f308d1d896a",
+      "size_bytes": 1094
+    },
+    "schemas/character-7.1-voice-v1.sql": {
+      "sha256": "bbcee1a5879869fdc0e3017751cb6efc611caa1f20deec16876e8bb9ea23260c",
+      "size_bytes": 2818
+    },
+    "schemas/character-lore-v1.sql": {
+      "sha256": "3bc4218b5a65d4acd6b2b2a26c3d782fcf44eea1e681d85b12234a118d0f7aac",
+      "size_bytes": 11688
+    },
+    "schemas/codexquest-7.1-v1.sql": {
+      "sha256": "2b10b29a0258408d101f94da24def7fd7775b0754bad4d562a5c961a79d25710",
+      "size_bytes": 2602
+    },
+    "schemas/codexquest-archive-v1.sql": {
+      "sha256": "675a9b1c5c8b152dd024b92ee872e3caecc2ad5b5664daf257f0796dc06672c2",
+      "size_bytes": 8697
+    },
+    "schemas/document-v1.sql": {
+      "sha256": "c6e8283fa0c3bad0eadbf4de7d1ad1958bf4e0e2a8f9270d7b9e3f7ae2e36fb0",
+      "size_bytes": 4807
+    },
+    "schemas/event-filmfest-7.1-v1.sql": {
+      "sha256": "7207eaf2e10d95f477ed474768a9f16bf67ba6618cafca668f6a3de94063667d",
+      "size_bytes": 5437
+    },
+    "schemas/event-narrative-v1.sql": {
+      "sha256": "2c55e4a6a4260b3fe146158e3f2525399dd27f93c58a53f286345552001a4270",
+      "size_bytes": 3446
+    },
+    "schemas/event-narrative-v3.sql": {
+      "sha256": "9c254957c39d586da919d9447a4ada8e2a0f70767d8a06c0409f2e8c1adf063e",
+      "size_bytes": 5938
+    },
+    "schemas/event-native-text-wave-7.1-v1.sql": {
+      "sha256": "8c14e4b09454104469cadd224ea6bb7c15a95dd30b1f4656dfc1997ca97e0a79",
+      "size_bytes": 4953
+    },
+    "schemas/event-photo-echo-7.1-v1.sql": {
+      "sha256": "17a2024fb8e4b6baa45dbadc408817dc01b29363951d7b1d106e698a42833e52",
+      "size_bytes": 5317
+    },
+    "schemas/event-successor-7.1-v1.sql": {
+      "sha256": "50a96597c415fa2f9676e37eac0a64b2db717bbfb5e62d65d27e59ed37f94dc3",
+      "size_bytes": 3291
+    },
+    "schemas/event-tps-7.1-v1.sql": {
+      "sha256": "0d57472dc719f6176497205de80893fb3ea225d7d4a89fd85d8371560fb49d4d",
+      "size_bytes": 5407
+    },
+    "schemas/event13-7.1-physical-v1.sql": {
+      "sha256": "d6583625b6e5e5cae7c55da243c917696ae12dfb23c1b8e58505f32c123d966d",
+      "size_bytes": 2749
+    },
+    "schemas/event16-18-7.1-physical-selection-v1.sql": {
+      "sha256": "4cf52d09abe8f25bd3b2d811db049288824d5464e5812ed2f19afc4cd47555a7",
+      "size_bytes": 1828
+    },
+    "schemas/gcg-card-v1.sql": {
+      "sha256": "6c69c7893d3a498823d56ab3ff90ead69f3282a17b5223571326484a09ef6b0e",
+      "size_bytes": 4441
+    },
+    "schemas/loading-tips-v1.sql": {
+      "sha256": "15b4b0e8765e494161df2e582cb36aa4b1f9fa9e3a6d2a1145213b887f1ba4cb",
+      "size_bytes": 2719
+    },
+    "schemas/m3-7.1-provider-family-v1.sql": {
+      "sha256": "3458349e6fcd90068d9ef1092972b34073a929acde886299480e3316fd1fa6e5",
+      "size_bytes": 6819
+    },
+    "schemas/mail-archive-7.1-v2.sql": {
+      "sha256": "f43b2b8cf154779cd1839c946cbc7d7e10fc20118a9ef32d3acf559c301cde83",
+      "size_bytes": 4446
+    },
+    "schemas/mail-archive-v1.sql": {
+      "sha256": "f5ea5f8d7480a152313e126e3e192456aeca6b02452ec55961b5371a4dcc0b17",
+      "size_bytes": 4652
+    },
+    "schemas/narrative-7.1-npc-dialog-reminder.sql": {
+      "sha256": "4d051fc0cf4d50c60e4058dffc3a1c7d79d68bcca6cbaca9abc5c49ab5610391",
+      "size_bytes": 2751
+    },
+    "schemas/native-archive-v1.sql": {
+      "sha256": "18df238787eb792fa0e810bf6ace888cecc896bc048c9e827b2624b7c054216b",
+      "size_bytes": 6582
+    },
+    "schemas/native-aux-quest-7.1-v1.sql": {
+      "sha256": "88e46aad39ff11f1a5882bdc831fb461b41dddb3226cd3a99600deb006942aca",
+      "size_bytes": 6064
+    },
+    "schemas/native-book-music-7.1-v1.sql": {
+      "sha256": "744def7aaabb56efd5ee5913229d3cdeea02007fbc5a94fb454fdf424dc002b6",
+      "size_bytes": 6069
+    },
+    "schemas/native-message-7.1-v1.sql": {
+      "sha256": "4eed819e5958b7dd77f64c822a6bf4ae982e378a2240d5733482ccc54f81d7b9",
+      "size_bytes": 5438
+    },
+    "schemas/native21-7.1-projection-v1.sql": {
+      "sha256": "73c6c8766ffbbd65ca4eee6dc61d5212e95728f820808808524fd75caee28f9a",
+      "size_bytes": 4857
+    },
+    "schemas/npc-dialogue-v1.sql": {
+      "sha256": "c9640df2d23b031e9cdd83cf10a44742f4b1630096b98e6c9bdf59b369a06786",
+      "size_bytes": 4153
+    },
+    "schemas/quest-narrative-7.1-v1.sql": {
+      "sha256": "4a3757ee3b1d00a62a08735a402d468facd1900f71c3e9fb903f14ddb89e07f1",
+      "size_bytes": 2970
+    },
+    "schemas/quest-narrative-v1.sql": {
+      "sha256": "c743ac10f1eddf72d495379752705910c0b75e81a4eb9b7d66509cae32ffd452",
+      "size_bytes": 6725
+    },
+    "schemas/quest-review-7.1-binding-v2.sql": {
+      "sha256": "fcc965f304e2dfdbadca791788c10f5c2fb0f246af5b66e08c947d9ec6f27744",
+      "size_bytes": 1300
+    },
+    "schemas/quest-review-7.1-v1.sql": {
+      "sha256": "378a9688b5a626ce61010fd77e3df26e62be084aac199384dc6c35b58cf95c24",
+      "size_bytes": 1776
+    },
+    "schemas/quest-review-v1.sql": {
+      "sha256": "e2ad9e604ae49207a29ac905748e1599adae0e5877360d400293e17dcf814b01",
+      "size_bytes": 5804
+    },
+    "schemas/quest-talk-7.1-standalone-v1.sql": {
+      "sha256": "1aa1ee04fde231a771fa1cddfd027a06cb7eb7234df16c80e801ccf0ef6cc253",
+      "size_bytes": 4076
+    },
+    "schemas/quest-talk-completeness-v1.sql": {
+      "sha256": "2a8940987b5b04af3f11fbe9d99177c20311a286e55ef12cc34676111134845e",
+      "size_bytes": 2850
+    },
+    "schemas/quest-talk-immutable-v1.sql": {
+      "sha256": "dfea2fdf88d1022e06a0fbf94a615453525ffd68ca243b060b523176ccbf402c",
+      "size_bytes": 5632
+    },
+    "schemas/quest-talk-physical-v1.sql": {
+      "sha256": "bbbb934905bc879c60723d5e1d2e194d02ec7a5ed3a3f0ea299376c626224ace",
+      "size_bytes": 2358
+    },
+    "schemas/readable-evidence-v1.sql": {
+      "sha256": "12628736c40db7f964a51e32f9ed3c19ca45f8a9eff2e0dfa5743be345327dfe",
+      "size_bytes": 1941
+    },
+    "schemas/source-context-7.1-v1.sql": {
+      "sha256": "cdcd7843fbc90402f9a3a6e55b0c9cd8becbfa6aa12d456d98f9f4b62343b33b",
+      "size_bytes": 1943
+    },
+    "schemas/special-core-7.1-provider-v1.sql": {
+      "sha256": "7f80688858e916fd0c7bcd7084a10ab0c0fc4b787436c67e82eb53f08990a2ce",
+      "size_bytes": 4955
+    },
+    "schemas/special-historical-7.1-provider-v1.sql": {
+      "sha256": "ee1392c48bc6fae9e856c3e05de1852afbfb874004378e9fe559fe9db2235bcf",
+      "size_bytes": 2240
+    },
+    "schemas/subtitle-evidence-v1.sql": {
+      "sha256": "24db8ce46e4c3663f079c75d5b5aafae3e54fea648e1b620d2b0993c7a1a97eb",
+      "size_bytes": 1888
+    },
+    "schemas/talk-physical-closure-v1.sql": {
+      "sha256": "959839b99e3d8033abc086d70650a467b6cecc42f9e6e12e42114b995b897400",
+      "size_bytes": 4194
+    },
+    "scripts/build_character_7_1_foundation.py": {
+      "sha256": "b5d4d3c2f66fa14f5ac1df7eae6df8247811d0f23fa4d2aeca7751e26ac3a9c6",
+      "size_bytes": 541
+    },
+    "scripts/build_character_7_1_successor.py": {
+      "sha256": "f94c6cfacfa957d71d2f522b772b160a893cd24e8c3c691296541537ecd4786f",
+      "size_bytes": 1079
+    },
+    "scripts/build_codexquest_7_1.py": {
+      "sha256": "f3e2dc6bbf4b5ac8561c4a513ba62476dad6067fcd5767c49d538ac26e2d1a46",
+      "size_bytes": 13032
+    },
+    "scripts/build_m3_7_1_provider.py": {
+      "sha256": "404cfce75dc63e4ac30982bb08f060537bb9e1af8826dda7a9a1f0832f197828",
+      "size_bytes": 1016
+    },
+    "scripts/build_narrative_7_1_family.py": {
+      "sha256": "8dc184826a71fcee311aa0ba6562984882c93e326f688eedb0c04a2229c77751",
+      "size_bytes": 1971
+    },
+    "scripts/build_quest_narrative_7_1.py": {
+      "sha256": "6e13bcde4bb33c7b6cfc71986ec52d7d44af5c1d783106ab1d3b079ea4114876",
+      "size_bytes": 10799
+    },
+    "scripts/build_quest_review_7_1.py": {
+      "sha256": "071ead167a86d465e92e8744f78eab7e0654db8c656a4324ed6c0f3f5fd9e532",
+      "size_bytes": 9140
+    },
+    "scripts/build_quest_review_7_1_binding_v2.py": {
+      "sha256": "a45551742903ee875549f85c15a7312307fbf57826cfca99a0d9c42cc6a51aed",
+      "size_bytes": 10669
+    },
+    "scripts/build_research71_complete_candidate.py": {
+      "sha256": "38f43ab0760c6346a9e5946db7c606d7392471603d00a1495d2374694e67f4fd",
+      "size_bytes": 17324
+    },
+    "scripts/build_research71_scoped_candidate.py": {
+      "sha256": "c1490514913b7b3acc87437b876f051acf368a29f37d747dded999d6e987bd44",
+      "size_bytes": 8251
+    },
+    "scripts/build_research71_semantic.py": {
+      "sha256": "3bbd2069eafa00913798e9875e6dfff020e1869b1e6bb104f8fde88fa5250802",
+      "size_bytes": 8370
+    },
+    "scripts/build_research_index.py": {
+      "sha256": "b914a88c7f6a7d29d4dd632cd713c2f1b7d9aedecf6cf80d2250d37e71c633f8",
+      "size_bytes": 1001
+    },
+    "scripts/check_rebuilt_mcp.py": {
+      "sha256": "76da2daf1aa01bc4f4ee99d31dceb689811a31b307980ec23f0cbf28fab0fa94",
+      "size_bytes": 5325
+    },
+    "scripts/generate_native_aux_quest_7_1_scope.py": {
+      "sha256": "d39e50985139f583c47f18d9e57aaf20f08dccb38cff96a33a1d275270fa94be",
+      "size_bytes": 10822
+    },
+    "scripts/generate_native_book_music_7_1_scope.py": {
+      "sha256": "bce030093a9deb15065f45469bb4e72d09adf118c0b75444531bb63b174c01e3",
+      "size_bytes": 5023
+    },
+    "scripts/prove_quest_review_7_1_fields.py": {
+      "sha256": "5b452dd7fc1f6fc02242f5179cadcda464e1b480776d8133879c72a5dac9f603",
+      "size_bytes": 7096
+    },
+    "scripts/rebuild.py": {
+      "sha256": "265fdf681931164d54c42b1cdad6bf6fabb466f0e3e74d0eab3e2b6b9fac9ea9",
+      "size_bytes": 6063
+    },
+    "scripts/rebuild_complete.py": {
+      "sha256": "2359ad32de3795a3855464e0c8076875209a416c597a465eb3b8afe4798a3cee",
+      "size_bytes": 33401
+    },
+    "scripts/rebuilt_runtime.py": {
+      "sha256": "a71947c1874906b07fd3aacc3c1e3ff6beddec5137019a2e10634ca13b01a6ce",
+      "size_bytes": 3222
+    },
+    "scripts/verify_7_1_r0.py": {
+      "sha256": "effd2d3097241fc0c08da499ddf79702b628b4543b8c88b93f50cbd514d660bf",
+      "size_bytes": 8207
+    },
+    "scripts/verify_character_7_1_foundation.py": {
+      "sha256": "290788773ab7e0d976c949d92d7feebc3382dafb7420534e419947ea54d88374",
+      "size_bytes": 783
+    },
+    "scripts/verify_character_7_1_successor.py": {
+      "sha256": "2d2c6ac3054d193c7e25ad9085c39264336a43dc7179514e2882677d975d9118",
+      "size_bytes": 996
+    },
+    "scripts/verify_codexquest_7_1.py": {
+      "sha256": "697ee47dbf7ead296ddd763200a51ac58d058613632d3d1d04d93e354648f28b",
+      "size_bytes": 13994
+    },
+    "scripts/verify_event13_7_1_physical.py": {
+      "sha256": "2e20b3f5f2da4854c03d3c292172b6f41d0e4f8b7e2dad6c0c289448a6751295",
+      "size_bytes": 424
+    },
+    "scripts/verify_event16_18_7_1_selection.py": {
+      "sha256": "beaa38d9f1b162ad0e564b435cb45a489337e6eed988517b06bd3e0686787ebb",
+      "size_bytes": 428
+    },
+    "scripts/verify_m3_7_1_provider.py": {
+      "sha256": "25d01043297ad406d17ce006fbf498c7c87f30d9c5f8b746c4feb3d31f2bc407",
+      "size_bytes": 1010
+    },
+    "scripts/verify_narrative_7_1_family.py": {
+      "sha256": "9dc24d5387df05b44c4314fd0aba0ac7826656fafaf3caea3107982b7fd677c6",
+      "size_bytes": 582
+    },
+    "scripts/verify_quest_narrative_7_1.py": {
+      "sha256": "7a3939b00d29f555e8215ce4748e4b1cdd4202f3383376f2ce56d80799d9b4d2",
+      "size_bytes": 12049
+    },
+    "scripts/verify_quest_review_7_1.py": {
+      "sha256": "b6bcff6173c239b4ca3cf7f0b5a8a40f226b768119e33d09df6950c5f4058da9",
+      "size_bytes": 10756
+    },
+    "scripts/verify_quest_review_7_1_binding_v2.py": {
+      "sha256": "62a2bb9aa1339f52419c5de7c56d8030a5871263a4210e7195a93a202940dc99",
+      "size_bytes": 11023
+    },
+    "scripts/verify_research71_complete_candidate.py": {
+      "sha256": "0338b759a696d24b6d333b6e09d19567fb7b99b612bb5998a30df56511c0116e",
+      "size_bytes": 20240
+    },
+    "scripts/verify_research71_semantic.py": {
+      "sha256": "d8afb3c52fac9ff62519cd9c4b4339f36762397f120f8e4efefca327fbfb7aa6",
+      "size_bytes": 4842
+    },
+    "scripts/verify_research_index.py": {
+      "sha256": "18d8d17c4072cc3110608187fe1d6b3d56e112442c2087caa4e1bdd32ff9b03d",
+      "size_bytes": 20477
+    },
+    "scripts/verify_talk_physical_7_1.py": {
+      "sha256": "176182ac9effc06234f82b79fb47fee6f7739c0288a1f8c63831657c8dc25ad1",
+      "size_bytes": 8299
+    },
+    "src/genshin_lore/__init__.py": {
+      "sha256": "9aa7a60d72db3c1ea26925d7a1222aa852b383c5f4639d6924c6c06b463a1b13",
+      "size_bytes": 3091
+    },
+    "src/genshin_lore/_quest_corpus_db_audit.py": {
+      "sha256": "c818de69884f1a9cbcf0d987e76e2475633e2362f6d62f3724105b12baadcbe9",
+      "size_bytes": 45512
+    },
+    "src/genshin_lore/_quest_corpus_release_contract.py": {
+      "sha256": "a0dfda5d98794f17030308b490aedd583873d458e931aaabd594c33abe2edd09",
+      "size_bytes": 24414
+    },
+    "src/genshin_lore/_readonly_database.py": {
+      "sha256": "571cd8510faad64e0754dcbf49186b291ac00ec1aa924a07adf6b30d9bf0ce96",
+      "size_bytes": 1858
+    },
+    "src/genshin_lore/artifact_io.py": {
+      "sha256": "e7861d20bf0fbe7a6267b1da8c3f5cf058db9adfec1ea28d1d04cb0d58885511",
+      "size_bytes": 2867
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_contract.py": {
+      "sha256": "5514d1dfb128329d81620ed16cb6d18fd4d6fd4f45aa27b8e64f2092ff1a19bf",
+      "size_bytes": 23548
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_evidence.py": {
+      "sha256": "548871a51174e2a39b346356ad148a0649f6b4fda4a1b63b5e53d51a9915b1eb",
+      "size_bytes": 31508
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_maintenance.py": {
+      "sha256": "26039e41cd062d15d6724f4ca0969eabe46e7f5019af5f5a0f7795aabb02447b",
+      "size_bytes": 25092
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_paths.py": {
+      "sha256": "355fa2ffea049f4426641a0bbf0b09b888ca56ee26d198d74a67fc6e4c4de392",
+      "size_bytes": 3389
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_release_oracle.py": {
+      "sha256": "cff1ec984cd0f62ed9a4b33f7cfdc51b37e88c25bd5ae16961c5d4fd6140098a",
+      "size_bytes": 6685
+    },
+    "src/genshin_lore/avatar_codex_phase4g2_schema.py": {
+      "sha256": "fef86dcb9bb2530d281875a8bec569f3d3b89c34e7e5591dd05693b26f82cddc",
+      "size_bytes": 5411
+    },
+    "src/genshin_lore/batch_m0_baseline.py": {
+      "sha256": "b9a6e6f9f2a783fcce48310d5316fa759ce350f6909701ea6019066ad74cdf12",
+      "size_bytes": 56924
+    },
+    "src/genshin_lore/batch_m1_textmap.py": {
+      "sha256": "3219c2c78e47aaf20c863d200df10b76e3004c7f35d44a2eb2c11846ce989a48",
+      "size_bytes": 40132
+    },
+    "src/genshin_lore/batch_m1_verifier.py": {
+      "sha256": "3bc061bd9f04135a4a7ecefaca021bfdae086c7a8332b71bafbd1869239240e8",
+      "size_bytes": 65636
+    },
+    "src/genshin_lore/batch_m2_avatar.py": {
+      "sha256": "ee17718a1025c3ae39d9102ad4a225ac6628bcd150fadd9d48e1194625da80c3",
+      "size_bytes": 20223
+    },
+    "src/genshin_lore/batch_m2_replay.py": {
+      "sha256": "717596d4dd0e74cbbb4a95bc3294735b493e2be4b283105a3bf2ed20c456725c",
+      "size_bytes": 10355
+    },
+    "src/genshin_lore/batch_m2_verifier.py": {
+      "sha256": "bbaf71efe75ae04a7e361778a6f6a1d0f767735588c4cd688a8f0d7f216f896c",
+      "size_bytes": 21651
+    },
+    "src/genshin_lore/batch_m3_inventory.py": {
+      "sha256": "a4ceb7dcfe06747019af0bbd9ffda87925eb4b3ccf989c3f93d4ab2f04d39a2d",
+      "size_bytes": 56393
+    },
+    "src/genshin_lore/batch_m3_physical.py": {
+      "sha256": "da06c7596354bb2cbe73160ba44d4f90542a4c3af4371c08e5cc74d67acab671",
+      "size_bytes": 38484
+    },
+    "src/genshin_lore/batch_m3_r1_projection.py": {
+      "sha256": "b30770f24da8e3f61b089fb1f41130c2037a05a4553f1ad25ad9177b891b79eb",
+      "size_bytes": 25804
+    },
+    "src/genshin_lore/batch_m4_receipt.py": {
+      "sha256": "4781d8310c4cd24a6f8cefa64b0fc5bfaa4f0c41ad56afffbcd0b06b9f71c70e",
+      "size_bytes": 17099
+    },
+    "src/genshin_lore/batch_m4_release.py": {
+      "sha256": "64ea3365902fd6a1a03928b67641e852560b4fdba834f40ededef004f123dae7",
+      "size_bytes": 29372
+    },
+    "src/genshin_lore/batch_m4_retrieval.py": {
+      "sha256": "aa9b12040cdcaa687f49d214b5ed76b024231518ebd5bf5b794342703b68e7c0",
+      "size_bytes": 29864
+    },
+    "src/genshin_lore/batch_m4_runtime_oracle.py": {
+      "sha256": "a7b6a61191ddd81d1d1c924db2d6de146acc7dcadf594d909196d76eba9ffa65",
+      "size_bytes": 35804
+    },
+    "src/genshin_lore/batch_m5c_projection.py": {
+      "sha256": "a917ba9d582fcfc0df70ce81386356e1978cb07e764f6099f70c2ef189274e66",
+      "size_bytes": 93929
+    },
+    "src/genshin_lore/batch_m5d_retrieval.py": {
+      "sha256": "7cdc799caa1d0ea2e8295c211aea10b2dd53bc2e53f8e9364aa87d2086df6245",
+      "size_bytes": 29134
+    },
+    "src/genshin_lore/batch_m5d_runtime.py": {
+      "sha256": "cb6381dcd7061401e6417496ce2d67c9035e8d1f3e44451e1b0787ec69ec4da7",
+      "size_bytes": 49522
+    },
+    "src/genshin_lore/batch_m5e_receipt.py": {
+      "sha256": "ec840c0ee1bccd1494efec88f4a703b5dc4030954178adb63e48c881c8033fa7",
+      "size_bytes": 21138
+    },
+    "src/genshin_lore/batch_m5e_retrieval.py": {
+      "sha256": "b3fe6025a47632e3b6757c28c7ad9c02d832ea57c963b4d5d6aafd19488b4247",
+      "size_bytes": 24294
+    },
+    "src/genshin_lore/batch_m5e_runtime_oracle.py": {
+      "sha256": "c3266035fc72422944092f9ed89ff16f0ce4debf02e85029dba578446e4f7d02",
+      "size_bytes": 56223
+    },
+    "src/genshin_lore/batch_q2_uplift.py": {
+      "sha256": "ae35cbf065f74206038f668b7cd5dcdbd92ab139598bc74ae6c8d93151b5a599",
+      "size_bytes": 20910
+    },
+    "src/genshin_lore/batch_r1_repository.py": {
+      "sha256": "425ad39080a33706cc7f665237929897d9122b064bd7fac0bd2813c83e01cda2",
+      "size_bytes": 11041
+    },
+    "src/genshin_lore/batch_r1_schema19.py": {
+      "sha256": "5b2484a6757e88b904c55ffcca84a09bfb07bd8fe7735ab1b87ffe389efd4afc",
+      "size_bytes": 18643
+    },
+    "src/genshin_lore/batch_r1_verifier.py": {
+      "sha256": "af512cc09c1341165165ec3dc7b747aa88483be7219e161e237012d70263de37",
+      "size_bytes": 17285
+    },
+    "src/genshin_lore/batch_r2_retrieval.py": {
+      "sha256": "d5183974bbcf12e1a21b74a5c4ed46ecadc457caf8c63b0036da5774c85d0458",
+      "size_bytes": 10406
+    },
+    "src/genshin_lore/batch_r2_runtime.py": {
+      "sha256": "c9548aa4845d28d8993e0f980c01cf15700c68a86e1b7f0c961ef5face0027f1",
+      "size_bytes": 13123
+    },
+    "src/genshin_lore/batch_r3_uplift.py": {
+      "sha256": "71fb95cfa58a403b1472e642abbe3bfe8e0fe412bf6bb14db01f4bb56a79bf7f",
+      "size_bytes": 29344
+    },
+    "src/genshin_lore/batch_r3_verifier.py": {
+      "sha256": "dd59291d65b57d942903afcd1e792789ea6c551aca74de84b334aa7cac2bae4e",
+      "size_bytes": 9824
+    },
+    "src/genshin_lore/batch_r4_release.py": {
+      "sha256": "dd0c12d0baf876210a2db05c091a9cd571c1e28528fea9b6cc3feb72173568fd",
+      "size_bytes": 6439
+    },
+    "src/genshin_lore/batch_r4_runtime.py": {
+      "sha256": "99038e53e7d87c1d538d4f84eabb6da0a4a5f5ae2e4fb380058449cf294020ae",
+      "size_bytes": 9013
+    },
+    "src/genshin_lore/batch_r4_verifier.py": {
+      "sha256": "511dd45ca28593fe085efd60b31279f67138c20f46f330d384e32401d861ab3a",
+      "size_bytes": 8316
+    },
+    "src/genshin_lore/batch_release.py": {
+      "sha256": "1ea89de918d722d874a30b545978e211b3a811127cd76f793f58eb59ca5c6c3e",
+      "size_bytes": 8998
+    },
+    "src/genshin_lore/batch_space.py": {
+      "sha256": "083c4ba36fdffe90e02186f2a19f3b1839a94807a47595e8d127dc15bcdd96f4",
+      "size_bytes": 23422
+    },
+    "src/genshin_lore/batch_wave_retrieval.py": {
+      "sha256": "41eb9ff40dc84ab5d4879d5e118de1aafaafaf22edd9615204eb585f06b99b59",
+      "size_bytes": 31039
+    },
+    "src/genshin_lore/build_metrics.py": {
+      "sha256": "a67b29537dfcbbc512a8aab779d327a5e1bdd9c741e9005110a9fb7d6de0a860",
+      "size_bytes": 5895
+    },
+    "src/genshin_lore/canary.py": {
+      "sha256": "fd9a6f13504101c57bf1d929dbebb900208e9932acbed5ef70f57f574a269a13",
+      "size_bytes": 9610
+    },
+    "src/genshin_lore/character_7_1_bounded.py": {
+      "sha256": "6da61e3e128dbdc9217fba6040d7e1821a3589e7bd384bde1f8dfc797c8eb61a",
+      "size_bytes": 18072
+    },
+    "src/genshin_lore/character_7_1_foundation_build.py": {
+      "sha256": "f638f1db77f56237bc75f71a9336b2fad51b7d258320ab61d0f8c774dddc7783",
+      "size_bytes": 18267
+    },
+    "src/genshin_lore/character_7_1_foundation_verify.py": {
+      "sha256": "6be8929ac3e001fc1acf11b2111c17366c240f1fd13789ffbba48e4d91b6f346",
+      "size_bytes": 23672
+    },
+    "src/genshin_lore/character_7_1_physical.py": {
+      "sha256": "55a9a629f63ba33ea77410afb2a1a0dd047729b5f9dcd2d0b91da75a5141d1b3",
+      "size_bytes": 5861
+    },
+    "src/genshin_lore/character_7_1_successor_build.py": {
+      "sha256": "cf6de5d0934520fb9dc0434ab4518716bece53143cb4053e63f7498b1b648c4a",
+      "size_bytes": 20578
+    },
+    "src/genshin_lore/character_7_1_successor_verify.py": {
+      "sha256": "2b13dcbf3a314856ea3ef85059e06683266605533daff2ff715d778ca7889e8e",
+      "size_bytes": 17563
+    },
+    "src/genshin_lore/character_7_1_voice.py": {
+      "sha256": "8ebec1bf1254408ec17d652f78a05a19ebccc99b74a41ea6a68240797d5294f3",
+      "size_bytes": 3142
+    },
+    "src/genshin_lore/character_contracts.py": {
+      "sha256": "cf2c71ba11a171b52dee7dd840fde9b37767c3823651382d34ce4593f421afb7",
+      "size_bytes": 16879
+    },
+    "src/genshin_lore/character_lore_build.py": {
+      "sha256": "303d600273ce749b8f7a53e11b1bb58957b25f69956e6b14eb3b2fe8c5b97707",
+      "size_bytes": 14566
+    },
+    "src/genshin_lore/character_lore_retrieval.py": {
+      "sha256": "9f52401f442528d3c0b1b6cdf68e95170a5c0fa9326f2b734044c1451d513e96",
+      "size_bytes": 9475
+    },
+    "src/genshin_lore/character_lore_source.py": {
+      "sha256": "1506b49431eeea5fbf5c50ecc63d46291d7e1c0fe172b4aca9f9823a23f4dbd8",
+      "size_bytes": 2462
+    },
+    "src/genshin_lore/character_lore_verify.py": {
+      "sha256": "4fd1fc5af0c657fa2327b7dea3fcd477a4e2518ef82f954b121a9a7b06934cf6",
+      "size_bytes": 14906
+    },
+    "src/genshin_lore/character_phase4c2_evidence.py": {
+      "sha256": "68bb350a4ac5f140aedbf35d65f11e4654dac996fc8d944b2e7e6e58ca68eeb4",
+      "size_bytes": 76609
+    },
+    "src/genshin_lore/character_phase4c2_maintenance.py": {
+      "sha256": "73d030d01889347eafc44963aff79129ce7027e9b74a2c98fc2dd71ad59cf950",
+      "size_bytes": 20228
+    },
+    "src/genshin_lore/character_phase4c2_manifest.py": {
+      "sha256": "aece2b5879f105563c41d69015470dc09fbc71ba31e4f665829763236278d879",
+      "size_bytes": 14011
+    },
+    "src/genshin_lore/character_phase4c2_release_contract.py": {
+      "sha256": "3030e3a983042a5fc654d4dd60ab77ed283c87265afd0e671bea0902d35c66a7",
+      "size_bytes": 50505
+    },
+    "src/genshin_lore/character_phase4c2_schema.py": {
+      "sha256": "0944646d3beb20aa646b7a3a00a31544471bfdbf67a350dd70066bfbc42787f2",
+      "size_bytes": 8666
+    },
+    "src/genshin_lore/character_phase4c4b_evidence.py": {
+      "sha256": "6edf5c7b6db0c7752e946beb04bccfacf9e9d8392b39798e174635c43eabc0e9",
+      "size_bytes": 88735
+    },
+    "src/genshin_lore/character_phase4c4b_maintenance.py": {
+      "sha256": "2da20d4426fd4f3c8f350c4b4d3a8059d544a4b9279dd2d09912bddf2fa89795",
+      "size_bytes": 46653
+    },
+    "src/genshin_lore/character_phase4c4b_manifest.py": {
+      "sha256": "e483f9f8962b1ccd7c10688508f3eeee013a1a94a50636469d53e3cf52e8c2eb",
+      "size_bytes": 16266
+    },
+    "src/genshin_lore/character_phase4c4b_release_contract.py": {
+      "sha256": "f253456189252e47a94e211fec5bb77f19171f07d6537c74a04c115ad9186709",
+      "size_bytes": 48458
+    },
+    "src/genshin_lore/character_phase4c5b_evidence.py": {
+      "sha256": "c8582a9037b1d2f70b59e8c722f368f82f283a76b786cf3ba4bdb2a52a991c86",
+      "size_bytes": 68904
+    },
+    "src/genshin_lore/character_phase4c5b_maintenance.py": {
+      "sha256": "b3979eecb47211f240dac3dc236d05d9bbed31beef4c6f715f93ef29def06252",
+      "size_bytes": 24797
+    },
+    "src/genshin_lore/character_phase4c5b_manifest.py": {
+      "sha256": "c092839ef80b748a2aa76152d8949f52bd8a4efd5a644676f362d305826b2702",
+      "size_bytes": 25297
+    },
+    "src/genshin_lore/character_phase4c5b_release_contract.py": {
+      "sha256": "099fd47178264fcb9ce344fe87156e27e93539f12d28264acbd4fe4debdbf332",
+      "size_bytes": 42844
+    },
+    "src/genshin_lore/character_phase4c5c_evidence.py": {
+      "sha256": "885366e6d85110ceee961a7b505eafbee4307b3b12564b4b5501f6bb10f6354e",
+      "size_bytes": 25380
+    },
+    "src/genshin_lore/character_retrieval.py": {
+      "sha256": "fb7de5b575d0ebf78e01beb792e507758ae7e0a76fb5ad10b4407ccb839a6060",
+      "size_bytes": 45486
+    },
+    "src/genshin_lore/citation_handoff.py": {
+      "sha256": "d9c380ae59ea4568ec116b85cca684515f258b92a9f1818a8ca494b9a5801c73",
+      "size_bytes": 10931
+    },
+    "src/genshin_lore/cli.py": {
+      "sha256": "d72d0b7992a533a0a84d6bf325c1ecf7a8f2b4c1a92b2f8aac4253ef6d6af744",
+      "size_bytes": 86559
+    },
+    "src/genshin_lore/codexquest_build.py": {
+      "sha256": "ae259106010d066ff79333b2dee98e7e64ddec03c691ca9fd770a911c03fdec3",
+      "size_bytes": 3974
+    },
+    "src/genshin_lore/codexquest_retrieval.py": {
+      "sha256": "8d4d51f63f3c2c06f0d725f0c8e6dd21cd25389dc6755acf471f5a298f0cefa1",
+      "size_bytes": 14054
+    },
+    "src/genshin_lore/codexquest_source.py": {
+      "sha256": "44ab475c030ad55b67679a7d9ca7738f396ef5ed20d586ba7b863a65cb584837",
+      "size_bytes": 14853
+    },
+    "src/genshin_lore/codexquest_verify.py": {
+      "sha256": "c27d562895877bb9b6e0173dfcd2f9be908f921ee35b2e8a6afc82b4dbf46bd1",
+      "size_bytes": 12281
+    },
+    "src/genshin_lore/db.py": {
+      "sha256": "2b45669a9484bb9e8e24ea345ef974fa39a00416eb30badb7d45e789d96a5c7e",
+      "size_bytes": 56840
+    },
+    "src/genshin_lore/deterministic_merge.py": {
+      "sha256": "733a14a62b9ab6dc83f83d56eaee91a91e577a3fabdd9c8161f4491a59f25435",
+      "size_bytes": 11102
+    },
+    "src/genshin_lore/direct_text_7_1_build.py": {
+      "sha256": "1b6a25bc9191e38c4ca780f3e3810f53c357c25f5c097f6f29c967a7321330fb",
+      "size_bytes": 14719
+    },
+    "src/genshin_lore/direct_text_7_1_source.py": {
+      "sha256": "be3e95da4404f2141f20766b6b73f8c481e5b4e20eaa9f54a3bdb9cf5b3a8ad6",
+      "size_bytes": 1921
+    },
+    "src/genshin_lore/direct_text_7_1_verify.py": {
+      "sha256": "be724a6e98b736f24fd5481e28eb58dd54ad11c5c706382aa91ab514b67f2977",
+      "size_bytes": 19753
+    },
+    "src/genshin_lore/direct_text_build.py": {
+      "sha256": "b025faa4651235cc43ed0c0b8531276b03176506250fc952a27f659dc890184e",
+      "size_bytes": 14665
+    },
+    "src/genshin_lore/direct_text_retrieval.py": {
+      "sha256": "eabec9f85b5aa38a6fa388bf28dbd9932210e1789db8ef4111b728c606963cce",
+      "size_bytes": 13267
+    },
+    "src/genshin_lore/direct_text_source.py": {
+      "sha256": "a40a71c92ce6f137c37cfba1a0e1934d398c05db79d15426a92e541829a952b6",
+      "size_bytes": 1922
+    },
+    "src/genshin_lore/direct_text_verify.py": {
+      "sha256": "ecd20f346edc5f8dd6deac11c319dc28885ec5cee1d6e57d4a2f6f6cd41308e2",
+      "size_bytes": 18525
+    },
+    "src/genshin_lore/discovery.py": {
+      "sha256": "4dc79fd03503c918888339c12497491c45470dd50d598790dd7117cc82984101",
+      "size_bytes": 36913
+    },
+    "src/genshin_lore/document_7_1_build.py": {
+      "sha256": "5972ab8f90860727541355b08ad66600ac6e38ae4c655401012f0e1e984e239d",
+      "size_bytes": 11660
+    },
+    "src/genshin_lore/document_7_1_physical.py": {
+      "sha256": "42913a34629537151bee05597d6f2ade163493c11f0c24c16997bf14c6ec254d",
+      "size_bytes": 2327
+    },
+    "src/genshin_lore/document_7_1_verify.py": {
+      "sha256": "9cb005e54d9d0c30d241fb9cdd5c69bf24fb80c7c454618bfb3e26ff6bba366b",
+      "size_bytes": 13175
+    },
+    "src/genshin_lore/document_build.py": {
+      "sha256": "a2d86470548993d3a4b739f18d92c2f8933eb62e2f3ec62a675ebbd54ad92b48",
+      "size_bytes": 5741
+    },
+    "src/genshin_lore/document_retrieval.py": {
+      "sha256": "dc96256bad557d22a4e5a87dd9388e168435c70fe90cc73076c3b6f59649df55",
+      "size_bytes": 8263
+    },
+    "src/genshin_lore/document_source.py": {
+      "sha256": "c971db476cf60f4ed617ad33433d64419c67c37dcba20c3a2c3a15dd0f768059",
+      "size_bytes": 2709
+    },
+    "src/genshin_lore/document_verify.py": {
+      "sha256": "30f2611dd11bbc9cb8e188521d356b5a5e2d9595f11c4a94f125b4b9caa48d8d",
+      "size_bytes": 6751
+    },
+    "src/genshin_lore/errors.py": {
+      "sha256": "dd63caa05950d9c7772df5cfd8baab19c8b4f0af0579c8979e724d7e97b9fe9a",
+      "size_bytes": 570
+    },
+    "src/genshin_lore/event13_7_1_physical.py": {
+      "sha256": "2a7b87ffba730cd4b63b1472f4c605eca2acecabffe131c641fa97be57594a93",
+      "size_bytes": 7862
+    },
+    "src/genshin_lore/event13_7_1_physical_verify.py": {
+      "sha256": "508e279f436958135d1229d3a45421c996614b558378457b9ae3bed1651bb644",
+      "size_bytes": 12589
+    },
+    "src/genshin_lore/event13_7_1_trade_show.py": {
+      "sha256": "2f1b63ee72df414add1934bb24cdf1dbbb9684bf3461596de5fce562d6cf2217",
+      "size_bytes": 5088
+    },
+    "src/genshin_lore/event16_18_7_1_selection.py": {
+      "sha256": "75501561bde771aa5a88c5f8418d78cd02fadec02b53fb6868011894688f6a7f",
+      "size_bytes": 12327
+    },
+    "src/genshin_lore/event16_18_7_1_selection_verify.py": {
+      "sha256": "1494c9274a1303464d91981d892cd4fd2f1aafa693343d129c1b86556a28df7d",
+      "size_bytes": 12344
+    },
+    "src/genshin_lore/event_7_1_source.py": {
+      "sha256": "df46d4c4f05cfd7e402a1abf1bf199190b1bdbadae57387fbd754750724b21ec",
+      "size_bytes": 1585
+    },
+    "src/genshin_lore/event_filmfest_7_1_build.py": {
+      "sha256": "40dd75e95e6c90d910220f66f465801042cf149f22352951b78472b65a71c6c7",
+      "size_bytes": 16080
+    },
+    "src/genshin_lore/event_filmfest_7_1_runtime.py": {
+      "sha256": "510fcc04f8a09cb631c55061b6eaf352a0f1e23a311e49a49eb6f4df0775cf0b",
+      "size_bytes": 4989
+    },
+    "src/genshin_lore/event_filmfest_7_1_verify.py": {
+      "sha256": "229096be10d57396ca9c2c605fcf93e0d0257500227b76fd834ee150875260ee",
+      "size_bytes": 19089
+    },
+    "src/genshin_lore/event_legacy_7_1_build.py": {
+      "sha256": "b46297cf52909bbbb91ab8be52144b75e1483d250f424db9ab3f64570f63e597",
+      "size_bytes": 8180
+    },
+    "src/genshin_lore/event_legacy_7_1_runtime.py": {
+      "sha256": "e929b236327d6387b156a87baa73f00ad358c56b9aed713d3d90bebebf041379",
+      "size_bytes": 6225
+    },
+    "src/genshin_lore/event_legacy_7_1_verify.py": {
+      "sha256": "9e9cba0ffd71f460f2c7250a8780e9daa67465a950d68d8bbe3fd4cd93903239",
+      "size_bytes": 13288
+    },
+    "src/genshin_lore/event_narrative_archive_wave.py": {
+      "sha256": "5b351d445227252463c5c50fa1e6f9c1243ea16edccbe0ab3b7ce786a615b769",
+      "size_bytes": 12254
+    },
+    "src/genshin_lore/event_narrative_archive_wave_verify.py": {
+      "sha256": "4e116f5edf2eaa9ee11383fc604ffc8ec9660cf4b0048880b00e9bbd152934ff",
+      "size_bytes": 19958
+    },
+    "src/genshin_lore/event_narrative_authority.py": {
+      "sha256": "a2260dd2b697b2f86562e6d39f15877186dd79057642384ed6b7deb99fac719f",
+      "size_bytes": 7276
+    },
+    "src/genshin_lore/event_narrative_build.py": {
+      "sha256": "3e6dca26db9d3884176793c93f0dd33495cafb420608393847b84649d9bcffab",
+      "size_bytes": 5697
+    },
+    "src/genshin_lore/event_narrative_filmfest.py": {
+      "sha256": "54bc8ffbfa967b8e0a527aa580c260224247aadfbb64ff52c89453b05305385c",
+      "size_bytes": 8925
+    },
+    "src/genshin_lore/event_narrative_filmfest_verify.py": {
+      "sha256": "6d57313c313301150206eb357b288e5087ab074edb913265ce2e176f80398915",
+      "size_bytes": 10874
+    },
+    "src/genshin_lore/event_narrative_release.py": {
+      "sha256": "bb23f75dc0accbe8a3009388c70e45feb4da7fcf1554e761ca489cf328758a5d",
+      "size_bytes": 2269
+    },
+    "src/genshin_lore/event_narrative_retrieval.py": {
+      "sha256": "6aa5f347c44517e6352467a1abf344ccfbc5a9eaaf203b1c6032538146751c2f",
+      "size_bytes": 12064
+    },
+    "src/genshin_lore/event_narrative_source.py": {
+      "sha256": "a7d382f301a55a7d2d2606fcf7ee3ceacd672b599d9229d4e8374d4cef96dd28",
+      "size_bytes": 2171
+    },
+    "src/genshin_lore/event_narrative_verify.py": {
+      "sha256": "6e4329e80b0c1ed3f8ccd8c3a03fb872630647e84f0bb0550a75f029cc3d15e1",
+      "size_bytes": 6134
+    },
+    "src/genshin_lore/event_native_text_7_1_build.py": {
+      "sha256": "918ef306c25b883d2aec73859282f063c72bd2f75ed3125bc1907f42217ff9e5",
+      "size_bytes": 10885
+    },
+    "src/genshin_lore/event_native_text_7_1_compat.py": {
+      "sha256": "cdb9e2e2844d96fb79f5ee7b6bd8ea78f06f40e305c5a626204835f0ecb595f7",
+      "size_bytes": 12072
+    },
+    "src/genshin_lore/event_native_text_7_1_runtime.py": {
+      "sha256": "9e74c2857f3368131c876f6119e111cfc9f244cbbcbe919128b30d2818950552",
+      "size_bytes": 9180
+    },
+    "src/genshin_lore/event_native_text_7_1_verify.py": {
+      "sha256": "e550b0421e73dda75e172d7fd5d1852209ded2e01c4003ce0ae8df446897a7b2",
+      "size_bytes": 10658
+    },
+    "src/genshin_lore/event_photo_echo_7_1_build.py": {
+      "sha256": "1d99bb89f3dea95308f18d761965afee47d7b7daade2076e1fbd92b875186822",
+      "size_bytes": 13496
+    },
+    "src/genshin_lore/event_photo_echo_7_1_runtime.py": {
+      "sha256": "c64ab65791425643fa203a0fdc16d38251bc039c2f6d59129e8614f1f1da9cae",
+      "size_bytes": 5128
+    },
+    "src/genshin_lore/event_photo_echo_7_1_verify.py": {
+      "sha256": "566f6920d6f71482480173bedb07bcbaff8cca61e60e5e9e60252e8aff9444b0",
+      "size_bytes": 23753
+    },
+    "src/genshin_lore/event_successor_7_1_build.py": {
+      "sha256": "f9c1b44e45887b7ec520a41020a77e01fc87996a2ed6e6971debc72a46561433",
+      "size_bytes": 8488
+    },
+    "src/genshin_lore/event_successor_7_1_runtime.py": {
+      "sha256": "1d210deac655f4e23d462c362c5f2698a7d247af37de43597f86e07f42e858dc",
+      "size_bytes": 4947
+    },
+    "src/genshin_lore/event_successor_7_1_verify.py": {
+      "sha256": "fcac8b4d3f7dcffbf1feec557c64c17a370b190adeef6a6e9fb6763ee7b185e8",
+      "size_bytes": 11853
+    },
+    "src/genshin_lore/event_tps_7_1_build.py": {
+      "sha256": "114e21838c7038336ddf485bfe2f70c2a48e493bcd6acdee8c7ab06cc55af075",
+      "size_bytes": 13940
+    },
+    "src/genshin_lore/event_tps_7_1_runtime.py": {
+      "sha256": "a0a8018a8d0986bea952176dee49cc0b5c2b9b93e1cad3041f4b7a703726d831",
+      "size_bytes": 5135
+    },
+    "src/genshin_lore/event_tps_7_1_verify.py": {
+      "sha256": "0ace0356975a3b6c69429e34e05769a8cdae175fadd59f9bb5424ddad13c226c",
+      "size_bytes": 18076
+    },
+    "src/genshin_lore/family_evidence.py": {
+      "sha256": "f4f10461948e13bf94196603885409883732e838b050314160a596434b543584",
+      "size_bytes": 7447
+    },
+    "src/genshin_lore/family_projection_protocol.py": {
+      "sha256": "b3d6fe34d64fa359a0cf733ddc6a77911b4ce7af5ae880f5da06d6e899c2cde4",
+      "size_bytes": 8281
+    },
+    "src/genshin_lore/gcg_card_7_1_build.py": {
+      "sha256": "96b294db335514169c0ae887e58c00890a2f0133985ae9b0e3b64a09f49c0f74",
+      "size_bytes": 4394
+    },
+    "src/genshin_lore/gcg_card_7_1_source.py": {
+      "sha256": "bfdde22e3673df0841c2717f772f56403b5305ec9627f577eabf8e128209c9b2",
+      "size_bytes": 2260
+    },
+    "src/genshin_lore/gcg_card_7_1_verify.py": {
+      "sha256": "72f7aab5a799bf1f0c69459525c7d4751084703352459aa65399c1916ca26764",
+      "size_bytes": 5677
+    },
+    "src/genshin_lore/gcg_card_build.py": {
+      "sha256": "da1ec8de136586124b9a4a0bc7e5f057f20a27840d7d9384c4fc453f21422490",
+      "size_bytes": 4382
+    },
+    "src/genshin_lore/gcg_card_retrieval.py": {
+      "sha256": "247503f5b89995ccfe69e65ce8bbfcb09ca17af8e4cfa856849bea0bd2b574e8",
+      "size_bytes": 7983
+    },
+    "src/genshin_lore/gcg_card_source.py": {
+      "sha256": "91ad9073aaafd90ed89f7291fff2a73559e4ef0875aa152e9bd3806956bb5d17",
+      "size_bytes": 1445
+    },
+    "src/genshin_lore/gcg_card_verify.py": {
+      "sha256": "de022bc8f06f478e0191f30f5ce5d6ab55bd26b8476e04c527fadc5e1c245bcf",
+      "size_bytes": 5665
+    },
+    "src/genshin_lore/lexical_discovery.py": {
+      "sha256": "6a244d33d3123714fec851d81b038ae3bc8e8f2104ba41ab804077cfe216a0ea",
+      "size_bytes": 18157
+    },
+    "src/genshin_lore/loading_tips_7_1_build.py": {
+      "sha256": "e92cb76aeff4a5b7f63ff8e105571d7ce4b0a83b2aba627a52857f243302f980",
+      "size_bytes": 6223
+    },
+    "src/genshin_lore/loading_tips_7_1_source.py": {
+      "sha256": "0120c40eb9ad8a16b6bf4a6b742f03e09bd10d2c852d006630b4fb5f6a623583",
+      "size_bytes": 3468
+    },
+    "src/genshin_lore/loading_tips_7_1_verify.py": {
+      "sha256": "46605b4e1ff7b3e4c5db274fb71f331a2698378f86ba4269f8dc45397cc1f47e",
+      "size_bytes": 7398
+    },
+    "src/genshin_lore/loading_tips_build.py": {
+      "sha256": "7637d48f9b6ea0decff20b2ff4784dbfaa056a0f12dbd54e8df64c28def1cad8",
+      "size_bytes": 3145
+    },
+    "src/genshin_lore/loading_tips_retrieval.py": {
+      "sha256": "cbbd2919ef15d7526f2584720a6faead4f3e716d74fa7ec4289da3e84dc46603",
+      "size_bytes": 6967
+    },
+    "src/genshin_lore/loading_tips_source.py": {
+      "sha256": "32e50f9b23d0746dbaab8874683fcd2bb776b213b82d19e902b9cf0b4061234c",
+      "size_bytes": 2504
+    },
+    "src/genshin_lore/loading_tips_verify.py": {
+      "sha256": "7e79ff29c086bfe92e2ce80ec00e352c5df75e60d51a4b9718a7d7ca25d7bcca",
+      "size_bytes": 3706
+    },
+    "src/genshin_lore/m3_7_1_provider_build.py": {
+      "sha256": "64c8b7b79193a4d070ff1ebe8e3ddcb7987205203c464a2eb2266173f24b1993",
+      "size_bytes": 15679
+    },
+    "src/genshin_lore/m3_7_1_provider_integration.py": {
+      "sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "size_bytes": 1559
+    },
+    "src/genshin_lore/m3_7_1_provider_verify.py": {
+      "sha256": "54c9c4c44ae3957e9eacf383568be126222ec2a0064a3ac17242322b29bd5468",
+      "size_bytes": 18597
+    },
+    "src/genshin_lore/mail_7_1_build.py": {
+      "sha256": "20a42a2c0c18a9a131c98ade8dec38de08c7d2abafe125764fd6e2d8f035d42b",
+      "size_bytes": 9014
+    },
+    "src/genshin_lore/mail_7_1_compat.py": {
+      "sha256": "eaae5651feb618be256df02b9cdda0fb278759038e315fae5290b7545291e067",
+      "size_bytes": 11674
+    },
+    "src/genshin_lore/mail_7_1_runtime.py": {
+      "sha256": "15cbc8ec80132fa024f7ae97b9552aec95dd61aeb28b26ba72904efacd646cb7",
+      "size_bytes": 13235
+    },
+    "src/genshin_lore/mail_7_1_verify.py": {
+      "sha256": "6b41d0f53c70a583552154821ae267a09a5fff9a37f4c788b5b75bf790a44c1d",
+      "size_bytes": 10402
+    },
+    "src/genshin_lore/mail_archive_build.py": {
+      "sha256": "160b9cc5fe4bd5fca19423fcfd4f98f21573544cdc65d71c2fcfa877ac2390dc",
+      "size_bytes": 5014
+    },
+    "src/genshin_lore/mail_archive_retrieval.py": {
+      "sha256": "7891824573002bc3173fc44c0c5ece09e6bf528ed1b439b1414f215ffa543bae",
+      "size_bytes": 8649
+    },
+    "src/genshin_lore/mail_archive_source.py": {
+      "sha256": "9b35b3e85333ec9c3886a8c14bbf3f2ade987362991e2929482713760c18ecd4",
+      "size_bytes": 2071
+    },
+    "src/genshin_lore/mail_archive_verify.py": {
+      "sha256": "2ade2c2cf082dbef5586b8727719717b701773d43489fd4da7eeed14834d5dba",
+      "size_bytes": 5570
+    },
+    "src/genshin_lore/mapping.py": {
+      "sha256": "1c0e2ba9bfa729a98d797393ed6b52f7e4089ebd7f6ef56a6ebfa4da94a8075a",
+      "size_bytes": 2554
+    },
+    "src/genshin_lore/mcp_server.py": {
+      "sha256": "308df2d3060de310c4a0e7ca4315ff010230fe8c8ca5f29c938257db82697cf4",
+      "size_bytes": 118590
+    },
+    "src/genshin_lore/narrative_7_1_bounded.py": {
+      "sha256": "524203dd13d8c408c33d2e83fe90ed9795ab2499d0865d3c1488f9220546fb66",
+      "size_bytes": 15668
+    },
+    "src/genshin_lore/narrative_7_1_build.py": {
+      "sha256": "531d052ab5b1b4e280a104ac043031ed0d53e0ce05426d6b5f3c669a75a8eae6",
+      "size_bytes": 10734
+    },
+    "src/genshin_lore/narrative_7_1_contract.py": {
+      "sha256": "3fe846a0c23cb92ef3a5c7179eeb800236acfd12e7fb84cb920677637c35d8d7",
+      "size_bytes": 2916
+    },
+    "src/genshin_lore/narrative_7_1_verify.py": {
+      "sha256": "afb33f9440ad806492b56e3c80d8c192adf965bcc5085d65da2389bc11588a4d",
+      "size_bytes": 11451
+    },
+    "src/genshin_lore/narrative_assistant_7_1.py": {
+      "sha256": "899a2da2ede17d4cdfd5df9a6e1f5f161d52dc00cb5b4df10f4a1670c53e1bb8",
+      "size_bytes": 63858
+    },
+    "src/genshin_lore/native21_7_1_build.py": {
+      "sha256": "e6234e47b7e151be2fa15a5d86e8d1a0000fa62b75e4acafa86a6cdc40b25134",
+      "size_bytes": 14770
+    },
+    "src/genshin_lore/native21_7_1_verify.py": {
+      "sha256": "54153472d47ca65210f34fae7b8a9518c2fb4c96e2fc716f229e10d81264fbbb",
+      "size_bytes": 16311
+    },
+    "src/genshin_lore/native26_7_1_physical.py": {
+      "sha256": "bc9dc259380445f4bb3205bd1845478f24a9fbac287d3631e8c89ad9f8d61362",
+      "size_bytes": 18010
+    },
+    "src/genshin_lore/native26_7_1_verify.py": {
+      "sha256": "f7d0b915671b733f924244ae1e0192e7505e2296c2ba71b58bc8960323c101c5",
+      "size_bytes": 20006
+    },
+    "src/genshin_lore/native_archive_build.py": {
+      "sha256": "2153a202c653af9e8c22b7da26ede7f00e2e36fa8e095130e07f4fc001ea71f9",
+      "size_bytes": 7407
+    },
+    "src/genshin_lore/native_archive_retrieval.py": {
+      "sha256": "afe58636321f052e73a957f3850469c297b00d27f01b501791c45d3ad8b40475",
+      "size_bytes": 10603
+    },
+    "src/genshin_lore/native_archive_successor_build.py": {
+      "sha256": "42cf9c2c70f02e8893724250fdfd34d5a124b83adc4dd827fe0e945b5a396fa0",
+      "size_bytes": 8811
+    },
+    "src/genshin_lore/native_archive_successor_verify.py": {
+      "sha256": "1e426df6de9d2cf892ec5da2dd2887588a4cc6c6e6d8c91b4109da7310916488",
+      "size_bytes": 15358
+    },
+    "src/genshin_lore/native_archive_verify.py": {
+      "sha256": "1918fca4dabad8de743c898bfbdc611d1f95885b6d35f3944db4be201cdd3512",
+      "size_bytes": 11106
+    },
+    "src/genshin_lore/native_aux_quest_7_1_build.py": {
+      "sha256": "45ba71105b960f713376a08a2c629478c0b9d96f744644ae1a55663ff3786f20",
+      "size_bytes": 8823
+    },
+    "src/genshin_lore/native_aux_quest_7_1_compat.py": {
+      "sha256": "bfc9659c5a7aed8efbfe98975d2cb5bd53c9cb34a2cf04b7bf9206d1c639637f",
+      "size_bytes": 856
+    },
+    "src/genshin_lore/native_aux_quest_7_1_verify.py": {
+      "sha256": "81e5a787e757af8364399f1b3af88a1e5a51838a1a94cc46673801547acd8bb0",
+      "size_bytes": 15133
+    },
+    "src/genshin_lore/native_aux_quest_archive_build.py": {
+      "sha256": "ed32133df324abfa8d8a32a58c1542e90b289e14e16c301a9b9cf76ca906e2d1",
+      "size_bytes": 8142
+    },
+    "src/genshin_lore/native_aux_quest_archive_verify.py": {
+      "sha256": "c973a950a852a265f7e0396eebb789949a03960e6cecdffdbe4a6f9f481ea4d5",
+      "size_bytes": 16826
+    },
+    "src/genshin_lore/native_book_music_7_1_build.py": {
+      "sha256": "0ccbce094ad732b11b792698c7f20803b26b02a606f1494df9cb3e66a7bfe513",
+      "size_bytes": 9443
+    },
+    "src/genshin_lore/native_book_music_7_1_compat.py": {
+      "sha256": "94424d3471e5b041cd2bd39aa4236a870fc377feda0c2bdcbbea56a2a42a4549",
+      "size_bytes": 867
+    },
+    "src/genshin_lore/native_book_music_7_1_verify.py": {
+      "sha256": "35fcc844fb57f2f7da2bad2f71f25d5e443a4310678fdb80f7a720f221206873",
+      "size_bytes": 12335
+    },
+    "src/genshin_lore/native_book_music_archive_build.py": {
+      "sha256": "9b13b2677dde3d9618a3f954fd83a02f6e73093f0a48ee3bca1bc47f6456cb03",
+      "size_bytes": 8818
+    },
+    "src/genshin_lore/native_book_music_archive_verify.py": {
+      "sha256": "f228dad4e7fa11f97f22832b6d9ef5577639d9133a930be7a26c1de23ee8e8c5",
+      "size_bytes": 11816
+    },
+    "src/genshin_lore/native_bulk_7_1_build.py": {
+      "sha256": "727d9f242b41382e5946c940e003ebaf7bcdd720160b1a3b9ec2b6ac916b9457",
+      "size_bytes": 10788
+    },
+    "src/genshin_lore/native_bulk_7_1_verify.py": {
+      "sha256": "c1bacc68c0712096a00e90552a2f18dfdf6304fea84097e79d2b94048209555e",
+      "size_bytes": 11506
+    },
+    "src/genshin_lore/native_high_value_archive_build.py": {
+      "sha256": "29036a734face79a4e308be805372c4522eb30c5a050b9f76082668cd5e80f08",
+      "size_bytes": 8918
+    },
+    "src/genshin_lore/native_high_value_archive_verify.py": {
+      "sha256": "0dcb0b8c34ae2384f7a9f7354ffb1d35a513ad1db4c45d2e69d90bd948e1c177",
+      "size_bytes": 10557
+    },
+    "src/genshin_lore/native_high_value_open_build.py": {
+      "sha256": "b95a0858a705c7b103e8b0514bc2ba2cc81195d0602927733aece45edad39756",
+      "size_bytes": 11655
+    },
+    "src/genshin_lore/native_high_value_open_verify.py": {
+      "sha256": "dbe36111e8a4db94a48ba2b03c13441ea7a1b7d82f213f240800025536b192f8",
+      "size_bytes": 18611
+    },
+    "src/genshin_lore/native_message_7_1_build.py": {
+      "sha256": "6c95d61725da21841dec206c0e3abc8055ba3b82aefff1154b4d8fc9f49939f5",
+      "size_bytes": 12979
+    },
+    "src/genshin_lore/native_message_7_1_compat.py": {
+      "sha256": "9891b22ea2de07bfd6d1d11875724e3f3863117283f75069a8a27380fdb67b39",
+      "size_bytes": 12090
+    },
+    "src/genshin_lore/native_message_7_1_runtime.py": {
+      "sha256": "cdd788fe91c876f8347f7ea0e5b77d02a1229ce3fb85c2074e7fddfe3b55f90a",
+      "size_bytes": 9933
+    },
+    "src/genshin_lore/native_message_7_1_verify.py": {
+      "sha256": "aabdaa13574c05e4703d40edc8800965dd5ca580d5c4a544a3060d91073eae9a",
+      "size_bytes": 11953
+    },
+    "src/genshin_lore/native_message_archive_build.py": {
+      "sha256": "edccdb1ce2775e6d62abe628c7c4e1e9b275b0b548917efde8a3954341d41c8d",
+      "size_bytes": 8816
+    },
+    "src/genshin_lore/native_message_archive_verify.py": {
+      "sha256": "2f872788198465295f82cadd5004eaed487986392f7c1fc4e963a7691f1b6c03",
+      "size_bytes": 11778
+    },
+    "src/genshin_lore/native_text_bulk_archive_build.py": {
+      "sha256": "016714220ba5fb2fd8603130af06741a8c79930715244117a353691ae0d81b3b",
+      "size_bytes": 8805
+    },
+    "src/genshin_lore/native_text_bulk_archive_verify.py": {
+      "sha256": "15be8baa1e9194d0f82e1d5ef8ecac654d5c15c004581d18a443e0fb35332783",
+      "size_bytes": 10527
+    },
+    "src/genshin_lore/npc_dialogue_build.py": {
+      "sha256": "47460c89510a41ef8f0354de6354c4f1defbf99888ceb4de78361e71bcd9fe75",
+      "size_bytes": 5598
+    },
+    "src/genshin_lore/npc_dialogue_retrieval.py": {
+      "sha256": "808702f93f4e8b3973659617ffc4a25d5a13ed277bd552df74510d44a9e11a6e",
+      "size_bytes": 8985
+    },
+    "src/genshin_lore/npc_dialogue_source.py": {
+      "sha256": "c45954b5ffcc706ad2d819b4b51133be261c337623b454fce48fac01e6e577d3",
+      "size_bytes": 1938
+    },
+    "src/genshin_lore/npc_dialogue_verify.py": {
+      "sha256": "4c71ccd79d752bc5268b645d88d87c91d9da864842f3d209c82ffb2ecaa0040f",
+      "size_bytes": 8696
+    },
+    "src/genshin_lore/parsers.py": {
+      "sha256": "817397c85e5cb3084a4be4316bc3cf0d116ad52b5caac01d1d9bde23330c4301",
+      "size_bytes": 14472
+    },
+    "src/genshin_lore/phase4a_audit.py": {
+      "sha256": "76ec79e8b3334ed694a6e1b1879ebc253aa5005265c67888139d77671b3192b8",
+      "size_bytes": 95665
+    },
+    "src/genshin_lore/phase4d5_combined_gate.py": {
+      "sha256": "814245c3846cd90f125669453d1cb57be4f079961ffa6d3fdec3f1c76ad24d30",
+      "size_bytes": 61800
+    },
+    "src/genshin_lore/phase4e5_combined_gate.py": {
+      "sha256": "77cdfe8b0287ff55800e53c4db5bd7cc42a7a58af89ae366dc03530db3daf0c8",
+      "size_bytes": 25240
+    },
+    "src/genshin_lore/phase4f5_combined_gate.py": {
+      "sha256": "f27a07cd15d525ba99f4dcdae2575ce8eeaa6c997f28bfbaeba9c3b922ded1d5",
+      "size_bytes": 40607
+    },
+    "src/genshin_lore/pipeline.py": {
+      "sha256": "8c61fafec02d8df2f55a1a41f477064b610c7dd1660d796671f229816f6250ed",
+      "size_bytes": 85836
+    },
+    "src/genshin_lore/product_acceptance_chain.py": {
+      "sha256": "497601061fabccb52facc7262ba79a110a027eb06058388ad618e43909f39024",
+      "size_bytes": 2493
+    },
+    "src/genshin_lore/quest_codex_phase4f2_contract.py": {
+      "sha256": "16fec0cf775f81069993a33a75e4965a99fc41e8c5b1cf64b023a382a96de9fa",
+      "size_bytes": 17658
+    },
+    "src/genshin_lore/quest_codex_phase4f2_evidence.py": {
+      "sha256": "d15beaf2a5225dd862e5cbca51eea58ad5ae5936c263f5ea4dca773e50bfae63",
+      "size_bytes": 21664
+    },
+    "src/genshin_lore/quest_codex_phase4f2_maintenance.py": {
+      "sha256": "1ea0a3a1439334819d7f57cf43c80b9cc8ff2b29fdc197e9fa69208339236a84",
+      "size_bytes": 14960
+    },
+    "src/genshin_lore/quest_codex_phase4f2_release_oracle.py": {
+      "sha256": "f6b22726fdeb457202846b9c9e0b397360647e773feab0fcef447c60d50f2af6",
+      "size_bytes": 7423
+    },
+    "src/genshin_lore/quest_codex_phase4f2_schema.py": {
+      "sha256": "7e12cd9b497a9fb03618cdff4d59c732f2391f03a15bc93961f80306ec972def",
+      "size_bytes": 5912
+    },
+    "src/genshin_lore/quest_codex_phase4f3_contract.py": {
+      "sha256": "ae07781f1d42d30eecb92a12c132dfa18f5a01a448ff4baf868ba81b38b5182f",
+      "size_bytes": 16242
+    },
+    "src/genshin_lore/quest_codex_phase4f3_evidence.py": {
+      "sha256": "f77d31470f84ddf7828eb8562279f4b67a5ee15ff0d057c93bab8fc4092e9645",
+      "size_bytes": 16269
+    },
+    "src/genshin_lore/quest_codex_phase4f3_maintenance.py": {
+      "sha256": "05ebd38037c864d9310621e852ea2682b2ac5dc0c91d94896d074941335365a3",
+      "size_bytes": 21457
+    },
+    "src/genshin_lore/quest_codex_phase4f3_receipt.py": {
+      "sha256": "89142e0809ba61ac47cf21a8d9692ea8f1054f2cee3c4406a944f10776a90453",
+      "size_bytes": 7965
+    },
+    "src/genshin_lore/quest_codex_phase4f3_release_oracle.py": {
+      "sha256": "65b1f5772a4b1d3452acd8d6d545dd96014333f1decdd2d7fa1649ec22aa8300",
+      "size_bytes": 429
+    },
+    "src/genshin_lore/quest_codex_phase4f3_runtime_seal.py": {
+      "sha256": "7017e2af691884fe6d2fc043e6cd03814b8608c43400e7a022284691b80eb02d",
+      "size_bytes": 5520
+    },
+    "src/genshin_lore/quest_codex_retrieval.py": {
+      "sha256": "fe1878b4e74791ebc4e15244dcb5b7335f5b252380b600b543f0b93799c5904c",
+      "size_bytes": 43460
+    },
+    "src/genshin_lore/quest_corpus_evidence.py": {
+      "sha256": "a505fe2fb92cf924629eb336fe86ea8f26707b52feea3d86d67f9368a13cf2b3",
+      "size_bytes": 59924
+    },
+    "src/genshin_lore/quest_corpus_maintenance.py": {
+      "sha256": "ca97a3d7c8937b4cdee90e4b8126315cc59c4b974c0459461881510bfac85639",
+      "size_bytes": 6098
+    },
+    "src/genshin_lore/quest_corpus_manifest.py": {
+      "sha256": "4412e2a0cc3ef2964ff39de13afb305957c48b2914a527ae9b6c377888d08af1",
+      "size_bytes": 38091
+    },
+    "src/genshin_lore/quest_derived_7_1_bounded.py": {
+      "sha256": "82865430fda11e1db6f170926594ea5bdf706c61cb505cb518ca618561355caf",
+      "size_bytes": 30329
+    },
+    "src/genshin_lore/quest_evidence.py": {
+      "sha256": "398917c298629813ff516368f298af2fe6f8f41012c81d9ce0660fcbb33abedd",
+      "size_bytes": 59959
+    },
+    "src/genshin_lore/quest_narrative_build.py": {
+      "sha256": "99e16703425b3c2fac148305cf5f628540fca74c693d8f9e1388befa1fd04590",
+      "size_bytes": 4219
+    },
+    "src/genshin_lore/quest_narrative_retrieval.py": {
+      "sha256": "ee28d4042487fa292f072c5cb22e4122080dac58ee1114c5eab3e51f84cf6815",
+      "size_bytes": 9960
+    },
+    "src/genshin_lore/quest_narrative_source.py": {
+      "sha256": "c8a4853d194f7b1511bad8fb52991ec581859eb8c72b0fc47229f0198d2ffc05",
+      "size_bytes": 11314
+    },
+    "src/genshin_lore/quest_narrative_verify.py": {
+      "sha256": "b6874c81ac19d7aa7675efb071ca6415c4bc48ec70989147bfc4a9f78800178f",
+      "size_bytes": 12570
+    },
+    "src/genshin_lore/quest_resolution.py": {
+      "sha256": "2c8cdf5840549dc6bb7e262b5af5d296565b55c24d1f581c40176a3fb0c73b11",
+      "size_bytes": 48001
+    },
+    "src/genshin_lore/quest_retrieval.py": {
+      "sha256": "5533fc428046309a685ab3900092b6fa3ff2050836aebb3d042a9605acebebb6",
+      "size_bytes": 15067
+    },
+    "src/genshin_lore/quest_review_7_1_provider.py": {
+      "sha256": "ac24a90724a22ec4867c784e77717a907241981e0436b6dd9e8fb6963e08884c",
+      "size_bytes": 11395
+    },
+    "src/genshin_lore/quest_review_build.py": {
+      "sha256": "ff985e3500b221c1773bc633782644ad7a8c783e2625bcc34aee1bf614c147c5",
+      "size_bytes": 3074
+    },
+    "src/genshin_lore/quest_review_retrieval.py": {
+      "sha256": "372091f6ee2ee00a3c23071ef1b5f14e831674263c5aca6e3d26c85d92d6ca92",
+      "size_bytes": 9337
+    },
+    "src/genshin_lore/quest_review_source.py": {
+      "sha256": "6ce4783f851b35ac143197fc292cb7d362594a9f487bfcbac07da2ab619ecb5c",
+      "size_bytes": 9701
+    },
+    "src/genshin_lore/quest_review_verify.py": {
+      "sha256": "a7b0727ffe473fead9c70f67338bfc6c5f777f1690202b5c009454737826ac93",
+      "size_bytes": 8572
+    },
+    "src/genshin_lore/quest_talk_7_1_build.py": {
+      "sha256": "e2ad5f1de9dbe42186b8539b70cf66bf983b20f60070acc9967b3bdd3a111b79",
+      "size_bytes": 20196
+    },
+    "src/genshin_lore/quest_talk_7_1_physical.py": {
+      "sha256": "6de3c7ad7e5fcbc7a850d12c15a8a4241a4ac5325caec43766ceb3f16078b848",
+      "size_bytes": 10825
+    },
+    "src/genshin_lore/quest_talk_7_1_runtime.py": {
+      "sha256": "fd111dbebdce871b4a2b0eb33852fc96c4130474bead114a8793322dd32ed601",
+      "size_bytes": 3955
+    },
+    "src/genshin_lore/quest_talk_7_1_verify.py": {
+      "sha256": "da871c7baaba6c1b5e1fb3da5c25033afdb38fcc8653546dad20ae14ea325b26",
+      "size_bytes": 29186
+    },
+    "src/genshin_lore/quest_talk_bounded_retrieval.py": {
+      "sha256": "6efa9e3744e13918fd686f56d4b89121ef552efbde14cb7e0cbb585783c8c2d0",
+      "size_bytes": 10097
+    },
+    "src/genshin_lore/quest_talk_completeness_build.py": {
+      "sha256": "664d5cef63bc4789cd3d2380847d80caf97bb66752c43fa097f26a5baf73157f",
+      "size_bytes": 7861
+    },
+    "src/genshin_lore/quest_talk_completeness_retrieval.py": {
+      "sha256": "be4d7623c6f4044de3559db570439e3e35a25b226f6dadef79e5f8d36c0146b5",
+      "size_bytes": 4208
+    },
+    "src/genshin_lore/quest_talk_completeness_verify.py": {
+      "sha256": "f9bbe9a34ba765ef24f8256dd2ce219f42c5fcf823ec0c703101de5d4a73879d",
+      "size_bytes": 17013
+    },
+    "src/genshin_lore/quest_talk_immutable_build.py": {
+      "sha256": "fe7a72999073494c209f5c1216848fb0adeb2050502a4922feca41a9d65d5d2f",
+      "size_bytes": 15324
+    },
+    "src/genshin_lore/quest_talk_immutable_retrieval.py": {
+      "sha256": "6902396010125c3647b1a51f76ea1477ec587819dd6bdd8ed64f18315a458052",
+      "size_bytes": 800
+    },
+    "src/genshin_lore/quest_talk_immutable_verify.py": {
+      "sha256": "1c471ff25cda91e4eb29d1d0e5a68cdb798c4f35b096ee056acf990c13e7f261",
+      "size_bytes": 20994
+    },
+    "src/genshin_lore/quest_talk_physical_build.py": {
+      "sha256": "cc74010a85b6539549eb8d49dc5de0a3d3ece3ed95cea5646093f8308fce51b4",
+      "size_bytes": 13255
+    },
+    "src/genshin_lore/quest_talk_physical_retrieval.py": {
+      "sha256": "3637c6e594aa75b51c422b60afe8e3e9f97dda29d83ed23afcdb34792e229470",
+      "size_bytes": 12462
+    },
+    "src/genshin_lore/quest_talk_physical_shapes.py": {
+      "sha256": "f55d978abeaa7d18496be0536aa84eaa41aa6ebc7070550946ebafb71d5e2837",
+      "size_bytes": 4565
+    },
+    "src/genshin_lore/quest_talk_physical_verify.py": {
+      "sha256": "2a94b92a30a0a772057a59c2873aff2d9560d7181b87c58e70f5569a0a899405",
+      "size_bytes": 17294
+    },
+    "src/genshin_lore/quest_talk_scope.py": {
+      "sha256": "db0b374cdb3a13391cb512da6bdd46345b79ba671b0e08574cf9737ed75cfa13",
+      "size_bytes": 2286
+    },
+    "src/genshin_lore/quest_talk_source_verifier.py": {
+      "sha256": "40d2b42f4d6413e0a1b46ab589c58a0caac0fd4912440a4a33b02aa22d8dfa9f",
+      "size_bytes": 10995
+    },
+    "src/genshin_lore/r0_retrieval.py": {
+      "sha256": "731fc3600a7963641a8e493048463116f79dd7ce5c38d248c617cad9f4c8658c",
+      "size_bytes": 17247
+    },
+    "src/genshin_lore/r5_quest_talk_retrieval.py": {
+      "sha256": "01b85416f10d41118af5c4b6142de57e67434f344f8fe5cab30a672e749c46c8",
+      "size_bytes": 34114
+    },
+    "src/genshin_lore/readable_7_1_build.py": {
+      "sha256": "8461510ff9fe2fa6077d86c91d462c5b33a655d0d00e597a35f10c346ee800d4",
+      "size_bytes": 13108
+    },
+    "src/genshin_lore/readable_7_1_verify.py": {
+      "sha256": "7bd5496c1eb050c71506f2f30688f9d8527cb9cabb60db6514bf8c82071d7281",
+      "size_bytes": 12159
+    },
+    "src/genshin_lore/research71_candidate_adapters.py": {
+      "sha256": "7c105b2bbcb4864d10634d4fc83bbdca9f9ab0b6b0deb8744a86b2bd093eed69",
+      "size_bytes": 12903
+    },
+    "src/genshin_lore/research71_candidate_query.py": {
+      "sha256": "a945d661ab6a764cca23d23757e594ace485358c859f83762b42172fe33a502b",
+      "size_bytes": 19184
+    },
+    "src/genshin_lore/research71_candidate_relations.py": {
+      "sha256": "6956268344f4e31e59c5051611979c410e165abc276cf8ffd2530d1b7231104b",
+      "size_bytes": 4870
+    },
+    "src/genshin_lore/research71_candidate_server.py": {
+      "sha256": "313b768579807485a6c8fa79ddf459977f939667843bd673c444105a8f0edf2a",
+      "size_bytes": 940
+    },
+    "src/genshin_lore/research71_minor_release.py": {
+      "sha256": "a7481ed3482e06286a6f38bca3d9f17cf6186927dfaadbafbf6a18d36efeef65",
+      "size_bytes": 7868
+    },
+    "src/genshin_lore/research71_preview_server.py": {
+      "sha256": "bf25e42f338c9e9de0bef92325655ccb2df399be460ec4477f5333e8cfb6f170",
+      "size_bytes": 31001
+    },
+    "src/genshin_lore/research71_release.py": {
+      "sha256": "19a2644f01d48de6a0e747ad68a47ca59275c0298fb38101369f78b9d4cc8a5c",
+      "size_bytes": 5029
+    },
+    "src/genshin_lore/research71_successor.py": {
+      "sha256": "f4b34839661b2bbd317bd7345ff81dc32861a8b9a919a801fbdfcd8a26dbedea",
+      "size_bytes": 17033
+    },
+    "src/genshin_lore/research71_unified.py": {
+      "sha256": "15c4f18ffaca7c368aede711696b57889889211c326b1c6af455413dc4a6ba05",
+      "size_bytes": 28997
+    },
+    "src/genshin_lore/research_7_1_bounded.py": {
+      "sha256": "3aedbf3340c0b14cedb935c7e070761fc20d3426d3da71af65a9012859d7c42f",
+      "size_bytes": 38620
+    },
+    "src/genshin_lore/research_adapters.py": {
+      "sha256": "19d326827cd3e1851bbdf556ad3ce8f5e38d7693f2a9206f446c60484228e340",
+      "size_bytes": 11162
+    },
+    "src/genshin_lore/research_index.py": {
+      "sha256": "7a83a3ab1fec431fa6eb7c8fd38383f05f0d6ecd845830157b4be9ca8b201f72",
+      "size_bytes": 31363
+    },
+    "src/genshin_lore/research_navigation.py": {
+      "sha256": "ff7fafa935621e1dd59a6a8e770d964ecfa45cc53c58da9da57e6422b15e1a15",
+      "size_bytes": 8460
+    },
+    "src/genshin_lore/research_query.py": {
+      "sha256": "7db0f1ce2362f717d4539329e01c40ec855d20edee66e21635a48a2aa377a0a5",
+      "size_bytes": 78441
+    },
+    "src/genshin_lore/research_refs.py": {
+      "sha256": "6a9cb67c75ef0d277ba340845d5ed61a4b4ac020c4080ec078d1768cbe3c84d5",
+      "size_bytes": 1680
+    },
+    "src/genshin_lore/research_server.py": {
+      "sha256": "d9336bfa45e055bb3b40341bfafbf5b805b09aa392b2b38ba6e66d33b76e1550",
+      "size_bytes": 5042
+    },
+    "src/genshin_lore/research_source_context.py": {
+      "sha256": "662a13636b935ddcf9027a4f87a1faff9b6d54646a4092d119fbafaf36244eb6",
+      "size_bytes": 6991
+    },
+    "src/genshin_lore/research_story_7_0.py": {
+      "sha256": "76a13c2d1a71c7a51eafb66f49edbcde61c953552c3ce1ed1793dc36da7bbdcf",
+      "size_bytes": 20748
+    },
+    "src/genshin_lore/research_story_7_1.py": {
+      "sha256": "06e4f12faa62ecd2c311502582405afaae612a9a9aa18760b3880a83c4dee448",
+      "size_bytes": 12013
+    },
+    "src/genshin_lore/research_story_scope.py": {
+      "sha256": "a6fb9629fd6224de0a6cde7b6bd7181af9a8b9c5da118d6c6e7458f03d863113",
+      "size_bytes": 6139
+    },
+    "src/genshin_lore/retrieval.py": {
+      "sha256": "668b87e8105bbf5dad840219c7b3a6606a54fd5f8e81573a64d750d1bace688d",
+      "size_bytes": 40338
+    },
+    "src/genshin_lore/runtime_stability.py": {
+      "sha256": "30309ef5ade385114cd98964f6fa92114d078f8e93b2b8b02875e18738c4a9ed",
+      "size_bytes": 7811
+    },
+    "src/genshin_lore/schema20_7_1_candidate.py": {
+      "sha256": "cff1af414466813045e594b5f6a440eff437554f3b1d90d64f659b50e2414d69",
+      "size_bytes": 11847
+    },
+    "src/genshin_lore/schema20_7_1_guards.py": {
+      "sha256": "aedebc5f00bcd482d244140620eb3f203c93ce8f1409b9ce2ac33d5424b1b38a",
+      "size_bytes": 3168
+    },
+    "src/genshin_lore/schema20_7_1_oracle.py": {
+      "sha256": "03ed1ec086fa9c8c85dc08bb64eaf4c1b2e649fa43a1a47a6a9221d6b3dadcda",
+      "size_bytes": 10413
+    },
+    "src/genshin_lore/schema20_7_1_routed.py": {
+      "sha256": "34f8d1219be2d3ce5b485c842156aa7fa06107d0e1dd5ef3d9d9ff537b870297",
+      "size_bytes": 11265
+    },
+    "src/genshin_lore/schema20_7_1_special.py": {
+      "sha256": "c356fe590e2c38faf7f9353262102ee1a968c69345d67105882448384e00783e",
+      "size_bytes": 17454
+    },
+    "src/genshin_lore/schema20_7_1_special_oracle.py": {
+      "sha256": "07b704bc3a3856eb19e9f4ac459498ff7a250af58fe2f8a0adf7909dc78aad6a",
+      "size_bytes": 12712
+    },
+    "src/genshin_lore/semantic_discovery.py": {
+      "sha256": "6a27e1d264a3b90b939513ea109b4803813553aebbebcf4b125a323f83ca5584",
+      "size_bytes": 13466
+    },
+    "src/genshin_lore/shard_builder.py": {
+      "sha256": "56c9a09ba496b61f23c05397b91d60717a8d90ba99c05649022394d229fff304",
+      "size_bytes": 8947
+    },
+    "src/genshin_lore/source.py": {
+      "sha256": "5461b5a947ca87f288a344a50fa1793628abb75b48d55f89b134a92dabfc7b77",
+      "size_bytes": 4431
+    },
+    "src/genshin_lore/source_context_7_1_build.py": {
+      "sha256": "2ca8d1ab7eb57d1846508a6a062adc0baeb590113c6bcb643afbfa6ee901dccd",
+      "size_bytes": 10131
+    },
+    "src/genshin_lore/source_context_7_1_runtime.py": {
+      "sha256": "14e49485106ea45283abf6587e4de419ce000c7361cab83449a37ee138aa8d94",
+      "size_bytes": 9335
+    },
+    "src/genshin_lore/source_context_7_1_verify.py": {
+      "sha256": "3c8e52a20f400278dd8422ad32c896a241a21f063f62dc9cd555555f865cc6ca",
+      "size_bytes": 10272
+    },
+    "src/genshin_lore/source_integrity.py": {
+      "sha256": "f7ab59a96a5c4ad99c96fee8dcce14407d2a8c9bf702e49417546447e4eb2330",
+      "size_bytes": 1014
+    },
+    "src/genshin_lore/source_record_contract.py": {
+      "sha256": "58f4473f8409558ce7d1b847f740dd25b933ddb35bcaa4e27f042df3d4e32760",
+      "size_bytes": 1155
+    },
+    "src/genshin_lore/special_core_7_1_build.py": {
+      "sha256": "93ae01a674d4f77afbc253783c435db61b4276249725a20c52cff1cc066fe658",
+      "size_bytes": 17499
+    },
+    "src/genshin_lore/special_core_7_1_verify.py": {
+      "sha256": "9140020166bc385860173c43842e24586466be0c1a53fd543f55ba5f512c0503",
+      "size_bytes": 18249
+    },
+    "src/genshin_lore/special_historical_7_1_build.py": {
+      "sha256": "0562aa5cd3eed17a4f980f77f9bfdd53d54d1b38853c03340a15a2bce0f3b2bb",
+      "size_bytes": 19049
+    },
+    "src/genshin_lore/special_historical_7_1_verify.py": {
+      "sha256": "edb995b53bfe7fd613c8a7b5959d8ea21a02c6adc17e31962196bc0e452d5eb5",
+      "size_bytes": 18616
+    },
+    "src/genshin_lore/static_book1_evidence.py": {
+      "sha256": "457de702d08e7832a65579828a46165b40afb787da2c51eded5f7967cd3f34a3",
+      "size_bytes": 32934
+    },
+    "src/genshin_lore/static_book1_maintenance.py": {
+      "sha256": "6a3af0450334c118360749922ed2a4ca68d740fc0c8171e5b04d8957bb8ca83b",
+      "size_bytes": 6743
+    },
+    "src/genshin_lore/static_book1_manifest.py": {
+      "sha256": "1bca10a15da1e9d7283bd5dedfff98ad5ce5821d112e28395f0e57bf2197a7a4",
+      "size_bytes": 18388
+    },
+    "src/genshin_lore/static_book1_verification_contract.py": {
+      "sha256": "2564518d70f72efbc03b3df264fd4352d7a4c960f6156a39c6590b85bc741da3",
+      "size_bytes": 29027
+    },
+    "src/genshin_lore/static_contracts.py": {
+      "sha256": "8452348e5f36ae55845ba65fea5d34c91386fc09bae8f9b26dec60174543f7c4",
+      "size_bytes": 31924
+    },
+    "src/genshin_lore/static_phase4b2_evidence.py": {
+      "sha256": "7ec5468564c810ae623ec5c57e3991d2fa7a287ee3e5682ad257de78ec2bf6d2",
+      "size_bytes": 66761
+    },
+    "src/genshin_lore/static_phase4b2_maintenance.py": {
+      "sha256": "43f48ffd4385eff2d0a62681245db5a142648133f1fbc159ca9bfd32f2ae5c3c",
+      "size_bytes": 63810
+    },
+    "src/genshin_lore/static_phase4b2_manifest.py": {
+      "sha256": "897ba8f2997cebcdd8de9e76e6bcad96cda0c8b0dfdfc448038abd2baeac917b",
+      "size_bytes": 27981
+    },
+    "src/genshin_lore/static_phase4b2_verification_contract.py": {
+      "sha256": "11b5096b22fc3b3708edc67bc3d031c2988514e0c354e52bc964b9e90389cd94",
+      "size_bytes": 54838
+    },
+    "src/genshin_lore/static_phase4b3_evidence.py": {
+      "sha256": "c8c074d67fff9c7f9cd5fecdf12addb7e749c6c61e76fca916d598d90987652a",
+      "size_bytes": 69123
+    },
+    "src/genshin_lore/static_phase4b3_maintenance.py": {
+      "sha256": "9c4e920a05b840be8456593628e62aad539dbe3ff8f26887d1ba3724ee4a7cf7",
+      "size_bytes": 6138
+    },
+    "src/genshin_lore/static_phase4b3_manifest.py": {
+      "sha256": "b826566591ded30c6bb54d0394ceb67fe279bc004e71c0e93d0bc5e17bbe5afa",
+      "size_bytes": 16483
+    },
+    "src/genshin_lore/static_phase4b3_verification_contract.py": {
+      "sha256": "0d57bec493b699baebd3ef490757b8d84d4f2090ffde33f0539b27a4c3a801f9",
+      "size_bytes": 42768
+    },
+    "src/genshin_lore/static_phase4b5_reliquary_evidence.py": {
+      "sha256": "14c508754d65fb5c1551c0f398f62d8eb3655846389498377662d5d26d4cadf5",
+      "size_bytes": 68360
+    },
+    "src/genshin_lore/static_phase4b5_reliquary_maintenance.py": {
+      "sha256": "6e3a25a7ed4536aaef1d113ef5c924fc89d09a25d7e298828e4febbf0d2bc463",
+      "size_bytes": 6417
+    },
+    "src/genshin_lore/static_phase4b5_reliquary_manifest.py": {
+      "sha256": "f4f5ed9328562b22154f86db4bc4d360e05c83b464371299fc7b099a64ace250",
+      "size_bytes": 14755
+    },
+    "src/genshin_lore/static_phase4b5_reliquary_verification_contract.py": {
+      "sha256": "24b636c2e1f32edf9c4e48f4524d892a422505f422b35f9700a8fa5fd80cc231",
+      "size_bytes": 26993
+    },
+    "src/genshin_lore/static_phase4b6_material_evidence.py": {
+      "sha256": "cefc75f4ffd63eb6e284e7f6e5eb472d1eb52d8ff326c4081dcad60b60389637",
+      "size_bytes": 71874
+    },
+    "src/genshin_lore/static_phase4b6_material_maintenance.py": {
+      "sha256": "91aa76345da1306c510069f09962837384fe8f3cbf0a55c5b20ecff7105a2892",
+      "size_bytes": 10393
+    },
+    "src/genshin_lore/static_phase4b6_material_manifest.py": {
+      "sha256": "083a2e97aea20ee88f4814eed6ff9611915cd9b426fddc1b4ab1ec92e02d9a09",
+      "size_bytes": 20884
+    },
+    "src/genshin_lore/static_phase4b6_material_verification_contract.py": {
+      "sha256": "d2cd696fed5d65d862859e59cb2afcd689af5549e0bf8d5755cf1be2c27a8094",
+      "size_bytes": 61433
+    },
+    "src/genshin_lore/static_retrieval.py": {
+      "sha256": "1d10f4155c587a63dbbe59613fbdb4c9e884a59055ae884be5e8f459b41714ae",
+      "size_bytes": 57473
+    },
+    "src/genshin_lore/storage_policy.py": {
+      "sha256": "06300c595bdc89e010542265e9996eac1c155f1dfbea1e16423955ea7904cd44",
+      "size_bytes": 166
+    },
+    "src/genshin_lore/talk_comparison_cli.py": {
+      "sha256": "531cb8538c7260d9c2469d70a8f26bf1911c482b2c14d7550dffd19ee10cc89d",
+      "size_bytes": 2959
+    },
+    "src/genshin_lore/talk_comparison_phase31c3b_contract.py": {
+      "sha256": "c2b189d2ffa4d475822f927711fffd69dac386fb142ed91b02571235e69ed380",
+      "size_bytes": 19136
+    },
+    "src/genshin_lore/talk_comparison_phase31c3b_evidence.py": {
+      "sha256": "03a9466220262816922e2e38fdce5cbb7dc167b3372ffb077c9b17be57a71df7",
+      "size_bytes": 32993
+    },
+    "src/genshin_lore/talk_comparison_phase31c3b_maintenance.py": {
+      "sha256": "24cde5c509ea1cc07d480f463fc3b749e2ebee73786d8d05c52a5cecce802d7f",
+      "size_bytes": 38552
+    },
+    "src/genshin_lore/talk_comparison_retrieval.py": {
+      "sha256": "3bbf682e9d203a03e9a06564a1b6b8989b2bbfd0525a4921d5060b06e05ad386",
+      "size_bytes": 26492
+    },
+    "src/genshin_lore/talk_evidence.py": {
+      "sha256": "72d6f0516445154b1d57ced27dc3a369208d04a55adf87f03e372b913057d50f",
+      "size_bytes": 14380
+    },
+    "src/genshin_lore/talk_physical_7_1.py": {
+      "sha256": "99a36948deefb8f571d4bc2db4bd0188127b74db6f8352446f27566b121edba5",
+      "size_bytes": 6903
+    },
+    "src/genshin_lore/talk_physical_closure_build.py": {
+      "sha256": "8caea9a2eeb18ca1c0e6313860b13eafa708a26c006027a4279649d5d56ad3b5",
+      "size_bytes": 3617
+    },
+    "src/genshin_lore/talk_physical_closure_retrieval.py": {
+      "sha256": "504ebf7fee9c7571771de34b197917d8a5338d1e53c0e2eebc2e87b2751fc49f",
+      "size_bytes": 8922
+    },
+    "src/genshin_lore/talk_physical_closure_source.py": {
+      "sha256": "edbc95e4b286ee5289a4a1fe4293f7a3d581553ec788d4ce0bc2593b620e2384",
+      "size_bytes": 4877
+    },
+    "src/genshin_lore/talk_physical_closure_verify.py": {
+      "sha256": "8f71936c290355034019f3b59baab8b4f3fc54c853304a6280ede4a697fce28b",
+      "size_bytes": 7141
+    },
+    "src/genshin_lore/talk_textmap.py": {
+      "sha256": "066816592029624875a48207295c3c6b58b1da047f14bea04a75c3d669c9bb49",
+      "size_bytes": 9977
+    },
+    "src/genshin_lore/tutorial_phase4d2a_contract.py": {
+      "sha256": "70f815e0f7c7bb17ef82d90adf71f5383c82bb7114e8d9c926f2704cdec4d338",
+      "size_bytes": 39253
+    },
+    "src/genshin_lore/tutorial_phase4d2a_evidence.py": {
+      "sha256": "edbbd61ffc5f86165b3076d77e2e7eaf967af71f1f51f1ab0521bdba864eb9ea",
+      "size_bytes": 42983
+    },
+    "src/genshin_lore/tutorial_phase4d2a_maintenance.py": {
+      "sha256": "3ccd2beb97b9b342c3f27f83412bfa5aec70a24fabdd9c6f0bd22c74691736d3",
+      "size_bytes": 29749
+    },
+    "src/genshin_lore/tutorial_phase4d2a_manifest.py": {
+      "sha256": "eb0281eb23ebe06f5d179c5208ee96729d51999d43c900f0b857652ceba38e2f",
+      "size_bytes": 15682
+    },
+    "src/genshin_lore/tutorial_phase4d2a_schema.py": {
+      "sha256": "963f86f62110944f2e21a117ecd52f85ed46a1b8135f297beded52ead9d3ea21",
+      "size_bytes": 12997
+    },
+    "src/genshin_lore/tutorial_phase4d2b_contract.py": {
+      "sha256": "e9282928d1b2a445289d792b0b29937e00be2eff1a2ea9649f8169fcefd96a6a",
+      "size_bytes": 14391
+    },
+    "src/genshin_lore/tutorial_phase4d2b_evidence.py": {
+      "sha256": "a0e282604f55ce92bfd20147bb8adf6cd6b2bd27517bb9f42e5c77076b1ba356",
+      "size_bytes": 30805
+    },
+    "src/genshin_lore/tutorial_phase4d2b_maintenance.py": {
+      "sha256": "3e3b96cbfce75c2cc64cc112b657bc1157d0d15a9297a47bac483cbe1aecd401",
+      "size_bytes": 34357
+    },
+    "src/genshin_lore/tutorial_phase4d2b_manifest.py": {
+      "sha256": "9b5d0b0d8232b218fe957bdc30ca82052d8a5925367123accb53a3dced21dbf5",
+      "size_bytes": 18046
+    },
+    "src/genshin_lore/tutorial_retrieval.py": {
+      "sha256": "a50f0db5006581c47f2508200106babc1df1d873cdf9e36487018d65c2064d5f",
+      "size_bytes": 76105
+    },
+    "src/genshin_lore/util.py": {
+      "sha256": "ea6ab96f01c2fc8621a7553b41eefaaf8c2963b947f2eec860eb4d62a58a6168",
+      "size_bytes": 2478
+    },
+    "src/genshin_lore/wave1_rebuild_contract.py": {
+      "sha256": "eb58f222bce78874a8a8f208000fad9841ee87cdaffc477e066e84b828db84af",
+      "size_bytes": 48280
+    },
+    "src/genshin_lore/wave1_rebuild_maintenance.py": {
+      "sha256": "01edca54d5074cc92a95698051a863f16f4b5bce5c6f73dc9292d08b99b5a026",
+      "size_bytes": 8001
+    },
+    "src/genshin_lore/world_archive_phase4e2_contract.py": {
+      "sha256": "21fb21efd3b0861ef43b599de7a359357a25af8ee7c83e81e806f7baefd91ffa",
+      "size_bytes": 18807
+    },
+    "src/genshin_lore/world_archive_phase4e2_evidence.py": {
+      "sha256": "d3c534333992838ddb5c8c93c95a3228b5307da76dedf4b20920b90bd9fb469f",
+      "size_bytes": 19458
+    },
+    "src/genshin_lore/world_archive_phase4e2_maintenance.py": {
+      "sha256": "fca49ffbfdd598d77be4a607ba84a4920cfd86d452fe4dd631c1fc33e64f510c",
+      "size_bytes": 10720
+    },
+    "src/genshin_lore/world_archive_phase4e2_promotion.py": {
+      "sha256": "b869d6bc2a6df792882489dbf4efee36b6d6ef6e21cfc7d824556043a84dd4bd",
+      "size_bytes": 2471
+    },
+    "src/genshin_lore/world_archive_phase4e2_release_oracle.py": {
+      "sha256": "e2b75dae44e8dd38f972d5445b01e79345f966a0b1be7b90dae4ea636863fc71",
+      "size_bytes": 8154
+    },
+    "src/genshin_lore/world_archive_phase4e2_schema.py": {
+      "sha256": "a047eced12b954c915953813cb8540864d6aa0ff22e4c3800a3b39b440c760b6",
+      "size_bytes": 5753
+    },
+    "src/genshin_lore/world_archive_phase4e2_stable_lock.py": {
+      "sha256": "c13f7c2205526745f8e9a6a647009c2b2e7716a46c924ca81443410287c8075a",
+      "size_bytes": 6516
+    },
+    "src/genshin_lore/world_archive_phase4e3_contract.py": {
+      "sha256": "5ea103853fe20d51e18ecd447a37b71e5ce41f422285ad077779b77455a24a35",
+      "size_bytes": 32325
+    },
+    "src/genshin_lore/world_archive_phase4e3_evidence.py": {
+      "sha256": "daaa54cabd5b3aa0c3bfbc3ccb5199e3fe8cd5e006ddbc3a6f84e2aa58d892f4",
+      "size_bytes": 22986
+    },
+    "src/genshin_lore/world_archive_phase4e3_maintenance.py": {
+      "sha256": "7263081d2871ba21a90bf037812d66008061f61d0f257a8fbc3d872c31f28127",
+      "size_bytes": 19396
+    },
+    "src/genshin_lore/world_archive_phase4e3_receipt.py": {
+      "sha256": "ee52355b22deb040ec7b699d70da7f5be4f6bf6d186fe239b0f72bc001de2ea7",
+      "size_bytes": 9320
+    },
+    "src/genshin_lore/world_archive_phase4e3_release_oracle.py": {
+      "sha256": "292aeb8c4387832c5abd6858a86fead83d72c13c0d86786723e7f73046781c67",
+      "size_bytes": 9721
+    },
+    "src/genshin_lore/world_archive_phase4e3_runtime_seal.py": {
+      "sha256": "ac8f7f8fe661d28221a78d9f7316443db587e543360e457b512b94a7bced1dfe",
+      "size_bytes": 7439
+    },
+    "src/genshin_lore/world_archive_retrieval.py": {
+      "sha256": "0777f9e972223c34d1a3a634fc6473cbee679a717f0987ef3288aab90362d2bb",
+      "size_bytes": 41890
+    },
+    "tests/test_complete_rebuild.py": {
+      "sha256": "7fb2a9ee31924f7e5de5327012366340785ce0495edb8406d65602196c82888f",
+      "size_bytes": 6982
+    },
+    "tests/test_public_rebuild.py": {
+      "sha256": "37775cc8357941f8c55b02c9f5086bf87554b6431edcc65efc83e49bfaa356db",
+      "size_bytes": 4449
+    }
+  },
+  "full_private_release_rebuild": false,
+  "game_artifacts_included": false,
+  "git_history_included": false,
+  "source_implementation_commit": "eda2435057aacc638776efe47c7fba4e2f878dba"
+}

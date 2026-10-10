@@ -1,0 +1,73 @@
+{
+  "contract": "event13-7.1-snez-physical-binding-v1",
+  "native_id_semantics": "none_proven",
+  "occurrences": [
+    {
+      "ordinal": 0,
+      "pointer": "/0",
+      "raw_sha256": "063b4fed891b5cbbfcc281c58e2f65a7df04c19257e4eb45e4852af889f6ce1f",
+      "target_occurrence_id": "event13-71:1b8b28386f53e89b6b995d3a123f570ef4709940"
+    },
+    {
+      "ordinal": 1,
+      "pointer": "/1",
+      "raw_sha256": "d935b066ce13c7cec727413c6ba21a2c8191238553c5c8314ae04ba1782302b4",
+      "target_occurrence_id": "event13-71:07757f9aec154aa49f3bd202206be27fb13c792f"
+    },
+    {
+      "ordinal": 2,
+      "pointer": "/2",
+      "raw_sha256": "837b344db4f8e9c5556e23a8b1b48ad3a86a0974334a6cdb8d00455f528d2889",
+      "target_occurrence_id": "event13-71:e643798003d2f1f4bcd67be4b228df12a2897f9e"
+    },
+    {
+      "ordinal": 3,
+      "pointer": "/3",
+      "raw_sha256": "1ba916f5454162ac1909e96b2325b9b06b3f7c22e879380cabc33a4e5dd4dff1",
+      "target_occurrence_id": "event13-71:2f91f19a4888320e23db834bda7c9f400c46ed5d"
+    },
+    {
+      "ordinal": 4,
+      "pointer": "/4",
+      "raw_sha256": "beef0c208a0f651ab3d22e8af1abad468907b0681e716cfc800aa6901a9e886b",
+      "target_occurrence_id": "event13-71:025bf1d52a54c645fbcb1219a677a4653e95e8f7"
+    },
+    {
+      "ordinal": 5,
+      "pointer": "/5",
+      "raw_sha256": "83106c8888ff935707eb4987858c6930e29122e274ba24c249f2b407f6fbe23b",
+      "target_occurrence_id": "event13-71:2d8a18cde6d1fe4bf0dc93300ecf7accd7eddd17"
+    },
+    {
+      "ordinal": 6,
+      "pointer": "/6",
+      "raw_sha256": "9741234a70387e4fa6f9f71813a6d619f65249da1c92c43a720cfcf0a92b340b",
+      "target_occurrence_id": "event13-71:c3ae65f48f4a2712a8fc8ecca4c7e9095633c63b"
+    },
+    {
+      "ordinal": 7,
+      "pointer": "/7",
+      "raw_sha256": "abbb5cfc7233ff63fc800cf6247e67004da73c26c1aacccca70af45ed452e02b",
+      "target_occurrence_id": "event13-71:d30d701fd92bfa9495f53963c9c41ea6fa76ad9a"
+    },
+    {
+      "ordinal": 8,
+      "pointer": "/8",
+      "raw_sha256": "54271019767d3912b5386e31e8862b509a4fe1ce566ebb2d165c091f961c4982",
+      "target_occurrence_id": "event13-71:0b5cf2a9bf984c3720798fbe1759f9d1f3c8db28"
+    }
+  ],
+  "selection_rule": "all physical rows in exact SnezBookOfferingGameplay array; no native-ID predicate",
+  "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_path": "ExcelBinOutput/SnezBookOfferingGameplayExcelConfigData.json",
+  "source_scope_sha256": "3e741ee2ceaa588ea2a25353c68ea89a1ea921aea543f84b5de280a857626b19",
+  "target_artifact": {
+    "path_machine_local": "/tmp/event13-7.1-physical-v3-a.sqlite",
+    "sha256": "aa1c958e494e83e374b0aa76d28ab756d771836ce0029317d0d58f03ea259f7f",
+    "size_bytes": 2195456
+  },
+  "target_contract": "event13-7.1-physical-capability-v1",
+  "target_family": "event_narrative_archive",
+  "target_parser": "event13-71:f57fa9df25e2cbacee996f46bfed77dfeac3e74c",
+  "target_run": "event13-71:d7402d6d4732989f42a426e157f7e3e9abbe5221"
+}

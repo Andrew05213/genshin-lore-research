@@ -1,0 +1,19 @@
+{
+  "validation_kind": "public source export, local fixed upstream, not downloaded in this run",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "component": "activity_archive",
+  "fresh_builds": 2,
+  "independent_source_verification": "PASS both arms",
+  "artifact_size_bytes": 94208,
+  "artifact_sha256": "95d9149a8b274cc14d67eeda76aefd973d245df08e280fd14b0dd80abbaea1e1",
+  "a_b": "PASS byte-exact artifact and deterministic build reports",
+  "artifact_included": false,
+  "original_game_text_included": false,
+  "full_35_input_release_rebuild": "NOT_RUN, portable qualification/bindings not complete",
+  "other_13_components": "entry wiring inspected, not freshly built in this export check",
+  "runtime_deployment_acceptance": "NOT_CLAIMED",
+  "remote_snapshot_download": "NOT_RUN; web page probe timed out; source pin checked locally",
+  "python": "3.12",
+  "direct_dependencies": {"mcp": "2.1.1", "jsonschema": "4.26.0"}
+}

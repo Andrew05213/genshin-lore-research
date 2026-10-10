@@ -1,0 +1,1855 @@
+{
+  "contract": "special-core-7.1-provider-input-v1",
+  "contract_count": 13,
+  "contracts": [
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:avatar_codex_archive:avatar-codex-archive-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "avatarId": 122
+        },
+        "relation_slots": {
+          "avatarId": 122
+        },
+        "selected_rows": 122,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "avatar_codex_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 120,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "avatarId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "FMDEJPDNFKB"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/AvatarCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 122,
+      "provider_contract": "avatar-codex-archive-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "avatarId",
+              "source_field_pointer": "/0/avatarId",
+              "source_file": "ExcelBinOutput/AvatarCodexExcelConfigData.json",
+              "source_lexical_checksum": "3a07535c04cab78f5e7799a4a1b6819c06edff3c7fd975edf028dbfaa32a7e9f",
+              "source_locator_value": 10000033,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "b4dab5567ede2effc89d2d7ea498f7daa816277d3116e3d6f01103b8ac20a269",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000033,
+                  "target_r0_physical_pointer": "/#21",
+                  "target_raw_record_checksum": "f31766171b95a43df86f4aa65cb2af3015b42027056e5b26c89eed8f5ca5541b",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "e5eae0d635fbc631f6df8476ba7d396aa69a8010881f74c49144fa6a09d0803b",
+                  "target_source_record_pointer": "/21",
+                  "target_source_row_ordinal": 21
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "avatarId",
+              "source_field_pointer": "/1/avatarId",
+              "source_file": "ExcelBinOutput/AvatarCodexExcelConfigData.json",
+              "source_lexical_checksum": "0f3482d349307bda6c7e5bd838c2f005a9599144f40c7a363fb73ee4528d57b4",
+              "source_locator_value": 10000039,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "13b4329b8a7bb94977c739aeab130d7a3d81ee34ad1543bee36f8f6b977a35c7",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000039,
+                  "target_r0_physical_pointer": "/#27",
+                  "target_raw_record_checksum": "826798dea9eaf72ef3592692e109ae6a84365818a8e275071ca9163994b86bcd",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "4426370ca8511394a562dd53dec27253a9243a7eb1128f5c948032d5a710b54b",
+                  "target_source_record_pointer": "/27",
+                  "target_source_row_ordinal": 27
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 119,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "9c2055181d2f63dae1444cae4e4c1c6150bdd734adf062b6969e3868c2fe9ce2",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "existing AvatarCodex boundary explicitly permits avatarId-to-AvatarExcel lookup only",
+          "field": "avatarId",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 120,
+          "status_counts": {
+            "resolved_unique": 120
+          },
+          "target_key_unique_count": 165,
+          "target_locator_field": "id",
+          "target_row_count": 165,
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:cook_bonus_archive:cook-bonus-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "avatarId": 119,
+          "recipeId": 119
+        },
+        "relation_slots": {
+          "avatarId": 119,
+          "recipeId": 119
+        },
+        "selected_rows": 119,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "cook_bonus_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 117,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "avatarId",
+        "recipeId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json",
+        "ExcelBinOutput/CookRecipeExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "complexParamVec[]",
+        "paramVec[]"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/CookBonusExcelConfigData.json"
+      ],
+      "primary_physical_rows": 119,
+      "provider_contract": "cook-bonus-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "avatarId",
+              "source_field_pointer": "/0/avatarId",
+              "source_file": "ExcelBinOutput/CookBonusExcelConfigData.json",
+              "source_lexical_checksum": "d7fcaba2d1f8d67cb4be0d4c4c6e2c99de595d4ca9c749ce12bd90bd3c3148f2",
+              "source_locator_value": 10000021,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "67f2763d72a4bbd32b3b69faf2bb1a7d233f7b90a6cf32550443bfc1a1a8dd1e",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000021,
+                  "target_r0_physical_pointer": "/#10",
+                  "target_raw_record_checksum": "952864a737efcadf90679bf0b48512ab56f03440646964c777e5a6a8e4d46aec",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "cff96808d298009411508a074695e24609021b86eed3e1070d0e81675fcc0ee2",
+                  "target_source_record_pointer": "/10",
+                  "target_source_row_ordinal": 10
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "avatarId",
+              "source_field_pointer": "/1/avatarId",
+              "source_file": "ExcelBinOutput/CookBonusExcelConfigData.json",
+              "source_lexical_checksum": "f8f7426e142a03d7d3562973ded9a283c688be77ed22cef9a400e0fae71db2a3",
+              "source_locator_value": 10000015,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "579e337725f4106d07e4daa9c4260fa589d9266a30682b6247634f22d68f1dd4",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000015,
+                  "target_r0_physical_pointer": "/#7",
+                  "target_raw_record_checksum": "408b9bc32f83b7da2dd0edd74da8f045f1d4b9865b68a2d1376728f9ed97630d",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "844621e6bd17872a5afc03af0094cb22bcaa78cea11fe6d7c0fa3257e59597a9",
+                  "target_source_record_pointer": "/7",
+                  "target_source_row_ordinal": 7
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 116,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "6eb64be66bb0b3a7e3b3149f9878e7a33cac62505af5f15609b8b4083f4a2b15",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "named avatarId field",
+          "field": "avatarId",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 117,
+          "status_counts": {
+            "resolved_unique": 117
+          },
+          "target_key_unique_count": 165,
+          "target_locator_field": "id",
+          "target_row_count": 165,
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "recipeId",
+              "source_field_pointer": "/0/recipeId",
+              "source_file": "ExcelBinOutput/CookBonusExcelConfigData.json",
+              "source_lexical_checksum": "d7fcaba2d1f8d67cb4be0d4c4c6e2c99de595d4ca9c749ce12bd90bd3c3148f2",
+              "source_locator_value": 1004,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "67f2763d72a4bbd32b3b69faf2bb1a7d233f7b90a6cf32550443bfc1a1a8dd1e",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 1004,
+                  "target_r0_physical_pointer": "/#2",
+                  "target_raw_record_checksum": "b98a9049ad2464145c4bc2d64de45f53d77709a6009e30216076abca7b845ca6",
+                  "target_source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+                  "target_source_lexical_checksum": "cade9d57dce27b90a756e9684ba4594d5e2c6feaccc0cf5b760b05dd86896a7b",
+                  "target_source_record_pointer": "/2",
+                  "target_source_row_ordinal": 2
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "recipeId",
+              "source_field_pointer": "/1/recipeId",
+              "source_file": "ExcelBinOutput/CookBonusExcelConfigData.json",
+              "source_lexical_checksum": "f8f7426e142a03d7d3562973ded9a283c688be77ed22cef9a400e0fae71db2a3",
+              "source_locator_value": 1001,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "579e337725f4106d07e4daa9c4260fa589d9266a30682b6247634f22d68f1dd4",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 1001,
+                  "target_r0_physical_pointer": "/#0",
+                  "target_raw_record_checksum": "d8fd4ed764f81d4cf3b3dde4da1dc57556fb3283f4679fa65b25ecf36ea08461",
+                  "target_source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+                  "target_source_lexical_checksum": "c1d3c7202f3e429ac08dda24d3637234ea0bab4f24065a1aaf22b88579fc72d1",
+                  "target_source_record_pointer": "/0",
+                  "target_source_row_ordinal": 0
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 116,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "e53849def1e9759f05e886a3cdcff6cceedd8e309e349910b9b6ba50dc46fe6b",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "named recipeId field to selected CookRecipe primary",
+          "field": "recipeId",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 117,
+          "status_counts": {
+            "resolved_unique": 117
+          },
+          "target_key_unique_count": 281,
+          "target_locator_field": "id",
+          "target_row_count": 281,
+          "target_source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [
+        "icon"
+      ],
+      "component_key": "schema20:cook_recipe_archive:cook-recipe-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 284
+        },
+        "relation_slots": {
+          "inputVec[].id": 1420,
+          "qualityOutputVec[].id": 852
+        },
+        "selected_rows": 284,
+        "text_owner_present": {
+          "descTextMapHash": 284,
+          "nameTextMapHash": 284
+        },
+        "text_owner_types": {
+          "descTextMapHash": [
+            "int"
+          ],
+          "nameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "cook_recipe_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 281,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/MaterialExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "effectDesc[]",
+        "qteParam",
+        "qteQualityWeightVec[]"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/CookRecipeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 284,
+      "provider_contract": "cook-recipe-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "inputVec[].id",
+              "source_field_pointer": "/0/inputVec/0/id",
+              "source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+              "source_lexical_checksum": "c1d3c7202f3e429ac08dda24d3637234ea0bab4f24065a1aaf22b88579fc72d1",
+              "source_locator_value": 100011,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "d8fd4ed764f81d4cf3b3dde4da1dc57556fb3283f4679fa65b25ecf36ea08461",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 100011,
+                  "target_r0_physical_pointer": "/#570",
+                  "target_raw_record_checksum": "3661c6ba40f843607a93928c1f41260f3d8a9f65888f40aa3e9d8ffcd9684128",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "1df042aa7efb18decc88e7ef4f119ef10ccb10d0b960c43e15bbedc0d788f91d",
+                  "target_source_record_pointer": "/570",
+                  "target_source_row_ordinal": 570
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "inputVec[].id",
+              "source_field_pointer": "/0/inputVec/1/id",
+              "source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+              "source_lexical_checksum": "c1d3c7202f3e429ac08dda24d3637234ea0bab4f24065a1aaf22b88579fc72d1",
+              "source_locator_value": 100064,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "d8fd4ed764f81d4cf3b3dde4da1dc57556fb3283f4679fa65b25ecf36ea08461",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 100064,
+                  "target_r0_physical_pointer": "/#605",
+                  "target_raw_record_checksum": "3356a104e5c29d6d2b6d0f71b549cc43839385ea319ed33707d8a809f34c984f",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "ba488db9559e58adc384842eb741c8dff6245eebf7306dd6ba9fb9e1da0cb911",
+                  "target_source_record_pointer": "/605",
+                  "target_source_row_ordinal": 605
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 280,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "042f6b9d18f9855edccfe2e427679783cf4afa05c39b700474793cc2bbd3b2fe",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit ingredient member id; empty input objects remain physical empty slots",
+          "field": "inputVec[].id",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 1405,
+          "status_counts": {
+            "empty_slot": 448,
+            "resolved_unique": 957
+          },
+          "target_key_unique_count": 10404,
+          "target_locator_field": "id",
+          "target_row_count": 10404,
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "qualityOutputVec[].id",
+              "source_field_pointer": "/0/qualityOutputVec/0/id",
+              "source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+              "source_lexical_checksum": "c1d3c7202f3e429ac08dda24d3637234ea0bab4f24065a1aaf22b88579fc72d1",
+              "source_locator_value": 108011,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "d8fd4ed764f81d4cf3b3dde4da1dc57556fb3283f4679fa65b25ecf36ea08461",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 108011,
+                  "target_r0_physical_pointer": "/#2305",
+                  "target_raw_record_checksum": "dfc36a6feee723ec53cab08ad4b9e8736287316e04e7911d4e94020b5616be54",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "8067999e6dacaf608ec6da94fcebb257fef2b7ff418849a98b4b5001835c62dc",
+                  "target_source_record_pointer": "/2305",
+                  "target_source_row_ordinal": 2305
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "qualityOutputVec[].id",
+              "source_field_pointer": "/0/qualityOutputVec/1/id",
+              "source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json",
+              "source_lexical_checksum": "c1d3c7202f3e429ac08dda24d3637234ea0bab4f24065a1aaf22b88579fc72d1",
+              "source_locator_value": 108012,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "d8fd4ed764f81d4cf3b3dde4da1dc57556fb3283f4679fa65b25ecf36ea08461",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 108012,
+                  "target_r0_physical_pointer": "/#2306",
+                  "target_raw_record_checksum": "69221148ae9de5743ba7c465dd2884e27af262e1a2429d74d709248a46f3bd79",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "e702bd49debcb7be91340716b78a8ce4f89d2779b78394dac6262edb43b1e285",
+                  "target_source_record_pointer": "/2306",
+                  "target_source_row_ordinal": 2306
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 280,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "6409a82854340dbf889b72ffae528ebd7bae6b8ab32a0fb67a45cffdb87d69b0",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit quality output member id",
+          "field": "qualityOutputVec[].id",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 843,
+          "status_counts": {
+            "resolved_unique": 843
+          },
+          "target_key_unique_count": 10404,
+          "target_locator_field": "id",
+          "target_row_count": 10404,
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:furniture_make_archive:furniture-make-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "configID": 1405
+        },
+        "relation_slots": {
+          "furnitureItemID": 1405,
+          "materialItems[].id": 4215
+        },
+        "selected_rows": 1405,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "furniture_make_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 1398,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "configID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+        "ExcelBinOutput/MaterialExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "JCENPMKMEHH"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/FurnitureMakeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 1405,
+      "provider_contract": "furniture-make-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnitureItemID",
+              "source_field_pointer": "/0/furnitureItemID",
+              "source_file": "ExcelBinOutput/FurnitureMakeExcelConfigData.json",
+              "source_lexical_checksum": "11b65ed0b142e452dab3be1cdaabd860eb5f7c4b10c4d167795a1d65f5b83df8",
+              "source_locator_value": 360101,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "2b7ecd785754328db314314fc8ac019e13761451fc0c3cd1f76d46d5860edee5",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 360101,
+                  "target_r0_physical_pointer": "/#128",
+                  "target_raw_record_checksum": "369e6ee336ec119440f60863ee0986d3f0606badce3a272ce22579902c97c722",
+                  "target_source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+                  "target_source_lexical_checksum": "c12e4cce0bfdb51539d0428d4b6553ec9ba4f5034a14ec14bec62b3703787142",
+                  "target_source_record_pointer": "/128",
+                  "target_source_row_ordinal": 128
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnitureItemID",
+              "source_field_pointer": "/1/furnitureItemID",
+              "source_file": "ExcelBinOutput/FurnitureMakeExcelConfigData.json",
+              "source_lexical_checksum": "9397ddc461eeb10fb046149de5d95b359e4f10172b074d327ae7e97ae73893ae",
+              "source_locator_value": 360102,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "9080d49ac38874b25a15847a38c5dcf81f4bda72a47b55da8eed5713ca9dc91e",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 360102,
+                  "target_r0_physical_pointer": "/#129",
+                  "target_raw_record_checksum": "0769c677c561ce1a73e51912a83b76959336d07055a83d818c351548e72e830e",
+                  "target_source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+                  "target_source_lexical_checksum": "f8c2640cc259ac44388bc9bf7a974310f463539d6991df2c684b3428c7e81500",
+                  "target_source_record_pointer": "/129",
+                  "target_source_row_ordinal": 129
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 1397,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "3857a853289da6358cc713ca5abf68be5d828c24a6ad87d07d9675281a518688",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit furniture item field to selected furniture primary",
+          "field": "furnitureItemID",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 1398,
+          "status_counts": {
+            "resolved_unique": 1398
+          },
+          "target_key_unique_count": 2483,
+          "target_locator_field": "id",
+          "target_row_count": 2483,
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "materialItems[].id",
+              "source_field_pointer": "/0/materialItems/0/id",
+              "source_file": "ExcelBinOutput/FurnitureMakeExcelConfigData.json",
+              "source_lexical_checksum": "11b65ed0b142e452dab3be1cdaabd860eb5f7c4b10c4d167795a1d65f5b83df8",
+              "source_locator_value": 101307,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "2b7ecd785754328db314314fc8ac019e13761451fc0c3cd1f76d46d5860edee5",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 101307,
+                  "target_r0_physical_pointer": "/#748",
+                  "target_raw_record_checksum": "905063b802867f88e3349925101605f8d9e899e5ff20639e27c9c1422e2dd232",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "38e154138fdf73df2aeea4fdc65e8cd906512f6a424c0e8f77b45f2e4ecff650",
+                  "target_source_record_pointer": "/748",
+                  "target_source_row_ordinal": 748
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "materialItems[].id",
+              "source_field_pointer": "/0/materialItems/1/id",
+              "source_file": "ExcelBinOutput/FurnitureMakeExcelConfigData.json",
+              "source_lexical_checksum": "11b65ed0b142e452dab3be1cdaabd860eb5f7c4b10c4d167795a1d65f5b83df8",
+              "source_locator_value": 101002,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "2b7ecd785754328db314314fc8ac019e13761451fc0c3cd1f76d46d5860edee5",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 101002,
+                  "target_r0_physical_pointer": "/#637",
+                  "target_raw_record_checksum": "3f0d31c7280043b7932b30b1800f94f391517b941eeb0285e25d953618279678",
+                  "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json",
+                  "target_source_lexical_checksum": "6752cbd60543c2bb1c70a57fc8c27e112aab8ebcdea856be5aa07bb19e85671e",
+                  "target_source_record_pointer": "/637",
+                  "target_source_row_ordinal": 637
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 1397,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "05c9554c2de08a8f9567f5712da3d944156212fea69d36ecd674654283e62552",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit crafting material member id; empty material objects remain physical slots",
+          "field": "materialItems[].id",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 4194,
+          "status_counts": {
+            "empty_slot": 1557,
+            "resolved_unique": 2637
+          },
+          "target_key_unique_count": 10404,
+          "target_locator_field": "id",
+          "target_row_count": 10404,
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [
+        "itemIcon",
+        "mapIcon"
+      ],
+      "component_key": "schema20:furniture_suite_archive:furniture-suite-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "suiteID": 111
+        },
+        "relation_slots": {
+          "favoriteNpcExcelIdVec[]": 269,
+          "furnType[]": 222
+        },
+        "selected_rows": 111,
+        "text_owner_present": {
+          "suiteDescTextMapHash": 111,
+          "suiteNameTextMapHash": 111
+        },
+        "text_owner_types": {
+          "suiteDescTextMapHash": [
+            "int"
+          ],
+          "suiteNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "furniture_suite_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 111,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "suiteID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldNPCExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "transStr"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/FurnitureSuiteExcelConfigData.json"
+      ],
+      "primary_physical_rows": 111,
+      "provider_contract": "furniture-suite-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnType[]",
+              "source_field_pointer": "/0/furnType/0",
+              "source_file": "ExcelBinOutput/FurnitureSuiteExcelConfigData.json",
+              "source_lexical_checksum": "75e718b2aeda6fd6fe043043493861c1fe01c2f8b61542e999f947d1b6097aa1",
+              "source_locator_value": 771,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "59b57c9a50f516995cf89015a6f5856d9879eb945b9b03f591f3240a8357bd32",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "typeID",
+                  "target_locator_value": 771,
+                  "target_r0_physical_pointer": "/#66",
+                  "target_raw_record_checksum": "b4c65000c6bb974622d30e6f7d42c6602a0f38e6f82601b8cd5baf076f18298c",
+                  "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+                  "target_source_lexical_checksum": "e905dc7ebcfc1e3494538d80ac2fc4f0fa1836998f598ab6870b2152ecdbc6bd",
+                  "target_source_record_pointer": "/66",
+                  "target_source_row_ordinal": 66
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": true,
+              "source_field_path": "furnType[]",
+              "source_field_pointer": "/0/furnType/1",
+              "source_file": "ExcelBinOutput/FurnitureSuiteExcelConfigData.json",
+              "source_lexical_checksum": "75e718b2aeda6fd6fe043043493861c1fe01c2f8b61542e999f947d1b6097aa1",
+              "source_locator_value": 0,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "59b57c9a50f516995cf89015a6f5856d9879eb945b9b03f591f3240a8357bd32",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "missing_target",
+              "target_candidates": []
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 110,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "02d6e1c2a3ae71ec53cf3e13e54ca562f6a169c03dc607a6e06a9af5f52cbf22",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit furniture type slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnType[]",
+          "raw_zero_observed_count": 113,
+          "source_occurrence_count": 222,
+          "status_counts": {
+            "missing_target": 113,
+            "resolved_unique": 109
+          },
+          "target_key_unique_count": 81,
+          "target_locator_field": "typeID",
+          "target_row_count": 81,
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "favoriteNpcExcelIdVec[]",
+              "source_field_pointer": "/0/favoriteNpcExcelIdVec",
+              "source_file": "ExcelBinOutput/FurnitureSuiteExcelConfigData.json",
+              "source_lexical_checksum": "75e718b2aeda6fd6fe043043493861c1fe01c2f8b61542e999f947d1b6097aa1",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "59b57c9a50f516995cf89015a6f5856d9879eb945b9b03f591f3240a8357bd32",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "missing_field",
+              "target_candidates": []
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "favoriteNpcExcelIdVec[]",
+              "source_field_pointer": "/1/favoriteNpcExcelIdVec",
+              "source_file": "ExcelBinOutput/FurnitureSuiteExcelConfigData.json",
+              "source_lexical_checksum": "5eee1ab267822efaf585803afc4162297113c3d079f96d40b2f3ba62ea8de4b3",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "a78a514ac82eccecc60baff9c506612550b8502021860c0adc16c2045364ca18",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "missing_field",
+              "target_candidates": []
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 110,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "3e680c37c1a1d7648d902f7399764cfafbeb77edc067c2c0b7d3af9be172ce16",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "observed values are avatar IDs and match the named HomeWorldNPC.avatarID domain; NPC npcID and alternate HomeworldNPCExcelDataData are not substituted",
+          "field": "favoriteNpcExcelIdVec[]",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 269,
+          "status_counts": {
+            "missing_field": 30,
+            "resolved_unique": 239
+          },
+          "target_key_unique_count": 118,
+          "target_locator_field": "avatarID",
+          "target_row_count": 119,
+          "target_source_file": "ExcelBinOutput/HomeWorldNPCExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "suiteNameTextMapHash",
+        "suiteDescTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:gadget_title_archive:gadget-title-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "gadgetId": 53
+        },
+        "relation_slots": {
+          "gadgetId": 53
+        },
+        "selected_rows": 53,
+        "text_owner_present": {
+          "nameTextMapHash": 53,
+          "titleTextMapHash": 53
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "titleTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "gadget_title_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 53,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "gadgetId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/GadgetExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [],
+      "primary_paths": [
+        "ExcelBinOutput/GadgetTitleExcelConfigData.json"
+      ],
+      "primary_physical_rows": 53,
+      "provider_contract": "gadget-title-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "gadgetId",
+              "source_field_pointer": "/0/gadgetId",
+              "source_file": "ExcelBinOutput/GadgetTitleExcelConfigData.json",
+              "source_lexical_checksum": "9909fdabd198a481c794591a78b8e55b41db4bf2057629e01d450461b4d05809",
+              "source_locator_value": 70380004,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "0eed7d0776f0cb7022b9063e1e04547c5c5702aa8ef26c42ae6c9e9e0b5ae3f7",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 70380004,
+                  "target_r0_physical_pointer": "/#10824",
+                  "target_raw_record_checksum": "267bcee52fae175391ad08bc983185f9ef5b7b39e0be0424ff750be7075a2245",
+                  "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json",
+                  "target_source_lexical_checksum": "9e41861833f8a3807f2c3b7e02583753bcd0a5b5765786c035d68ecc3229e686",
+                  "target_source_record_pointer": "/10824",
+                  "target_source_row_ordinal": 10824
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "gadgetId",
+              "source_field_pointer": "/1/gadgetId",
+              "source_file": "ExcelBinOutput/GadgetTitleExcelConfigData.json",
+              "source_lexical_checksum": "d72b246e2629508b8010ff788b0d3efb33e28b33a7b641c639d10bf737030f22",
+              "source_locator_value": 70380019,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "7934571dd062be282541b11c48ed3988c09b48bf916c7d7db8718e3fe5f6f064",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 70380019,
+                  "target_r0_physical_pointer": "/#10839",
+                  "target_raw_record_checksum": "67912fe59bf31c60f64cdbcda59629b396f66c45b1ac67c1e7040f35438ac7c1",
+                  "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json",
+                  "target_source_lexical_checksum": "d243b860c98b1a6a57d74d8ef97ccdec2234c6f1adcebf4443f01666223a2002",
+                  "target_source_record_pointer": "/10839",
+                  "target_source_row_ordinal": 10839
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 52,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "76ad717bd42bfa5864ab7f7a67a6af979f2c69d2bfafe450363e4b13255d01f2",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit gadgetId field; Gadget is lookup-only, not selected as a primary candidate",
+          "field": "gadgetId",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 53,
+          "status_counts": {
+            "resolved_unique": 53
+          },
+          "target_key_unique_count": 29869,
+          "target_locator_field": "id",
+          "target_row_count": 29869,
+          "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "titleTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "bgmPath"
+      ],
+      "component_key": "schema20:homeworld_bgm_archive:homeworld-bgm-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "bgmID": 223
+        },
+        "relation_slots": {},
+        "selected_rows": 223,
+        "text_owner_present": {
+          "bgmNameTextMapHash": 223
+        },
+        "text_owner_types": {
+          "bgmNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_bgm_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 218,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "bgmID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "CAMEEHNHLKO",
+        "CDGNFFDGJGE",
+        "FCFBMBKOELI",
+        "IEIMECLJOAE",
+        "JJDADAADBDO",
+        "NJHBHFCDGJC",
+        "NNGPLCDJOPO"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldBgmExcelConfigData.json"
+      ],
+      "primary_physical_rows": 223,
+      "provider_contract": "homeworld-bgm-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "bgmNameTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "icon",
+        "itemIcon",
+        "effectIcon"
+      ],
+      "component_key": "schema20:homeworld_furniture_archive:homeworld-furniture-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 2513
+        },
+        "relation_slots": {
+          "furnType[]": 5026,
+          "furnitureGadgetID[]": 7539,
+          "pushTipsId": 2513,
+          "roomSceneID": 2513
+        },
+        "selected_rows": 2513,
+        "text_owner_present": {
+          "descTextMapHash": 2513,
+          "nameTextMapHash": 2513
+        },
+        "text_owner_types": {
+          "descTextMapHash": [
+            "int"
+          ],
+          "nameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_furniture_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 2483,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/PushTipsConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "sourceTextList[]",
+        "CLENOKFNDOM",
+        "KONAHFEPEMP",
+        "LEAFFKPKEBC"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json"
+      ],
+      "primary_physical_rows": 2513,
+      "provider_contract": "homeworld-furniture-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnType[]",
+              "source_field_pointer": "/0/furnType/0",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": 9002,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "typeID",
+                  "target_locator_value": 9002,
+                  "target_r0_physical_pointer": "/#56",
+                  "target_raw_record_checksum": "de0ef18c52132d9fe91cc8dc9fbe8067771431fb42c6e667e3e01e2b287ed675",
+                  "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+                  "target_source_lexical_checksum": "62691524e8395aa7dcc8ef182f369b1faf46ac375ece03b55980993a9d53e53e",
+                  "target_source_record_pointer": "/56",
+                  "target_source_row_ordinal": 56
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnType[]",
+              "source_field_pointer": "/0/furnType/1",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": 9001,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "typeID",
+                  "target_locator_value": 9001,
+                  "target_r0_physical_pointer": "/#55",
+                  "target_raw_record_checksum": "6d3152df250a5202180e35c8fafccca27bc0ee0cebab7e92aa13a0432fc9d4a0",
+                  "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+                  "target_source_lexical_checksum": "c77418db13e4290e164e6501fd24eafade7a6224dfd46355c413f28ecc459324",
+                  "target_source_record_pointer": "/55",
+                  "target_source_row_ordinal": 55
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 2482,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "3405d652a76b01ee13d8c85f2c51f500b6f872410fbd2178d0c90e32d6e9f870",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit furniture type slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnType[]",
+          "raw_zero_observed_count": 2346,
+          "source_occurrence_count": 4966,
+          "status_counts": {
+            "missing_target": 2346,
+            "resolved_unique": 2620
+          },
+          "target_key_unique_count": 81,
+          "target_locator_field": "typeID",
+          "target_row_count": 81,
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "furnitureGadgetID[]",
+              "source_field_pointer": "/0/furnitureGadgetID/0",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": 77303005,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 77303005,
+                  "target_r0_physical_pointer": "/#18198",
+                  "target_raw_record_checksum": "1f662afe726d9b66abc749688aa5165bbf9a649c117a23aacd5f9fbb30e5ff2f",
+                  "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json",
+                  "target_source_lexical_checksum": "efa906cd778421169311699f8f2818f065245c1a1515e5e85a32d88513a6c85a",
+                  "target_source_record_pointer": "/18198",
+                  "target_source_row_ordinal": 18198
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": true,
+              "source_field_path": "furnitureGadgetID[]",
+              "source_field_pointer": "/0/furnitureGadgetID/1",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": 0,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "missing_target",
+              "target_candidates": []
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 2482,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "1e7c148e9aafaf575053bc45943a85bcb5852a105c396e2cc1bff4c8ac018b4f",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit gadget slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnitureGadgetID[]",
+          "raw_zero_observed_count": 5089,
+          "source_occurrence_count": 7449,
+          "status_counts": {
+            "missing_target": 5089,
+            "resolved_unique": 2360
+          },
+          "target_key_unique_count": 29869,
+          "target_locator_field": "id",
+          "target_row_count": 29869,
+          "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "pushTipsId",
+              "source_field_pointer": "/0/pushTipsId",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "missing_field",
+              "target_candidates": []
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "pushTipsId",
+              "source_field_pointer": "/1/pushTipsId",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "0e46343cababdc4fd76cea31931d99dfd4c6c008580562415e65ca74073a53d7",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "41cdc4e3668f9a36c3a8bee1dd951cd1f96680b4507b2772c50aea318f13cdfb",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "missing_field",
+              "target_candidates": []
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 2482,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "c9ad739300a346279522eb18ec0936934ad5694e742b360be6ef589f0af264f2",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "exact named PushTipsConfig key",
+          "field": "pushTipsId",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 2483,
+          "status_counts": {
+            "missing_field": 2473,
+            "resolved_unique": 10
+          },
+          "target_key_unique_count": 1767,
+          "target_locator_field": "pushTipsId",
+          "target_row_count": 1767,
+          "target_source_file": "ExcelBinOutput/PushTipsConfigData.json"
+        },
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "roomSceneID",
+              "source_field_pointer": "/0/roomSceneID",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "5bff0dc37587cf9321e47937666351f992e47d80d37ea7e9733cd38ca5512450",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "a423b994c0e77d170333aa3d62a84d2f0c4c418a1f58a69bb9168b92320ff1f8",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "missing_field",
+              "target_candidates": []
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "roomSceneID",
+              "source_field_pointer": "/1/roomSceneID",
+              "source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+              "source_lexical_checksum": "0e46343cababdc4fd76cea31931d99dfd4c6c008580562415e65ca74073a53d7",
+              "source_locator_value": null,
+              "source_r0_physical_pointer": "/#1",
+              "source_raw_record_checksum": "41cdc4e3668f9a36c3a8bee1dd951cd1f96680b4507b2772c50aea318f13cdfb",
+              "source_record_pointer": "/1",
+              "source_row_ordinal": 1,
+              "source_status": "missing_field",
+              "target_candidates": []
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 2482,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "a220eedf4b0bcb5581d5f383530f363ac1f0ed37dbefe2b17df11196a30c8123",
+          "condition": null,
+          "condition_excluded_row_count": 0,
+          "evidence_basis": "explicit room scene identifier; unmatched values remain dangling",
+          "field": "roomSceneID",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 2483,
+          "status_counts": {
+            "missing_field": 2476,
+            "resolved_unique": 7
+          },
+          "target_key_unique_count": 2337,
+          "target_locator_field": "id",
+          "target_row_count": 2337,
+          "target_source_file": "ExcelBinOutput/SceneExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "tabIcon"
+      ],
+      "component_key": "schema20:homeworld_furniture_type_archive:homeworld-furniture-type-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "typeID": 81
+        },
+        "relation_slots": {},
+        "selected_rows": 81,
+        "text_owner_present": {
+          "typeName2TextMapHash": 81,
+          "typeNameTextMapHash": 81
+        },
+        "text_owner_types": {
+          "typeName2TextMapHash": [
+            "int"
+          ],
+          "typeNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_furniture_type_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 81,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "typeID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "PBIOMJGIMAK"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 81,
+      "provider_contract": "homeworld-furniture-type-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "typeNameTextMapHash",
+        "typeName2TextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "iconPathHash"
+      ],
+      "component_key": "schema20:profile_frame_archive:profile-frame-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 12
+        },
+        "relation_slots": {},
+        "selected_rows": 12,
+        "text_owner_present": {
+          "nameTextMapHash": 12,
+          "unlockDescTextMapHash": 12
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "unlockDescTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "profile_frame_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 12,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "KNEHHMFJLFD",
+        "iconPathHash"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/ProfileFrameExcelConfigData.json"
+      ],
+      "primary_physical_rows": 12,
+      "provider_contract": "profile-frame-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "unlockDescTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "iconPath"
+      ],
+      "component_key": "schema20:profile_picture_archive:profile-picture-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 5
+        },
+        "relation_slots": {
+          "unlockParam": 5
+        },
+        "selected_rows": 5,
+        "text_owner_present": {
+          "nameTextMapHash": 5,
+          "unlockDescTextMapHash": 5
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "unlockDescTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "profile_picture_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 5,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "GNOGOJPAFCJ",
+        "JJPFBBOGPMN",
+        "KNEHHMFJLFD",
+        "unlockParam"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/ProfilePictureExcelConfigData.json"
+      ],
+      "primary_physical_rows": 188,
+      "provider_contract": "profile-picture-evidence-v1",
+      "relations": [
+        {
+          "anchors": [
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "unlockParam",
+              "source_field_pointer": "/0/unlockParam",
+              "source_file": "ExcelBinOutput/ProfilePictureExcelConfigData.json",
+              "source_lexical_checksum": "1081c623cd5240b685d2babcf660e7fd99ebbfcaf881cc6a25ba3c77f00208dc",
+              "source_locator_value": 10000005,
+              "source_r0_physical_pointer": "/#0",
+              "source_raw_record_checksum": "caa0d33222a84a9b2bdcf8bc2da4b055f948205178616947e9e613e475d3a083",
+              "source_record_pointer": "/0",
+              "source_row_ordinal": 0,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000005,
+                  "target_r0_physical_pointer": "/#3",
+                  "target_raw_record_checksum": "9fd4973e8fbbbde878aaf704830b146e6babebd6e220b3aab02a149a2e42d44d",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "bc424ccae194cdb9459eefa8aa3c83e7cb264910891b729c42aafb6e5967a748",
+                  "target_source_record_pointer": "/3",
+                  "target_source_row_ordinal": 3
+                }
+              ]
+            },
+            {
+              "raw_zero_observed": false,
+              "source_field_path": "unlockParam",
+              "source_field_pointer": "/2/unlockParam",
+              "source_file": "ExcelBinOutput/ProfilePictureExcelConfigData.json",
+              "source_lexical_checksum": "fc7dcc5026a3048610cd833c1a4ac6d9fb15211a4f0c2b3ecfff04d60e722ddc",
+              "source_locator_value": 10000007,
+              "source_r0_physical_pointer": "/#2",
+              "source_raw_record_checksum": "80c181c5583554061580c685ac7bdae61ee930b6088e4379e43a43eb61ae9fce",
+              "source_record_pointer": "/2",
+              "source_row_ordinal": 2,
+              "source_status": "resolved_unique",
+              "target_candidates": [
+                {
+                  "target_field_path": "id",
+                  "target_locator_value": 10000007,
+                  "target_r0_physical_pointer": "/#5",
+                  "target_raw_record_checksum": "5d4c4f5ebb07fb5ecb668a3f63cbd4ca2b9a6c7f5812654a3a8a5403a9438189",
+                  "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json",
+                  "target_source_lexical_checksum": "e2e057afd1b79d5bc21a51aacc421603425801f0ac01a1d96863107c59fd6e9a",
+                  "target_source_record_pointer": "/5",
+                  "target_source_row_ordinal": 5
+                }
+              ]
+            }
+          ],
+          "candidate_bounds": {
+            "max_source_row_ordinal": 183,
+            "max_target_candidates_per_occurrence": 1,
+            "min_source_row_ordinal": 0
+          },
+          "candidate_tuple_contract": "sha256(canonical source+target physical locator tuple per occurrence)",
+          "candidate_tuple_digest": "ef3b284d60d23326422e0c121104498d097f7775ff377aef9c4f1ecf766497d6",
+          "condition": {
+            "equals": "PROFILE_PICTURE_UNLOCK_BY_AVATAR",
+            "path": "NLAPNBMECDF"
+          },
+          "condition_excluded_row_count": 64,
+          "evidence_basis": "only the explicit AVATAR unlock variant is an Avatar relation; costume/item/quest parameters remain unresolved",
+          "field": "unlockParam",
+          "raw_zero_observed_count": 0,
+          "source_occurrence_count": 122,
+          "status_counts": {
+            "resolved_unique": 122
+          },
+          "target_key_unique_count": 165,
+          "target_locator_field": "id",
+          "target_row_count": 165,
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        }
+      ],
+      "selected": {
+        "coverage": "bounded_canary",
+        "native_field": "id",
+        "native_values": [
+          1,
+          11,
+          99999,
+          100010,
+          900003
+        ]
+      },
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "unlockDescTextMapHash"
+      ],
+      "versioned_decoder_basis": {
+        "accepted_foundation_manifest": "manifests/character-7.1-physical-foundation/immutable-runtime.json",
+        "consumption_contract": "manifests/character-7.1-physical-foundation/consumption-contract.json",
+        "new_field": "NLAPNBMECDF",
+        "old_field": "AHJHBENMGFK"
+      }
+    },
+    {
+      "component_key": "schema20:quest_codex_archive:quest-codex-archive-evidence-v1",
+      "family": "quest_codex_archive",
+      "historical_contract_path": "src/genshin_lore/quest_codex_phase4f3_contract.py",
+      "historical_parser": "pb-quest-codex-phase4f3:e8d8afa205bc1a56dcff5143b49fbbc04f648260",
+      "historical_run": "ir-quest-codex-phase4f3:08e7bde9c88f353bc1358d9287e154326b92c36c",
+      "kind": "HISTORICAL_SPECIAL",
+      "lookup_paths": [
+        "ExcelBinOutput/ChapterExcelConfigData.json",
+        "ExcelBinOutput/QuestExcelConfigData.json"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/QuestCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 499,
+      "provider_contract": "quest-codex-archive-evidence-v1"
+    },
+    {
+      "component_key": "schema20:world_archive:world-archive-evidence-v1",
+      "family": "world_archive",
+      "historical_contract_path": "src/genshin_lore/world_archive_phase4e3_contract.py",
+      "historical_parser": "pb-world-archive-phase4e3:d20c3b83bf0b838972d3b4ac7f71d3794c999692",
+      "historical_run": "ir-world-archive-phase4e3:2d800a2a6c8b3a60ac5ac9d06d27fd5757c6dbd3",
+      "kind": "HISTORICAL_SPECIAL",
+      "lookup_paths": [
+        "ExcelBinOutput/MonsterDescribeExcelConfigData.json",
+        "ExcelBinOutput/MonsterExcelConfigData.json",
+        "ExcelBinOutput/PushTipsCodexExcelConfigData.json",
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json",
+        "ExcelBinOutput/CityConfigData.json",
+        "ExcelBinOutput/WorldAreaConfigData.json"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/AnimalCodexExcelConfigData.json",
+        "ExcelBinOutput/ViewCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 853,
+      "provider_contract": "world-archive-evidence-v1"
+    }
+  ],
+  "historical_m5b_report": "reports/batch-m5b/batch-m5b-source-identity-audit.json",
+  "historical_m5b_sha256": "5c5a8fcafeaf55dc7dff8ed7c851b69618bbff50e9137bf553fbd5804f6fc40d",
+  "identity_policy": "snapshot+parser+run+physical coordinate; no cross-snapshot or logical merge",
+  "readiness_matrix": "reports/7.1-pre-schema20-closure/7.1-pre-schema20-input-matrix-v3-m3-provider.json",
+  "readiness_matrix_sha256": "9ff124017d6b56c4e69e8ef9e7384b9714d3776cc080f94f47129127b1f7e047",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_family_count": 13,
+  "source_files": {
+    "ExcelBinOutput/AnimalCodexExcelConfigData.json": {
+      "git_blob_oid": "d31ffa8f46808453b1fac87aec419aa44ed0013b",
+      "physical_rows": 585,
+      "sha256": "2be5b8bee50e35f5cb5ed888e068585d2701e484865fad60c3d6d9dc2cdbf834",
+      "size_bytes": 250615
+    },
+    "ExcelBinOutput/AvatarCodexExcelConfigData.json": {
+      "git_blob_oid": "1dae7cb75d66aefc0130af2ca0a1fdc2dd38d439",
+      "physical_rows": 122,
+      "sha256": "75c72c0968b6049ace8a58f50d5617fee2ab452c80751e95a37c917beb77506d",
+      "size_bytes": 14018
+    },
+    "ExcelBinOutput/AvatarExcelConfigData.json": {
+      "git_blob_oid": "b9376cd637d59deb46fd0e7d6dc29c10c1eb3685",
+      "physical_rows": 167,
+      "sha256": "a0ac92f1abb48e2ef6552cae2fefad95d51973dec9632f15dc51d85594efcfaf",
+      "size_bytes": 351799
+    },
+    "ExcelBinOutput/ChapterExcelConfigData.json": {
+      "git_blob_oid": "69248646a56464eb7ebbddc6400ffd0a96fe7b06",
+      "physical_rows": 430,
+      "sha256": "e80b715698863211c8c4896236097cc8726e23aa00c9c59c44471a2fe0346767",
+      "size_bytes": 199501
+    },
+    "ExcelBinOutput/CityConfigData.json": {
+      "git_blob_oid": "cd66fc11986c9b898a0ab438d4b0a5d57e820e20",
+      "physical_rows": 16,
+      "sha256": "dcc871514e681e724efe1f5521f5ee82072b70576f8aed0d1db5ca3f51aaceab",
+      "size_bytes": 8591
+    },
+    "ExcelBinOutput/CookBonusExcelConfigData.json": {
+      "git_blob_oid": "be7486700a012585deca276163d30750c42d8946",
+      "physical_rows": 119,
+      "sha256": "19fa18f91aa75521ca2482ee3f446a790849977e8441c21a16a36ced420e7c01",
+      "size_bytes": 24084
+    },
+    "ExcelBinOutput/CookRecipeExcelConfigData.json": {
+      "git_blob_oid": "80a9b241edbfa46dc65553309a55a4a179a8514d",
+      "physical_rows": 284,
+      "sha256": "0647a64ead5447f873dcd42ccd452033d4e966e1e885d36c671760deb47c1377",
+      "size_bytes": 250308
+    },
+    "ExcelBinOutput/FurnitureMakeExcelConfigData.json": {
+      "git_blob_oid": "70417351c30c7fd2cf3aa84195ab06eff794c823",
+      "physical_rows": 1405,
+      "sha256": "1b54cdcdb4fc8d95d4e61efed774a744bb5b6f8c789fa61b55502d71e064ad5c",
+      "size_bytes": 446938
+    },
+    "ExcelBinOutput/FurnitureSuiteExcelConfigData.json": {
+      "git_blob_oid": "04dbaab357a90a00f72ffbedbc82f7d43a6d8102",
+      "physical_rows": 111,
+      "sha256": "dab89ce3ac63d861164bbc9981069b9510ad580feaf09da83bf9c16677dc8dfb",
+      "size_bytes": 48830
+    },
+    "ExcelBinOutput/GadgetExcelConfigData.json": {
+      "git_blob_oid": "e6083ad777b1f427b5dbe3c8f689f3cee4475b64",
+      "physical_rows": 30599,
+      "sha256": "161dfbf2ba88a11a56376b0357f48639262940a9f7078ffd1121802f3c759ca8",
+      "size_bytes": 10122675
+    },
+    "ExcelBinOutput/GadgetTitleExcelConfigData.json": {
+      "git_blob_oid": "b2d3f42bfbd17b014ab34406fa232c45c5d20601",
+      "physical_rows": 53,
+      "sha256": "a531dd6f90419999a63e15aad9c1f06eda0f26b6a0cd9921b24dbcd17c9034e2",
+      "size_bytes": 5543
+    },
+    "ExcelBinOutput/HomeWorldBgmExcelConfigData.json": {
+      "git_blob_oid": "0563a23381d6d09d70f4a026cd2f70c17658dd5f",
+      "physical_rows": 223,
+      "sha256": "90e4b18de2a6d0a56260e2b44e305816d47a838b22637b5cbfe4e464a777431f",
+      "size_bytes": 65214
+    },
+    "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json": {
+      "git_blob_oid": "9f5594ab0dd93bd8d687c1c48c1ac5e174b00a65",
+      "physical_rows": 2513,
+      "sha256": "29e5b9400560c42b22fe0461edb1d3fce6d978bc620d1cb3182340a64b599064",
+      "size_bytes": 1656750
+    },
+    "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json": {
+      "git_blob_oid": "283c91a115ad189fc4119583ed0521cedd0e9a3d",
+      "physical_rows": 81,
+      "sha256": "a32975c8df64422ab16a71bdb69923863883c9739c74291ecdb6ed7f78226961",
+      "size_bytes": 19660
+    },
+    "ExcelBinOutput/HomeWorldNPCExcelConfigData.json": {
+      "git_blob_oid": "b608aa7a50cd830f5f2ae73ac08e7d68361f3ca7",
+      "physical_rows": 121,
+      "sha256": "f6d5e27ed38d8d675012b21b6daf889d8af71b473ab7362038bf2375819ee115",
+      "size_bytes": 26898
+    },
+    "ExcelBinOutput/MaterialExcelConfigData.json": {
+      "git_blob_oid": "c3ea28747ab723ee9007dcc7e1eb33067ad2ea8f",
+      "physical_rows": 10512,
+      "sha256": "a0691209b2cfb50d2bf15fb06900740105d15901ebd7bb43da833922f0652319",
+      "size_bytes": 8873251
+    },
+    "ExcelBinOutput/MonsterDescribeExcelConfigData.json": {
+      "git_blob_oid": "81e406a3b234297c7bcba1fc9c17c789be740870",
+      "physical_rows": 581,
+      "sha256": "ceed296ed94a4b31b89816948f7a24729636b32bc473245a1d12ccbaf7ed4377",
+      "size_bytes": 92975
+    },
+    "ExcelBinOutput/MonsterExcelConfigData.json": {
+      "git_blob_oid": "6ad8cfe91b8ee61f1858b3071d056d1fd155b6f8",
+      "physical_rows": 3408,
+      "sha256": "4a76b2ccf7f076e449159a8e7dee24e39e9c760dcc9d754686b0bcbac9046b8e",
+      "size_bytes": 5084743
+    },
+    "ExcelBinOutput/ProfileFrameExcelConfigData.json": {
+      "git_blob_oid": "b5b26d0bb0e12a3db352bd3b2ae0c2bffcc0c7ab",
+      "physical_rows": 12,
+      "sha256": "ee0d0a704e21fa4d1edcc1ad7b1497523c05b964da827d0bff269b2363783913",
+      "size_bytes": 2376
+    },
+    "ExcelBinOutput/ProfilePictureExcelConfigData.json": {
+      "git_blob_oid": "74906c5eea5e031d7193cca9e0d954def63c96c3",
+      "physical_rows": 188,
+      "sha256": "0e54540347e82543dc9a3c67d6e61adaf8da5f5ab97435979ddf8491532d69bf",
+      "size_bytes": 48960
+    },
+    "ExcelBinOutput/PushTipsCodexExcelConfigData.json": {
+      "git_blob_oid": "586d4fe357f264d6e7b9d1daf4f5fea58470c378",
+      "physical_rows": 783,
+      "sha256": "0cf247a1f558c99b52f6b232ae54f2f777b5c67899f54767a7f23430e54cd961",
+      "size_bytes": 110365
+    },
+    "ExcelBinOutput/PushTipsConfigData.json": {
+      "git_blob_oid": "1b6afab1ed4b697087138830ddeab1d300e598db",
+      "physical_rows": 1786,
+      "sha256": "533cfe1082cc0156d1d94c930da56bed3df53c284b6c134dbe8ff34f27b0b503",
+      "size_bytes": 566724
+    },
+    "ExcelBinOutput/QuestCodexExcelConfigData.json": {
+      "git_blob_oid": "1615ae3c617c987a0c346b5043625545d1cb15c0",
+      "physical_rows": 499,
+      "sha256": "64963aeddbf1fc6b17b01638af39c37bf949f896fd98faa9c9839bccff8eb6bc",
+      "size_bytes": 51977
+    },
+    "ExcelBinOutput/QuestExcelConfigData.json": {
+      "git_blob_oid": "0788265f3a267a22abf2c7e33f04705704a04b0d",
+      "physical_rows": 17814,
+      "sha256": "c8561299f543456573b0fa16404e210bcd2ecf84ce5006eb63dd4b2845137a87",
+      "size_bytes": 7903186
+    },
+    "ExcelBinOutput/SceneExcelConfigData.json": {
+      "git_blob_oid": "68727cf01bc7ab203278cb015f6301d28cc1e45c",
+      "physical_rows": 2377,
+      "sha256": "c455832a1637bd6487e97bfb95da8427aab395c3f5674de217057edf1005765f",
+      "size_bytes": 574636
+    },
+    "ExcelBinOutput/ViewCodexExcelConfigData.json": {
+      "git_blob_oid": "a409b3d5c177011e5f95b9682daf3f9fa684744c",
+      "physical_rows": 268,
+      "sha256": "ac5652a7dd4e19f29b2e422b5a476e6a7311a73e6a027656c29e53d76bbfc25c",
+      "size_bytes": 84916
+    },
+    "ExcelBinOutput/WorldAreaConfigData.json": {
+      "git_blob_oid": "fe7701f39fc9c918bc92121d7e693b78ced78906",
+      "physical_rows": 578,
+      "sha256": "ea1182382d4ae5c2cca1f4f6fe752eee23df792ef7e12463de3eb82f90442b63",
+      "size_bytes": 177339
+    },
+    "TextMap/TextMapCHS.json": {
+      "git_blob_oid": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    "TextMap/TextMapEN.json": {
+      "git_blob_oid": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    "TextMap/TextMapJP.json": {
+      "git_blob_oid": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    "TextMap/TextMap_MediumCHS.json": {
+      "git_blob_oid": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    "TextMap/TextMap_MediumEN.json": {
+      "git_blob_oid": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    "TextMap/TextMap_MediumJP.json": {
+      "git_blob_oid": "ed32257c5b6329e65fef837189d111262d655c87",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  },
+  "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "status": "frozen_build_input_not_acceptance",
+  "textmap_paths": [
+    "TextMap/TextMapCHS.json",
+    "TextMap/TextMapEN.json",
+    "TextMap/TextMapJP.json",
+    "TextMap/TextMap_MediumCHS.json",
+    "TextMap/TextMap_MediumEN.json",
+    "TextMap/TextMap_MediumJP.json"
+  ]
+}

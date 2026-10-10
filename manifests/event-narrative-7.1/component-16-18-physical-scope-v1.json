@@ -1,0 +1,274 @@
+{
+  "accepted_inputs": {
+    "dialog": {
+      "path_machine_local": "/tmp/genshin-lore-narrative71-dialog-v4-a.sqlite",
+      "release": {
+        "contract": "dialog-7.1-narrative-physical-v1",
+        "counts": {
+          "locator": 417117,
+          "physical_candidate": 348414,
+          "physical_row": 203908,
+          "text_candidate": 312951,
+          "text_owner": 611724,
+          "text_resolution": 1835172
+        },
+        "family": "dialog",
+        "implementation": {
+          "schemas/narrative-7.1-npc-dialog-reminder.sql": "4d051fc0cf4d50c60e4058dffc3a1c7d79d68bcca6cbaca9abc5c49ab5610391",
+          "src/genshin_lore/loading_tips_source.py": "32e50f9b23d0746dbaab8874683fcd2bb776b213b82d19e902b9cf0b4061234c",
+          "src/genshin_lore/narrative_7_1_build.py": "531d052ab5b1b4e280a104ac043031ed0d53e0ce05426d6b5f3c669a75a8eae6",
+          "src/genshin_lore/narrative_7_1_contract.py": "3fe846a0c23cb92ef3a5c7179eeb800236acfd12e7fb84cb920677637c35d8d7"
+        },
+        "parser": "narrative71-parser:a59907e1829a5c83a9aa3c9be22be0faa1355f2ead3c216b6493f9d971c1b443",
+        "product_accepted": false,
+        "research_corpus_accepted": false,
+        "run": "narrative71-run:6dd5ad376c756a9031d0e09be1a730168d096b29d1e7b0d289e56b77e5431e92",
+        "schema_sha256": "4d051fc0cf4d50c60e4058dffc3a1c7d79d68bcca6cbaca9abc5c49ab5610391",
+        "scope_sha256": "cb46d08b18bb0493ef398fea54d840a7a5ad03fbd1cc23366db6cfb6ad0e759a",
+        "semantic_mapping": "source_authored_declared_fields",
+        "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+        "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+        "source_files": [
+          {
+            "git_blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+            "path": "ExcelBinOutput/DialogExcelConfigData.json",
+            "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+            "size_bytes": 93248673
+          },
+          {
+            "git_blob": "ddb11e1adb9a33156c96b4e483f086c3f11acfe1",
+            "path": "ExcelBinOutput/NpcExcelConfigData.json",
+            "sha256": "f1c06cc20c6b0622df66eed8a4f14b078edf249d85bac6b9b1ad8d21e69b266a",
+            "size_bytes": 7166501
+          },
+          {
+            "git_blob": "952be4670f64e062b797d5f89ae105c4a632958c",
+            "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+            "sha256": "57bd1fa49d0d7922378cf2f92b886ff200b921cdf0b46d791bd1bf8f89463fac",
+            "size_bytes": 5082170
+          },
+          {
+            "git_blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+            "path": "TextMap/TextMapCHS.json",
+            "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+            "size_bytes": 49920231
+          },
+          {
+            "git_blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+            "path": "TextMap/TextMapEN.json",
+            "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+            "size_bytes": 55719620
+          },
+          {
+            "git_blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+            "path": "TextMap/TextMapJP.json",
+            "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+            "size_bytes": 63445300
+          },
+          {
+            "git_blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+            "path": "TextMap/TextMap_MediumCHS.json",
+            "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+            "size_bytes": 18801724
+          },
+          {
+            "git_blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+            "path": "TextMap/TextMap_MediumEN.json",
+            "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+            "size_bytes": 20704568
+          },
+          {
+            "git_blob": "ed32257c5b6329e65fef837189d111262d655c87",
+            "path": "TextMap/TextMap_MediumJP.json",
+            "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+            "size_bytes": 23059132
+          }
+        ],
+        "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+        "textmap_policy": "retain_all_main_and_medium_physical_candidates; no_cross_snapshot_fallback"
+      },
+      "runtime_manifest": "manifests/narrative-7.1/runtime.json",
+      "runtime_manifest_sha256": "c93be79eaf2d8d3426c835235fc617deac1daf1841b8c79498dee3f46dc1b1c9",
+      "sha256": "7d5deb13999ef7262b3eb97165e452b564929b6e66bc434b9f16f44d3da3caf6",
+      "size_bytes": 507940864
+    },
+    "event15_photo": {
+      "path_machine_local": "/tmp/event-photo-echo-7.1-final-a.sqlite",
+      "release": {
+        "contract": "event-narrative-evidence-v3",
+        "counts": {
+          "event_narrative_relation": 91,
+          "event_narrative_relation_candidate": 69,
+          "event_narrative_row": 92,
+          "event_narrative_slot": 1497,
+          "event_narrative_text": 652
+        },
+        "implementation": {
+          "schemas/event-photo-echo-7.1-v1.sql": "17a2024fb8e4b6baa45dbadc408817dc01b29363951d7b1d106e698a42833e52",
+          "src/genshin_lore/event_7_1_source.py": "df46d4c4f05cfd7e402a1abf1bf199190b1bdbadae57387fbd754750724b21ec",
+          "src/genshin_lore/event_photo_echo_7_1_build.py": "1d99bb89f3dea95308f18d761965afee47d7b7daade2076e1fbd92b875186822"
+        },
+        "owner_role_counts": {
+          "mapping_unresolved": 210,
+          "resolved": 1287
+        },
+        "parser_build_id": "event-narrative:04a8819139bc526ab1f33ecbd58445201c119730",
+        "relation_occurrences": 91,
+        "relation_state_counts": {
+          "missing": 22,
+          "resolved_unique": 69
+        },
+        "run_id": "event-narrative:3bd012e95fb8af53f636da952e8f7137101abd1e",
+        "scope_sha256": "7446a36a5ac6a6928aea43c91fc6d0420f333f23e5dfdb9f1b12c885abb455b4",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+        "text_state_counts": {
+          "missing": 845,
+          "resolved_main": 652
+        }
+      },
+      "runtime_manifest": "manifests/event-narrative-7.1/component-15-runtime-v1.json",
+      "runtime_manifest_sha256": "8583ac322a83dc51839dae142ea76efe0d5f2062ba121b77a4ab88dc352feb27",
+      "sha256": "bb50fe10bedec9315a73625b98ae96a196c2060f0f8697075329ef644436a354",
+      "size_bytes": 1650688
+    },
+    "reminder": {
+      "path_machine_local": "/tmp/genshin-lore-narrative71-reminder-v4-a.sqlite",
+      "release": {
+        "contract": "reminder-7.1-narrative-physical-v1",
+        "counts": {
+          "locator": 18541,
+          "physical_candidate": 5884,
+          "physical_row": 18541,
+          "text_candidate": 94544,
+          "text_owner": 37189,
+          "text_resolution": 111567
+        },
+        "family": "reminder",
+        "implementation": {
+          "schemas/narrative-7.1-npc-dialog-reminder.sql": "4d051fc0cf4d50c60e4058dffc3a1c7d79d68bcca6cbaca9abc5c49ab5610391",
+          "src/genshin_lore/loading_tips_source.py": "32e50f9b23d0746dbaab8874683fcd2bb776b213b82d19e902b9cf0b4061234c",
+          "src/genshin_lore/narrative_7_1_build.py": "531d052ab5b1b4e280a104ac043031ed0d53e0ce05426d6b5f3c669a75a8eae6",
+          "src/genshin_lore/narrative_7_1_contract.py": "3fe846a0c23cb92ef3a5c7179eeb800236acfd12e7fb84cb920677637c35d8d7"
+        },
+        "parser": "narrative71-parser:a59907e1829a5c83a9aa3c9be22be0faa1355f2ead3c216b6493f9d971c1b443",
+        "product_accepted": false,
+        "research_corpus_accepted": false,
+        "run": "narrative71-run:bf0c2e788b5ee7cefe0a6417cfd248d23e293c0ee946e5554f31f1a8748124f1",
+        "schema_sha256": "4d051fc0cf4d50c60e4058dffc3a1c7d79d68bcca6cbaca9abc5c49ab5610391",
+        "scope_sha256": "cb46d08b18bb0493ef398fea54d840a7a5ad03fbd1cc23366db6cfb6ad0e759a",
+        "semantic_mapping": "unresolved",
+        "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+        "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+        "source_files": [
+          {
+            "git_blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+            "path": "ExcelBinOutput/DialogExcelConfigData.json",
+            "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+            "size_bytes": 93248673
+          },
+          {
+            "git_blob": "ddb11e1adb9a33156c96b4e483f086c3f11acfe1",
+            "path": "ExcelBinOutput/NpcExcelConfigData.json",
+            "sha256": "f1c06cc20c6b0622df66eed8a4f14b078edf249d85bac6b9b1ad8d21e69b266a",
+            "size_bytes": 7166501
+          },
+          {
+            "git_blob": "952be4670f64e062b797d5f89ae105c4a632958c",
+            "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+            "sha256": "57bd1fa49d0d7922378cf2f92b886ff200b921cdf0b46d791bd1bf8f89463fac",
+            "size_bytes": 5082170
+          },
+          {
+            "git_blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+            "path": "TextMap/TextMapCHS.json",
+            "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+            "size_bytes": 49920231
+          },
+          {
+            "git_blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+            "path": "TextMap/TextMapEN.json",
+            "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+            "size_bytes": 55719620
+          },
+          {
+            "git_blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+            "path": "TextMap/TextMapJP.json",
+            "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+            "size_bytes": 63445300
+          },
+          {
+            "git_blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+            "path": "TextMap/TextMap_MediumCHS.json",
+            "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+            "size_bytes": 18801724
+          },
+          {
+            "git_blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+            "path": "TextMap/TextMap_MediumEN.json",
+            "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+            "size_bytes": 20704568
+          },
+          {
+            "git_blob": "ed32257c5b6329e65fef837189d111262d655c87",
+            "path": "TextMap/TextMap_MediumJP.json",
+            "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+            "size_bytes": 23059132
+          }
+        ],
+        "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+        "textmap_policy": "retain_all_main_and_medium_physical_candidates; no_cross_snapshot_fallback"
+      },
+      "runtime_manifest": "manifests/narrative-7.1/runtime.json",
+      "runtime_manifest_sha256": "c93be79eaf2d8d3426c835235fc617deac1daf1841b8c79498dee3f46dc1b1c9",
+      "sha256": "c831ea4f77741ff7b95c10c83e478011622d80f7becdfd20bc6d7262db8edc94",
+      "size_bytes": 41635840
+    }
+  },
+  "contract": "event16-18-7.1-physical-selection-v1",
+  "event15_scope": "manifests/event-narrative-7.1/component-15-scope-v1.json",
+  "event15_scope_sha256": "7446a36a5ac6a6928aea43c91fc6d0420f333f23e5dfdb9f1b12c885abb455b4",
+  "files": [
+    {
+      "blob": "e2a7323f8f6723ae5f6651082546247b7d6b536c",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "sha256": "5f2ed6159683fae64dec7bf82009f3bc78208ea3695e5369e90568d91b19a640",
+      "size_bytes": 127449
+    },
+    {
+      "blob": "d201cb6b08786c4545dc14b9093575ea09c5751a",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "sha256": "97c537cb1598c732c0f78f1b343b6d7a368362b861ce6f2548aed0557c7d0338",
+      "size_bytes": 21980
+    },
+    {
+      "blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+      "size_bytes": 93248673
+    },
+    {
+      "blob": "952be4670f64e062b797d5f89ae105c4a632958c",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "sha256": "57bd1fa49d0d7922378cf2f92b886ff200b921cdf0b46d791bd1bf8f89463fac",
+      "size_bytes": 5082170
+    },
+    {
+      "blob": "3b54b562a93446233a09a39db954b7759fe31fef",
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "sha256": "3c3a70e0976d0a9f994c785940663e402c1b7422031ecc625807e079bd46ac5c",
+      "size_bytes": 46749784
+    }
+  ],
+  "historical_scope_sha256": {
+    "event16_scope": "b610fba2bb381f5b4091e8b6c518fe7fd11728253e8e1ab607a1bb40aa6471e3",
+    "event18_scope": "456e756072d1a9b18666e93e3e5154c7339ce6476697052648a0ca51889f749c"
+  },
+  "reminder_semantic_owner_mapping_unresolved": true,
+  "selection": {
+    "16": "photograph complement plus EchoShell-derived Dialog/Reminder/TalkExcel support",
+    "18": "complete Dialog/Reminder physical complement of component16"
+  },
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272"
+}

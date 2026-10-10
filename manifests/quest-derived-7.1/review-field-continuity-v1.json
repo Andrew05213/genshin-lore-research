@@ -1,0 +1,43 @@
+{
+  "contract": "quest-review-7.1-field-continuity-v1",
+  "verdict": "PROVEN_PHYSICAL_FIELD_CONTINUITY_NOT_LOGICAL_IDENTITY",
+  "alignment": "same physical row ordinal plus same source-owned id; physical comparison only, no logical identity",
+  "old_source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "new_source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_seals": {
+    "ExcelBinOutput/QuestReviewExcelConfigData.json": {
+      "old_sha256": "2b5afd0cdccb1e1cec63ebbe6640a91143ade31c5fe9b94b5cfc96718a33f610",
+      "old_git_blob": "bcc89a9364cb8bc5c020949e75dbe365049e7ca6",
+      "new_sha256": "edc6d54debdf1905396f03d82a5f5fc34579681c32dd80ef52170df1662f3c92",
+      "new_git_blob": "19b04540499ff16e0e59548fdd7733514c176abb"
+    },
+    "ExcelBinOutput/QuestReviewTabGroupExcelConfigData.json": {
+      "old_sha256": "173e68690ee1283cb1b24edbb1e9511a4c2597fd5eaa58e2c6234aa95375ec37",
+      "old_git_blob": "168385f70e47b44b9eee3eb4c10c9ef6461a9b34",
+      "new_sha256": "19d3eefe5d98d09e23c76444c2d128c2d3312d18dd82ee33784bbaf278411c8e",
+      "new_git_blob": "807b6b07882c1651e638329ed520bab646719e86"
+    }
+  },
+  "field_continuity": {
+    "ExcelBinOutput/QuestReviewExcelConfigData.json": [
+      {"old": "KHAPIAPJAHD", "new": "GJHKONEAHPC", "rows": 9, "present": 8, "mismatches": 0, "role": "member raw locator observation"},
+      {"old": "JIKNKEAFDJO", "new": "CGPCOFBDIFP", "rows": 9, "present": 9, "mismatches": 0, "role": "uninterpreted condition metadata"}
+    ],
+    "ExcelBinOutput/QuestReviewTabGroupExcelConfigData.json": [
+      {"old": "GIAIIFFDFNE", "new": "CCIHLEICLMF", "rows": 7, "present": 7, "mismatches": 0, "role": "four text hash locator slots"},
+      {"old": "BGOCCKKGLPH", "new": "PGLHIJCBJCE", "rows": 7, "present": 7, "mismatches": 0, "role": "uninterpreted male asset paths"},
+      {"old": "PFDNJJNHAOJ", "new": "LIIIELBGLEI", "rows": 7, "present": 7, "mismatches": 0, "role": "uninterpreted female asset paths"},
+      {"old": "BOGKOENEJLM", "new": "NJJJODOAICN", "rows": 7, "present": 7, "mismatches": 0, "role": "uninterpreted conditions"}
+    ]
+  },
+  "target_space_checks": {
+    "member_locator_count": 11,
+    "member_candidate_cardinality": {"one": 6, "two": 5},
+    "member_candidate_occurrences": 16,
+    "tab_text_locator_count": 28,
+    "tab_text_main_hits": {"CHS": 8, "EN": 7, "JP": 7}
+  },
+  "proof_script": "scripts/prove_quest_review_7_1_fields.py",
+  "historical_relation_status_preserved": "mapping_unresolved",
+  "cross_snapshot_identity_merge_count": 0
+}

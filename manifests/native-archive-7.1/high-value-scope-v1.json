@@ -1,0 +1,6162 @@
+{
+  "contract": "native26-7.1-physical-projection-scope-v1",
+  "event16_artifact": {
+    "path_machine_local": "/tmp/event16-7.1-selection-a.sqlite",
+    "sha256": "cda1f7481e4f3be953b0af4648b2a8118db3e5b1a8479b63f54cbb7d6766b361",
+    "size_bytes": 729088
+  },
+  "event16_contract": "event16-18-7.1-physical-selection-v1",
+  "event16_manifest_sha256": "6dfd0c8bc81b115f41ed6518b1867bdb177aae66d278af02ca1ab5bb61e7e506",
+  "event16_parser": "event16-18-71:81e52abf11003b4d92281ab24c80f95b45db5926",
+  "event16_reuse_targets": [
+    {
+      "ordinal": 2887,
+      "raw_sha256": "51504696e006d4511a7f6bb9a763a6b6726ca7f2299d53499589182663b86d72",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2887",
+      "target_occurrence_id": "event16-18-71:3d5bef807b02f0094630aa96803d78074fe5fce4"
+    },
+    {
+      "ordinal": 2888,
+      "raw_sha256": "dc0b69714191ead7501e1a3fa88f65a0dfa5d923099c1be8e8511a99af42179c",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2888",
+      "target_occurrence_id": "event16-18-71:fcbfd119b27287bb13ef298fa45803b77e5c1379"
+    },
+    {
+      "ordinal": 2889,
+      "raw_sha256": "32a590710e8ffe9022de8412ba93fb740252fba8c442b7804aab0d2c25d6404d",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2889",
+      "target_occurrence_id": "event16-18-71:0e310bf1c4aec173917f1ea4c4c80b993582ad32"
+    },
+    {
+      "ordinal": 2890,
+      "raw_sha256": "8d77de742aa310762813c2a522304bb30518597b8713be465b9f8a26bec9886c",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2890",
+      "target_occurrence_id": "event16-18-71:c82a9d7c2482564446238f26a3e67526d07a53b6"
+    },
+    {
+      "ordinal": 2891,
+      "raw_sha256": "ebbe39d774285892f2609cc3802080c756b9f4f997777644f4c62a1804decf8e",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2891",
+      "target_occurrence_id": "event16-18-71:d6478213f507be3a184f07fc4f383521dac965ea"
+    },
+    {
+      "ordinal": 2892,
+      "raw_sha256": "1b2d631c5968ed219b62b54d8601143f9d4e815cfeb9fd1f7ce4cb893b0d7d89",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2892",
+      "target_occurrence_id": "event16-18-71:f0236737c3f86d6fef2050da37b6d1c6f362c462"
+    },
+    {
+      "ordinal": 2893,
+      "raw_sha256": "77ca7b3da0064c9be5641ff22ddc2f6bf5de479047017505b7d978bb80598874",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2893",
+      "target_occurrence_id": "event16-18-71:0a42d28e36feddc14c91a5140f242bc73e61a66c"
+    },
+    {
+      "ordinal": 2894,
+      "raw_sha256": "872aac5cbb45f679ba1b1727f0de2a54e755f64ce24649dbaf65aab235723521",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2894",
+      "target_occurrence_id": "event16-18-71:7b8e72d73792df7dc0211d316c37788517095e39"
+    },
+    {
+      "ordinal": 2895,
+      "raw_sha256": "e402b3c22c10f79988095780fda5d89db03548a8b80d8cb41e0c27d95f917ce9",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2895",
+      "target_occurrence_id": "event16-18-71:5173ad1d6358bd0c62b24d906a541f5948d81153"
+    },
+    {
+      "ordinal": 2896,
+      "raw_sha256": "3521c30d3925cbf9f3d033456785c9fedd9f6d655cf7a59b066e65e741e7ae15",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2896",
+      "target_occurrence_id": "event16-18-71:e3be525212a99673b3cf697a22bdb2377244b0c6"
+    },
+    {
+      "ordinal": 2897,
+      "raw_sha256": "b660f46be0a279bc337a07f1d763d0ed19b096e0a9e0a462b2e1afd314c30236",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2897",
+      "target_occurrence_id": "event16-18-71:ea3d9dcf86c33786b2cde1810aba1e932b411754"
+    },
+    {
+      "ordinal": 2898,
+      "raw_sha256": "a93085465403f80554c1ea749b9b69480d92153f90345784a4c7593794b4297c",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2898",
+      "target_occurrence_id": "event16-18-71:cde235732be729ebfe2c6dd5cca2c7903ed706d0"
+    },
+    {
+      "ordinal": 2899,
+      "raw_sha256": "49b207cfed4b3c8d5ff408ce3e1eb49e6b6e808f1a6dac75f2cf5ec22e3fbfe0",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2899",
+      "target_occurrence_id": "event16-18-71:d8953f561de333b913fe4762ff4db6512f668aba"
+    },
+    {
+      "ordinal": 2900,
+      "raw_sha256": "8956ec43c641fe481eeb33a3a4c04a79ec5574029d8b9cda55d0bee452bb25f4",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2900",
+      "target_occurrence_id": "event16-18-71:83d1f002d1fc965cee82c400d46aec66ded19f4d"
+    },
+    {
+      "ordinal": 2901,
+      "raw_sha256": "138d4090dfd44cb2c47dbc662089203905abb1b2d81cfd18c13fff4ee694a32e",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2901",
+      "target_occurrence_id": "event16-18-71:e004fefc585821fa3d26a0c231dad6a37c71d88a"
+    },
+    {
+      "ordinal": 2902,
+      "raw_sha256": "861f9738ada6e4a323d1a4414fa2feef943baf03778f3a2ed731491c2b63dfc3",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2902",
+      "target_occurrence_id": "event16-18-71:12cbcd918ef8457085e7bf84e7c13690d612bfd3"
+    },
+    {
+      "ordinal": 2903,
+      "raw_sha256": "cf8c6749251eb652f31308f016f915044f0f66837d3ba8ec9c7e842ae4a1a5f5",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2903",
+      "target_occurrence_id": "event16-18-71:219aa908c8c4b36299224ebc481306df2ea310b5"
+    },
+    {
+      "ordinal": 2904,
+      "raw_sha256": "2b1c01a08065fdce6a80d38739e07205b3633c274431c2ff148a724f800b993a",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2904",
+      "target_occurrence_id": "event16-18-71:7f8e42d7a09601f44763c77de9f7dbc15076d155"
+    },
+    {
+      "ordinal": 2905,
+      "raw_sha256": "9f0f4365bf9667960988ccd0a239d3abcf620a1335894276e543d4384497c03d",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2905",
+      "target_occurrence_id": "event16-18-71:d8b77e86764e6fb88bb5d04453888b460b1d0a15"
+    },
+    {
+      "ordinal": 2906,
+      "raw_sha256": "c9d7a4e4fab84118698d4bc29e2c46945c949ef6516111aebae524da79ae3a82",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2906",
+      "target_occurrence_id": "event16-18-71:d564a5c5c57e1c2dd84276b7879a0d0d6713a199"
+    },
+    {
+      "ordinal": 2907,
+      "raw_sha256": "c553fa14efee9bd468bb7305f4cc08ae15506ef589f3c3e94befc0b5c4ca44ed",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2907",
+      "target_occurrence_id": "event16-18-71:580ed1d0196e7fa04ee9c8322140bbad8cce7c63"
+    },
+    {
+      "ordinal": 2908,
+      "raw_sha256": "4b9b47bb7fd4fa78ef1d78a8ae65313a54103109b2672ff2af9670439a18ab1a",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2908",
+      "target_occurrence_id": "event16-18-71:f6afc484fd7613f3dd61655befe590b4cd630e49"
+    },
+    {
+      "ordinal": 2909,
+      "raw_sha256": "7f08953e21d6fb3eed6594f954a2908142f8c577ec20be039b19dd31a2615a8a",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2909",
+      "target_occurrence_id": "event16-18-71:a887bdd18d0750cfbb2a467814fe7f23c7cdb2d0"
+    },
+    {
+      "ordinal": 2910,
+      "raw_sha256": "2eb482c554677c50c4ac211ad2fdb502276f8e9bcec0981958c7631f21431f2e",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2910",
+      "target_occurrence_id": "event16-18-71:a4660a83eb5cc9d6cebf54d19412a1593dec4a9f"
+    },
+    {
+      "ordinal": 2911,
+      "raw_sha256": "55b118c09795bfb31af61b18619cf546cc516b606d75570b94152a6a9a5c6a86",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2911",
+      "target_occurrence_id": "event16-18-71:38f8751c88eef0514e8544f54f2192e47f6700fe"
+    },
+    {
+      "ordinal": 2912,
+      "raw_sha256": "f49909f479185c5b8db9689c20eb57682563b04ac72041a73c83c52b469f143e",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2912",
+      "target_occurrence_id": "event16-18-71:5dfebf454e93e448812d6e37398468fe031bb92b"
+    },
+    {
+      "ordinal": 2913,
+      "raw_sha256": "36e23b25c52cc8096a6f21db45d3d6369c7fa4b63a47fa4224eef2b02d72ecc4",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2913",
+      "target_occurrence_id": "event16-18-71:f76bfaddbbbe3a894a5f9b4a063f4f1fe0bc9097"
+    },
+    {
+      "ordinal": 2914,
+      "raw_sha256": "fa4cff5ba8943fdb4a099e31e0012cbbf81a8ebc5e91ede99cdd20086dbc58c2",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2914",
+      "target_occurrence_id": "event16-18-71:459ae9de11f16db4fea021d1e1c89bed632eafbe"
+    },
+    {
+      "ordinal": 2915,
+      "raw_sha256": "27614d0bd4ce9591e51142710da6490060f5e5a01bc1841ccf531c049ea5b58d",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2915",
+      "target_occurrence_id": "event16-18-71:05d5b9d7a2a504ed99f18deef99f921bdb23583c"
+    },
+    {
+      "ordinal": 2916,
+      "raw_sha256": "bce783a967588b623f7c5ac9715db9292401265be8c8bce7013c3389ee250cf9",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2916",
+      "target_occurrence_id": "event16-18-71:bbbdd4780f34534068ee86b72ee675318cb6c9c0"
+    },
+    {
+      "ordinal": 2917,
+      "raw_sha256": "b408946fa28291b9496fbfd16615cd3ed8a88a4d7d45b5f345401b6ad01c9dcf",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2917",
+      "target_occurrence_id": "event16-18-71:e7e2016759afa2844cd06971572bdbe0be0b3f3e"
+    },
+    {
+      "ordinal": 2918,
+      "raw_sha256": "acc81f8a4ebb403eadcabbbc53801a345ebb65ece745a7e655520247d56b7f9b",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2918",
+      "target_occurrence_id": "event16-18-71:50b1a73d059794b7871704f2b067211e8105933e"
+    },
+    {
+      "ordinal": 2936,
+      "raw_sha256": "d2e24fcf24f310fe71b178b91663b92572ae76af3ad4a7007e854b7fbc410966",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2936",
+      "target_occurrence_id": "event16-18-71:2ceeea8de5f71687fa4982a23232395e95b08091"
+    },
+    {
+      "ordinal": 2937,
+      "raw_sha256": "94bba2a379c7c08a1080fc799a4451943aef341ca2bad24caa9c3804133115cf",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2937",
+      "target_occurrence_id": "event16-18-71:483fe1f783c8373cc37effdaa14eaa94c4d1e07f"
+    },
+    {
+      "ordinal": 2938,
+      "raw_sha256": "95b9f43ae688b96c6c9509f7a6fc9d5dbeac05e3b206949ff144b220fcdcd6ad",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2938",
+      "target_occurrence_id": "event16-18-71:f41d3a4ce2e88eb481f80785736a9a7092e4b08f"
+    },
+    {
+      "ordinal": 2939,
+      "raw_sha256": "9481cfa946a79118e0797e3c73c6b37fb1d4b70413a0743fbf8a8adcc9424f01",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2939",
+      "target_occurrence_id": "event16-18-71:8e4ff100670fa6d44ec3589fddf2b19c4ee422e9"
+    },
+    {
+      "ordinal": 2940,
+      "raw_sha256": "b03c3f55995feefd6605723ffe6e850b4670813635ecb56de3d0d592a0dfba05",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2940",
+      "target_occurrence_id": "event16-18-71:0a05c4c1e868aca52ca04b475f56601f55725fac"
+    },
+    {
+      "ordinal": 2941,
+      "raw_sha256": "0430fbe86f7d7b7e3f095ce60e6e01cad902af837c3b7be876cf9f85327c7b04",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2941",
+      "target_occurrence_id": "event16-18-71:a7b39afa98c397288c75a8f579ae0974e0fb6d35"
+    },
+    {
+      "ordinal": 2942,
+      "raw_sha256": "c30d782bfc5fa304583d675f49da426e0a204c75bd7d2de16b5ad813845e0bb4",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2942",
+      "target_occurrence_id": "event16-18-71:dee0a3554715422aa60ac2046eb326cc049e8da3"
+    },
+    {
+      "ordinal": 2943,
+      "raw_sha256": "3c8294b30d2770de66be81094e81d032245c50d5422458487e4b07100439936e",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2943",
+      "target_occurrence_id": "event16-18-71:dbae8cce9468bf0b4f99d967bfd06bb8255aa9fc"
+    },
+    {
+      "ordinal": 2944,
+      "raw_sha256": "61de1df77049a836436bc00e22ff9f5ef9ca5d2294ef4ea41d1a82696243d283",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2944",
+      "target_occurrence_id": "event16-18-71:dd616c91b94f8355e3d2c80d812fa933e34410db"
+    },
+    {
+      "ordinal": 2945,
+      "raw_sha256": "f41594a3246f37b61922edac883922ede12f50cfeca9a60c3e1e831dbc02bc85",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2945",
+      "target_occurrence_id": "event16-18-71:614b0bdab6e5a8d21103278d089e680a40a8ab94"
+    },
+    {
+      "ordinal": 2946,
+      "raw_sha256": "0683af0580732eb9e6b62ed33baa0b720b2dc41f989781d67c564b6676949514",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2946",
+      "target_occurrence_id": "event16-18-71:2bdab16aa76c904d073f762711c3ce40ddccda34"
+    },
+    {
+      "ordinal": 2947,
+      "raw_sha256": "c90a3748c89686d56d66a9255ff7b191a450236b95e9eb2a93a54c08a7d394e4",
+      "source_path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "source_pointer": "/2947",
+      "target_occurrence_id": "event16-18-71:9bfe65980967c4e6d9fcded93327201d6e8116e8"
+    }
+  ],
+  "event16_run": "event16-18-71:5e39997d0aa93eb0d94aae94e4fb5683a8ecb7e5",
+  "files": [
+    {
+      "blob": "023adae3af25f509217271fc84206149f46ccbcc",
+      "path": "ExcelBinOutput/ActivityBubbleDramaPhotoQuestTargetExcelConfigData.json",
+      "sha256": "85583e9ab17c4d816bb3524dfb2554e3c5d78d9ad0542ae28f546c7437e1c19d",
+      "size_bytes": 510
+    },
+    {
+      "blob": "b0c3a1db4b65e431fc565150ad55a4bf01572958",
+      "path": "ExcelBinOutput/ActivityLanternRiteV6LanternNPCExcelConfigData.json",
+      "sha256": "a202d0dae9b704da044146f8539e6877600fb3fd4aa4cb199f1561ee977f0f59",
+      "size_bytes": 2726
+    },
+    {
+      "blob": "9a5dc1e5bad6539f6da7c98ad45dc579d88f2c0e",
+      "path": "ExcelBinOutput/ActivityLanternRiteV6PhotoNPCExcelConfigData.json",
+      "sha256": "ca005a66f36922f75bf67f8232f3bf2b5ce5d39f2e5f4e09f1b28ddfddb9e8d5",
+      "size_bytes": 2236
+    },
+    {
+      "blob": "c22249f5b871a23985678c05754a4936c98ba122",
+      "path": "ExcelBinOutput/ActivityNatlanRaceAlbumExcelConfigData.json",
+      "sha256": "28954318b2ef75947cb68f334615bd118d8377c0a605ab43599fd3ac04c7733c",
+      "size_bytes": 353
+    },
+    {
+      "blob": "29110a821c9f8fd534112563f40b7b165cbde533",
+      "path": "ExcelBinOutput/ActivityRockBoardExploreQuestExcelConfigData.json",
+      "sha256": "9337f23b89be8880d19e1a5dff7ddc3967554f94cead35c10a3388dd25d2264b",
+      "size_bytes": 192
+    },
+    {
+      "blob": "d24a2fbf8da680e69ad79c760a9903474bf9ea92",
+      "path": "ExcelBinOutput/ActivitySnowRaceHideTutorialExcelConfigData.json",
+      "sha256": "3bbd3683edb55e806e031d9875b6ff102e7c4c8dd9fdaf2c4fcbe4461a03b0d4",
+      "size_bytes": 1338
+    },
+    {
+      "blob": "db91536f099a6f200f01d33d9f25a85d3f7bcce1",
+      "path": "ExcelBinOutput/ActivityVideoSheetExcelConfigData.json",
+      "sha256": "28105b204f26b39d076d64155e7fcc417dc6da036b3022ad4a05808c2784ba5b",
+      "size_bytes": 1039
+    },
+    {
+      "blob": "832be47445aca53306606404463d3c9430e6e9ea",
+      "path": "ExcelBinOutput/ActivityVintageQuestDataExcelConfigData.json",
+      "sha256": "39621224d6bc1b9ce5624e2d6b7aee37b93d89a5568bbb4133055d99f0b1705e",
+      "size_bytes": 610
+    },
+    {
+      "blob": "71eb50ef0fa5fad20d69d4d46b75282d574b37ab",
+      "path": "ExcelBinOutput/AnimalDescribeExcelConfigData.json",
+      "sha256": "104e51248b6749c460bd1a2df027414bdb0eae3648c6c11bc82e1cf25c6102ae",
+      "size_bytes": 48737
+    },
+    {
+      "blob": "57cb186b308e13b90590964b479673472f3df5cb",
+      "path": "ExcelBinOutput/AvatarSkillExcelConfigData.json",
+      "sha256": "4505c55534b71dfd8551011e0229ff8f0fb737da924ffbe558a50b18221a9575",
+      "size_bytes": 502318
+    },
+    {
+      "blob": "6750165833710da646f61a22882594ba682cf117",
+      "path": "ExcelBinOutput/AvatarTalentExcelConfigData.json",
+      "sha256": "3a1d0794cf67dd03b7eee95ec95b3955a03fe3340d1eb444db4f1a5663031292",
+      "size_bytes": 299171
+    },
+    {
+      "blob": "fdd96e0426570878ec4b8eaef6ea60b71ed60707",
+      "path": "ExcelBinOutput/AvatarVideoSheetExcelConfigData.json",
+      "sha256": "77a8cba3c24ba78d63c0169c658d52b3b07d6e441a5572189f8c6b2b228bb136",
+      "size_bytes": 18796
+    },
+    {
+      "blob": "4bf02bf948a16c50d80f359001000eb39b42365f",
+      "path": "ExcelBinOutput/AvatarWeaponSkinExcelConfigData.json",
+      "sha256": "93a74aa1a5c9baa96fb00108d05c56e279f32703839796284889dc16c0b2556a",
+      "size_bytes": 20995
+    },
+    {
+      "blob": "5643c7ce4ba759cbf914c81c689dba2adf5926e8",
+      "path": "ExcelBinOutput/AvatarWeaponSkinGroupExcelConfigData.json",
+      "sha256": "541134b6bfa8d585d307a7abc74528625e08976ec4d3cb0d8309bd08cbcd686b",
+      "size_bytes": 721
+    },
+    {
+      "blob": "4efe745f031ad1f6262378c6aa16f30346cb062d",
+      "path": "ExcelBinOutput/BattlePassStoryExcelConfigData.json",
+      "sha256": "f321e355e381d70bcfc90a13b4e2e9aa948d6ebbc63812e96bf4a13c4843707f",
+      "size_bytes": 233
+    },
+    {
+      "blob": "a5c6abd071b5404bc31a75c8c9d308fed4c5c565",
+      "path": "ExcelBinOutput/BeyondAvatarVoiceExcelConfigData.json",
+      "sha256": "743e37976fcb61d9f37b3a100d41fffc7d4b9a1eafbc95720131aab9f2752585",
+      "size_bytes": 749
+    },
+    {
+      "blob": "519655262d5d3af493ad6542e0b4b477c46157cf",
+      "path": "ExcelBinOutput/BeyondCostumeDrawingExcelConfigData.json",
+      "sha256": "aeb84de039ae3061a12c8bc9251ca0b3d4b3ca9f7ef59d8f4f9d1188d9f1958d",
+      "size_bytes": 101559
+    },
+    {
+      "blob": "6f68bc3a990f6fcac532869705e80cd56a29e028",
+      "path": "ExcelBinOutput/BeyondCostumeExcelConfigData.json",
+      "sha256": "dc6d8524a45157e92941b96140772ceaf411078dd6d66c6c624469c2c616b139",
+      "size_bytes": 1748182
+    },
+    {
+      "blob": "e1cd1efebc611726ba86bf0ed1c4b6dccbb70b92",
+      "path": "ExcelBinOutput/BeyondCostumePostExcelConfigData.json",
+      "sha256": "f202f3c7d3c55c9888cd4d28b28d2ce982be66358f2839c72b8d316991e7b9cf",
+      "size_bytes": 4302
+    },
+    {
+      "blob": "44da62f72ca12aa482643b01c516da2829bfef0e",
+      "path": "ExcelBinOutput/BeyondCostumeSuitExcelConfigData.json",
+      "sha256": "997710950a5966185b501ba01d622a0d881bbce71ae5764b715d45bd1aa2cb52",
+      "size_bytes": 239217
+    },
+    {
+      "blob": "d4266cf93555e1d853c0745d9ea564c4b5474b74",
+      "path": "ExcelBinOutput/BeyondCostumeUIEntryExcelConfigData.json",
+      "sha256": "67effdcdeeaeb0e83658f51a11b8c58b02146e728f7e874e15605b7035fa5f58",
+      "size_bytes": 297
+    },
+    {
+      "blob": "cdb41908a6daf205b5d26d68d4f0db0e62a31a5c",
+      "path": "ExcelBinOutput/BeyondCostumeUISlotEntryExcelConfigData.json",
+      "sha256": "23d6f391cc0f91d5bb9968034b774cbe1aac1235bad3ee5b4aac76c77aee0f9b",
+      "size_bytes": 6546
+    },
+    {
+      "blob": "b881d513b6c1406db9c82296b0d0744f4efb5740",
+      "path": "ExcelBinOutput/BeyondHandbookWatcherExcelConfigData.json",
+      "sha256": "1eba105f89e5bbe71c639aeeab16fcf167916efcc816ac354d2ecd480d0ccf42",
+      "size_bytes": 4781
+    },
+    {
+      "blob": "89c95ee91e4145468c516e4b76d9d0f68a08ae33",
+      "path": "ExcelBinOutput/BeyondOfficialEntityExcelConfigData.json",
+      "sha256": "ccb8f59504b15c9da82d972ffb3ada2309db44728f52684c337c5a9ce625cbf7",
+      "size_bytes": 673421
+    },
+    {
+      "blob": "1d7b86464cdcca9a2aee8ba79900614c94dfbc20",
+      "path": "ExcelBinOutput/BlossomTalkExcelConfigData.json",
+      "sha256": "6c1e77bcf87c468538a2f0f9900ed48bc92be80265ba2b06421ac2283a294981",
+      "size_bytes": 33079
+    },
+    {
+      "blob": "2bbbeb196e4d6df39b8a4b72afef5223690f8c87",
+      "path": "ExcelBinOutput/BounceConjuringChapterExcelConfigData.json",
+      "sha256": "b3b9c8cb6305c5a678ca0c4fdfddc237611737ac90142aea74acfe88973a9788",
+      "size_bytes": 1649
+    },
+    {
+      "blob": "a2825bbd6c4a3b2a9ade8f989a89e9c8cb8510ba",
+      "path": "ExcelBinOutput/BrickBreakerQuestExcelConfigData.json",
+      "sha256": "b3cb77b4dd0e29bd477f5834a2b5488755451962f15f4c111ff1e52a531f7f27",
+      "size_bytes": 1081
+    },
+    {
+      "blob": "2fe145b3f6cf4b355fb11d25f0becf6955231224",
+      "path": "ExcelBinOutput/BydMaterialExcelConfigData.json",
+      "sha256": "784271cce222fbebf20b26af4a036e2e4e43237e1fd15e6b03447294062ad656",
+      "size_bytes": 1099209
+    },
+    {
+      "blob": "3214a5169d6e2dc788c05f49571d28aac1160306",
+      "path": "ExcelBinOutput/ChannellerSlabChapterExcelConfigData.json",
+      "sha256": "abdbd9ca4d2356671e30e87ab272acde8eda576e328182539d1f9928d05141b2",
+      "size_bytes": 450
+    },
+    {
+      "blob": "d6eebe2dabab9137243075b71f2760280d16ca4d",
+      "path": "ExcelBinOutput/ChapterChangeExcelConfigData.json",
+      "sha256": "65a1dbf1c727233bcd38b2a744847af7d488f05d353fef9baffab1a5bd66956d",
+      "size_bytes": 652
+    },
+    {
+      "blob": "27fcb7c07ed1dec4799f94c2c363433aecbef1fa",
+      "path": "ExcelBinOutput/CoopCGExcelConfigData.json",
+      "sha256": "8eaf7e624ff8f58a4840e49f2e719104e6f64fc1e1525f03f0f7022df23862e6",
+      "size_bytes": 104725
+    },
+    {
+      "blob": "a2b2b19ea4782587c5c2956c8f35b1914cab839c",
+      "path": "ExcelBinOutput/CoopPointExcelConfigData.json",
+      "sha256": "418c21f9456757f116e6e506623706604716547118c3b1635501f9c0bc5de1d1",
+      "size_bytes": 120761
+    },
+    {
+      "blob": "c545b522f48e621b4581030fa7389a9117704767",
+      "path": "ExcelBinOutput/CustomGalleryProgressExcelConfigData.json",
+      "sha256": "1ed74f84c621b99d94651c348c7e2b246ea47547af011d2e23c5297b1c8d4f22",
+      "size_bytes": 144184
+    },
+    {
+      "blob": "cb1cd23fa804c46d169a52918ff9493399b21262",
+      "path": "ExcelBinOutput/CustomGalleryTargetExcelConfigData.json",
+      "sha256": "ecdc4893183d6734f1b52a4b666d4271044c6db66c54c2c00a2e8433eef9cdee",
+      "size_bytes": 60623
+    },
+    {
+      "blob": "5f8867fa1d6d414058bcd161acea17a92abec3da",
+      "path": "ExcelBinOutput/DisplayItemExcelConfigData.json",
+      "sha256": "1b8a02239dc9d6ec795e0b27968500c2c86b05603ad6c52b31a4388c6fdb46b2",
+      "size_bytes": 83516
+    },
+    {
+      "blob": "09049a1a8200c6dafc1b83404ab20b7ba4efa2a0",
+      "path": "ExcelBinOutput/DynamicBookDetailsExcelConfigData.json",
+      "sha256": "1bb95e6623092712ac75cd9297786bf001d9be6e186c00f9ea7bca272d413e15",
+      "size_bytes": 1913
+    },
+    {
+      "blob": "d3e085c73ac9498ab9e331d8bca205653a3ed368",
+      "path": "ExcelBinOutput/DynamicBookExcelConfigData.json",
+      "sha256": "ed8a7915ac379dc7fa36fbfc8eab3a8856a429af09cdcf1f99514be2889eba32",
+      "size_bytes": 243
+    },
+    {
+      "blob": "903b3b46bb07d564f3995dd9eb5d8dac1a5f54de",
+      "path": "ExcelBinOutput/FleurFairChapterExcelConfigData.json",
+      "sha256": "430ef7927424c323b5e7a8841bd355bdf389a2b4f6c7c13f1c55d748104ea5f6",
+      "size_bytes": 1053
+    },
+    {
+      "blob": "6557e0c7570055d579254f9eae602d531f03b804",
+      "path": "ExcelBinOutput/GCGCardExcelConfigData.json",
+      "sha256": "86c8a5d8c5b389eaa072d653d714722131c4fc7d1964e5bd8ad4069e155be274",
+      "size_bytes": 1576378
+    },
+    {
+      "blob": "026a83075ced5176693df0ef22c4762d56131a5a",
+      "path": "ExcelBinOutput/GCGCardFilterExcelConfigData.json",
+      "sha256": "8702155ef4ff8c1bc7d11cef2653b6e62a35bd8c9a2cb8bf74ad121360029ba5",
+      "size_bytes": 2508
+    },
+    {
+      "blob": "e1bb8b0352e95bf2fe7e25e5a2880df957b2b54d",
+      "path": "ExcelBinOutput/GCGGameExcelConfigData.json",
+      "sha256": "656758c5b963f40e6e8221514ddce507ddf9f003517c1d6d295919379ffc656b",
+      "size_bytes": 241737
+    },
+    {
+      "blob": "340f0bea0a7e42ae8355e456189fe0cb54c9ee1e",
+      "path": "ExcelBinOutput/GCGTalkDetailExcelConfigData.json",
+      "sha256": "ccc714ab7cf46236c7e8552275065bd7774b526d4c4147a6b0d018cbd9c063d2",
+      "size_bytes": 846049
+    },
+    {
+      "blob": "a90f349b8ab6c50e7a35b056194717a1521494da",
+      "path": "ExcelBinOutput/GCGTalkDetailIconExcelConfigData.json",
+      "sha256": "aad695d7139e2b5707ce8e18cd2cb7e382a964fc8b16bcce94e84d24f1bdc170",
+      "size_bytes": 33116
+    },
+    {
+      "blob": "98cda547141a05efa2ecd8125550a487309ad377",
+      "path": "ExcelBinOutput/GCGTalkExcelConfigData.json",
+      "sha256": "6fa34fca5f43abce22b05fd2e41071d553a4a886beb48884583ddfcc11c83773",
+      "size_bytes": 132593
+    },
+    {
+      "blob": "b1dd3f585f1055a0c630bf67d1c3fe2f4494aec3",
+      "path": "ExcelBinOutput/GCGWorldLevelExcelConfigData.json",
+      "sha256": "3fcc9507c39a0d1c0032755f38a213988609644631d93e3bd774903af470c3c4",
+      "size_bytes": 19742
+    },
+    {
+      "blob": "e6083ad777b1f427b5dbe3c8f689f3cee4475b64",
+      "path": "ExcelBinOutput/GadgetExcelConfigData.json",
+      "sha256": "161dfbf2ba88a11a56376b0357f48639262940a9f7078ffd1121802f3c759ca8",
+      "size_bytes": 10122675
+    },
+    {
+      "blob": "10e68f7c64fa8143ce7ac723caac7a9ff4e69d87",
+      "path": "ExcelBinOutput/GalleryExcelConfigData.json",
+      "sha256": "c0f942e2cb72c6473f6d133a37486fe51cf5e5e3fb4b5cc693884a0aa5badb99",
+      "size_bytes": 916881
+    },
+    {
+      "blob": "6fe72be53ffac3275f9657c3f51557b6d5e5a0ae",
+      "path": "ExcelBinOutput/HandbookMainQuestGuideExcelConfigData.json",
+      "sha256": "30d0599b3fcf75f0405ee1e074720ae6142bcdffaa0733d981a62d0e1315fa70",
+      "size_bytes": 7018
+    },
+    {
+      "blob": "23e75a713c1b877160a1e616144a7287cfde7a7f",
+      "path": "ExcelBinOutput/HomeWorldAreaComfortExcelConfigData.json",
+      "sha256": "2ae6be614772dadb26a76e2075f0443b1755aa2f7d45fc59ffa956375e19d1ea",
+      "size_bytes": 43164
+    },
+    {
+      "blob": "b608aa7a50cd830f5f2ae73ac08e7d68361f3ca7",
+      "path": "ExcelBinOutput/HomeWorldNPCExcelConfigData.json",
+      "sha256": "f6d5e27ed38d8d675012b21b6daf889d8af71b473ab7362038bf2375819ee115",
+      "size_bytes": 26898
+    },
+    {
+      "blob": "860812a6c6bb8e531f3d5e29a6f4785fb150a2f3",
+      "path": "ExcelBinOutput/HuntingMonsterExcelConfigData.json",
+      "sha256": "f187b4d4a9fe77a6910be8adaa37d5f9d491491ca76fb44e526f3dafd7799af4",
+      "size_bytes": 93983
+    },
+    {
+      "blob": "3b6ed4eca27489c8280533e3d2252fd116d8ee3d",
+      "path": "ExcelBinOutput/IceCreatureBuffExcelConfigData.json",
+      "sha256": "cdfa1ec488ab053de44cb214583da20f6666caff48356d876a8875b1cc16cea7",
+      "size_bytes": 467
+    },
+    {
+      "blob": "0dd073ed316b663d7bff154d40f4eceda2d2860b",
+      "path": "ExcelBinOutput/IceCreatureCodexExcelConfigData.json",
+      "sha256": "6253b6f385d64de1ed587dd5efb40dd4420f379f424432c9393e67b68ef3b0cd",
+      "size_bytes": 61
+    },
+    {
+      "blob": "e952b4d57ff30ded5443df03d55526c15278a285",
+      "path": "ExcelBinOutput/IceCreatureExcelConfigData.json",
+      "sha256": "314c46f27ce4c57e64174e05cfa97d205e72d5dd7adf8993fe1928ea2d234b5d",
+      "size_bytes": 15250
+    },
+    {
+      "blob": "0b165f7c1481a67dbe29343bab093fce3e0bb4ba",
+      "path": "ExcelBinOutput/IceCreatureIconExcelConfigData.json",
+      "sha256": "088b247a632207d8b80dfd59cbcc87857f7ed1a90933cc4a0b77d2739d25d594",
+      "size_bytes": 4196
+    },
+    {
+      "blob": "7de6b8b698b775da99250900b9fa87cf3f7a804a",
+      "path": "ExcelBinOutput/IceCreatureSkinExcelConfigData.json",
+      "sha256": "605d9f69a31df98a8cb3424ad198d564e23bf8c45f7276c73e9b8a05a640739c",
+      "size_bytes": 1466
+    },
+    {
+      "blob": "c9d31edd8197b20c99c451d1ecc8521a0cce9dfd",
+      "path": "ExcelBinOutput/IrodoriQuestExcelConfigData.json",
+      "sha256": "a35fdf65b7e4514f6d681f1eddacd6cd1649c6da30f149d9722815ee57da5e21",
+      "size_bytes": 2318
+    },
+    {
+      "blob": "6e9546c3ca239f1d7dce7de23a52c96fd509a7d7",
+      "path": "ExcelBinOutput/LanV5GreetingCardNpcExcelConfigData.json",
+      "sha256": "22d0ed10232b88c0b097fa67de4e4008ff0d7a069965cca103b5298cab693df2",
+      "size_bytes": 4820
+    },
+    {
+      "blob": "e35550c94d292aadf44f65bc02c17fcbedf7c684",
+      "path": "ExcelBinOutput/LunaRiteQuestExcelConfigData.json",
+      "sha256": "b13e2d1da346baba5a2cebf6ab8c4cc300c846f11ce7c3ad1e8890bfa9de99ca",
+      "size_bytes": 1369
+    },
+    {
+      "blob": "57a38b513818081e07a3ead82f3127f8b721c9a3",
+      "path": "ExcelBinOutput/MaterialCodexExcelConfigData.json",
+      "sha256": "0595c0e22f80eb544ef5db7be12c12adc93cb61f6fd0514f8bf1096829944711",
+      "size_bytes": 435784
+    },
+    {
+      "blob": "81e406a3b234297c7bcba1fc9c17c789be740870",
+      "path": "ExcelBinOutput/MonsterDescribeExcelConfigData.json",
+      "sha256": "ceed296ed94a4b31b89816948f7a24729636b32bc473245a1d12ccbaf7ed4377",
+      "size_bytes": 92975
+    },
+    {
+      "blob": "313278ae9b13812d1837e8039e63d748045eaa88",
+      "path": "ExcelBinOutput/MonsterSpecialNameExcelConfigData.json",
+      "sha256": "bfc732842a0b16d1aef7ef8a371d88ebe7210d978dd4399b3f4ebe3e4b491896",
+      "size_bytes": 150857
+    },
+    {
+      "blob": "ec6aa73a387e96bc1aca6566a3d97a97abf42399",
+      "path": "ExcelBinOutput/MonsterTitleExcelConfigData.json",
+      "sha256": "fd2f62bede996aee13d3255564d30c7c1b051ec0f58ecfb753a595ef0de60542",
+      "size_bytes": 65026
+    },
+    {
+      "blob": "f28df154559f4f1d5d7449742a709906e99e291a",
+      "path": "ExcelBinOutput/MusicInfoConfigData.json",
+      "sha256": "8e18858a6e7c65e5a6c96e55ae84a2f96a1027a753bae36fa98616c4e39cd14e",
+      "size_bytes": 8759
+    },
+    {
+      "blob": "f1aec524bc74a04a1bf0c281d661c93dbd4b94fb",
+      "path": "ExcelBinOutput/NatlanTribalQuestActivityExcelConfigData.json",
+      "sha256": "467084a4891c96dd44c2c6186db77cb0996c1a6fa2967a249426e2a8bc04ba62",
+      "size_bytes": 1034
+    },
+    {
+      "blob": "ce372f09ffbbfe1ecc1bb31166948caa4a65ae10",
+      "path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "sha256": "fe37ab34236d4525b1e7c0e11adc41bb879fcc3aad7e42b90802cf3e1295adf4",
+      "size_bytes": 4158
+    },
+    {
+      "blob": "9fbe6f732801c1775f451cb24aa66171a1ff92df",
+      "path": "ExcelBinOutput/NpcFirstMetExcelConfigData.json",
+      "sha256": "73dd38ce081e0a9d7ef139a8d761e3ec9449eccaafedf89004a599b72ed23420",
+      "size_bytes": 35065
+    },
+    {
+      "blob": "53672a02a4946794765abc3f321228eaf21038ea",
+      "path": "ExcelBinOutput/ProudSkillExcelConfigData.json",
+      "sha256": "381b70963eb3ede60de040b8da6f167c77c5065a613adeaf99121f1358294fe5",
+      "size_bytes": 8158447
+    },
+    {
+      "blob": "98389422a1592a5833a92a82aa4099ed20a90940",
+      "path": "ExcelBinOutput/QuestAbyssWarAccountIndexExcelConfigData.json",
+      "sha256": "ced4ca39b11d071658690893a68a22ed6b561832147413733ecece5154ff84f2",
+      "size_bytes": 1070
+    },
+    {
+      "blob": "11d0c1498ba9c16ca4adef50afd02f574636f3cc",
+      "path": "ExcelBinOutput/QuestAlchemySimExamExcelConfigData.json",
+      "sha256": "662e6235be5c9d3285ba827d47116361c8cc8e46c31bcd0cc6944d1fd2bbfbea",
+      "size_bytes": 5180
+    },
+    {
+      "blob": "5546c2b1ffe6fb8427a6de0d1df077035a2ebc33",
+      "path": "ExcelBinOutput/QuestAlchemySimPotionRankExcelConfigData.json",
+      "sha256": "c32642341f45a94241516b038e561ce53489eee1bfdb21283149382d49e8fb18",
+      "size_bytes": 462
+    },
+    {
+      "blob": "a91880999a1dc2c3d7e266f70caf40050a0057be",
+      "path": "ExcelBinOutput/QuestAlchemySimTypeExcelConfigData.json",
+      "sha256": "1bd5d9dec5d089867f894694f9738999dde57bff67383636b403c9e46c74c52f",
+      "size_bytes": 754
+    },
+    {
+      "blob": "f739d728f5ff0baf64ce537f74964e0b25d3b6ce",
+      "path": "ExcelBinOutput/QuestBomberUnitExcelConfigData.json",
+      "sha256": "3a1f8b8b0831fdbe6d15afab635c5bf11140e69294409bdcc56371a7565e1cca",
+      "size_bytes": 2653
+    },
+    {
+      "blob": "3fcf659cf444f16015acfcc43f55b7c76a26f0b7",
+      "path": "ExcelBinOutput/QuestEventsConfigData.json",
+      "sha256": "b366e219bf0db3b61df78aae8bf46e911f836996dd4933de338709b5c3ee0dd1",
+      "size_bytes": 840
+    },
+    {
+      "blob": "6f5197a7a1a642c58f2425001f8c183da894112f",
+      "path": "ExcelBinOutput/QuestScheduleStoryExcelConfigData.json",
+      "sha256": "d31e63c70da1d3acb54ded27ceb0972a594c7d5c0ca05db88e1ea374ab725034",
+      "size_bytes": 6525
+    },
+    {
+      "blob": "9df0663be439b01711d9b8f72d413eb803b35d18",
+      "path": "ExcelBinOutput/QuestScheduleTalkExcelConfigData.json",
+      "sha256": "fa6012d70af4403d5020aab9b7c9ec15dd6005ea9dac31d76e596b8526cbe9e1",
+      "size_bytes": 4772
+    },
+    {
+      "blob": "2964aaee4c4ce2a3eca53d51b0a8c507d9231196",
+      "path": "ExcelBinOutput/QuestSpecialShowConfigData.json",
+      "sha256": "d852e6f5876f14dc2f0e6ed1ab870e8a07a0860f1179a2ee14bbf9bb1845dd8e",
+      "size_bytes": 2012
+    },
+    {
+      "blob": "7b07d68d709a46f1188d812e7ae560531c18ad51",
+      "path": "ExcelBinOutput/ReliquarySetSchemeExcelConfigData.json",
+      "sha256": "a081b00f16c48076e2f8a8ff1f84e0c6ff5eb98d746c31cd9f41b899722e9cfd",
+      "size_bytes": 170
+    },
+    {
+      "blob": "a589fd24c39c010f10f1ab06b3bd64a8fc052293",
+      "path": "ExcelBinOutput/RqTalkExcelConfigData.json",
+      "sha256": "402efb65220454fff3020d1ee4bb76abc03e93b861e2ef05f1c1b0bb91a63ff0",
+      "size_bytes": 104159
+    },
+    {
+      "blob": "8c20a852fa6573a7ee515b8ebca99e8d77b4688f",
+      "path": "ExcelBinOutput/SorushTrialHitmanGalleryExcelConfigData.json",
+      "sha256": "ccb1f74f54582b1237fe1edd52e6cfa90fbcb2dba0dec5d8a8d31fc2e96f4c65",
+      "size_bytes": 2004
+    },
+    {
+      "blob": "23ddc96173b8d92512d4116ac5169b80eeb850be",
+      "path": "ExcelBinOutput/SorushTrialPhotoMatchGalleryExcelConfigData.json",
+      "sha256": "ebb8cf19c80071c76d103deaaf8b1ea56583ab10fe4a901392f405d75ff5ad84",
+      "size_bytes": 2687
+    },
+    {
+      "blob": "997b009aa4df2623b07fd1aa44a16e3df85d67f0",
+      "path": "ExcelBinOutput/SorushTrialQuestExcelConfigData.json",
+      "sha256": "8f58534fcbf1c88a7d290d8e286cb39b8e3fd80caa65d5c561206d06d8072511",
+      "size_bytes": 1778
+    },
+    {
+      "blob": "81da144141f9d3861a7a8f76ee3f4aaa7d91b414",
+      "path": "ExcelBinOutput/SorushTrialRaceGalleryExcelConfigData.json",
+      "sha256": "0cb09c7d9f80dfbb7642ff3374c9275a946bf606ccef5a6ded1f6d2f9f8d9bbf",
+      "size_bytes": 917
+    },
+    {
+      "blob": "b2780253187b27f3a54bf14516e5e30e1ea71eb7",
+      "path": "ExcelBinOutput/TalkExcelConfigData_0.json",
+      "sha256": "4729a028f0ce72428cd13144afd765a6b41dde228d24783c180aba242142a96a",
+      "size_bytes": 40519197
+    },
+    {
+      "blob": "3b54b562a93446233a09a39db954b7759fe31fef",
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "sha256": "3c3a70e0976d0a9f994c785940663e402c1b7422031ecc625807e079bd46ac5c",
+      "size_bytes": 46749784
+    },
+    {
+      "blob": "c7baa064ad0d1a0718864b6e580da8d942dcfe36",
+      "path": "ExcelBinOutput/TpsWeaponAccessoryExcelConfigData.json",
+      "sha256": "67198bb74808cf347f98467a137ea1d76f83417e5d2fdf58bfcb2925840e32a0",
+      "size_bytes": 10299
+    },
+    {
+      "blob": "53587f4a8a27277dc4d0b6032d9bddc350183854",
+      "path": "ExcelBinOutput/TpsWeaponExcelConfigData.json",
+      "sha256": "028ce9f4c04f78cc971c6e2370e9fa66e1d1e03e5ab61dde3fb2c927d7c15f76",
+      "size_bytes": 5760
+    },
+    {
+      "blob": "55648a26532701287e4de96bd0d50141abc837e4",
+      "path": "ExcelBinOutput/UgcTutorialExcelConfigData.json",
+      "sha256": "16e0bd1bc8c178d173fe9128e023f544ce57e0d37cd65f68755638075901ee95",
+      "size_bytes": 392
+    },
+    {
+      "blob": "77e03c374e9317625dd181d7facf43a74f0c9536",
+      "path": "ExcelBinOutput/VintageMarketNpcEventExcelConfigData.json",
+      "sha256": "9a614fd84bc5a668ac55e98ecf271ca32617a21d1e6d86919f769dca4d33ce28",
+      "size_bytes": 2114
+    },
+    {
+      "blob": "fe7701f39fc9c918bc92121d7e693b78ced78906",
+      "path": "ExcelBinOutput/WorldAreaConfigData.json",
+      "sha256": "ea1182382d4ae5c2cca1f4f6fe752eee23df792ef7e12463de3eb82f90442b63",
+      "size_bytes": 177339
+    },
+    {
+      "blob": "fd8fb379ff2c8d97b0e846c9fb6cfa74dd998fa8",
+      "path": "ExcelBinOutput/WorldVideoSheetExcelConfigData.json",
+      "sha256": "65fe4aaff92fcf18967df20b250e3a55366e0b4ec94a5ffe75fb8a997496a541",
+      "size_bytes": 3450
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "historical_exact_replacement": false,
+  "historical_selection_manifest": "manifests/native-archive/high-value-open-selection.json",
+  "historical_selection_sha256": "c3f9c0abefe7ebde9db3ca8b99c3a4f38d0beb1e10a5d9821359d79ca7681f22",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "missing_historical_owner_specs": [
+    {
+      "historical_owner_path": "KGHHEJOKLOO",
+      "source_path": "ExcelBinOutput/BattlePassStoryExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "DECLKPJBIKO",
+      "source_path": "ExcelBinOutput/BeyondHandbookWatcherExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "BABKFBNIGIM",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "DBKLIKDEAFJ",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "GKKOMOBPOMN",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "GNMMOGLHHGE",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "INBIOJMLEIF",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "JFBCIBAECHP",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "KHHLAJKAPAC",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "MIFMLKNJCAN",
+      "source_path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "OJHLGBILFBG",
+      "source_path": "ExcelBinOutput/QuestScheduleStoryExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "EJOPBEIFBCO",
+      "source_path": "ExcelBinOutput/QuestScheduleTalkExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    },
+    {
+      "historical_owner_path": "FGIOEJLEBOA",
+      "source_path": "ExcelBinOutput/QuestScheduleTalkExcelConfigData.json",
+      "status": "UNRESOLVED_7_1_FIELD_ROLE"
+    }
+  ],
+  "raw_physical_row_denominator": 107323,
+  "same_named_historical_owner_roles_carried_as_raw_locators_only": true,
+  "semantic_owner_mapping_unresolved": true,
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "absent_historical_field_names": [
+        "DGKOILDPJGN",
+        "FEPCCKPKJMB",
+        "HGKNNGEPEPB"
+      ],
+      "added_field_names": [
+        "GILOHKJIBEH",
+        "JLPGJBANPDJ",
+        "PEIMCPPHEKF"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DGKOILDPJGN",
+          "FEPCCKPKJMB",
+          "HGKNNGEPEPB",
+          "icon",
+          "id",
+          "questId"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityBubbleDramaPhotoQuestTargetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 2,
+        "nameTextMapHash": 2
+      },
+      "path": "ExcelBinOutput/ActivityBubbleDramaPhotoQuestTargetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "ABMCDPOCHGG",
+        "DAOGFBKJMKM",
+        "FAAIDDHPDEB",
+        "GLBDMNBBOKJ",
+        "IHIEIFDFJFP",
+        "JHHHLNPCGAI"
+      ],
+      "added_field_names": [
+        "CECEEFODKCF",
+        "CMIEGKGJLIL",
+        "DDAOPDACECC",
+        "GOLOOIKLNKP",
+        "JMMGAOCEKKG",
+        "NKNKKDKNAEO"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "ABMCDPOCHGG",
+          "DAOGFBKJMKM",
+          "FAAIDDHPDEB",
+          "GLBDMNBBOKJ",
+          "IHIEIFDFJFP",
+          "JHHHLNPCGAI",
+          "gadgetId",
+          "groupLinkBundleId",
+          "id",
+          "markId",
+          "npcId",
+          "questId"
+        ],
+        "readable_owner_fields": [
+          "markDescTextMapHash",
+          "markNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityLanternRiteV6LanternNPCExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "markDescTextMapHash": 6,
+        "markNameTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/ActivityLanternRiteV6LanternNPCExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "markDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "markNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DAOGFBKJMKM",
+        "FAAIDDHPDEB",
+        "IHIEIFDFJFP",
+        "JHHHLNPCGAI"
+      ],
+      "added_field_names": [
+        "CMIEGKGJLIL",
+        "GOLOOIKLNKP",
+        "JMMGAOCEKKG",
+        "NKNKKDKNAEO"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DAOGFBKJMKM",
+          "FAAIDDHPDEB",
+          "IHIEIFDFJFP",
+          "JHHHLNPCGAI",
+          "groupLinkBundleId",
+          "id",
+          "markId",
+          "npcId",
+          "questId"
+        ],
+        "readable_owner_fields": [
+          "markDescTextMapHash",
+          "markNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityLanternRiteV6PhotoNPCExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "markDescTextMapHash": 6,
+        "markNameTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/ActivityLanternRiteV6PhotoNPCExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "markDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "markNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "watcherIdList"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityNatlanRaceAlbumExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/ActivityNatlanRaceAlbumExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "GBDOJAFDCGJ"
+      ],
+      "added_field_names": [
+        "MHAHJHAJMFD"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "GBDOJAFDCGJ",
+          "iconName",
+          "openDay",
+          "questID"
+        ],
+        "readable_owner_fields": [
+          "questDescTextMapHash",
+          "questTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityRockBoardExploreQuestExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "questDescTextMapHash": 1,
+        "questTitleTextMapHash": 1
+      },
+      "path": "ExcelBinOutput/ActivityRockBoardExploreQuestExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1,
+      "text_owners": [
+        {
+          "field": "questDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_readable_tutorial_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "pic",
+          "showType"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivitySnowRaceHideTutorialExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 8,
+        "titleTextMapHash": 8
+      },
+      "path": "ExcelBinOutput/ActivitySnowRaceHideTutorialExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 8,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AGMEFJGPKOB",
+        "FDABBNOOKGE"
+      ],
+      "added_field_names": [
+        "CFMGKGCALAD",
+        "CPPGOMFOOJB"
+      ],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AGMEFJGPKOB",
+          "FDABBNOOKGE",
+          "iconHash",
+          "id",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityVideoSheetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 5,
+        "titleTextMapHash": 5
+      },
+      "path": "ExcelBinOutput/ActivityVideoSheetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 5,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "openIndex",
+          "preQuestId",
+          "questId"
+        ],
+        "readable_owner_fields": [
+          "chapterTitleTextMapHash",
+          "questDescTextMapHash",
+          "questTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ActivityVintageQuestDataExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "chapterTitleTextMapHash": 3,
+        "questDescTextMapHash": 3,
+        "questTitleTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/ActivityVintageQuestDataExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "chapterTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "icon",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AnimalDescribeExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 479
+      },
+      "path": "ExcelBinOutput/AnimalDescribeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 479,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BGGGPPJLDMN",
+        "BNBJCJIHIGN",
+        "CKLJPHHHDOP",
+        "CMGEIEOLPPL",
+        "DABHNPPDKFE",
+        "DBAFPLPNCMH",
+        "DLJHAINIPJA",
+        "FKEFLMMBMGN",
+        "GOFJEIIJAGH",
+        "GPPPPLEHGHJ",
+        "HMOOBIBFLNP",
+        "ILOLFKPELNG",
+        "KLKCALFNLMG",
+        "MKHEDIPFFMI",
+        "PLBHFOJGOMM"
+      ],
+      "added_field_names": [
+        "AILNLGPMDIL",
+        "BGMLPHCEHOL",
+        "BKOGECMNPJP",
+        "CHFJHOOMPKM",
+        "CJJODEPIILB",
+        "IEBGELFLKJP",
+        "JPHOAKOCJNP",
+        "KOMGFAGBDFJ",
+        "MKBDMKMFLPN",
+        "MNHDMLMIBNJ",
+        "NHINPABHLGM",
+        "NIFEPGKKMAL",
+        "specialEnergyMax",
+        "specialEnergyMin",
+        "specialEnergyType"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BGGGPPJLDMN",
+          "BNBJCJIHIGN",
+          "CKLJPHHHDOP",
+          "CMGEIEOLPPL",
+          "DABHNPPDKFE",
+          "DBAFPLPNCMH",
+          "DLJHAINIPJA",
+          "FKEFLMMBMGN",
+          "GOFJEIIJAGH",
+          "GPPPPLEHGHJ",
+          "HMOOBIBFLNP",
+          "ILOLFKPELNG",
+          "KLKCALFNLMG",
+          "MKHEDIPFFMI",
+          "PLBHFOJGOMM",
+          "abilityName",
+          "buffIcon",
+          "cdSlot",
+          "cdTime",
+          "costElemType",
+          "costElemVal",
+          "costStamina",
+          "dragType",
+          "energyMin",
+          "globalValueKey",
+          "id",
+          "isAttackCameraLock",
+          "lockShape",
+          "lockWeightParams",
+          "maxChargeNum",
+          "needMonitor",
+          "proudSkillGroupId",
+          "shareCDID",
+          "skillIcon",
+          "triggerID"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "extraDescTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AvatarSkillExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 1149,
+        "extraDescTextMapHash": 1149,
+        "nameTextMapHash": 1149
+      },
+      "path": "ExcelBinOutput/AvatarSkillExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1149,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "extraDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CMGEIEOLPPL"
+      ],
+      "added_field_names": [
+        "CJJODEPIILB"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CMGEIEOLPPL",
+          "addProps",
+          "icon",
+          "mainCostItemCount",
+          "mainCostItemId",
+          "openConfig",
+          "paramList",
+          "prevTalent",
+          "talentId"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AvatarTalentExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 762,
+        "nameTextMapHash": 762
+      },
+      "path": "ExcelBinOutput/AvatarTalentExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 762,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AGMEFJGPKOB",
+        "FDABBNOOKGE"
+      ],
+      "added_field_names": [
+        "CFMGKGCALAD",
+        "CPPGOMFOOJB"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AGMEFJGPKOB",
+          "FDABBNOOKGE",
+          "iconHash",
+          "id",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AvatarVideoSheetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 96,
+        "titleTextMapHash": 96
+      },
+      "path": "ExcelBinOutput/AvatarVideoSheetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 96,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BNJKPLHBPKM",
+        "DEBDBDBOJDJ",
+        "ELJAPHNLBAN",
+        "IAJKBKPCANA",
+        "JONDBMJKHDC",
+        "KALOICHDGDN",
+        "KHCJOIGACAA",
+        "MJHKNHNBHAH",
+        "NDLAFCPIKHC",
+        "NGPFHLHDNEE",
+        "OHCBDDGDHGH",
+        "PKNGFKJECLD"
+      ],
+      "added_field_names": [
+        "APAMJHIIFEH",
+        "CIENCEPGHBN",
+        "ENJLGCACBOH",
+        "GKOOBGJMPPB",
+        "ICOCOGJFMJB",
+        "IKAAEDLAACK",
+        "JEOFOLGLMDB",
+        "JGNFHDMPENP",
+        "KICNADHDDFM",
+        "MIHEENNNACK",
+        "NGFMENPGICN",
+        "ODLOAJCGJCA",
+        "PJIOFLLCLKA"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BNJKPLHBPKM",
+          "DEBDBDBOJDJ",
+          "ELJAPHNLBAN",
+          "IAJKBKPCANA",
+          "JONDBMJKHDC",
+          "KALOICHDGDN",
+          "KHCJOIGACAA",
+          "MJHKNHNBHAH",
+          "NDLAFCPIKHC",
+          "NGPFHLHDNEE",
+          "OHCBDDGDHGH",
+          "PKNGFKJECLD",
+          "displayType",
+          "iconPath",
+          "imagePath",
+          "itemId",
+          "jsonName",
+          "prefabPathHash",
+          "quality",
+          "tagType",
+          "unRotate",
+          "weaponType"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AvatarWeaponSkinExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 26,
+        "nameTextMapHash": 26
+      },
+      "path": "ExcelBinOutput/AvatarWeaponSkinExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 26,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DDMKFBNMGND"
+      ],
+      "added_field_names": [
+        "CDGMLNDOODA"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DDMKFBNMGND",
+          "groupId",
+          "priority"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "AvatarWeaponSkinGroupExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "nameTextMapHash": 4
+      },
+      "path": "ExcelBinOutput/AvatarWeaponSkinGroupExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 4,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "KGHHEJOKLOO"
+      ],
+      "added_field_names": [
+        "IIDALEJDIHP"
+      ],
+      "boundary": "battle_pass_story_text",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "storyUnlockLevel"
+        ],
+        "readable_owner_fields": [
+          "KGHHEJOKLOO"
+        ],
+        "relation_fields": [
+          "storyId"
+        ]
+      },
+      "kind": "BattlePassStory",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "KGHHEJOKLOO": 0
+      },
+      "path": "ExcelBinOutput/BattlePassStoryExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "storyId",
+          "relation_kind": "battle_pass_story_observation",
+          "resolution": "unresolved",
+          "shape": "array"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "KGHHEJOKLOO",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "KAHPDPBMDLC",
+        "LIJMDNMAEJD"
+      ],
+      "added_field_names": [
+        "ECOKINPPIPH",
+        "KJBBNGFMIBE"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "KAHPDPBMDLC",
+          "LIJMDNMAEJD",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondAvatarVoiceExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/BeyondAvatarVoiceExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "KDILJCBBPKG",
+        "KEBIAKKHGDC",
+        "OGGDJKDMBPI",
+        "OKFJOHDLCIA"
+      ],
+      "added_field_names": [
+        "BABILFMJJME",
+        "FHIDKAKGMFN",
+        "MDNHHNJIEOO",
+        "NGHBBIBFLBC"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "KDILJCBBPKG",
+          "KEBIAKKHGDC",
+          "OGGDJKDMBPI",
+          "OKFJOHDLCIA",
+          "iconHash"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumeDrawingExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 411,
+        "nameTextMapHash": 411
+      },
+      "path": "ExcelBinOutput/BeyondCostumeDrawingExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 411,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AEHOMLFGHCC",
+        "CIOANBKFOGP",
+        "DCFGPOBILIL",
+        "FEAANHGFJLO",
+        "FKJGOCFMGAD",
+        "GOCCLKKDFNM",
+        "GPELHDHHAJD",
+        "HHDFIJOFBNC",
+        "IFFEEAHOMFH",
+        "KABEMKNALHJ",
+        "LGOHMGGHGPI",
+        "MHHGPDHJKFJ",
+        "NGMBIHNKBMC",
+        "OAIEIPDOAOF",
+        "OGDHIPLGMGG",
+        "OGGDJKDMBPI"
+      ],
+      "added_field_names": [
+        "AAFJPEDPGJE",
+        "CLCLNMHHHIH",
+        "CMEFDJHHIAI",
+        "CPFGDJLKFLF",
+        "DCJCBJKHEFN",
+        "DIPFJICOBLJ",
+        "EBHDLCEKGFI",
+        "IHOBABJCIOJ",
+        "JKOKOGCFAKF",
+        "JPDBAOOOFCC",
+        "MPFOEFGJKAE",
+        "NGHBBIBFLBC",
+        "NIHIONHKJFH",
+        "NMJEHOJJBGC",
+        "PFPMECIGJFC",
+        "PPCBPJGBFEF"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AEHOMLFGHCC",
+          "CIOANBKFOGP",
+          "DCFGPOBILIL",
+          "FEAANHGFJLO",
+          "FKJGOCFMGAD",
+          "GOCCLKKDFNM",
+          "GPELHDHHAJD",
+          "HHDFIJOFBNC",
+          "IFFEEAHOMFH",
+          "KABEMKNALHJ",
+          "LGOHMGGHGPI",
+          "MHHGPDHJKFJ",
+          "NGMBIHNKBMC",
+          "OAIEIPDOAOF",
+          "OGDHIPLGMGG",
+          "OGGDJKDMBPI",
+          "costumeId",
+          "sortId",
+          "suitId"
+        ],
+        "readable_owner_fields": [
+          "descriptionTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumeExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descriptionTextMapHash": 2757,
+        "nameTextMapHash": 2757
+      },
+      "path": "ExcelBinOutput/BeyondCostumeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2757,
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CDIFKMHHNJH",
+        "CFGLEEADGHJ",
+        "KBIACIALNBD",
+        "NFDBMFHNDHE",
+        "OBEAICHOGCM"
+      ],
+      "added_field_names": [
+        "APBHIHPOHOH",
+        "HEKNCMDDIBK",
+        "LFCMNEMIFPN",
+        "MGOMAKEABOH",
+        "OPHJNAHCMLP",
+        "PMKDMIFMGOB"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CDIFKMHHNJH",
+          "CFGLEEADGHJ",
+          "KBIACIALNBD",
+          "NFDBMFHNDHE",
+          "OBEAICHOGCM",
+          "endTime",
+          "id",
+          "startTime"
+        ],
+        "readable_owner_fields": [
+          "displayNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumePostExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "displayNameTextMapHash": 9
+      },
+      "path": "ExcelBinOutput/BeyondCostumePostExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 9,
+      "text_owners": [
+        {
+          "field": "displayNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AEHOMLFGHCC",
+        "DHFLLEANCKP",
+        "FKDJADHCJEC",
+        "FKJGOCFMGAD",
+        "GHCHIHFDEIG",
+        "GOCCLKKDFNM",
+        "HHDFIJOFBNC",
+        "JAAGKCPFFAH",
+        "JAELPCALOIG",
+        "LELKAEONPBI",
+        "LNNKOONIFEB",
+        "MAFODONFFEB",
+        "MGMIFONKAHA",
+        "NGIFNAHFBEB",
+        "NGMBIHNKBMC",
+        "OGGDJKDMBPI",
+        "OHFCBPJGFNJ",
+        "OOMGAIMICAC"
+      ],
+      "added_field_names": [
+        "AAFJPEDPGJE",
+        "AENKJPHOPNO",
+        "BNDLOECGIEO",
+        "BONBCELOAFJ",
+        "CLCLNMHHHIH",
+        "CPFGDJLKFLF",
+        "DCJCBJKHEFN",
+        "FKLBIDGKEJK",
+        "GJFOCINPKLM",
+        "JKOKOGCFAKF",
+        "LKBBIENCHAF",
+        "LLKGMIOIMGM",
+        "MGINANMHCJE",
+        "MIEBMBLJLJE",
+        "NGHBBIBFLBC",
+        "OLKBFAJMKNF",
+        "PICGKAEOKNC",
+        "PPGKBEKIILO"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AEHOMLFGHCC",
+          "DHFLLEANCKP",
+          "FKDJADHCJEC",
+          "FKJGOCFMGAD",
+          "GHCHIHFDEIG",
+          "GOCCLKKDFNM",
+          "HHDFIJOFBNC",
+          "JAAGKCPFFAH",
+          "JAELPCALOIG",
+          "LELKAEONPBI",
+          "LNNKOONIFEB",
+          "MAFODONFFEB",
+          "MGMIFONKAHA",
+          "NGIFNAHFBEB",
+          "NGMBIHNKBMC",
+          "OGGDJKDMBPI",
+          "OHFCBPJGFNJ",
+          "OOMGAIMICAC",
+          "iconHash",
+          "showType",
+          "sortId",
+          "suitId"
+        ],
+        "readable_owner_fields": [
+          "descriptionTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumeSuitExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descriptionTextMapHash": 324,
+        "nameTextMapHash": 324
+      },
+      "path": "ExcelBinOutput/BeyondCostumeSuitExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 324,
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "configID",
+          "iconHash"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumeUIEntryExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "nameTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/BeyondCostumeUIEntryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "ENOFOCMDJON",
+        "FKLHGBHOINJ",
+        "JMBGAPBOLKH",
+        "LEMBDDGPDJD",
+        "OIJNPNHMIJC"
+      ],
+      "added_field_names": [
+        "EHMLJDLKJCJ",
+        "KHLFAOMPAHK",
+        "LOPKMKDOKMM",
+        "PGGIBPKLLEF",
+        "slotType"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "ENOFOCMDJON",
+          "FKLHGBHOINJ",
+          "JMBGAPBOLKH",
+          "LEMBDDGPDJD",
+          "OIJNPNHMIJC",
+          "configID",
+          "iconHash",
+          "order"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondCostumeUISlotEntryExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "nameTextMapHash": 29
+      },
+      "path": "ExcelBinOutput/BeyondCostumeUISlotEntryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 29,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DECLKPJBIKO"
+      ],
+      "added_field_names": [
+        "BHOHBOCBAEM"
+      ],
+      "boundary": "beyond_handbook_watcher_text",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "isDisuse",
+          "progress",
+          "triggerConfig"
+        ],
+        "readable_owner_fields": [
+          "DECLKPJBIKO"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondHandbookWatcher",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "DECLKPJBIKO": 0
+      },
+      "path": "ExcelBinOutput/BeyondHandbookWatcherExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 18,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "DECLKPJBIKO",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "HNGLJBLJEEJ",
+        "KIJPCLFKEMB",
+        "NMNFLFHDFKJ"
+      ],
+      "added_field_names": [
+        "BCFBDGMAHPK",
+        "HDDGJBCHHLA",
+        "KAENIAHKDEG"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "HNGLJBLJEEJ",
+          "KIJPCLFKEMB",
+          "NMNFLFHDFKJ",
+          "entityType",
+          "id",
+          "jsonName"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BeyondOfficialEntityExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 2729,
+        "nameTextMapHash": 2729
+      },
+      "path": "ExcelBinOutput/BeyondOfficialEntityExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2729,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "blossom_talk_relation_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "groupId",
+          "id",
+          "refreshId"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "talkId"
+        ]
+      },
+      "kind": "BlossomTalk",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/BlossomTalkExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "talkId",
+          "relation_kind": "blossom_talk_target",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/TalkExcelConfigData_0.json",
+            "ExcelBinOutput/TalkExcelConfigData_1.json"
+          ],
+          "target_table": null
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 312,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DraftID",
+          "chapterId",
+          "galleryId",
+          "id",
+          "newBallList",
+          "openDay",
+          "otherBallList",
+          "otherItemList",
+          "pos",
+          "upItemList",
+          "watcherIdList"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BounceConjuringChapterExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 3,
+        "titleTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/BounceConjuringChapterExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "finishSubQuestID",
+          "id",
+          "levelID",
+          "levelType",
+          "openDay",
+          "stageID",
+          "startSubQuestID"
+        ],
+        "readable_owner_fields": [
+          "questDescTextMapHash",
+          "questTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BrickBreakerQuestExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "questDescTextMapHash": 4,
+        "questTitleTextMapHash": 4
+      },
+      "path": "ExcelBinOutput/BrickBreakerQuestExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 4,
+      "text_owners": [
+        {
+          "field": "questDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BECMAIDGPIM",
+        "CMIDFAKNEAP",
+        "GFGAALOAKLL",
+        "GHJMIKMLBBC"
+      ],
+      "added_field_names": [
+        "BLFCNNGIOEM",
+        "CPJIJMDHGML",
+        "EKBBNAHKGCB",
+        "JNEENOCJHMG"
+      ],
+      "boundary": "high_value_world_item_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BECMAIDGPIM",
+          "CMIDFAKNEAP",
+          "GFGAALOAKLL",
+          "GHJMIKMLBBC",
+          "globalItemLimit",
+          "icon",
+          "id",
+          "isForceGetHint",
+          "itemType",
+          "itemUse",
+          "maxUseCount",
+          "rank",
+          "rankLevel",
+          "stackLimit",
+          "useOnGain"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "BydMaterialExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 1828,
+        "nameTextMapHash": 1828
+      },
+      "path": "ExcelBinOutput/BydMaterialExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1828,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "chapterId",
+          "id",
+          "openDay",
+          "preQuest"
+        ],
+        "readable_owner_fields": [
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ChannellerSlabChapterExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "titleTextMapHash": 4
+      },
+      "path": "ExcelBinOutput/ChannellerSlabChapterExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 4,
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "FAHELAIFJFN",
+        "PAGANBPKANF"
+      ],
+      "added_field_names": [
+        "DABEODOFPPN",
+        "GGILIABCOJK"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "FAHELAIFJFN",
+          "PAGANBPKANF",
+          "chapterId",
+          "chapterImageHash",
+          "cityId",
+          "icon",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "chapterImageTitleTextMapHash",
+          "chapterNumTextMapHash",
+          "chapterTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ChapterChangeExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "chapterImageTitleTextMapHash": 2,
+        "chapterNumTextMapHash": 2,
+        "chapterTitleTextMapHash": 2
+      },
+      "path": "ExcelBinOutput/ChapterChangeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2,
+      "text_owners": [
+        {
+          "field": "chapterImageTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "chapterNumTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "chapterTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "cgType",
+          "chapterId",
+          "id",
+          "showImageHash",
+          "showImageSmallHash",
+          "sortId",
+          "unlockCond",
+          "unlockPointId"
+        ],
+        "readable_owner_fields": [
+          "cgDesTextMapHash",
+          "cgNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "CoopCGExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "cgDesTextMapHash": 204,
+        "cgNameTextMapHash": 204
+      },
+      "path": "ExcelBinOutput/CoopCGExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 204,
+      "text_owners": [
+        {
+          "field": "cgDesTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "cgNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DKHHCMONCFO"
+      ],
+      "added_field_names": [
+        "BHAFIAJJLHG"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DKHHCMONCFO",
+          "acceptQuest",
+          "chapterId",
+          "id",
+          "photoFemaleHash",
+          "photoMaleHash",
+          "pointPosId",
+          "postPointList",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "pointDecTextMapHash",
+          "pointNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "CoopPointExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "pointDecTextMapHash": 415,
+        "pointNameTextMapHash": 415
+      },
+      "path": "ExcelBinOutput/CoopPointExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 415,
+      "text_owners": [
+        {
+          "field": "pointDecTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "pointNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AINCNODMIIA",
+        "NIPNGHEDHHK"
+      ],
+      "added_field_names": [
+        "DHMDOMMFJHP",
+        "NAELHGHHMLI"
+      ],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AINCNODMIIA",
+          "NIPNGHEDHHK",
+          "progressId",
+          "progressSubType",
+          "progressType",
+          "sortLevel"
+        ],
+        "readable_owner_fields": [
+          "progressTextTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "CustomGalleryProgressExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "progressTextTextMapHash": 977
+      },
+      "path": "ExcelBinOutput/CustomGalleryProgressExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 977,
+      "text_owners": [
+        {
+          "field": "progressTextTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "targetId",
+          "targetSubType",
+          "targetType"
+        ],
+        "readable_owner_fields": [
+          "targetSubTextTextMapHash",
+          "targetTextTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "CustomGalleryTargetExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "targetSubTextTextMapHash": 343,
+        "targetTextTextMapHash": 343
+      },
+      "path": "ExcelBinOutput/CustomGalleryTargetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 343,
+      "text_owners": [
+        {
+          "field": "targetSubTextTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "targetTextTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "displayType",
+          "icon",
+          "id",
+          "itemType",
+          "param",
+          "rankLevel"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "typeDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "DisplayItemExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 334,
+        "nameTextMapHash": 334,
+        "typeDescTextMapHash": 334
+      },
+      "path": "ExcelBinOutput/DisplayItemExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 334,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "typeDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CNGJIPFNFIL",
+        "DLBBANHJNEH",
+        "GNKPDNBLFLE",
+        "JGBBDFHCEJP"
+      ],
+      "added_field_names": [
+        "BINPEABENOE",
+        "DDPGKCADCIE",
+        "JBJFLOBBDAE",
+        "JMLJFKILOEJ"
+      ],
+      "boundary": "dynamic_book_detail_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CNGJIPFNFIL",
+          "DLBBANHJNEH",
+          "GNKPDNBLFLE",
+          "JGBBDFHCEJP"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "showId"
+        ]
+      },
+      "kind": "DynamicBookDetails",
+      "native_id_field": null,
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/DynamicBookDetailsExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "showId",
+          "relation_kind": "dynamic_book_show",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "showId",
+          "target_sources": [
+            "ExcelBinOutput/DynamicBookExcelConfigData.json"
+          ],
+          "target_table": null
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 15,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "AKGPBNDDCHP",
+        "MNDAOAOOIJD"
+      ],
+      "added_field_names": [
+        "KGCCKGADNDA",
+        "NJFDKPMFIKB"
+      ],
+      "boundary": "dynamic_book_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AKGPBNDDCHP",
+          "MNDAOAOOIJD",
+          "id",
+          "prefabName",
+          "showId"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": []
+      },
+      "kind": "DynamicBook",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/DynamicBookExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "chapterId",
+          "icon",
+          "id",
+          "mainQuest",
+          "miniQuest",
+          "openDay",
+          "preQuest"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "FleurFairChapterExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 4,
+        "titleTextMapHash": 4
+      },
+      "path": "ExcelBinOutput/FleurFairChapterExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 4,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BMCNEIHDJKB",
+        "DKLDDBOPJFC",
+        "DLBKNBEKEKC",
+        "GCKLLPBAMLN",
+        "GPCOMDMOECH",
+        "HDMJCIGAEOP",
+        "HIPCDFHLBBH",
+        "HNALDDBICJF",
+        "HOLBMOEPNDC",
+        "JEPLCMGAMJJ",
+        "KKEBIONOJBG",
+        "KPOIKIJFAMM",
+        "MMKPGFLIFJM",
+        "NCMJGBDLBMK",
+        "OILFBKGLMJH",
+        "PJIEBJMKGDH"
+      ],
+      "added_field_names": [
+        "BDCGGKIENDE",
+        "CLPDFKKGJIH",
+        "EBHKPFKJFEN",
+        "EKDIJJNEIDO",
+        "FDEBDABMJFG",
+        "FHMAHLCPKGM",
+        "FJDBFMNFNBL",
+        "GAPEGGPIPLG",
+        "JIOJHLAJILC",
+        "JMBFAKODPDA",
+        "LALFHJBBGOK",
+        "LJNNAEHGFHD",
+        "LOFHFMGGNAI",
+        "MIBCOHLJCPO",
+        "OIOBIONNFNH",
+        "PACBFCDIOHE"
+      ],
+      "boundary": "high_value_gcg_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BMCNEIHDJKB",
+          "DKLDDBOPJFC",
+          "DLBKNBEKEKC",
+          "GCKLLPBAMLN",
+          "GPCOMDMOECH",
+          "HDMJCIGAEOP",
+          "HIPCDFHLBBH",
+          "HNALDDBICJF",
+          "HOLBMOEPNDC",
+          "JEPLCMGAMJJ",
+          "KKEBIONOJBG",
+          "KPOIKIJFAMM",
+          "MMKPGFLIFJM",
+          "NCMJGBDLBMK",
+          "OILFBKGLMJH",
+          "PJIEBJMKGDH",
+          "buffIconHash",
+          "cardType",
+          "changeToWhichSpecialView",
+          "chooseTargetList",
+          "chooseTargetType",
+          "costList",
+          "dvAdjustJsonList",
+          "hintType",
+          "hintValue",
+          "id",
+          "isCanObtain",
+          "isHidden",
+          "persistEffectConstraintSkillIdList",
+          "persistEffectConstraintToken",
+          "persistEffectType",
+          "skillList",
+          "stateBuffType",
+          "tagList",
+          "tokenToShow",
+          "tokenToShowIconType",
+          "tokenToShowTextId",
+          "triggerSummonFullHintNum"
+        ],
+        "readable_owner_fields": [
+          "descOnTableTextMapHash",
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GCGCardExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descOnTableTextMapHash": 2012,
+        "descTextMapHash": 2012,
+        "nameTextMapHash": 2012
+      },
+      "path": "ExcelBinOutput/GCGCardExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2012,
+      "text_owners": [
+        {
+          "field": "descOnTableTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CKJPMGEGIOM"
+      ],
+      "added_field_names": [
+        "MMCPJKEHDPA"
+      ],
+      "boundary": "high_value_gcg_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CKJPMGEGIOM",
+          "filterType",
+          "id",
+          "isCard",
+          "isChar",
+          "paramList"
+        ],
+        "readable_owner_fields": [
+          "filterNameTextMapHash",
+          "otherOptionNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GCGCardFilterExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "filterNameTextMapHash": 9,
+        "otherOptionNameTextMapHash": 9
+      },
+      "path": "ExcelBinOutput/GCGCardFilterExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 9,
+      "text_owners": [
+        {
+          "field": "filterNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "otherOptionNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AHPLEAPOBMA",
+        "FJDMMEKPJAF",
+        "PDOEGFLAGBJ"
+      ],
+      "added_field_names": [
+        "JLIJJAJBCCL",
+        "JNNNLLJFKEO",
+        "LCKJNEMAOCD"
+      ],
+      "boundary": "gcg_game_lookup_and_readable_name",
+      "carried_forward": false,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AHPLEAPOBMA",
+          "FJDMMEKPJAF",
+          "PDOEGFLAGBJ",
+          "cardGroupId",
+          "enemyCardGroupId",
+          "gameType",
+          "guideName",
+          "id",
+          "initHand",
+          "isIgnoreDicePhase",
+          "loadingSituationConfigId",
+          "modeType",
+          "ruleId"
+        ],
+        "readable_owner_fields": [
+          "oppoPlayerNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GCGGame",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "oppoPlayerNameTextMapHash": 1457
+      },
+      "path": "ExcelBinOutput/GCGGameExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1457,
+      "terminal_unresolved_reason": null,
+      "text_owners": [
+        {
+          "field": "oppoPlayerNameTextMapHash",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "gcg_dialogue_text_detail",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "talkDetailId",
+          "talkEmoji"
+        ],
+        "readable_owner_fields": [
+          "talkContent"
+        ],
+        "relation_fields": [
+          "talkCharacterId",
+          "talkVoiceId"
+        ]
+      },
+      "kind": "GCGTalkDetail",
+      "native_id_field": "talkDetailId",
+      "owner_root_presence": {
+        "talkContent": 1256
+      },
+      "path": "ExcelBinOutput/GCGTalkDetailExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete GCGTalkDetailIcon physical namespace",
+          "field": "talkCharacterId",
+          "relation_kind": "gcg_talk_detail_icon",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailIconExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "talkVoiceId",
+          "relation_kind": "gcg_talk_voice_observation",
+          "resolution": "unresolved",
+          "shape": "array"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1256,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "talkContent",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "EFDPGGCNEJL"
+      ],
+      "added_field_names": [
+        "FLNKMCFIMKJ"
+      ],
+      "boundary": "gcg_talk_detail_icon_lookup",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "EFDPGGCNEJL",
+          "iconName",
+          "id",
+          "type"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": []
+      },
+      "kind": "GCGTalkDetailIcon",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/GCGTalkDetailIconExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 248,
+      "terminal_unresolved_reason": "complete physical lookup namespace retained icon resource fields without inferring global Character identity",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "BLBODEFEPAF",
+        "BMIMPCEHDOF",
+        "DHDIONLPPEK",
+        "HKBHECNDJFB",
+        "KBHIBIPCMAH",
+        "MELJCLMNFOD",
+        "MGIJADDONBM",
+        "NGONJPCDGLH"
+      ],
+      "added_field_names": [
+        "ANEHFCAGPBF",
+        "BMKPAMMCLCC",
+        "FHIDCCKFCKF",
+        "FKEFAMJLPAG",
+        "FPGANKBIJPJ",
+        "JIJAMPMOOKE",
+        "KBCMEKANHNK",
+        "KPNPAAGFJBH"
+      ],
+      "boundary": "gcg_dialogue_relation_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BLBODEFEPAF",
+          "BMIMPCEHDOF",
+          "DHDIONLPPEK",
+          "HKBHECNDJFB",
+          "KBHIBIPCMAH",
+          "MELJCLMNFOD",
+          "MGIJADDONBM",
+          "NGONJPCDGLH",
+          "highHealthValue",
+          "lowHealthValue"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "elementBrustTalkId",
+          "happyTalkId",
+          "sadTalkId",
+          "toughTalkId",
+          "lowHealthTalkId",
+          "highHealthTalkId",
+          "gameID"
+        ]
+      },
+      "kind": "GCGTalk",
+      "native_id_field": "gameID",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/GCGTalkExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "elementBrustTalkId",
+          "relation_kind": "gcg_elementBrustTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "happyTalkId",
+          "relation_kind": "gcg_happyTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "sadTalkId",
+          "relation_kind": "gcg_sadTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "toughTalkId",
+          "relation_kind": "gcg_toughTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "lowHealthTalkId",
+          "relation_kind": "gcg_lowHealthTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "highHealthTalkId",
+          "relation_kind": "gcg_highHealthTalkId_detail",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "talkDetailId",
+          "target_sources": [
+            "ExcelBinOutput/GCGTalkDetailExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete GCGGame physical namespace",
+          "field": "gameID",
+          "relation_kind": "gcg_game",
+          "resolution": "local",
+          "shape": "scalar",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/GCGGameExcelConfigData.json"
+          ],
+          "target_table": null
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 539,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gcg_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "levelId",
+          "markId",
+          "npcId",
+          "talkId",
+          "unlockCond",
+          "unlockParam"
+        ],
+        "readable_owner_fields": [
+          "levelDecTextMapHash",
+          "levelTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GCGWorldLevelExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "levelDecTextMapHash": 113,
+        "levelTitleTextMapHash": 113
+      },
+      "path": "ExcelBinOutput/GCGWorldLevelExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 113,
+      "text_owners": [
+        {
+          "field": "levelDecTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "levelTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AOJAKGHDJEA",
+        "ELFPMCOFGNB",
+        "EMDDDPALHFL",
+        "FDFPGMIKJLP",
+        "PLIGIMNGAJA"
+      ],
+      "added_field_names": [
+        "MEAFFJCCKNE",
+        "MECPCDBEFBG",
+        "NGDGAAEHPHB",
+        "NMIAMBDOEJK",
+        "OLOLLKJCHHI"
+      ],
+      "boundary": "high_value_world_entity_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AOJAKGHDJEA",
+          "ELFPMCOFGNB",
+          "EMDDDPALHFL",
+          "FDFPGMIKJLP",
+          "PLIGIMNGAJA",
+          "campID",
+          "chainId",
+          "clientScriptHash",
+          "controllerPathHash",
+          "controllerPathRemoteHash",
+          "hasAudio",
+          "hasMove",
+          "id",
+          "inteeIconName",
+          "isEquip",
+          "isInteractive",
+          "itemJsonName",
+          "itemPrefabPathHash",
+          "jsonName",
+          "landSoundID",
+          "lodPatternName",
+          "mpPropID",
+          "prefabPathHash",
+          "prefabPathRemoteHash",
+          "radarHintID",
+          "tags",
+          "type",
+          "visionLevel"
+        ],
+        "readable_owner_fields": [
+          "interactNameTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GadgetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "interactNameTextMapHash": 30599,
+        "nameTextMapHash": 30599
+      },
+      "path": "ExcelBinOutput/GadgetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 30599,
+      "text_owners": [
+        {
+          "field": "interactNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AHJJIONIDDC",
+        "AJHLCOKLLGO",
+        "BNDLKOLAONP",
+        "EODOGNCLIFK",
+        "FOOLMMLMKBI",
+        "GMMCMHCCGEA",
+        "GNAGIIGOPAD",
+        "ILLHIAJAHAG",
+        "KDEGFJGBMIA",
+        "LGMJJJOABFJ",
+        "LMAFJFPHLPE",
+        "LMEANGBOKDL",
+        "LPFFALDHLCG",
+        "NDJKDAHLACN",
+        "OEBEDDPLIHI",
+        "PNGKCFNODBI"
+      ],
+      "added_field_names": [
+        "AEBLMCBMLHA",
+        "CCNGGHMMDBG",
+        "FHNACHDKAGH",
+        "GJBGMPNFAAB",
+        "JHFBJJMEDKH",
+        "JNJKGKNEACA",
+        "LCJPFFELKGL",
+        "LNNPEHJDCKK",
+        "MIMDIEBLGGJ",
+        "MNKLEGDAJMC",
+        "NCFMFDIEBFP",
+        "NPFNKCODCBP",
+        "PCECOEPNKEP",
+        "PDGEIHBANLH",
+        "PEODDLNKKFN",
+        "POPMKEGBNEN"
+      ],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AHJJIONIDDC",
+          "AJHLCOKLLGO",
+          "BNDLKOLAONP",
+          "EODOGNCLIFK",
+          "FOOLMMLMKBI",
+          "GMMCMHCCGEA",
+          "GNAGIIGOPAD",
+          "ILLHIAJAHAG",
+          "KDEGFJGBMIA",
+          "LGMJJJOABFJ",
+          "LMAFJFPHLPE",
+          "LMEANGBOKDL",
+          "LPFFALDHLCG",
+          "NDJKDAHLACN",
+          "OEBEDDPLIHI",
+          "PNGKCFNODBI",
+          "abilityGroup",
+          "abilityGroupList",
+          "canInterruptByClient",
+          "centerPosList",
+          "centerRadius",
+          "controlGroupId",
+          "destroyGadgetPosition",
+          "destroyGadgetRadius",
+          "duration",
+          "endAudioValues",
+          "groupFurnitureId",
+          "groupId",
+          "id",
+          "isDisableGroupDefaultReviseLevel",
+          "isEnableMpPrepare",
+          "limitRegion",
+          "mpPrepareTime",
+          "param",
+          "pic",
+          "preStartAudioValues",
+          "revivePointConfigId",
+          "revivePointGroupId",
+          "sceneId",
+          "selectableAbilityGroups",
+          "selectableTeamAbilityGroupList",
+          "singlePrepareTime",
+          "startAudioValues",
+          "teamAbilityGroupList",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "galleryMSGTextMapHash",
+          "galleryNameTextMapHash",
+          "nameTextMapHash",
+          "targetTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "GalleryExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 1602,
+        "galleryMSGTextMapHash": 1602,
+        "galleryNameTextMapHash": 1602,
+        "nameTextMapHash": 1602,
+        "targetTextMapHash": 1602
+      },
+      "path": "ExcelBinOutput/GalleryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1602,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "galleryMSGTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "galleryNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "targetTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AIBFLNDLFNJ",
+        "MHOBBAGJDNB",
+        "MLCPOKDPMMJ"
+      ],
+      "added_field_names": [
+        "BODBFOGGOKI",
+        "GFNEEFDKOLP",
+        "HMGLLAIEIDG"
+      ],
+      "boundary": "handbook_main_quest_guide_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AIBFLNDLFNJ",
+          "MHOBBAGJDNB",
+          "MLCPOKDPMMJ",
+          "mainQuestGuideID"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "preMainQuestGuideIDList",
+          "investigationTargetID"
+        ]
+      },
+      "kind": "HandbookMainQuestGuide",
+      "native_id_field": "mainQuestGuideID",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/HandbookMainQuestGuideExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "preMainQuestGuideIDList",
+          "relation_kind": "handbook_previous_guide",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "mainQuestGuideID",
+          "target_sources": [
+            "ExcelBinOutput/HandbookMainQuestGuideExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "investigationTargetID",
+          "relation_kind": "handbook_investigation_target",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 50,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "FMLOABICIJE",
+        "OPPBAKNOFPB"
+      ],
+      "added_field_names": [
+        "MEJENHOMDMA",
+        "MMLKIBLLOGP"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "FMLOABICIJE",
+          "OPPBAKNOFPB",
+          "areaCenterPos",
+          "areaCenterRot",
+          "areaID",
+          "areaType",
+          "blueprintImageAddr",
+          "blueprintSafePointStr",
+          "configID",
+          "highLoadLimit",
+          "lowLoadLimit",
+          "maxComfort",
+          "middleLoadLimit",
+          "playerSafePointStr",
+          "safePointStr",
+          "sceneID"
+        ],
+        "readable_owner_fields": [
+          "blueprintSlotNameTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "HomeWorldAreaComfortExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "blueprintSlotNameTextMapHash": 81,
+        "nameTextMapHash": 81
+      },
+      "path": "ExcelBinOutput/HomeWorldAreaComfortExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 81,
+      "text_owners": [
+        {
+          "field": "blueprintSlotNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "JMMKFLGCBCC",
+        "OBHAHKPJONP"
+      ],
+      "added_field_names": [
+        "GBFGCLOFHHK",
+        "MPEAAHPJEBF"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "JMMKFLGCBCC",
+          "OBHAHKPJONP",
+          "avatarID",
+          "frontIcon",
+          "furnitureID",
+          "isNPC",
+          "npcID",
+          "quality",
+          "talkIDs"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "showNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "HomeWorldNPCExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 121,
+        "showNameTextMapHash": 121
+      },
+      "path": "ExcelBinOutput/HomeWorldNPCExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 121,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "showNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_monster_npc_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "abilityGroup",
+          "affix",
+          "cityList",
+          "clueTextIdList",
+          "configId",
+          "createPosType",
+          "difficulty",
+          "initialPose",
+          "isDisableWandering",
+          "level",
+          "limitTime",
+          "monsterId",
+          "refreshCond",
+          "reviseLevelId",
+          "routeId",
+          "searchPointNum",
+          "suiteId"
+        ],
+        "readable_owner_fields": [
+          "mechanismDesc1TextMapHash",
+          "mechanismDesc2TextMapHash",
+          "mechanismTitle1TextMapHash",
+          "mechanismTitle2TextMapHash",
+          "newsTextTextMapHash",
+          "traitTextTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "HuntingMonsterExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "mechanismDesc1TextMapHash": 137,
+        "mechanismDesc2TextMapHash": 137,
+        "mechanismTitle1TextMapHash": 137,
+        "mechanismTitle2TextMapHash": 137,
+        "newsTextTextMapHash": 137,
+        "traitTextTextMapHash": 137
+      },
+      "path": "ExcelBinOutput/HuntingMonsterExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 137,
+      "text_owners": [
+        {
+          "field": "mechanismDesc1TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "mechanismDesc2TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "mechanismTitle1TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "mechanismTitle2TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "newsTextTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "traitTextTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "icon",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "buffNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "IceCreatureBuffExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "buffNameTextMapHash": 5
+      },
+      "path": "ExcelBinOutput/IceCreatureBuffExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 5,
+      "text_owners": [
+        {
+          "field": "buffNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AMOABBELGKH",
+        "EPFLBCJDDOI"
+      ],
+      "added_field_names": [
+        "BDJJEBJDOHE",
+        "FPOONBOPLLI"
+      ],
+      "boundary": "ice_creature_codex_opaque",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AMOABBELGKH",
+          "EPFLBCJDDOI"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": []
+      },
+      "kind": "IceCreatureCodex",
+      "native_id_field": null,
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/IceCreatureCodexExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "COHEAHLKKDF",
+        "DBLFGAJHHHG",
+        "DLHADBAPBFI",
+        "DPKIJBOJKEJ",
+        "GEHOBMEIEKB",
+        "ICHBHDIDBDG",
+        "JGHODOOOADJ",
+        "MHOCCALGFIM",
+        "MKKOOIIABJK",
+        "NMAFFHGAMOA"
+      ],
+      "added_field_names": [
+        "CAHBBPFKENI",
+        "CDKPHFHNDFJ",
+        "EIJNPJAALDL",
+        "EOLKKKMHHPN",
+        "IDMFAGMEKKA",
+        "IHENHNNMNKA",
+        "NDJGFGGAEPB",
+        "NMFCEJGCBNP",
+        "PIHGOFJPKFC",
+        "POIANNGGFIF"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "COHEAHLKKDF",
+          "DBLFGAJHHHG",
+          "DLHADBAPBFI",
+          "DPKIJBOJKEJ",
+          "GEHOBMEIEKB",
+          "ICHBHDIDBDG",
+          "JGHODOOOADJ",
+          "MHOCCALGFIM",
+          "MKKOOIIABJK",
+          "NMAFFHGAMOA",
+          "gadgetIdList",
+          "icon",
+          "id",
+          "order",
+          "pushTipsId"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "unlockDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "IceCreatureExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 33,
+        "nameTextMapHash": 33,
+        "unlockDescTextMapHash": 33
+      },
+      "path": "ExcelBinOutput/IceCreatureExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 33,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "unlockDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DPKIJBOJKEJ",
+        "EDHDFKCMFJB",
+        "FAAIDDHPDEB",
+        "NBLJPJKFLLH"
+      ],
+      "added_field_names": [
+        "BJNDPBKKANH",
+        "DFGJGBLJKKO",
+        "GOLOOIKLNKP",
+        "PIHGOFJPKFC"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DPKIJBOJKEJ",
+          "EDHDFKCMFJB",
+          "FAAIDDHPDEB",
+          "NBLJPJKFLLH",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "IceCreatureIconExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 17
+      },
+      "path": "ExcelBinOutput/IceCreatureIconExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 17,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "LGHGOIPJPMB"
+      ],
+      "added_field_names": [
+        "AFLDPGPHHJN"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "LGHGOIPJPMB",
+          "gadgetId",
+          "icon"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "unlockDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "IceCreatureSkinExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 6,
+        "nameTextMapHash": 6,
+        "unlockDescTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/IceCreatureSkinExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "unlockDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id",
+          "mainQuestIds",
+          "openDay",
+          "preOtherQuestIds",
+          "preQuestId",
+          "questId",
+          "questType"
+        ],
+        "readable_owner_fields": [
+          "chapterTextMapHash",
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "IrodoriQuestExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "chapterTextMapHash": 8,
+        "descTextMapHash": 8,
+        "nameTextMapHash": 8
+      },
+      "path": "ExcelBinOutput/IrodoriQuestExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 8,
+      "text_owners": [
+        {
+          "field": "chapterTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CMGBOLOAEOI",
+        "KAGFDDOAKFG",
+        "OEPEAAOBGPH",
+        "PPECPDLAPNJ"
+      ],
+      "added_field_names": [
+        "FHOALCANHFJ",
+        "FJOOKLKBODI",
+        "NILPIICMKJD",
+        "PPLDGODPDDP"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CMGBOLOAEOI",
+          "KAGFDDOAKFG",
+          "OEPEAAOBGPH",
+          "PPECPDLAPNJ",
+          "id",
+          "preQuestId"
+        ],
+        "readable_owner_fields": [
+          "markDescTextMapHash",
+          "markTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "LanV5GreetingCardNpcExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "markDescTextMapHash": 18,
+        "markTitleTextMapHash": 18
+      },
+      "path": "ExcelBinOutput/LanV5GreetingCardNpcExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 18,
+      "text_owners": [
+        {
+          "field": "markDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "markTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "atmosphereNeed",
+          "chapterIcon",
+          "id",
+          "openDay",
+          "preQuestId",
+          "questId",
+          "questType"
+        ],
+        "readable_owner_fields": [
+          "chapterTextMapHash",
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "LunaRiteQuestExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "chapterTextMapHash": 5,
+        "descTextMapHash": 5,
+        "nameTextMapHash": 5
+      },
+      "path": "ExcelBinOutput/LunaRiteQuestExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 5,
+      "text_owners": [
+        {
+          "field": "chapterTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "FAOOEMEDPOG"
+      ],
+      "added_field_names": [
+        "DOGDJGCEGPH"
+      ],
+      "boundary": "high_value_world_item_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "FAOOEMEDPOG",
+          "id",
+          "isDisuse",
+          "materialId",
+          "questID1",
+          "showOnlyUnlocked",
+          "sortOrder",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "questReplaceDesc1TextMapHash",
+          "questReplaceDesc2TextMapHash",
+          "questReplaceName1TextMapHash",
+          "questReplaceName2TextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "MaterialCodexExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 1176,
+        "nameTextMapHash": 1176,
+        "questReplaceDesc1TextMapHash": 1176,
+        "questReplaceDesc2TextMapHash": 1176,
+        "questReplaceName1TextMapHash": 1176,
+        "questReplaceName2TextMapHash": 1176
+      },
+      "path": "ExcelBinOutput/MaterialCodexExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1176,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questReplaceDesc1TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questReplaceDesc2TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questReplaceName1TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questReplaceName2TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_item_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "icon",
+          "id",
+          "specialNameLabID",
+          "titleID"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "MonsterDescribeExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 581
+      },
+      "path": "ExcelBinOutput/MonsterDescribeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 581,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_monster_npc_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "isInRandomList",
+          "specialNameID",
+          "specialNameLabID"
+        ],
+        "readable_owner_fields": [
+          "specialNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "MonsterSpecialNameExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "specialNameTextMapHash": 1236
+      },
+      "path": "ExcelBinOutput/MonsterSpecialNameExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 1236,
+      "text_owners": [
+        {
+          "field": "specialNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_monster_npc_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "isInverted",
+          "titleID"
+        ],
+        "readable_owner_fields": [
+          "titleNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "MonsterTitleExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "titleNameTextMapHash": 899
+      },
+      "path": "ExcelBinOutput/MonsterTitleExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 899,
+      "text_owners": [
+        {
+          "field": "titleNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DEDEEIECFBB"
+      ],
+      "added_field_names": [
+        "LDOHCAOJELE"
+      ],
+      "boundary": "high_value_music_game_configuration_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DEDEEIECFBB",
+          "condID",
+          "instrumentID",
+          "levelId",
+          "musicID",
+          "musicTime",
+          "pointID",
+          "watcherList"
+        ],
+        "readable_owner_fields": [
+          "markDescTextMapHash",
+          "markNameTextMapHash",
+          "musicDescTextMapHash",
+          "musicNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "MusicInfoConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "markDescTextMapHash": 21,
+        "markNameTextMapHash": 21,
+        "musicDescTextMapHash": 21,
+        "musicNameTextMapHash": 21
+      },
+      "path": "ExcelBinOutput/MusicInfoConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 21,
+      "text_owners": [
+        {
+          "field": "markDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "markNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "musicDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "musicNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CANKKLPDNCH",
+        "KMHGBJNMJNA",
+        "NDGIOENPPJP"
+      ],
+      "added_field_names": [
+        "APNHPKLGLMP",
+        "FAICMBAJIDJ",
+        "IOCJFMMFKGE"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CANKKLPDNCH",
+          "KMHGBJNMJNA",
+          "NDGIOENPPJP",
+          "id",
+          "perfabPath"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "NatlanTribalQuestActivityExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/NatlanTribalQuestActivityExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BABKFBNIGIM",
+        "BKFNHOPCDAF",
+        "CMGJAAIMNFD",
+        "DBKLIKDEAFJ",
+        "EBGALMCHNJN",
+        "GKKOMOBPOMN",
+        "GNMMOGLHHGE",
+        "IELMEDCIJOO",
+        "INBIOJMLEIF",
+        "JFBCIBAECHP",
+        "KDFHPAEEDPP",
+        "KHHLAJKAPAC",
+        "LLNNMKPHOIO",
+        "MIFMLKNJCAN"
+      ],
+      "added_field_names": [
+        "AAHCKLOPDBK",
+        "BCEDBAMEOFD",
+        "BEFLHFJPFEL",
+        "DEGMDBIMLNP",
+        "GLPCICDGLNO",
+        "HBKCLOHGCEJ",
+        "IEBGJOHPGGH",
+        "IEBMMDACCDP",
+        "JHIBJGJKDLJ",
+        "JMBEBFIAGNG",
+        "KHEAGMILLPC",
+        "LLJJOAEFMFH",
+        "OMDHDKNCIFO",
+        "PNACIOGIAMH"
+      ],
+      "boundary": "naturalist_handbook_text",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BKFNHOPCDAF",
+          "CMGJAAIMNFD",
+          "IELMEDCIJOO",
+          "KDFHPAEEDPP",
+          "LLNNMKPHOIO",
+          "fetterLevel"
+        ],
+        "readable_owner_fields": [
+          "BABKFBNIGIM",
+          "DBKLIKDEAFJ",
+          "GKKOMOBPOMN",
+          "GNMMOGLHHGE",
+          "INBIOJMLEIF",
+          "JFBCIBAECHP",
+          "KHHLAJKAPAC",
+          "MIFMLKNJCAN"
+        ],
+        "relation_fields": [
+          "avatarId",
+          "EBGALMCHNJN/*/questId"
+        ]
+      },
+      "kind": "NaturalistHandBook",
+      "native_id_field": "avatarId",
+      "owner_root_presence": {
+        "BABKFBNIGIM": 0,
+        "DBKLIKDEAFJ": 0,
+        "GKKOMOBPOMN": 0,
+        "GNMMOGLHHGE": 0,
+        "INBIOJMLEIF": 0,
+        "JFBCIBAECHP": 0,
+        "KHHLAJKAPAC": 0,
+        "MIFMLKNJCAN": 0
+      },
+      "path": "ExcelBinOutput/NaturalistHandBookExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "avatarId",
+          "relation_kind": "naturalist_avatar_observation",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "EBGALMCHNJN/*/questId",
+          "relation_kind": "naturalist_quest_observation",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "BABKFBNIGIM",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "DBKLIKDEAFJ",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "GKKOMOBPOMN",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "GNMMOGLHHGE",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "INBIOJMLEIF",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "JFBCIBAECHP",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "KHHLAJKAPAC",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "MIFMLKNJCAN",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "array"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "avatarID",
+          "costElemType",
+          "iconName",
+          "id",
+          "npcType",
+          "subQuestIdList"
+        ],
+        "readable_owner_fields": [
+          "avatarDescriptionTextMapHash",
+          "avatarTitleTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "NpcFirstMetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "avatarDescriptionTextMapHash": 166,
+        "avatarTitleTextMapHash": 166,
+        "nameTextMapHash": 166
+      },
+      "path": "ExcelBinOutput/NpcFirstMetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 166,
+      "text_owners": [
+        {
+          "field": "avatarDescriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "avatarTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CMGEIEOLPPL",
+        "ENDBNEAFELH",
+        "FADCOMADLOD",
+        "FCOIGJEDFMP",
+        "GOOHPHJPIKM",
+        "IDKICPJBKLA"
+      ],
+      "added_field_names": [
+        "ACFMCHPBDMG",
+        "CJJODEPIILB",
+        "CMILJGJDNAC",
+        "INIMKGCALEE",
+        "KHENPLCCPDP",
+        "NAOILGGDLNA"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CMGEIEOLPPL",
+          "ENDBNEAFELH",
+          "FADCOMADLOD",
+          "FCOIGJEDFMP",
+          "GOOHPHJPIKM",
+          "IDKICPJBKLA",
+          "addProps",
+          "breakLevel",
+          "coinCost",
+          "costItems",
+          "filterConds",
+          "icon",
+          "isHideLifeProudSkill",
+          "level",
+          "lifeEffectParams",
+          "lifeEffectType",
+          "openConfig",
+          "paramDescList",
+          "paramList",
+          "proudSkillGroupId",
+          "proudSkillId",
+          "proudSkillType"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "unlockDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ProudSkillExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 6273,
+        "nameTextMapHash": 6273,
+        "unlockDescTextMapHash": 6273
+      },
+      "path": "ExcelBinOutput/ProudSkillExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6273,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "unlockDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DEILNLAFCFB",
+        "KCGMNLGOGJN"
+      ],
+      "added_field_names": [
+        "EPDLGEJIDPA",
+        "JOFHMOOJBGA"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DEILNLAFCFB",
+          "KCGMNLGOGJN",
+          "number"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestAbyssWarAccountIndexExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descTextMapHash": 10
+      },
+      "path": "ExcelBinOutput/QuestAbyssWarAccountIndexExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 10,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "ANLEABGAEKC",
+        "CAFJNEJJNGF",
+        "CJDDCMOELLM",
+        "DEPDCIDHKFG",
+        "DLINELIJOAM",
+        "EDHPGBEAFNF",
+        "EHNGPOAONPK",
+        "EMPJBNNCDMD",
+        "FNOHHCPFHJH",
+        "GGALCLJOLPF",
+        "HNGIPMKJDKA",
+        "IDCIAEPPGFD",
+        "JAODEBHDIJL",
+        "JHKAOPKIBGE",
+        "NPKPFHMDPDA"
+      ],
+      "added_field_names": [
+        "APMODHMNDGD",
+        "CAFGMLCDPLI",
+        "CEHHCGCPBDG",
+        "DAMBCBFCGIM",
+        "EGOHCBPOBEC",
+        "GBJPLHDDOJM",
+        "IIFDMGPIABI",
+        "IJHPHOLCDFF",
+        "IKEHDAPPHBM",
+        "JIPAFKANGNJ",
+        "KMMLMDONLBC",
+        "MAGOFGNEBHN",
+        "MBBMPFGJEDE",
+        "MDDPOAHMOEL",
+        "MJCCHFKEOOP"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "ANLEABGAEKC",
+          "CAFJNEJJNGF",
+          "CJDDCMOELLM",
+          "DEPDCIDHKFG",
+          "DLINELIJOAM",
+          "EDHPGBEAFNF",
+          "EHNGPOAONPK",
+          "EMPJBNNCDMD",
+          "FNOHHCPFHJH",
+          "GGALCLJOLPF",
+          "HNGIPMKJDKA",
+          "IDCIAEPPGFD",
+          "JAODEBHDIJL",
+          "JHKAOPKIBGE",
+          "NPKPFHMDPDA",
+          "id",
+          "mainQuestId",
+          "pushTipsId"
+        ],
+        "readable_owner_fields": [
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestAlchemySimExamExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "titleTextMapHash": 5
+      },
+      "path": "ExcelBinOutput/QuestAlchemySimExamExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 5,
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "FEDCILENDKO",
+        "KMLPOBCABGH",
+        "NLBIEAEIIOG"
+      ],
+      "added_field_names": [
+        "CBPNCHFMIFH",
+        "ELIFAOHEPNF",
+        "HJCCCOBACAN"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "FEDCILENDKO",
+          "KMLPOBCABGH",
+          "NLBIEAEIIOG"
+        ],
+        "readable_owner_fields": [
+          "descriptionTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestAlchemySimPotionRankExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descriptionTextMapHash": 4
+      },
+      "path": "ExcelBinOutput/QuestAlchemySimPotionRankExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 4,
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "JFBAPAIICDG"
+      ],
+      "added_field_names": [
+        "JLDFAMFPDIC"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "JFBAPAIICDG",
+          "iconHash",
+          "typeId"
+        ],
+        "readable_owner_fields": [
+          "descriptionTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestAlchemySimTypeExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descriptionTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/QuestAlchemySimTypeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CHNMPMJNCJC",
+        "FPCGKHADGGE"
+      ],
+      "added_field_names": [
+        "CNPDEIKGKMG",
+        "HHGDDADPBEL"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CHNMPMJNCJC",
+          "FPCGKHADGGE",
+          "iconHash",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descriptionTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestBomberUnitExcelConfigData",
+      "native_id_field": null,
+      "owner_root_presence": {
+        "descriptionTextMapHash": 13,
+        "nameTextMapHash": 13
+      },
+      "path": "ExcelBinOutput/QuestBomberUnitExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 13,
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "KICFKBEOPAE",
+        "LEHCPNIDKFN",
+        "MGCKKFLOJMM",
+        "NDFMMMPAPIJ"
+      ],
+      "added_field_names": [
+        "CHNFEMMEECM",
+        "CMFLJAJHIBE",
+        "GIAAEFNDJAM",
+        "MGKFNDLKBCI"
+      ],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "KICFKBEOPAE",
+          "LEHCPNIDKFN",
+          "MGCKKFLOJMM",
+          "NDFMMMPAPIJ",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestEventsConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 5
+      },
+      "path": "ExcelBinOutput/QuestEventsConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 5,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "BEOOKGLNAJF",
+        "FJMFDAOPAPG",
+        "IECKLFDHNBP",
+        "KLCIIEMGBII",
+        "ODFBEAAPKID",
+        "OJHLGBILFBG"
+      ],
+      "added_field_names": [
+        "EBEHIAFHBCN",
+        "ENDPKPFFBGD",
+        "KHNFCJNGPEE",
+        "MCNAJAFFIKC",
+        "NHKIIKFMNPF",
+        "PEKFMOCBPON"
+      ],
+      "boundary": "quest_schedule_story_text",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "BEOOKGLNAJF",
+          "FJMFDAOPAPG",
+          "IECKLFDHNBP",
+          "KLCIIEMGBII",
+          "ODFBEAAPKID",
+          "priority",
+          "storyId"
+        ],
+        "readable_owner_fields": [
+          "OJHLGBILFBG"
+        ],
+        "relation_fields": [
+          "parentQuestId",
+          "startQuestId"
+        ]
+      },
+      "kind": "QuestScheduleStory",
+      "native_id_field": "storyId",
+      "owner_root_presence": {
+        "OJHLGBILFBG": 0
+      },
+      "path": "ExcelBinOutput/QuestScheduleStoryExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "parentQuestId",
+          "relation_kind": "quest_schedule_parent_quest",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "startQuestId",
+          "relation_kind": "quest_schedule_start_quest",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 12,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "OJHLGBILFBG",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "EJOPBEIFBCO",
+        "FGIOEJLEBOA"
+      ],
+      "added_field_names": [
+        "EMKHHCKILOP",
+        "FNAFBDGDBNO"
+      ],
+      "boundary": "quest_schedule_talk_text",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "icon"
+        ],
+        "readable_owner_fields": [
+          "EJOPBEIFBCO",
+          "FGIOEJLEBOA"
+        ],
+        "relation_fields": [
+          "talkId"
+        ]
+      },
+      "kind": "QuestScheduleTalk",
+      "native_id_field": "talkId",
+      "owner_root_presence": {
+        "EJOPBEIFBCO": 0,
+        "FGIOEJLEBOA": 0
+      },
+      "path": "ExcelBinOutput/QuestScheduleTalkExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "exact accepted quest-talk v7 mapped program roots with kind=talk_root",
+          "field": "talkId",
+          "relation_kind": "quest_schedule_talk_root",
+          "resolution": "quest_talk_v7",
+          "shape": "scalar",
+          "target_key": "native_id",
+          "target_sources": null,
+          "target_table": "quest_talk_physical_container"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 31,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": [
+        {
+          "field": "EJOPBEIFBCO",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "FGIOEJLEBOA",
+          "owner_role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "condType",
+          "id",
+          "param1",
+          "param2"
+        ],
+        "readable_owner_fields": [
+          "showTipsTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "QuestSpecialShowConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "showTipsTextMapHash": 16
+      },
+      "path": "ExcelBinOutput/QuestSpecialShowConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 16,
+      "text_owners": [
+        {
+          "field": "showTipsTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "id"
+        ],
+        "readable_owner_fields": [
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "ReliquarySetSchemeExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "nameTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/ReliquarySetSchemeExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "rq_talk_relation_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "beginCond",
+          "beginCondComb",
+          "beginWay",
+          "heroTalk",
+          "id",
+          "priority",
+          "showRandomTalkCount"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "nextTalks",
+          "nextRandomTalks",
+          "initDialog",
+          "npcId",
+          "questId"
+        ]
+      },
+      "kind": "RqTalk",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/RqTalkExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextTalks",
+          "relation_kind": "rq_next_talk",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/RqTalkExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextRandomTalks",
+          "relation_kind": "rq_next_random_talk",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/RqTalkExcelConfigData.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "initDialog",
+          "relation_kind": "rq_initial_dialog",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "npcId",
+          "relation_kind": "rq_npc_observation",
+          "resolution": "unresolved",
+          "shape": "array"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "questId",
+          "relation_kind": "rq_quest_observation",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 151,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "DFGEKCLDAIE",
+        "HDCDDKBCPIM"
+      ],
+      "added_field_names": [
+        "AEHIENCBOLK",
+        "OAIOFGBDPOG"
+      ],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DFGEKCLDAIE",
+          "HDCDDKBCPIM",
+          "endTransConfigId",
+          "galleryId",
+          "groupID",
+          "groupLinkID",
+          "id",
+          "previewList",
+          "startTransConfigId",
+          "targetWatcher3",
+          "watcher3DropCount",
+          "watcherList"
+        ],
+        "readable_owner_fields": [
+          "levelDescTextMapHash",
+          "levelTitleTextMapHash",
+          "target1TextMapHash",
+          "target2TextMapHash",
+          "target3TextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "SorushTrialHitmanGalleryExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "levelDescTextMapHash": 3,
+        "levelTitleTextMapHash": 3,
+        "target1TextMapHash": 3,
+        "target2TextMapHash": 3,
+        "target3TextMapHash": 3
+      },
+      "path": "ExcelBinOutput/SorushTrialHitmanGalleryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "levelDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "levelTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "target1TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "target2TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "target3TextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "cameraPos",
+          "endTransConfigId",
+          "eulerAngle",
+          "galleryId",
+          "groupID",
+          "groupLinkID",
+          "id",
+          "startTransConfigId",
+          "watcherList"
+        ],
+        "readable_owner_fields": [
+          "levelDescTextMapHash",
+          "levelTitleTextMapHash",
+          "picNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "SorushTrialPhotoMatchGalleryExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "levelDescTextMapHash": 6,
+        "levelTitleTextMapHash": 6,
+        "picNameTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/SorushTrialPhotoMatchGalleryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "levelDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "levelTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "picNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_quest_story_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "condID",
+          "id",
+          "questId"
+        ],
+        "readable_owner_fields": [
+          "questDescTextMapHash",
+          "questNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "SorushTrialQuestExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "questDescTextMapHash": 12,
+        "questNameTextMapHash": 12
+      },
+      "path": "ExcelBinOutput/SorushTrialQuestExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 12,
+      "text_owners": [
+        {
+          "field": "questDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "questNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "endTransConfigId",
+          "galleryId",
+          "groupID",
+          "groupLinkID",
+          "id",
+          "startTransConfigId",
+          "watcherList"
+        ],
+        "readable_owner_fields": [
+          "levelDescTextMapHash",
+          "levelTitleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "SorushTrialRaceGalleryExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "levelDescTextMapHash": 3,
+        "levelTitleTextMapHash": 3
+      },
+      "path": "ExcelBinOutput/SorushTrialRaceGalleryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 3,
+      "text_owners": [
+        {
+          "field": "levelDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "levelTitleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "talk_excel_relation_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "activeMode",
+          "beginCond",
+          "beginCondComb",
+          "beginWay",
+          "checkActionAfter",
+          "crowdLOD0List",
+          "decoratorID",
+          "disableTalkReview",
+          "dontBlockDaily",
+          "enableCameraDisplacement",
+          "extraLoadMarkId",
+          "finishExec",
+          "forceNpcNotDestroy",
+          "heroRuleId",
+          "heroTalk",
+          "id",
+          "ignoreDragonTalkRule",
+          "isEnableNoBlackInter",
+          "isShowAdventureGlossary",
+          "linkBehaviorGrpId",
+          "loadType",
+          "lockGameTime",
+          "lowPriority",
+          "newTalkFinishTime",
+          "onlyQuestNpc",
+          "participantId",
+          "performCfg",
+          "prePerformCfg",
+          "priority",
+          "questIdleTalk",
+          "randomTalkPos",
+          "randomTalkPriorityList",
+          "removeDuplicatedRandomTalk",
+          "showRandomTalkCount",
+          "stayFreeStyle",
+          "talkMarkType"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "nextTalks",
+          "nextRandomTalks",
+          "initDialog",
+          "npcId",
+          "questId"
+        ]
+      },
+      "kind": "TalkExcelConfigData_0.json",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/TalkExcelConfigData_0.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextTalks",
+          "relation_kind": "talk_next",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/TalkExcelConfigData_0.json",
+            "ExcelBinOutput/TalkExcelConfigData_1.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextRandomTalks",
+          "relation_kind": "talk_next_random",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/TalkExcelConfigData_0.json",
+            "ExcelBinOutput/TalkExcelConfigData_1.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "initDialog",
+          "relation_kind": "talk_initial_dialog",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "npcId",
+          "relation_kind": "talk_npc_observation",
+          "resolution": "unresolved",
+          "shape": "array"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "questId",
+          "relation_kind": "talk_quest_observation",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 22229,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [
+        "isShowAdventureGlossary"
+      ],
+      "boundary": "talk_excel_relation_config",
+      "carried_forward": false,
+      "completion_outcome": "terminal_unresolved_after_complete_processing",
+      "excluded_event16_ordinals": [
+        2887,
+        2888,
+        2889,
+        2890,
+        2891,
+        2892,
+        2893,
+        2894,
+        2895,
+        2896,
+        2897,
+        2898,
+        2899,
+        2900,
+        2901,
+        2902,
+        2903,
+        2904,
+        2905,
+        2906,
+        2907,
+        2908,
+        2909,
+        2910,
+        2911,
+        2912,
+        2913,
+        2914,
+        2915,
+        2916,
+        2917,
+        2918,
+        2936,
+        2937,
+        2938,
+        2939,
+        2940,
+        2941,
+        2942,
+        2943,
+        2944,
+        2945,
+        2946,
+        2947
+      ],
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "activeMode",
+          "beginCond",
+          "beginCondComb",
+          "beginWay",
+          "checkActionAfter",
+          "crowdLOD0List",
+          "decoratorID",
+          "disableTalkReview",
+          "dontBlockDaily",
+          "enableCameraDisplacement",
+          "extraLoadMarkId",
+          "finishExec",
+          "forceNpcNotDestroy",
+          "heroRuleId",
+          "heroTalk",
+          "id",
+          "ignoreDragonTalkRule",
+          "isEnableNoBlackInter",
+          "linkBehaviorGrpId",
+          "loadType",
+          "lockGameTime",
+          "lowPriority",
+          "newTalkFinishTime",
+          "onlyQuestNpc",
+          "participantId",
+          "performCfg",
+          "prePerformCfg",
+          "priority",
+          "questIdleTalk",
+          "randomTalkPos",
+          "randomTalkPriorityList",
+          "removeDuplicatedRandomTalk",
+          "showRandomTalkCount",
+          "stayFreeStyle",
+          "talkMarkHideList",
+          "talkMarkType"
+        ],
+        "readable_owner_fields": [],
+        "relation_fields": [
+          "nextTalks",
+          "nextRandomTalks",
+          "initDialog",
+          "npcId",
+          "questId"
+        ]
+      },
+      "kind": "TalkExcelConfigData_1.json",
+      "native_id_field": "id",
+      "owner_root_presence": {},
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "relations": [
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextTalks",
+          "relation_kind": "talk_next",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/TalkExcelConfigData_0.json",
+            "ExcelBinOutput/TalkExcelConfigData_1.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "complete local physical namespace",
+          "field": "nextRandomTalks",
+          "relation_kind": "talk_next_random",
+          "resolution": "local",
+          "shape": "array",
+          "target_key": "id",
+          "target_sources": [
+            "ExcelBinOutput/TalkExcelConfigData_0.json",
+            "ExcelBinOutput/TalkExcelConfigData_1.json"
+          ],
+          "target_table": null
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "initDialog",
+          "relation_kind": "talk_initial_dialog",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "npcId",
+          "relation_kind": "talk_npc_observation",
+          "resolution": "unresolved",
+          "shape": "array"
+        },
+        {
+          "candidate_namespace": "namespace audited but semantic target identity not source-bound",
+          "field": "questId",
+          "relation_kind": "talk_quest_observation",
+          "resolution": "unresolved",
+          "shape": "scalar"
+        }
+      ],
+      "selection_rule": "complete 7.1 array minus 44 exact Event16 physical coordinates",
+      "source_row_count": 22230,
+      "source_row_denominator": 21973,
+      "terminal_unresolved_reason": "complete physical/owner/relation observation processing retains unresolved field roles or target namespaces without inference",
+      "text_owners": []
+    },
+    {
+      "absent_historical_field_names": [
+        "ACJKGGDHIMF",
+        "ADLKPPFNCCB",
+        "GPCOJHLAMLH",
+        "JKLPAGCNNHH",
+        "KKJDFJMLMBA",
+        "MFJCLHGDLBP",
+        "MPDICFKADOO",
+        "NDDFDHJNLFN",
+        "OAMNKLDMLDN",
+        "OKIHPPDEGNC",
+        "PBHHGDCCNDH"
+      ],
+      "added_field_names": [
+        "DJKLMIGBHIL",
+        "EGKBLLIFBCB",
+        "GIGABHHHIMF",
+        "HCEPKLEPJPD",
+        "IDFIALNFNMC",
+        "KLAJMNCOEIJ",
+        "KOHCBGDKMPG",
+        "NPABKPPDFPL",
+        "PAFGDGOCNHF",
+        "PHCGJCFENJP",
+        "PIHHHIMPCAM"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "ACJKGGDHIMF",
+          "ADLKPPFNCCB",
+          "GPCOJHLAMLH",
+          "JKLPAGCNNHH",
+          "KKJDFJMLMBA",
+          "MFJCLHGDLBP",
+          "MPDICFKADOO",
+          "NDDFDHJNLFN",
+          "OAMNKLDMLDN",
+          "OKIHPPDEGNC",
+          "PBHHGDCCNDH",
+          "id",
+          "prefabPath"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash",
+          "unlockDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "TpsWeaponAccessoryExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 12,
+        "nameTextMapHash": 12,
+        "unlockDescTextMapHash": 12
+      },
+      "path": "ExcelBinOutput/TpsWeaponAccessoryExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 12,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "unlockDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "CAHBCEHOEMD",
+        "CPFNONECDLA",
+        "FOOLPPAIJNP",
+        "GGIJOAEGKOF",
+        "GJHNINLLOCC",
+        "GNNJDMNPHKB",
+        "IGIFBOOLHIF",
+        "IPGJPNJJGBE",
+        "JKEDHMGKADO",
+        "JKLPAGCNNHH",
+        "KJIEOOOIDNC",
+        "MIMJOGOFHEI",
+        "NDDFDHJNLFN",
+        "NHKLELOIFHE"
+      ],
+      "added_field_names": [
+        "ANPKGOFBHLI",
+        "AOCDONCFKNA",
+        "BMPEDGJECGI",
+        "DJEFBHIOPOM",
+        "FNFHHMPAEJL",
+        "KHHMMJKEIOF",
+        "KOOADAKKIAK",
+        "MBEIANPDCHO",
+        "MMAHLBBNDCH",
+        "MNOEGOHMEMG",
+        "NNJGEAPMJFL",
+        "ODMHOIGDPEP",
+        "PHCGJCFENJP",
+        "PIHHHIMPCAM",
+        "globalItemLimit"
+      ],
+      "boundary": "high_value_character_readable_config",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "CAHBCEHOEMD",
+          "CPFNONECDLA",
+          "FOOLPPAIJNP",
+          "GGIJOAEGKOF",
+          "GJHNINLLOCC",
+          "GNNJDMNPHKB",
+          "IGIFBOOLHIF",
+          "IPGJPNJJGBE",
+          "JKEDHMGKADO",
+          "JKLPAGCNNHH",
+          "KJIEOOOIDNC",
+          "MIMJOGOFHEI",
+          "NDDFDHJNLFN",
+          "NHKLELOIFHE",
+          "gadgetId",
+          "icon",
+          "id",
+          "itemType",
+          "rank",
+          "rankLevel",
+          "skillId",
+          "weight"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "TpsWeaponExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 8,
+        "nameTextMapHash": 8
+      },
+      "path": "ExcelBinOutput/TpsWeaponExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 8,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "HFOAEJBMIPP"
+      ],
+      "added_field_names": [
+        "DFJDNJNLHDP"
+      ],
+      "boundary": "high_value_readable_tutorial_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "HFOAEJBMIPP",
+          "id"
+        ],
+        "readable_owner_fields": [
+          "typeNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "UgcTutorialExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "typeNameTextMapHash": 2
+      },
+      "path": "ExcelBinOutput/UgcTutorialExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 2,
+      "text_owners": [
+        {
+          "field": "typeNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [],
+      "added_field_names": [],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "branchList",
+          "duration",
+          "id",
+          "npcId",
+          "rewardSkillList",
+          "talkId"
+        ],
+        "readable_owner_fields": [
+          "talkDescTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "VintageMarketNpcEventExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "talkDescTextMapHash": 6
+      },
+      "path": "ExcelBinOutput/VintageMarketNpcEventExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 6,
+      "text_owners": [
+        {
+          "field": "talkDescTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "DGJIFMOFMLF",
+        "EHHCHPGPHEN",
+        "ENDJIAGANPH",
+        "LCCGHDEBJDK",
+        "PLAMGBIMBOH"
+      ],
+      "added_field_names": [
+        "EBOFNLMDEJC",
+        "GEBLJONICEL",
+        "HIBABOPPBMD",
+        "HJLEKOMJCCI",
+        "MLKKIHLMALF"
+      ],
+      "boundary": "high_value_world_npc_catalog_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "DGJIFMOFMLF",
+          "EHHCHPGPHEN",
+          "ENDJIAGANPH",
+          "LCCGHDEBJDK",
+          "PLAMGBIMBOH",
+          "areaID1",
+          "areaID2",
+          "areaOffset",
+          "areaType",
+          "elementType",
+          "guideEntrancePoint",
+          "guideExitPoint",
+          "id",
+          "isSpecialGuide",
+          "minimapScale",
+          "sceneID",
+          "showTips",
+          "teamAbilityGroupList",
+          "terrainType",
+          "towerPointId"
+        ],
+        "readable_owner_fields": [
+          "areaNameTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "WorldAreaConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "areaNameTextMapHash": 578
+      },
+      "path": "ExcelBinOutput/WorldAreaConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 578,
+      "text_owners": [
+        {
+          "field": "areaNameTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "absent_historical_field_names": [
+        "AGMEFJGPKOB",
+        "FDABBNOOKGE"
+      ],
+      "added_field_names": [
+        "CFMGKGCALAD",
+        "CPPGOMFOOJB"
+      ],
+      "boundary": "high_value_gallery_archive_text",
+      "carried_forward": true,
+      "completion_outcome": "fully_covered",
+      "historical_field_classification": {
+        "raw_or_opaque_fields": [
+          "AGMEFJGPKOB",
+          "FDABBNOOKGE",
+          "icon",
+          "id",
+          "type"
+        ],
+        "readable_owner_fields": [
+          "descTextMapHash",
+          "titleTextMapHash"
+        ],
+        "relation_fields": []
+      },
+      "kind": "WorldVideoSheetExcelConfigData",
+      "native_id_field": "id",
+      "owner_root_presence": {
+        "descTextMapHash": 16,
+        "titleTextMapHash": 16
+      },
+      "path": "ExcelBinOutput/WorldVideoSheetExcelConfigData.json",
+      "relations": [],
+      "selection_rule": "complete 7.1 top-level array",
+      "source_row_count": 16,
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    }
+  ],
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

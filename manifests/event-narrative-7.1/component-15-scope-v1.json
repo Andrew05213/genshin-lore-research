@@ -1,0 +1,325 @@
+{
+  "boundaries": [
+    "activity_photograph_narrative_archive",
+    "echo_shell_archive"
+  ],
+  "contract": "event-photo-echo-7.1-versioned-source-v1",
+  "corpus_complete": true,
+  "coverage": "complete V7 ActivityPhotograph root/page/position/position-extension narrative projection plus EchoShell main/story narrative rows, declared text owners, and source-local relations",
+  "cross_family_relations": false,
+  "external_relation_candidates": [],
+  "family_contract_version": "event-narrative-evidence-v3",
+  "field_renames": {
+    "DLGNPIDJDAD": "EHLBLMHEAAB",
+    "EINGJLOCLJO": "PKPHBGMFODP",
+    "FLKPLMMNLFL": "JOLGNPDDIJK",
+    "HPAMAMOHMMM": "ICMKPBCEJJB",
+    "KDLEHDLHHOD": "JPAAHMBJGOJ",
+    "NPDJPIBIDDG": "ELJEELOLFPI"
+  },
+  "files": [
+    {
+      "blob": "48a11fb144f6d9af7b1cc2e4f570ac37bac3281d",
+      "path": "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+      "sha256": "5b5a7acec0f73fd8f4c8bb4a5ddd9db5df8e2435051a2a93bb733d158df1d99b",
+      "size_bytes": 977
+    },
+    {
+      "blob": "665eea258613514ecddbb5a33d828e40f393fde3",
+      "path": "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+      "sha256": "cf610b28bc76cbb70ea8e08044247a8abfc87610dcce518f5370a3c35525fb85",
+      "size_bytes": 640
+    },
+    {
+      "blob": "e2a7323f8f6723ae5f6651082546247b7d6b536c",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "sha256": "5f2ed6159683fae64dec7bf82009f3bc78208ea3695e5369e90568d91b19a640",
+      "size_bytes": 127449
+    },
+    {
+      "blob": "6d68d755224e8ae6076f27c9ea8e760904215875",
+      "path": "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+      "sha256": "200fdbfa501a9326e966fce14c7ab1c5101b1b04eabfc73909fc123a4255b1a7",
+      "size_bytes": 4802
+    },
+    {
+      "blob": "d201cb6b08786c4545dc14b9093575ea09c5751a",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "sha256": "97c537cb1598c732c0f78f1b343b6d7a368362b861ce6f2548aed0557c7d0338",
+      "size_bytes": 21980
+    },
+    {
+      "blob": "2484322abb28532b0b60c5ea8ae4054300bf4abf",
+      "path": "ExcelBinOutput/EchoShellStoryExcelConfigData.json",
+      "sha256": "3cc8792231d5350ee54fe88cee2560b2e46c82a3f337d1b1f6164b7a539b48d2",
+      "size_bytes": 236
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_echo_shell_gameplay": false,
+  "full_photograph_gameplay": false,
+  "full_quest": false,
+  "full_talk": false,
+  "historical_scope_sha256": "8103d7125fe3dd47d29538dcb2c8970b163e88edafc410b8c7985f114f6137a3",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "ordering_contract": {
+    "narrative_chronology_inferred": false,
+    "source_order_fields_retained_raw": true
+  },
+  "row_denominator": {
+    "activity_photograph_page": 6,
+    "activity_photograph_position": 14,
+    "activity_photograph_position_extension": 14,
+    "activity_photograph_root": 1,
+    "echo_shell": 53,
+    "echo_shell_story": 4
+  },
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_selection_rule": "root JPAAHMBJGOJ equals page JOLGNPDDIJK union and extension id set; select matching position id rows",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "JPAAHMBJGOJ",
+          "relation_kind": "source_authored_root_position_reference",
+          "shape": "array_scalar",
+          "target_kind": "activity_photograph_position"
+        }
+      ],
+      "kind": "activity_photograph_root",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": []
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "JOLGNPDDIJK",
+          "relation_kind": "source_authored_page_position_reference",
+          "shape": "array_scalar",
+          "target_kind": "activity_photograph_position"
+        }
+      ],
+      "kind": "activity_photograph_page",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "id",
+          "relation_kind": "source_local_position_extension_reference",
+          "shape": "scalar",
+          "target_kind": "activity_photograph_position_extension"
+        }
+      ],
+      "kind": "activity_photograph_position",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "selected_native_ids": [
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80
+      ],
+      "selection_field": "id",
+      "text_owners": [
+        {
+          "field": "posTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireTitleInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireDescInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcInviteDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcCommentDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "rootNodeDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "photoCheckSubNodeDesc",
+          "role_status": "resolved",
+          "shape": "array"
+        },
+        {
+          "field": "presetCheckSubDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [],
+      "kind": "activity_photograph_position_extension",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "EHLBLMHEAAB",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "PKPHBGMFODP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "ICMKPBCEJJB",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "ELJEELOLFPI",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_archive",
+      "internal_relations": [
+        {
+          "field": "storyId",
+          "relation_kind": "source_authored_story_reference",
+          "shape": "scalar_optional",
+          "target_kind": "echo_shell_story"
+        }
+      ],
+      "kind": "echo_shell",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "dungeonPassedLockTipTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTipContentTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTipTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "voiceDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "voiceTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_archive",
+      "internal_relations": [],
+      "kind": "echo_shell_story",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/EchoShellStoryExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "relation_lookup_field_optional": true,
+      "text_owners": [
+        {
+          "field": "storyTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ],
+  "talk_candidates": []
+}

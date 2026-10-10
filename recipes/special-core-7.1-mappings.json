@@ -1,0 +1,493 @@
+{
+  "mappings": [
+    {
+      "component_key": "schema20:avatar_codex_archive:avatar-codex-archive-evidence-v1",
+      "family": "avatar_codex_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:610871295ddafc5d065b8511d27fe799eaf381d3",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:085e0e430e4aa7a4c593bb40a2bed1f227ecbac7",
+      "primary_source_rows": 122,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "avatar-codex-archive-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 122,
+      "selected_primary_evidence_rows": 122,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/AvatarCodexExcelConfigData.json",
+        "ExcelBinOutput/AvatarExcelConfigData.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:cook_bonus_archive:cook-bonus-evidence-v1",
+      "family": "cook_bonus_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:755ffecd9951a829fb350706a51625dd01f096a9",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:91ee50385a001fdf55d24a91697259ed9939564e",
+      "primary_source_rows": 119,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "cook-bonus-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 119,
+      "selected_primary_evidence_rows": 119,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json",
+        "ExcelBinOutput/CookBonusExcelConfigData.json",
+        "ExcelBinOutput/CookRecipeExcelConfigData.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:cook_recipe_archive:cook-recipe-evidence-v1",
+      "family": "cook_recipe_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:2290758fc5e02a96c45f0656c7a1a14556d10215",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:9664a3151b32d1a9bfc8cadc4a3645af7df2ec9f",
+      "primary_source_rows": 284,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "cook-recipe-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 284,
+      "selected_primary_evidence_rows": 284,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/CookRecipeExcelConfigData.json",
+        "ExcelBinOutput/MaterialExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:furniture_make_archive:furniture-make-evidence-v1",
+      "family": "furniture_make_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:d13effb0d5c31d91dd6167453df54087c30c314c",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:0e2f7548ea370adc6030bc6d0c44411a413288b5",
+      "primary_source_rows": 1405,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "furniture-make-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 1405,
+      "selected_primary_evidence_rows": 1405,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/FurnitureMakeExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+        "ExcelBinOutput/MaterialExcelConfigData.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:furniture_suite_archive:furniture-suite-evidence-v1",
+      "family": "furniture_suite_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:31294144a0dd755b8c48dfddbd092e969c3fdb23",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:491b526cf5f9530bbc042a3ecb3e41fe6fa4ab85",
+      "primary_source_rows": 111,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "furniture-suite-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 111,
+      "selected_primary_evidence_rows": 111,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/FurnitureSuiteExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldNPCExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:gadget_title_archive:gadget-title-evidence-v1",
+      "family": "gadget_title_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:cef42d639fdde299226086b557e172b37b05ea6a",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:4f5518e2f2cddc5418acc6431a00ee0f1db568cb",
+      "primary_source_rows": 53,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "gadget-title-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 53,
+      "selected_primary_evidence_rows": 53,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/GadgetTitleExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:homeworld_bgm_archive:homeworld-bgm-evidence-v1",
+      "family": "homeworld_bgm_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:9415b0adb892649b8dce2ff25f95e889045f0c50",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:710533db42621b65ca50cd6d36f1abbe14c5237c",
+      "primary_source_rows": 223,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "homeworld-bgm-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 223,
+      "selected_primary_evidence_rows": 223,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/HomeWorldBgmExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:homeworld_furniture_archive:homeworld-furniture-evidence-v1",
+      "family": "homeworld_furniture_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:62fa1d414995d5fb8238eb06b40ed7761c360f4c",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:77c956751b54d3a14fe58f58999d37aec0ff0b2a",
+      "primary_source_rows": 2513,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "homeworld-furniture-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 2513,
+      "selected_primary_evidence_rows": 2513,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/PushTipsConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:homeworld_furniture_type_archive:homeworld-furniture-type-evidence-v1",
+      "family": "homeworld_furniture_type_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:7a044390911d6f2c09eceb956ea113b91219eafd",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:48ab95f19715876f963507f628dabde4aacd9deb",
+      "primary_source_rows": 81,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "homeworld-furniture-type-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 81,
+      "selected_primary_evidence_rows": 81,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:profile_frame_archive:profile-frame-evidence-v1",
+      "family": "profile_frame_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:3818b8b0a50f62a2b3d6525be70b8fdad19fb191",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:f3876526780b1c1e53c0d1c3dd688f067f0d85f5",
+      "primary_source_rows": 12,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "profile-frame-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 12,
+      "selected_primary_evidence_rows": 12,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/ProfileFrameExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:profile_picture_archive:profile-picture-evidence-v1",
+      "family": "profile_picture_archive",
+      "historical_status_adapter": {
+        "relation_observation": "identity",
+        "text_resolution": {
+          "other_statuses": "identity",
+          "resolved_candidate_set": "ambiguous"
+        }
+      },
+      "ingest_run_id": "special-core-71-run:371d3dc029d2a30805e2192bac53d227f8697ae5",
+      "kind": "M5C_WAVE02",
+      "logical_identity_created": false,
+      "parser_build_id": "special-core-71-parser:0eb7bcb79fe226df01cbaff572cac0d4e30a798f",
+      "primary_source_rows": 188,
+      "product_accepted": false,
+      "profile_picture_migration_proof": {
+        "accepted_foundation_manifest": "manifests/character-7.1-physical-foundation/immutable-runtime.json",
+        "accepted_foundation_manifest_sha256": "f8cdab28025e8eaf54edcc0493812d77409ebe9770345107bdfea5b6954d2ae9",
+        "consumption_contract": "manifests/character-7.1-physical-foundation/consumption-contract.json",
+        "consumption_contract_sha256": "d75fd1ab38853a995aa51c45c0bdba39d59b4dbbd305a2f97000ef1e9d457b0e"
+      },
+      "profile_picture_versioned_field": "AHJHBENMGFK -> NLAPNBMECDF",
+      "provider_contract": "profile-picture-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 5,
+      "selected_primary_evidence_rows": 5,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json",
+        "ExcelBinOutput/ProfilePictureExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:quest_codex_archive:quest-codex-archive-evidence-v1",
+      "family": "quest_codex_archive",
+      "historical_status_adapter": {
+        "quest_relation": "identity",
+        "text_resolution": "identity",
+        "world_relation": "identity"
+      },
+      "ingest_run_id": "historical-special-71-run:34df5fad43307dcdf18dd64e0439e37371d4800c",
+      "kind": "HISTORICAL_SPECIAL",
+      "logical_identity_created": false,
+      "parser_build_id": "historical-special-71-parser:26a160ca2d09ce28bb33c05108a3ae164868be20",
+      "primary_source_rows": 499,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "quest-codex-archive-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 641,
+      "selected_primary_evidence_rows": 499,
+      "selected_support_evidence_rows": 142,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/ChapterExcelConfigData.json",
+        "ExcelBinOutput/QuestCodexExcelConfigData.json",
+        "ExcelBinOutput/QuestExcelConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    },
+    {
+      "component_key": "schema20:world_archive:world-archive-evidence-v1",
+      "family": "world_archive",
+      "historical_status_adapter": {
+        "quest_relation": "identity",
+        "text_resolution": "identity",
+        "world_relation": "identity"
+      },
+      "ingest_run_id": "historical-special-71-run:991d0a65cdd5ea6518182ec4036a8c4fa78cf315",
+      "kind": "HISTORICAL_SPECIAL",
+      "logical_identity_created": false,
+      "parser_build_id": "historical-special-71-parser:21f5ed97aa6c7f17fd66baa26a0dc873c76d2e8d",
+      "primary_source_rows": 853,
+      "product_accepted": false,
+      "profile_picture_migration_proof": null,
+      "profile_picture_versioned_field": null,
+      "provider_contract": "world-archive-evidence-v1",
+      "research_accepted": false,
+      "selected_evidence_rows": 853,
+      "selected_primary_evidence_rows": 853,
+      "selected_support_evidence_rows": 0,
+      "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_paths": [
+        "ExcelBinOutput/AnimalCodexExcelConfigData.json",
+        "ExcelBinOutput/CityConfigData.json",
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/MonsterDescribeExcelConfigData.json",
+        "ExcelBinOutput/MonsterExcelConfigData.json",
+        "ExcelBinOutput/PushTipsCodexExcelConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json",
+        "ExcelBinOutput/ViewCodexExcelConfigData.json",
+        "ExcelBinOutput/WorldAreaConfigData.json",
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING"
+    }
+  ],
+  "role": "rebuild recipe; no artifact qualification inherited"
+}

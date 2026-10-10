@@ -1,0 +1,15 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE excel_row(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,kind TEXT NOT NULL,source_path TEXT NOT NULL,ordinal INTEGER NOT NULL,pointer TEXT NOT NULL,native_id TEXT NOT NULL,raw_json TEXT NOT NULL,raw_sha256 TEXT NOT NULL,UNIQUE(run_id,source_path,pointer)) WITHOUT ROWID;
+CREATE TABLE main_root_candidate(id TEXT PRIMARY KEY,main_row_id TEXT NOT NULL REFERENCES excel_row(id),quest_talk_container_id TEXT NOT NULL,quest_source_path TEXT NOT NULL,quest_native_id TEXT NOT NULL,status TEXT NOT NULL,CHECK(status='physical_candidate'),UNIQUE(main_row_id,quest_talk_container_id)) WITHOUT ROWID;
+CREATE TABLE excel_candidate(id TEXT PRIMARY KEY,source_row_id TEXT NOT NULL REFERENCES excel_row(id),role TEXT NOT NULL CHECK(role IN ('step_mainquest','format_mainquest')),target_main_row_id TEXT NOT NULL REFERENCES excel_row(id),source_pointer TEXT NOT NULL,target_pointer TEXT NOT NULL,UNIQUE(source_row_id,role,target_main_row_id)) WITHOUT ROWID;
+CREATE TABLE child_observation(id TEXT PRIMARY KEY,quest_talk_child_id TEXT NOT NULL UNIQUE,quest_talk_container_id TEXT NOT NULL,quest_source_path TEXT NOT NULL,source_pointer TEXT NOT NULL,physical_ordinal INTEGER NOT NULL,shape TEXT NOT NULL,raw_sub_locator TEXT,raw_parent_locator TEXT,raw_order_observation TEXT,semantic_order_status TEXT NOT NULL CHECK(semantic_order_status='unresolved'),sub_locator_status TEXT NOT NULL,sub_candidate_count INTEGER NOT NULL,main_candidate_count INTEGER NOT NULL,UNIQUE(quest_source_path,source_pointer)) WITHOUT ROWID;
+CREATE TABLE child_candidate(id TEXT PRIMARY KEY,observation_id TEXT NOT NULL REFERENCES child_observation(id),role TEXT NOT NULL CHECK(role IN ('quest_step','main_quest')),target_row_id TEXT NOT NULL REFERENCES excel_row(id),target_source_path TEXT NOT NULL,target_pointer TEXT NOT NULL,UNIQUE(observation_id,role,target_row_id)) WITHOUT ROWID;
+CREATE TABLE text_slot(id TEXT PRIMARY KEY,row_id TEXT NOT NULL REFERENCES excel_row(id),owner_field TEXT NOT NULL,locale TEXT NOT NULL,raw_hash TEXT NOT NULL,status TEXT NOT NULL,candidate_count INTEGER NOT NULL,UNIQUE(row_id,owner_field,locale)) WITHOUT ROWID;
+CREATE TABLE text_candidate(id TEXT PRIMARY KEY,slot_id TEXT NOT NULL REFERENCES text_slot(id),source_path TEXT NOT NULL,pair_ordinal INTEGER NOT NULL,source_pointer TEXT NOT NULL,raw_text TEXT NOT NULL,raw_text_sha256 TEXT NOT NULL,UNIQUE(slot_id,source_path,pair_ordinal,source_pointer)) WITHOUT ROWID;
+CREATE TABLE release(singleton INTEGER PRIMARY KEY CHECK(singleton=1),manifest_json TEXT NOT NULL) WITHOUT ROWID;
+CREATE INDEX child_container ON child_observation(quest_talk_container_id,physical_ordinal,id);
+CREATE INDEX child_target ON child_candidate(target_row_id,role,id);
+CREATE INDEX main_root ON main_root_candidate(main_row_id,id);
+CREATE INDEX excel_target ON excel_candidate(target_main_row_id,role,id);
+CREATE INDEX text_owner ON text_slot(row_id,id);
+CREATE INDEX text_lookup ON text_candidate(slot_id,id);

@@ -1,0 +1,185 @@
+{
+  "audited_no_delta": [
+    "ExcelBinOutput/QuestSummarizationTextExcelConfigData.json",
+    "ExcelBinOutput/PushTipsCodexExcelConfigData.json"
+  ],
+  "contract": "native-message-archive-selection-v1",
+  "family": "native_archive",
+  "family_contract_version": "native-archive-evidence-v1",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "selection_semantics": "complete top-level-array rows for nine listed message/notify/catalog sources; no ID slicing; QuestSummarizationText is an audited exact physical no-delta against Quest Review",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "sources": [
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_gcg_festival_text",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "startDescTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_loli_golf_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "bannerNameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "GLPIOOHJNFF",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_notify_archive",
+      "kind": "activity_natlan_notify",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "new_activity_push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "server_message_archive",
+      "kind": "server_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "template_reminder_archive",
+      "kind": "template_reminder",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/PushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "resort_guide_map_text",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "travel_catalog",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "questId",
+          "relation_kind": "source_authored_main_quest_reference"
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    }
+  ],
+  "template_policy": "store source TextMap candidates verbatim; never instantiate placeholders",
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

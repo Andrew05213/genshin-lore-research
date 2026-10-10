@@ -1,0 +1,316 @@
+{
+  "boundaries": [
+    "tps_glasses_chat"
+  ],
+  "contract": "event-narrative-tps-glasses-chat-source-v1",
+  "corpus_complete": true,
+  "coverage": "complete TpsGlasses Overall/PushTips and TpsGlassesChat Character/Topic/Option/Message physical rows, declared text owners, and source-local graph references",
+  "family_contract_version": "event-narrative-evidence-v3",
+  "files": [
+    {
+      "blob": "d5a6d3134502496152bcce98a5488242a342757a",
+      "path": "ExcelBinOutput/TpsGlassesOverallExcelConfigData.json",
+      "sha256": "f377659c7d3150f4e14d6fe0aabf750f052a23f61eb47a59bf677ad4e7f00f14",
+      "size_bytes": 89
+    },
+    {
+      "blob": "754ec47cd6e2e3c83ac3365e84306e3fb6816901",
+      "path": "ExcelBinOutput/TpsGlassesPushTipsExcelConfigData.json",
+      "sha256": "7e77c31ca3628a69ea65ebd39c4442b245828b0620d784ed7340351cc60ec219",
+      "size_bytes": 200
+    },
+    {
+      "blob": "18225df91e1b4981f9447fa8983ce74e8eac71be",
+      "path": "ExcelBinOutput/TpsGlassesChatCharacterExcelConfigData.json",
+      "sha256": "2de59e58072359ea671410532240fb5941f65e241cce88dd92368d21164cf4b5",
+      "size_bytes": 552
+    },
+    {
+      "blob": "a9ace1ed57ed0420cbe91efc0f7c365b37d66e32",
+      "path": "ExcelBinOutput/TpsGlassesChatTopicExcelConfigData.json",
+      "sha256": "3e334d7b2675b47b49c37a8298a4a2f7121a29ab63ee7e7c293b5e4045da0bf6",
+      "size_bytes": 3955
+    },
+    {
+      "blob": "caa42f7455f3dd931b07a307c10701cb201b4e5a",
+      "path": "ExcelBinOutput/TpsGlassesChatOptionExcelConfigData.json",
+      "sha256": "eb3b80875ca063b9c6301649dbb2298fba931a3d4b1f782c15a7a4f156766597",
+      "size_bytes": 7230
+    },
+    {
+      "blob": "706feb12178f5a2c89d418fb12a83212a8c14d39",
+      "path": "ExcelBinOutput/TpsGlassesChatMessageExcelConfigData.json",
+      "sha256": "8a8445cd83b25ef43a24371e326cf16223a88a028b4812985ad0e1514ba5b51d",
+      "size_bytes": 118963
+    },
+    {
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "size_bytes": 48771857
+    },
+    {
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "size_bytes": 18550916
+    },
+    {
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "size_bytes": 54368516
+    },
+    {
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "size_bytes": 20424271
+    },
+    {
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "size_bytes": 61908087
+    },
+    {
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "size_bytes": 22744816
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_quest": false,
+  "full_talk": false,
+  "full_tps_gameplay": false,
+  "graph_contract": {
+    "cross_family_relations": false,
+    "narrative_sequence_inferred": false,
+    "node_namespaces": [
+      "tps_overall",
+      "tps_push_tips",
+      "tps_character",
+      "tps_topic",
+      "tps_option",
+      "tps_message"
+    ],
+    "opaque_order_fields_remain_raw": true,
+    "relations_are_source_local_only": true
+  },
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "row_denominator": {
+    "tps_character": 4,
+    "tps_message": 421,
+    "tps_option": 49,
+    "tps_overall": 1,
+    "tps_push_tips": 4,
+    "tps_topic": 28
+  },
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "sources": [
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "EHICHIDCBMB",
+          "relation_kind": "source_authored_local_push_tips_reference",
+          "shape": "array_scalar",
+          "target_kind": "tps_push_tips"
+        }
+      ],
+      "kind": "tps_overall",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesOverallExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_push_tips",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesPushTipsExcelConfigData.json",
+      "relation_lookup_field": "pushTipsId",
+      "text_owners": []
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_character",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatCharacterExcelConfigData.json",
+      "relation_lookup_field": "characterId",
+      "text_owners": [
+        {
+          "field": "IIKFHLPPBHC",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_topic",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatTopicExcelConfigData.json",
+      "relation_lookup_field": "BEEJPINHGON",
+      "text_owners": [
+        {
+          "field": "KKHOPDEHLBN",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "HGLEHHEBGOH",
+          "relation_kind": "source_authored_local_topic_membership",
+          "shape": "scalar",
+          "target_kind": "tps_topic"
+        },
+        {
+          "field": "GKFGFOHABKE",
+          "relation_kind": "source_authored_local_option_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_option"
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "CILPFMDBAPD",
+          "relation_kind": "raw_local_forward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "HGLEHHEBGOH",
+            "CILPFMDBAPD"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "HGLEHHEBGOH",
+            "BAPHKDEAPJD"
+          ]
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "DBKBPFAKJKO",
+          "relation_kind": "raw_local_backward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "HGLEHHEBGOH",
+            "DBKBPFAKJKO"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "HGLEHHEBGOH",
+            "BAPHKDEAPJD"
+          ]
+        }
+      ],
+      "kind": "tps_option",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatOptionExcelConfigData.json",
+      "relation_lookup_field": "BJIGHLMNFNI",
+      "text_owners": [
+        {
+          "field": "LJEDOJEFJDL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "HGLEHHEBGOH",
+          "relation_kind": "source_authored_local_topic_membership",
+          "shape": "scalar",
+          "target_kind": "tps_topic"
+        },
+        {
+          "field": "characterId",
+          "relation_kind": "source_authored_local_character_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_character"
+        },
+        {
+          "field": "GKFGFOHABKE",
+          "relation_kind": "source_authored_local_option_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_option"
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "CILPFMDBAPD",
+          "relation_kind": "raw_local_forward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "HGLEHHEBGOH",
+            "CILPFMDBAPD"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "HGLEHHEBGOH",
+            "BAPHKDEAPJD"
+          ]
+        }
+      ],
+      "kind": "tps_message",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatMessageExcelConfigData.json",
+      "relation_lookup_field": "EENOBEALCHF",
+      "relation_lookup_field_sets": [
+        [
+          "HGLEHHEBGOH",
+          "BAPHKDEAPJD"
+        ]
+      ],
+      "text_owners": [
+        {
+          "field": "DJJEFALFHCA",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "field": "IFAJNGCJNNP",
+            "present": true
+          }
+        },
+        {
+          "field": "MDMOGGBPANG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "field": "IFAJNGCJNNP",
+            "present": true
+          }
+        },
+        {
+          "field": "EBCKPCKHIHC",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "equals": "LOCATION",
+            "field": "IFAJNGCJNNP"
+          }
+        }
+      ]
+    }
+  ],
+  "talk_candidates": []
+}

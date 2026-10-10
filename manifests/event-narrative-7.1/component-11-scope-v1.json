@@ -1,0 +1,233 @@
+{
+  "contract": "event-successor-7.1-versioned-scope-v1",
+  "family_contract_version": "event-narrative-evidence-v2",
+  "field_continuity": {
+    "CICBGGGLNOL": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "OOHPIOPLCOO",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    },
+    "HKLJPFMMDFI": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "JJBAADKIDNI",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    },
+    "LJLBOBMAPAP": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "OMCFOFHDLBJ",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    },
+    "MJGADPEEAHD": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "IBLNKHCLFLA",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    },
+    "MKBJGPAODOF": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "DNNKIMCNMCO",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    },
+    "PKOFIHAFEBH": {
+      "aligned_rows": 5,
+      "counterexamples": 0,
+      "exact_value_matches": 5,
+      "new_field": "IOMDKHIGEHI",
+      "new_nonnull": 5,
+      "old_nonnull": 5,
+      "owner_role_status": "mapping_unresolved",
+      "proof_level": "unique full-ID-aligned raw locator vector; no semantic role upgrade"
+    }
+  },
+  "field_continuity_semantics": "raw TextMap locator ownership only; six unresolved roles remain unresolved",
+  "files": [
+    {
+      "blob": "00a724bd3322d2172eb0df7853f15ba0c904b505",
+      "path": "ExcelBinOutput/ActivityADShootingExcelConfigData.json",
+      "sha256": "4d7c1d8a4adcd86f9e62b2d166b2cb543a6bf05cf4225d4db254ba12115f3de5",
+      "size_bytes": 266
+    },
+    {
+      "blob": "50e0bf5fb172402b2d9e997b93ff8347767d152c",
+      "path": "ExcelBinOutput/ActivityADShootingFrameExcelConfigData.json",
+      "sha256": "7c7b2ce2edf501d578a146a763038e43050dd565f3adf8566b246c049141b93d",
+      "size_bytes": 9714
+    },
+    {
+      "blob": "2915db6ebc9fe60e54a45bfa21afd5c6251473ec",
+      "path": "ExcelBinOutput/ActivityADShootingLevelExcelConfigData.json",
+      "sha256": "c5f7d055b60f84d5a4d749bb720ce15ca41f9cfe7489b2713ce88a2b0e8b09e1",
+      "size_bytes": 4271
+    },
+    {
+      "blob": "e1d0c23deeba975b9a67abee45c91bb24b4b68bd",
+      "path": "ExcelBinOutput/ActivityADShootingSlotExcelConfigData.json",
+      "sha256": "8487a05b640f473ae7271b5c760f95d22b161bf0a7397733ece7a7b7c2e5d93a",
+      "size_bytes": 9503
+    },
+    {
+      "blob": "dc3752017ccc827d769154b7f827dcf1a767a970",
+      "path": "ExcelBinOutput/ActivityTanukiTravelDataExcelConfigData.json",
+      "sha256": "7fc610ac4f0c02aeeba4a473e26e13c293df0a8b575fa6e439b38a6a4847f6c4",
+      "size_bytes": 367
+    },
+    {
+      "blob": "1a6da07a668b20dc7a1442c45fec8a7d848884a9",
+      "path": "ExcelBinOutput/ActivityTanukiTravelRouteDataExcelConfigData.json",
+      "sha256": "152b6a12fdfd9f068723296d9a86a31939e415990ed8419320e33f149f0664a8",
+      "size_bytes": 2317
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "historical_scope": "manifests/event-narrative/successor-scope.json",
+  "historical_scope_sha256": "02966294a6ef982ce49e6d76b5d10bb504be8e88f536204811000c50515f686d",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "physical_rows": 132,
+  "product_accepted": false,
+  "row_denominator": {
+    "ad_shooting_frame": 59,
+    "ad_shooting_level": 5,
+    "ad_shooting_root": 1,
+    "ad_shooting_slot": 59,
+    "tanuki_travel_root": 1,
+    "tanuki_travel_route": 7
+  },
+  "selection_rule": "same six source arrays as historical component-11; all 7.1 rows in each array",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "boundary": "complete two-table Tanuki Travel archive",
+      "kind": "tanuki_travel_root",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityTanukiTravelDataExcelConfigData.json",
+      "text_fields": []
+    },
+    {
+      "boundary": "complete two-table Tanuki Travel archive",
+      "kind": "tanuki_travel_route",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityTanukiTravelRouteDataExcelConfigData.json",
+      "text_fields": [
+        "titleTextMapHash",
+        "descTextMapHash",
+        "regionTextMapHash",
+        "reviewTextMapHash"
+      ]
+    },
+    {
+      "boundary": "complete four-table AD Shooting archive",
+      "kind": "ad_shooting_root",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityADShootingExcelConfigData.json",
+      "text_fields": []
+    },
+    {
+      "boundary": "complete four-table AD Shooting archive",
+      "kind": "ad_shooting_level",
+      "native_id_field": "levelId",
+      "owner_roles": {
+        "DNNKIMCNMCO": "mapping_unresolved",
+        "IBLNKHCLFLA": "mapping_unresolved",
+        "IOMDKHIGEHI": "mapping_unresolved",
+        "JJBAADKIDNI": "mapping_unresolved",
+        "OMCFOFHDLBJ": "mapping_unresolved",
+        "OOHPIOPLCOO": "mapping_unresolved"
+      },
+      "path": "ExcelBinOutput/ActivityADShootingLevelExcelConfigData.json",
+      "text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "OOHPIOPLCOO",
+        "JJBAADKIDNI",
+        "OMCFOFHDLBJ",
+        "IBLNKHCLFLA",
+        "DNNKIMCNMCO",
+        "IOMDKHIGEHI"
+      ]
+    },
+    {
+      "boundary": "complete four-table AD Shooting archive",
+      "kind": "ad_shooting_slot",
+      "native_id_field": "slotId",
+      "path": "ExcelBinOutput/ActivityADShootingSlotExcelConfigData.json",
+      "text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "boundary": "complete four-table AD Shooting archive",
+      "kind": "ad_shooting_frame",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ActivityADShootingFrameExcelConfigData.json",
+      "text_fields": [
+        "descTextMapHash"
+      ]
+    }
+  ]
+}

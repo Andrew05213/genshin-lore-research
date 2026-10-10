@@ -1,0 +1,360 @@
+{
+  "contract": "event-filmfest-7.1-versioned-scope-v1",
+  "family_contract_version": "event-narrative-evidence-v3",
+  "field_continuity": {
+    "filmfest_shooting_frame": {},
+    "filmfest_shooting_level": {
+      "AKNFEMILMHI": {
+        "aligned_rows": 5,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 5,
+        "new_field": "OAAEOKOBAOM",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      },
+      "APFLKHGBAEH": {
+        "aligned_rows": 5,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 5,
+        "new_field": "JBJCLCDJJOB",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      },
+      "GIOBHINBDBC": {
+        "aligned_rows": 5,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 5,
+        "new_field": "FCOGMAHDIDP",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      },
+      "JPEPMOCCIHD": {
+        "aligned_rows": 5,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 5,
+        "new_field": "CNLGNMAFMDL",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      },
+      "KDPPHJKMOKN": {
+        "aligned_rows": 5,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 5,
+        "new_field": "JPEJOEHAINK",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      }
+    },
+    "filmfest_shooting_line": {},
+    "filmfest_shooting_slot": {
+      "HJKLFNBKGJA": {
+        "aligned_rows": 24,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 24,
+        "new_field": "JNNGFOGGEAJ",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      },
+      "JBKNLOIJHPH": {
+        "aligned_rows": 24,
+        "counterexamples": 0,
+        "exact_raw_value_matches": 24,
+        "new_field": "GAHGNBAJODL",
+        "proof_level": "unique full-ID-aligned raw field vector; role not inferred from values"
+      }
+    }
+  },
+  "files": [
+    {
+      "blob": "b493cc0ef1efbe19bb0acf684127f4eb860e574b",
+      "path": "BinOutput/Talk/Activity/7467520.json",
+      "sha256": "e1bcbaca1d90672efc82cd6460b270cd7c0fa02a37521515b37f6788c415cc62",
+      "size_bytes": 45
+    },
+    {
+      "blob": "bf80c8a3d50e8d7ee52457472dd2a077462e2d80",
+      "path": "BinOutput/Talk/Activity/7467525.json",
+      "sha256": "c022e22b89fef8cb73cf790f4e6e2efe2f5e05656b58b059725f4aaf2e3fb838",
+      "size_bytes": 45
+    },
+    {
+      "blob": "cf28583b6e58aa5b3d5f38a7adad2c9ac7a26a0d",
+      "path": "BinOutput/Talk/Activity/7467526.json",
+      "sha256": "24bffb12d0cf83c46b2fb293b6cfd8b461189551c5fdd960fe974a081d0ab8b1",
+      "size_bytes": 45
+    },
+    {
+      "blob": "cf919a6384e62fe79b3e192e5d90205fd491e401",
+      "path": "BinOutput/Talk/Activity/7467527.json",
+      "sha256": "55823588d62b1c44ccc4fbb4ddd5ebb5346201762eb8b4825c23d06b751c2e9d",
+      "size_bytes": 45
+    },
+    {
+      "blob": "edf9cccca37a6e018684d9079e60194315d68960",
+      "path": "BinOutput/Talk/Quest/4013217.json",
+      "sha256": "3e9b177972a2f90fbcffa20e308338fa1b8e7a9a0acaa6f237d78232823f264d",
+      "size_bytes": 369
+    },
+    {
+      "blob": "9b6695879e93324e0b37047546eaee6358ca61e3",
+      "path": "ExcelBinOutput/ActivityFilmfestFrameExcelConfigData.json",
+      "sha256": "3aafda34ea55ae6564acc192550375cfc1453d45e7c1ab9c1fd261a17bdbcac5",
+      "size_bytes": 11803
+    },
+    {
+      "blob": "8c09408327feeaa79407ffba634baf25586c3c20",
+      "path": "ExcelBinOutput/ActivityFilmfestLineExcelConfigData.json",
+      "sha256": "63b60b2a1f66c734492a633d69ecf6d46d168e3098c59895d295c791cf1e4fde",
+      "size_bytes": 1851
+    },
+    {
+      "blob": "1494defa11287d59af966ff954c7700e5f49347d",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingLevelExcelConfigData.json",
+      "sha256": "121351fcc2aa599839a10025b00289db4be36e6bb5873b3602f52c35a018581b",
+      "size_bytes": 4491
+    },
+    {
+      "blob": "f7fc40553ecfc211f1c1c213653daed81d182be6",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingSlotExcelConfigData.json",
+      "sha256": "542b7ae420539c5e8c8dd30e0c5ecbb3e3bb5e0c30a08d756fa8008ddda64e9d",
+      "size_bytes": 7768
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "historical_scope": "manifests/event-narrative/filmfest-scope.json",
+  "historical_scope_sha256": "3490ed82520bc40421b761c0d646da83badb7a16560f23cef7042026340f9963",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "physical_rows": 133,
+  "product_accepted": false,
+  "row_denominator": {
+    "filmfest_shooting_frame": 72,
+    "filmfest_shooting_level": 5,
+    "filmfest_shooting_line": 32,
+    "filmfest_shooting_slot": 24
+  },
+  "selection_rule": "four complete historical source arrays; all Level.talkID root matches across accepted full 7.1 Quest/Talk namespace",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "boundary": "filmfest_shooting_level",
+      "internal_relations": [
+        {
+          "field": "JBJCLCDJJOB",
+          "relation_kind": "source_authored_slot_reference",
+          "shape": "array_scalar",
+          "target_kind": "filmfest_shooting_slot"
+        }
+      ],
+      "kind": "filmfest_shooting_level",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingLevelExcelConfigData.json",
+      "talk_relation_field": "talkID",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "FCOGMAHDIDP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "JPEJOEHAINK",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "OAAEOKOBAOM",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "CNLGNMAFMDL",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        }
+      ]
+    },
+    {
+      "boundary": "filmfest_shooting_slot",
+      "internal_relations": [
+        {
+          "field": "JNNGFOGGEAJ",
+          "relation_kind": "source_authored_frame_reference",
+          "shape": "array_object_id",
+          "target_kind": "filmfest_shooting_frame"
+        },
+        {
+          "field": "GAHGNBAJODL",
+          "relation_kind": "source_authored_line_reference",
+          "shape": "array_object_id_optional",
+          "target_kind": "filmfest_shooting_line"
+        }
+      ],
+      "kind": "filmfest_shooting_slot",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestShootingSlotExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "filmfest_shooting_frame",
+      "internal_relations": [],
+      "kind": "filmfest_shooting_frame",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestFrameExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "filmfest_shooting_line",
+      "internal_relations": [],
+      "kind": "filmfest_shooting_line",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityFilmfestLineExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ],
+  "talk_candidate_namespace": {
+    "accepted_manifest": "manifests/quest-talk-7.1/standalone-candidate.json",
+    "accepted_manifest_sha256": "a4a2297cec718e35aee267215752fb36e5c9eb7776106f49ced54ccaf865f8cf",
+    "artifact": {
+      "sha256": "779df36983a6fbc8911622f1118d8323eee844ebfea09efe7c1544095eb21c73",
+      "size_bytes": 2000904192
+    },
+    "contract": "quest-talk-7.1-standalone-physical-v1",
+    "kind": "accepted_full_7_1_quest_talk_physical_roots",
+    "parser": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+    "run": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+    "search_complete": true
+  },
+  "talk_candidates": [
+    {
+      "raw_locator": "4013217",
+      "target_contract": "quest-talk-7.1-standalone-physical-v1",
+      "target_family": "quest_talk_physical",
+      "target_native_id": "4013217",
+      "target_occurrence_id": "qt71-container:b5b383019c849592e9ad38ac58110fbef6cfeff1",
+      "target_parser_build_id": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "target_raw_sha256": "3e9b177972a2f90fbcffa20e308338fa1b8e7a9a0acaa6f237d78232823f264d",
+      "target_run_id": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "target_source_path": "BinOutput/Talk/Quest/4013217.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467520",
+      "target_contract": "quest-talk-7.1-standalone-physical-v1",
+      "target_family": "quest_talk_physical",
+      "target_native_id": "7467520",
+      "target_occurrence_id": "qt71-container:391a7efc3e843b8daeece812bc0e5ec5c39483a5",
+      "target_parser_build_id": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "target_raw_sha256": "e1bcbaca1d90672efc82cd6460b270cd7c0fa02a37521515b37f6788c415cc62",
+      "target_run_id": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "target_source_path": "BinOutput/Talk/Activity/7467520.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467525",
+      "target_contract": "quest-talk-7.1-standalone-physical-v1",
+      "target_family": "quest_talk_physical",
+      "target_native_id": "7467525",
+      "target_occurrence_id": "qt71-container:5a522c3b00a062c13d4f5841cde413babd7589dd",
+      "target_parser_build_id": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "target_raw_sha256": "c022e22b89fef8cb73cf790f4e6e2efe2f5e05656b58b059725f4aaf2e3fb838",
+      "target_run_id": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "target_source_path": "BinOutput/Talk/Activity/7467525.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467526",
+      "target_contract": "quest-talk-7.1-standalone-physical-v1",
+      "target_family": "quest_talk_physical",
+      "target_native_id": "7467526",
+      "target_occurrence_id": "qt71-container:4cff94c442546fe1b8354f72fc626b69a7de75d8",
+      "target_parser_build_id": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "target_raw_sha256": "24bffb12d0cf83c46b2fb293b6cfd8b461189551c5fdd960fe974a081d0ab8b1",
+      "target_run_id": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "target_source_path": "BinOutput/Talk/Activity/7467526.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "7467527",
+      "target_contract": "quest-talk-7.1-standalone-physical-v1",
+      "target_family": "quest_talk_physical",
+      "target_native_id": "7467527",
+      "target_occurrence_id": "qt71-container:7ee522e43571f982ae20a42300a75613076259c2",
+      "target_parser_build_id": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "target_raw_sha256": "55823588d62b1c44ccc4fbb4ddd5ebb5346201762eb8b4825c23d06b751c2e9d",
+      "target_run_id": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "target_source_path": "BinOutput/Talk/Activity/7467527.json",
+      "target_source_pointer": "/"
+    }
+  ]
+}

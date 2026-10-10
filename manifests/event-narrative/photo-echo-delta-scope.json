@@ -1,0 +1,1206 @@
+{
+  "boundaries": [
+    "activity_photograph_historical_text_archive",
+    "echo_shell_reminder_dialog_archive"
+  ],
+  "contract": "event-narrative-photo-echo-delta-source-v1",
+  "corpus_complete": true,
+  "coverage": "complete frozen Photograph historical-position text and EchoShell Reminder/Dialog/Talk-support physical, text, local-graph, and exact Talk navigation projection",
+  "family_contract_version": "event-narrative-evidence-v3",
+  "files": [
+    {
+      "blob": "63e5ed92e1d6d2f39aba7c318ae1daa0110e0c00",
+      "path": "BinOutput/Talk/Gadget/6800201.json",
+      "sha256": "a4da6d34de67c28779648b2fd48271a214cf90610e3aab051c6c05a53f08c4d6",
+      "size_bytes": 2209
+    },
+    {
+      "blob": "86214b3801f8c2db9a260878840469167ec35cd3",
+      "path": "BinOutput/Talk/Gadget/6800202.json",
+      "sha256": "5f46f55ec81de56244fff43ccb4e43636a2c429e71b10df369a4e428cecd49c4",
+      "size_bytes": 2208
+    },
+    {
+      "blob": "96efa57e0c7b2fbcda3d91d652c4dcb0177d87bc",
+      "path": "BinOutput/Talk/Gadget/6800203.json",
+      "sha256": "eacd5580cb83687c38b563048b0a4f309b67748ea1d8b59338f3a6f32b3ae420",
+      "size_bytes": 2210
+    },
+    {
+      "blob": "50bce05b23d40cf6e77a614675c36efd86da004d",
+      "path": "BinOutput/Talk/Gadget/6800204.json",
+      "sha256": "6a610cfba0de49f9055d9eaae153c67e410285dd7466b2af8f1777877cb19893",
+      "size_bytes": 2208
+    },
+    {
+      "blob": "4a24cf4ab77ee660fd8f108dea6ad30f89a3a387",
+      "path": "BinOutput/Talk/Gadget/6800205.json",
+      "sha256": "ef6ca866462cf792d6f15a561f89fef92419c66d34253e62cc699303ce564811",
+      "size_bytes": 4307
+    },
+    {
+      "blob": "ff991dfffab4eae85c3db8341b98a9b835531cc9",
+      "path": "BinOutput/Talk/Gadget/6800206.json",
+      "sha256": "3143819e3b8adee9b5c5d9ae9bc1babad5c61243980f2aea7f3506acf12f5e05",
+      "size_bytes": 1508
+    },
+    {
+      "blob": "d706f9cf6ad498e8dd1b839adb12d01a3ba16187",
+      "path": "BinOutput/Talk/Gadget/6800207.json",
+      "sha256": "d48257a09bae0c0e3e35451bf2ff8fa9ce07d1d4db4b67bac319a53d3ffe5f05",
+      "size_bytes": 1509
+    },
+    {
+      "blob": "5a4808b34bf705eaca0e581f5471c31740693329",
+      "path": "BinOutput/Talk/Gadget/6800208.json",
+      "sha256": "3033d26f055c6081d871373b33ea4f38faa247ac781980ddd1a55d972bfb1d38",
+      "size_bytes": 810
+    },
+    {
+      "blob": "7f4ffaf6d9506227407d6a085b1efcf081644a48",
+      "path": "BinOutput/Talk/Gadget/6800209.json",
+      "sha256": "c2156830036ac7c018572634520159c8d5c0cab19402857204886346f1d34cea",
+      "size_bytes": 809
+    },
+    {
+      "blob": "c40914a80ade268467a27b4eea4b812f3cc5fdd0",
+      "path": "BinOutput/Talk/Gadget/6800210.json",
+      "sha256": "f1f1a2e9d7f92081b6971c3ed6e1d7e671fd14edeaf1d115e37d074f7d5252de",
+      "size_bytes": 809
+    },
+    {
+      "blob": "6b24c74a269f9860619c7228f4dbe54981d2939f",
+      "path": "BinOutput/Talk/Gadget/6800211.json",
+      "sha256": "743b1761bc9d9c442a76828a31ee22eac8d3b5c6ac0b6639128cdfbb31f33976",
+      "size_bytes": 1509
+    },
+    {
+      "blob": "0a557a2a09e3590e1f2b5840c828216ffeeb8a2a",
+      "path": "BinOutput/Talk/Gadget/6800212.json",
+      "sha256": "a810715065ae30f39b07732daf4555e6dce388e9633071168cd754679a1094a8",
+      "size_bytes": 809
+    },
+    {
+      "blob": "b5c8d55a0d7cfc98cc48b148d166207890336bf1",
+      "path": "BinOutput/Talk/Gadget/6800213.json",
+      "sha256": "6ff8e44bb21a1da8266e60812f7876db4ecd824275b228b68a4ef911340ab0fd",
+      "size_bytes": 1510
+    },
+    {
+      "blob": "5fc5ed9e67998e0b721e49d866dcd4b998500a59",
+      "path": "BinOutput/Talk/Gadget/6800214.json",
+      "sha256": "94b71c5ce19a09c9074b649a8a848c7e7f9217666918e7750f63b951bc964e8b",
+      "size_bytes": 3609
+    },
+    {
+      "blob": "f58dfc4d6d52ac93fe4d3ef6098277459c81df9d",
+      "path": "BinOutput/Talk/Gadget/6800215.json",
+      "sha256": "0a67dee4ae333cc49d37334c0466b00e6a820d8e3463d3a41921efbd60875618",
+      "size_bytes": 1510
+    },
+    {
+      "blob": "3a3bdfd8e16549422ab60f009669fd268f205fb6",
+      "path": "BinOutput/Talk/Gadget/6800216.json",
+      "sha256": "4851fad26472b8b5f51ad92de3619fd6e57fd89928041159831f0f86becb8fce",
+      "size_bytes": 2910
+    },
+    {
+      "blob": "a8a224b6f379b60c4dc80ae189184bc8be586bf7",
+      "path": "BinOutput/Talk/Gadget/6800217.json",
+      "sha256": "febe15885a9d9d526f663ae049e38daa751b67e1393c6602a4e9326d145a317e",
+      "size_bytes": 2909
+    },
+    {
+      "blob": "7ac9361532f45e66fba8336c5ea29be9886142db",
+      "path": "BinOutput/Talk/Gadget/6800218.json",
+      "sha256": "ad0881045a36b4a8de59f78b74b96002e5e77591796cf5e22a20bdddd8ecb836",
+      "size_bytes": 1510
+    },
+    {
+      "blob": "8239402451945d8274e87cde15ef6b4ffdac2189",
+      "path": "BinOutput/Talk/Gadget/6800219.json",
+      "sha256": "72c21163a725649aba95e5b2d96791c0cea486c91b1ed229c4ecf65be3f4e24a",
+      "size_bytes": 1509
+    },
+    {
+      "blob": "ea1dbe2a56e2a0af9ac81fac7c663ffd938e9657",
+      "path": "BinOutput/Talk/Gadget/6800220.json",
+      "sha256": "57fde53c9673edd8ee8f78dc8d6dc9f3138157585fef870ede2df9b10f1d6f15",
+      "size_bytes": 2908
+    },
+    {
+      "blob": "88aa00227199ba782ed0f2dc8a9ae09077b31e01",
+      "path": "BinOutput/Talk/Gadget/6800221.json",
+      "sha256": "c32f04f586d2c7a9ec8ae5a9a00a182f3e8fd34bce67125da5ce5d7f55d81101",
+      "size_bytes": 2908
+    },
+    {
+      "blob": "53f4719e3069d99231cc7818f2120036d727a0e5",
+      "path": "BinOutput/Talk/Gadget/6800222.json",
+      "sha256": "fdc4de5bc3a66141bde67dd29a4ca7a4ad69d293d567872a9a91123164252491",
+      "size_bytes": 2205
+    },
+    {
+      "blob": "99ca8236bc8ef7b6ab1fad0c1998487767c1d384",
+      "path": "BinOutput/Talk/Gadget/6800223.json",
+      "sha256": "3e7f0a793ba810e2502918e7d7b672727f4c4b7e0807d932c491965e719eeedd",
+      "size_bytes": 2207
+    },
+    {
+      "blob": "86cb3c113fa91a30ea122e63c193317923dca8b2",
+      "path": "BinOutput/Talk/Gadget/6800224.json",
+      "sha256": "b521966689c789dc8cd9b0b175d4c429e7bc8271bd4b9637eda7069976ee52f3",
+      "size_bytes": 809
+    },
+    {
+      "blob": "06cb6c96f72a89285f1d1e067fab3f474f0316d0",
+      "path": "BinOutput/Talk/Gadget/6800225.json",
+      "sha256": "69bf3dcae6e1943f4da3c7a575b559434578b09e53951f65841cd137e6c9f42a",
+      "size_bytes": 2208
+    },
+    {
+      "blob": "3d03e59fddc6ad15b4a795ee8007640ba2aa77ad",
+      "path": "BinOutput/Talk/Gadget/6800226.json",
+      "sha256": "95a148d36d303a1113c8aea5332d726e6993c53d44a9e4e72b6c968ee3377a2e",
+      "size_bytes": 2209
+    },
+    {
+      "blob": "9d96109c6d6940f36a0a691bbc0db569888c58b6",
+      "path": "BinOutput/Talk/Gadget/6800227.json",
+      "sha256": "7ecd1448f6e6ccabbc72c59029855ce5b56a11dc63b7e9fcb10c053e2cf7463d",
+      "size_bytes": 1507
+    },
+    {
+      "blob": "70a00f90dd269f000c5b63e709f4095a5e958f22",
+      "path": "BinOutput/Talk/Gadget/6800228.json",
+      "sha256": "9f9d097343a7fd308929adcba2fb1f51d1dc9839279393b5a0af2450865f1c43",
+      "size_bytes": 1507
+    },
+    {
+      "blob": "aa8f38dec79d73507ed6f3b27985ac97807f4907",
+      "path": "BinOutput/Talk/Gadget/6800229.json",
+      "sha256": "1c28aad159a1fbbf1ea6259fb11ce9c32cd29c828c574512fa352f8d931f1710",
+      "size_bytes": 810
+    },
+    {
+      "blob": "0483457c9ccacd1266fd4b145b2e5b01562b3b8f",
+      "path": "BinOutput/Talk/Gadget/6800230.json",
+      "sha256": "51417c406434041609c41d61f5a9b8a9cdfd940d5ad7980f12c8a6ab9b283901",
+      "size_bytes": 1510
+    },
+    {
+      "blob": "d3cb45598b0b38f8ac790f4ea1c2934e41ffa9bc",
+      "path": "BinOutput/Talk/Gadget/6800231.json",
+      "sha256": "62c39803549ed25eeec1dcb7b4fb36d129b06107b7c9b76c2159cfd71543208a",
+      "size_bytes": 1510
+    },
+    {
+      "blob": "58d455ab1f6ba228ab789c48423c432cd27c431c",
+      "path": "BinOutput/Talk/Gadget/6800232.json",
+      "sha256": "35ac549bcba25646fc3c2e3e2b3ae8579347c67c9ed0bcd228eca60c9d123a17",
+      "size_bytes": 810
+    },
+    {
+      "blob": "d42fe060aeece9d3d2fd63d467ab02316377d2cf",
+      "path": "BinOutput/Talk/Gadget/6800260.json",
+      "sha256": "bbe8ded76ba5c3e712e6ee143d23fb90c294049169fa17b5392e280cc65bcaa7",
+      "size_bytes": 789
+    },
+    {
+      "blob": "a3c911e82ac8f042f36042df93046457f14dd305",
+      "path": "BinOutput/Talk/Gadget/6800261.json",
+      "sha256": "ea4e1007fd9e5248efac0335d46fcb92d1a43d3992e56f1d164b678824454de5",
+      "size_bytes": 1468
+    },
+    {
+      "blob": "b7e892e253ee01177ecbd03c89f559cf6a7fae36",
+      "path": "BinOutput/Talk/Gadget/6800262.json",
+      "sha256": "fcfc7faf91be13fb1359353cee99ec767c4adc9a2b1f7f7ae55eea989c9c9fd4",
+      "size_bytes": 2147
+    },
+    {
+      "blob": "e7e85c07ecd658751b53a876cef2576987d9f4a6",
+      "path": "BinOutput/Talk/Gadget/6800263.json",
+      "sha256": "c2838d409f6bc0020f25021dbfc87e0f8b74156dbbb1c558fe113bd5a1252ad7",
+      "size_bytes": 1468
+    },
+    {
+      "blob": "bfa6e9cc3a499874f0728bc265b66e49d7b69854",
+      "path": "BinOutput/Talk/Gadget/6800264.json",
+      "sha256": "019a4f771fc34584e2499582924f7d9e42f54802a5e7b1ae5a865af7ed85fd66",
+      "size_bytes": 1467
+    },
+    {
+      "blob": "dc76056a4912519d696cec337d7c702705df9839",
+      "path": "BinOutput/Talk/Gadget/6800265.json",
+      "sha256": "e9e9568fad1fdbc00efa28104fbcf580b6d4dd4e213ca3cf76c823e854bf847e",
+      "size_bytes": 2825
+    },
+    {
+      "blob": "fd40931ded993d41f55c3f9667e31c8dacab4059",
+      "path": "BinOutput/Talk/Gadget/6800266.json",
+      "sha256": "9dc2467b37249c15c2db83e744fa3aa3b9a211fd060d81719e251006f572ac1f",
+      "size_bytes": 789
+    },
+    {
+      "blob": "db66da61b686430c81a107f249cb57ec3db28bbb",
+      "path": "BinOutput/Talk/Gadget/6800267.json",
+      "sha256": "ae7cc5d1eb4a784e41a5fe287548d7be3f0f48b93016f36049df64c1e92e9f92",
+      "size_bytes": 2146
+    },
+    {
+      "blob": "f9e48d94e2f0cfacfda5c816f33b930236fa8a44",
+      "path": "BinOutput/Talk/Gadget/6800268.json",
+      "sha256": "4565886b89eb2478010e5a7b2a72a393857f4dfaeb598ebd0563d22581029907",
+      "size_bytes": 789
+    },
+    {
+      "blob": "2136867d9fa1083fa756ce67a91e7de3bf2f1675",
+      "path": "BinOutput/Talk/Gadget/6800269.json",
+      "sha256": "bc0340010263d65b26fc6bf6eff78e921f1c4105e381fbb46243a8df115cd4db",
+      "size_bytes": 788
+    },
+    {
+      "blob": "285114ee22137fa580361db6fd385565eec2043c",
+      "path": "BinOutput/Talk/Gadget/6800270.json",
+      "sha256": "ed3321a200d0ec7322a0b86e550a3172935fb3c4cd5bb8a519fefb7fe1a5eb20",
+      "size_bytes": 1467
+    },
+    {
+      "blob": "745231a8dd732f27ff22598961fea5f0f42b4900",
+      "path": "BinOutput/Talk/Gadget/6800271.json",
+      "sha256": "ca1fb89b48f7e19c91bcfa27dc7f5e5b626e26274ccfc88874cd5a466c403fbb",
+      "size_bytes": 787
+    },
+    {
+      "blob": "065b70e2c5bc8ecb4de418cd99f6f9e1ce805e6e",
+      "path": "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+      "sha256": "6ac0338dcb6649aa968a036c0c39205944724600969584bab76962465a0587a2",
+      "size_bytes": 957
+    },
+    {
+      "blob": "1b3a309ea14299fcf164c5a0e1e0512909a98bd6",
+      "path": "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+      "sha256": "90c6c555faa0cd95b9a56fbc19f90aee061cae484e5d2a3252371748cad2ea5b",
+      "size_bytes": 640
+    },
+    {
+      "blob": "15691cecd138db38ad0706dcd105be0979b5e42d",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "sha256": "2847b12e142d49b2d8035f86bc44bd4d9afe1367bb7991a97774d2c45d615fc7",
+      "size_bytes": 127449
+    },
+    {
+      "blob": "f015600c843cd24a10d5ac5d5b437d266aa1b71d",
+      "path": "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+      "sha256": "5c337194ea0d7bab9e45b9d65019a67d956a7b39e2e67af47688b6a1fef98dfc",
+      "size_bytes": 4796
+    },
+    {
+      "blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+      "size_bytes": 93248673
+    },
+    {
+      "blob": "801e54cf37d9bb1463ad970326d0bfbc8bf278b8",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "sha256": "92b5518a7dd4af32849dd7b22e7035b521b7ef5b4a4857c319ee0f74eeb9d974",
+      "size_bytes": 21980
+    },
+    {
+      "blob": "c7fa511c1a89e4781d1e4efa083ab429257a8900",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "sha256": "0238d9cb5907f136b52deab72b8182d3f0d520c665e9a381fcdd1444b7bea687",
+      "size_bytes": 11328065
+    },
+    {
+      "blob": "0d5885495bd1d5c462999cd3c5af5e9c584ea724",
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "sha256": "5b643e7476f31445878014a6b32e60af7e15ceb8f9f76da62c79c2a8eb68a062",
+      "size_bytes": 46187105
+    },
+    {
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "size_bytes": 48771857
+    },
+    {
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "size_bytes": 54368516
+    },
+    {
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "size_bytes": 61908087
+    },
+    {
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "size_bytes": 18550916
+    },
+    {
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "size_bytes": 20424271
+    },
+    {
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "size_bytes": 22744816
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_echo_shell_gameplay": false,
+  "full_photograph_gameplay": false,
+  "full_quest": false,
+  "full_talk": false,
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "ordering_contract": {
+    "narrative_chronology_inferred": false,
+    "source_order_fields_retained_raw": true
+  },
+  "row_denominator": {
+    "activity_photograph_historical_position": 66,
+    "echo_shell_dialog": 103,
+    "echo_shell_reminder": 24,
+    "echo_shell_talk_support": 44
+  },
+  "selection_basis": {
+    "accepted_photograph_ids_derived_from_root_field": "KDLEHDLHHOD",
+    "accepted_photograph_ids_equal_page_union": true,
+    "accepted_photograph_ids_equal_position_extension_ids": true,
+    "echo_dialog_ids": "union of accepted EchoShell voiceList values",
+    "echo_reminder_ids": "union of accepted EchoShell reminderList values",
+    "echo_talk_support_ids": "TalkExcel rows whose initDialog is in selected Dialog namespace",
+    "historical_position_delta": "all physical position rows minus accepted source-derived set"
+  },
+  "selector_inputs": [
+    "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+    "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+    "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+    "ExcelBinOutput/EchoShellExcelConfigData.json"
+  ],
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "sources": [
+    {
+      "boundary": "activity_photograph_historical_text_archive",
+      "internal_relations": [],
+      "kind": "activity_photograph_historical_position",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "selected_native_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ],
+      "selection_field": "id",
+      "text_owners": [
+        {
+          "field": "posTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireTitleInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireDescInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcInviteDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcCommentDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "rootNodeDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "photoCheckSubNodeDesc",
+          "role_status": "resolved",
+          "shape": "array"
+        },
+        {
+          "field": "presetCheckSubDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_reminder_dialog_archive",
+      "internal_relations": [
+        {
+          "field": "nextReminderId",
+          "relation_kind": "source_authored_next_reminder_reference",
+          "shape": "scalar_optional",
+          "skip_values": [
+            0
+          ],
+          "target_kind": "echo_shell_reminder"
+        }
+      ],
+      "kind": "echo_shell_reminder",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "selected_native_ids": [
+        1111259,
+        1111260,
+        1111261,
+        1111262,
+        1111263,
+        1111264,
+        1111265,
+        1111266,
+        1111267,
+        1111268,
+        1111269,
+        1111270,
+        1111271,
+        1111272,
+        1111273,
+        1111274,
+        1111275,
+        1111276,
+        1111277,
+        1111278,
+        1111279,
+        1111280,
+        1111281,
+        1111282
+      ],
+      "selection_field": "id",
+      "text_owners": [
+        {
+          "field": "KNLCFFIONAH",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GBINHFPCCLJ",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_reminder_dialog_archive",
+      "internal_relations": [
+        {
+          "field": "nextDialogs",
+          "relation_kind": "source_authored_next_dialog_reference",
+          "shape": "array_scalar",
+          "target_kind": "echo_shell_dialog"
+        }
+      ],
+      "kind": "echo_shell_dialog",
+      "native_id_field": "GFLDJMJKIKE",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "relation_lookup_field": "GFLDJMJKIKE",
+      "selected_native_ids": [
+        680020101,
+        680020102,
+        680020103,
+        680020201,
+        680020202,
+        680020203,
+        680020301,
+        680020302,
+        680020303,
+        680020401,
+        680020402,
+        680020403,
+        680020501,
+        680020502,
+        680020503,
+        680020504,
+        680020505,
+        680020506,
+        680020601,
+        680020602,
+        680020701,
+        680020702,
+        680020801,
+        680020901,
+        680021001,
+        680021101,
+        680021102,
+        680021201,
+        680021301,
+        680021302,
+        680021401,
+        680021402,
+        680021403,
+        680021404,
+        680021405,
+        680021501,
+        680021502,
+        680021601,
+        680021602,
+        680021603,
+        680021604,
+        680021701,
+        680021702,
+        680021703,
+        680021704,
+        680021801,
+        680021802,
+        680021901,
+        680021902,
+        680022001,
+        680022002,
+        680022003,
+        680022004,
+        680022101,
+        680022102,
+        680022103,
+        680022104,
+        680022201,
+        680022202,
+        680022203,
+        680022301,
+        680022302,
+        680022303,
+        680022401,
+        680022501,
+        680022502,
+        680022503,
+        680022601,
+        680022602,
+        680022603,
+        680022701,
+        680022702,
+        680022801,
+        680022802,
+        680022901,
+        680023001,
+        680023002,
+        680023101,
+        680023102,
+        680023201,
+        680026001,
+        680026101,
+        680026102,
+        680026201,
+        680026202,
+        680026203,
+        680026301,
+        680026302,
+        680026401,
+        680026402,
+        680026501,
+        680026502,
+        680026503,
+        680026504,
+        680026601,
+        680026701,
+        680026702,
+        680026703,
+        680026801,
+        680026901,
+        680027001,
+        680027002,
+        680027101
+      ],
+      "selection_field": "GFLDJMJKIKE",
+      "text_owners": [
+        {
+          "field": "talkContentTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "talkTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "talkRoleNameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_reminder_dialog_archive",
+      "internal_relations": [
+        {
+          "field": "initDialog",
+          "relation_kind": "source_authored_initial_dialog_reference",
+          "shape": "scalar",
+          "target_kind": "echo_shell_dialog"
+        }
+      ],
+      "kind": "echo_shell_talk_support",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "relation_lookup_field": "id",
+      "selected_native_ids": [
+        6800201,
+        6800202,
+        6800203,
+        6800204,
+        6800205,
+        6800206,
+        6800207,
+        6800208,
+        6800209,
+        6800210,
+        6800211,
+        6800212,
+        6800213,
+        6800214,
+        6800215,
+        6800216,
+        6800217,
+        6800218,
+        6800219,
+        6800220,
+        6800221,
+        6800222,
+        6800223,
+        6800224,
+        6800225,
+        6800226,
+        6800227,
+        6800228,
+        6800229,
+        6800230,
+        6800231,
+        6800232,
+        6800260,
+        6800261,
+        6800262,
+        6800263,
+        6800264,
+        6800265,
+        6800266,
+        6800267,
+        6800268,
+        6800269,
+        6800270,
+        6800271
+      ],
+      "selection_field": "id",
+      "talk_relations": [
+        {
+          "field": "id",
+          "relation_kind": "source_authored_talk_program_reference",
+          "shape": "scalar"
+        }
+      ],
+      "text_owners": []
+    }
+  ],
+  "story_namespace_unchanged": true,
+  "talk_candidate_namespace": {
+    "artifacts": [
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:a5c566f94d8d9d8af19c0073b0d51cc38e550ad6",
+        "scope_kind": "quest_linked",
+        "sha256": "3f7cd77283e7c9507646d6902dd798eaaede620e67572bd7b8ff4b2305676065",
+        "size_bytes": 2171842560
+      },
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+        "scope_kind": "mapped_complement",
+        "sha256": "4aff314d945ade7f885c9cf948b7b1ee46d55c6dd6f22f720fe1c137c91fea21",
+        "size_bytes": 727257088
+      }
+    ],
+    "kind": "accepted_mapped_talk_program_roots_v7",
+    "mapped_program_denominator": 50862,
+    "required_container_kind": "talk_root",
+    "search_complete": true
+  },
+  "talk_candidates": [
+    {
+      "raw_locator": "6800201",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:0d00a9bbbcd7198ed844889622422cdcff696ebf",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800201.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800202",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:f3eccfca49fe5a2dc16722f46d08d52e2b0b44f6",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800202.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800203",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b292a3151854a551a6f8533dc1b562e5f7567c4e",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800203.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800204",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:0910fea1d4e703c3bd61f97fa6508796ffff4688",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800204.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800205",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:4afaee172f974e4ebb5cc43c5bece09e4edd5cc8",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800205.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800206",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:63b1dfbbacc09ce1f04823cb0c4189fc4e9210ca",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800206.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800207",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:f87f5d32714dfad2b565e894a57cb38da44852fb",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800207.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800208",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:25d006d45d88ee9e5209cb92a019de9cc9fa1750",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800208.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800209",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:9925a66918670f5a388d6cff54393353f2bd23df",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800209.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800210",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:a4df4f3e22e6fec1fc196280e8c6c1da58a9dbe4",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800210.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800211",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:4fa5f1054e9a9cd80ee494052a62a8dc98d548d5",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800211.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800212",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:4dd4baa0b7af319507db136a674af5cbabd55b7b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800212.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800213",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:402ad3db98291dd5a3c8e7860b1901a55b88bcdd",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800213.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800214",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:f245ca5ed3c382e488a129c53382544bbe19ae0b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800214.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800215",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:c0158e22ff56aa96b7f211b20203576acfe842d5",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800215.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800216",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:d7607475f6925574152a1d4649d0bdead5e24746",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800216.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800217",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b25413c80d51fec6abd34fedbabfdbabf641dbdb",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800217.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800218",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:9b926c9faf2441dc7d5370db1640b29006579e0e",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800218.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800219",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:32fa3e1f1339b6e0ca3bf1cb7cfb81f0db796f6a",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800219.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800220",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b76ac503d9533f579c12b8ba2fad79cd95c9a185",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800220.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800221",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:dc599d65f6e83782e245142a89d945963f617d24",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800221.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800222",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:3e61cd224c6c884511857d6f94ba0861be09d2c3",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800222.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800223",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:76e0aec6b7f632bbba791938f53e2243bf96e381",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800223.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800224",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:4d261d72142c44ce01ab32adca06aa3aff9ff629",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800224.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800225",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:1b42582c88deed4b323ec5731bbda1f2874ea368",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800225.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800226",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:81bf52dc5a0cbe8d63a24291ee852ee6522ad903",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800226.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800227",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:a16f1ca99d026d2e35eafe8e2ac7651361f5ae5b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800227.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800228",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:823313dfff450febf86feda0218e92a928e9c4e5",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800228.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800229",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:49bfcb8672c42fdabc5b86ba1920001a824f6506",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800229.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800230",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:26be3794aa30385d1c9bfb2a2442f648991435f7",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800230.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800231",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:524c6bb092eef6eeb767b72d8ded6389bd255d24",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800231.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800232",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:2d06fd8ed923357cbdd729c60e0a6dca2371499d",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800232.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800260",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:ba2ba02902e5b3d5db1b2cd153d7d6d7c69dc0ce",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800260.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800261",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:1baf3ad4b3926f47c02c74b1952cc991890640d1",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800261.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800262",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b924a7c69fd3edf5f8d429e4dac8da9ab4e79d83",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800262.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800263",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:1a57596133a68f246d90de1e277435f62c42b5a4",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800263.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800264",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:e8127a20985a46989ae0cdb4f08b493ae85d4e98",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800264.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800265",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:672a98cdafaa4c4c34969173bd7f8bf7091e0b42",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800265.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800266",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:708922533427552a02098b81b3528f8969af5a3c",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800266.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800267",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:8003538c3bda2a8da6c16aa01cb96d6838ee757b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800267.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800268",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:ee8094bb22a0128fc1b3337d95224073789ebae4",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800268.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800269",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:3e2f62b52ef86086ebd52aa362e56a691c1fd3ae",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800269.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800270",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:177300f2b701a96fe66b9e7df719e50de0ef64bb",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800270.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "6800271",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:c9a98f6e0f147098195b27b6858bb0036641db90",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Gadget/6800271.json",
+      "target_source_pointer": "/"
+    }
+  ]
+}

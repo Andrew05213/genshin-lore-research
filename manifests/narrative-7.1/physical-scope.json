@@ -1,0 +1,323 @@
+{
+  "contract": "npc-dialog-reminder-7.1-physical-scope-v1",
+  "families": {
+    "dialog": {
+      "field_types": {
+        "GFLDJMJKIKE": {
+          "int": 203908
+        },
+        "actionAfter": {
+          "str": 203908
+        },
+        "actionBefore": {
+          "str": 203908
+        },
+        "actionWhile": {
+          "str": 203908
+        },
+        "groupId": {
+          "int": 3437
+        },
+        "nextDialogs": {
+          "list": 203908
+        },
+        "optionIcon": {
+          "str": 203908
+        },
+        "showDuration": {
+          "float": 207
+        },
+        "talkAssetPath": {
+          "str": 203908
+        },
+        "talkAssetPathAlter": {
+          "str": 203908
+        },
+        "talkAudioName": {
+          "str": 203908
+        },
+        "talkContentTextMapHash": {
+          "int": 203908
+        },
+        "talkRole": {
+          "dict": 203908
+        },
+        "talkRoleNameTextMapHash": {
+          "int": 203908
+        },
+        "talkShowType": {
+          "str": 23483
+        },
+        "talkTitleTextMapHash": {
+          "int": 203908
+        }
+      },
+      "local_key": "GFLDJMJKIKE",
+      "physical_rows": 203908,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": false,
+      "source_path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "text_fields": {
+        "talkContentTextMapHash": "source_authored_content",
+        "talkRoleNameTextMapHash": "source_authored_role_name",
+        "talkTitleTextMapHash": "source_authored_title"
+      }
+    },
+    "npc": {
+      "field_types": {
+        "AHBFOCOOKHP": {
+          "bool": 8082
+        },
+        "BBPNINMJDAD": {
+          "bool": 1
+        },
+        "BMGJPHICOBI": {
+          "bool": 912
+        },
+        "EBCGKGFAOPB": {
+          "bool": 41
+        },
+        "HEOPAFMAFMJ": {
+          "int": 2
+        },
+        "HNJMHMLFGAN": {
+          "bool": 750
+        },
+        "KLOGFBEAMOH": {
+          "int": 39
+        },
+        "NBCMAFADKHP": {
+          "bool": 1388
+        },
+        "PAGDCLCLCNC": {
+          "bool": 41
+        },
+        "actionIdList": {
+          "list": 389
+        },
+        "alias": {
+          "str": 13882
+        },
+        "animatorConfigPathHash": {
+          "int": 9490
+        },
+        "avatarID": {
+          "int": 404
+        },
+        "billboardIcon": {
+          "str": 140
+        },
+        "billboardType": {
+          "str": 280
+        },
+        "bodyType": {
+          "str": 7610
+        },
+        "campID": {
+          "int": 14444
+        },
+        "deformationMeshPathHash": {
+          "int": 6353
+        },
+        "disableShowName": {
+          "bool": 7114
+        },
+        "elementType": {
+          "str": 2
+        },
+        "featureTagGroupId": {
+          "int": 8989
+        },
+        "firstMetId": {
+          "int": 485
+        },
+        "hasAudio": {
+          "bool": 12583
+        },
+        "hasMove": {
+          "bool": 12217
+        },
+        "id": {
+          "int": 14444
+        },
+        "invisiable": {
+          "bool": 2205
+        },
+        "isDaily": {
+          "bool": 4517
+        },
+        "jsonName": {
+          "str": 3140
+        },
+        "jsonPathHash": {
+          "int": 12219
+        },
+        "luaDataIndex": {
+          "int": 4
+        },
+        "luaDataPath": {
+          "str": 13755
+        },
+        "nameTextMapHash": {
+          "int": 14444
+        },
+        "prefabPathHash": {
+          "int": 14444
+        },
+        "scriptDataPath": {
+          "str": 14444
+        },
+        "specialType": {
+          "str": 193
+        },
+        "templateEmotionPath": {
+          "str": 22
+        },
+        "uniqueBodyId": {
+          "int": 14290
+        }
+      },
+      "local_key": "id",
+      "physical_rows": 14444,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": false,
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "text_fields": {
+        "nameTextMapHash": "source_authored_name"
+      }
+    },
+    "reminder": {
+      "field_types": {
+        "BDCNKAONHBH": {
+          "int": 18541
+        },
+        "BOPLMJAGOLN": {
+          "str": 18541
+        },
+        "EOMDJEEJKAL": {
+          "str": 18541
+        },
+        "FEKELBFFBCC": {
+          "int": 101
+        },
+        "FIONFEOLHHE": {
+          "int": 3
+        },
+        "HNDLKHJFLNF": {
+          "int": 18541
+        },
+        "IFHCDBDKCGA": {
+          "bool": 58
+        },
+        "JCEOIOOIAMA": {
+          "str": 18541
+        },
+        "JMBDKHKPMNL": {
+          "int": 3
+        },
+        "KIMIDFCGEOK": {
+          "str": 1313
+        },
+        "KOFBEHJKNMF": {
+          "str": 14
+        },
+        "NFJIEDBEINN": {
+          "str": 469
+        },
+        "OFKJGMFPLBA": {
+          "bool": 399
+        },
+        "POMDDAHBLOF": {
+          "str": 18541
+        },
+        "delay": {
+          "float": 1864
+        },
+        "hasAudio": {
+          "bool": 4461
+        },
+        "id": {
+          "int": 18541
+        },
+        "nextReminderId": {
+          "int": 5901
+        },
+        "showTime": {
+          "float": 18282
+        },
+        "soundEffect": {
+          "str": 13
+        },
+        "style": {
+          "str": 4648
+        }
+      },
+      "local_key": "id",
+      "physical_rows": 18541,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": true,
+      "source_path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "text_fields": {}
+    }
+  },
+  "files": [
+    {
+      "git_blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+      "size_bytes": 93248673
+    },
+    {
+      "git_blob": "ddb11e1adb9a33156c96b4e483f086c3f11acfe1",
+      "path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "sha256": "f1c06cc20c6b0622df66eed8a4f14b078edf249d85bac6b9b1ad8d21e69b266a",
+      "size_bytes": 7166501
+    },
+    {
+      "git_blob": "952be4670f64e062b797d5f89ae105c4a632958c",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "sha256": "57bd1fa49d0d7922378cf2f92b886ff200b921cdf0b46d791bd1bf8f89463fac",
+      "size_bytes": 5082170
+    },
+    {
+      "git_blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "git_blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "git_blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "git_blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "git_blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "git_blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "reminder_numeric_policy": "all_top_level_integer_scalars_except_id_and_nextReminderId_are_uninterpreted_numeric_TextMap_candidate_observations; not_semantic_text_owners",
+  "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "textmap_policy": "retain_all_main_and_medium_physical_candidates; no_cross_snapshot_fallback"
+}

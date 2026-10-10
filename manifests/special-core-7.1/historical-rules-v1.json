@@ -1,0 +1,46 @@
+{
+  "contract": "special-core-7.1-historical-family-rules-v1",
+  "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "world_archive": {
+    "provider_contract": "world-archive-evidence-v1",
+    "primary": {
+      "ExcelBinOutput/AnimalCodexExcelConfigData.json": {
+        "native_locator": "id",
+        "text_owners": ["descTextMapHash"],
+        "assets": ["modelPath"]
+      },
+      "ExcelBinOutput/ViewCodexExcelConfigData.json": {
+        "native_locator": "id",
+        "text_owners": ["descTextMapHash", "nameTextMapHash"],
+        "assets": ["image"]
+      }
+    },
+    "relations": [
+      {"source": "ExcelBinOutput/AnimalCodexExcelConfigData.json", "field": "describeId", "dynamic": "type_partition_animal_describe_v1"},
+      {"source": "ExcelBinOutput/AnimalCodexExcelConfigData.json", "field": "pushTipsCodexId", "target": "ExcelBinOutput/PushTipsCodexExcelConfigData.json", "target_field": "id"},
+      {"source": "ExcelBinOutput/ViewCodexExcelConfigData.json", "field": "cityId", "target": "ExcelBinOutput/CityConfigData.json", "target_field": "cityId"},
+      {"source": "ExcelBinOutput/ViewCodexExcelConfigData.json", "field": "gadgetId", "target": "ExcelBinOutput/GadgetExcelConfigData.json", "target_field": "id"},
+      {"source": "ExcelBinOutput/ViewCodexExcelConfigData.json", "field": "sceneId", "target": "ExcelBinOutput/SceneExcelConfigData.json", "target_field": "id"},
+      {"source": "ExcelBinOutput/ViewCodexExcelConfigData.json", "field": "worldAreaId", "target": "ExcelBinOutput/WorldAreaConfigData.json", "target_field": "id"}
+    ],
+    "opaque_policy": "source-native obfuscated fields and historical View configId/groupId are raw opaque observations; no cross-version field-role alignment",
+    "historical_rule_source": "src/genshin_lore/world_archive_phase4e3_contract.py"
+  },
+  "quest_codex_archive": {
+    "provider_contract": "quest-codex-archive-evidence-v1",
+    "primary": "ExcelBinOutput/QuestCodexExcelConfigData.json",
+    "support": "ExcelBinOutput/ChapterExcelConfigData.json",
+    "native_locator": "id",
+    "support_selection": "all physical Chapter rows matching any primary chapterId; no first-candidate selection",
+    "relations": [
+      {"field": "chapterId", "target": "ExcelBinOutput/ChapterExcelConfigData.json", "target_field": "id"},
+      {"field": "parentQuestId", "target": "ExcelBinOutput/QuestExcelConfigData.json", "target_field": "mainId"}
+    ],
+    "support_text_owners": ["chapterImageTitleTextMapHash", "chapterNumTextMapHash", "chapterTitleTextMapHash"],
+    "support_assets": ["chapterIcon", "chapterImageHash", "chapterSerialNumberIcon"],
+    "optional_primary_fields": ["tabType", "isDisuse"],
+    "opaque_policy": "source-native obfuscated fields and historical ID-like unclassified fields are raw opaque observations; no cross-version field-role alignment",
+    "historical_rule_source": "src/genshin_lore/quest_codex_phase4f3_contract.py"
+  },
+  "identity_policy": "all observations are snapshot/run/source-coordinate scoped; candidates are physical lookup rows, never logical entities"
+}

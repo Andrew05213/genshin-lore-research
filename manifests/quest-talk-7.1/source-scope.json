@@ -1,0 +1,63 @@
+{
+  "contract": "quest-talk-7.1-standalone-physical-v1",
+  "status": "candidate_source_scope",
+  "product_accepted": false,
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "physical_scope": {
+    "quest": {
+      "source_root": "BinOutput/Quest",
+      "file_count": 4808,
+      "inherited_paths_from_7_0": 4466,
+      "added_paths_since_7_0": 342,
+      "removed_paths_since_7_0": 0,
+      "path_set_sha256": "85028f3ce9acef975d9ee0b03abb7c53ad41bfe120165a601c4fb7f5f31e6f90"
+    },
+    "talk": {
+      "source_root": "BinOutput/Talk",
+      "file_count": 59853,
+      "inherited_paths_from_7_0": 55925,
+      "added_paths_since_7_0": 3928,
+      "removed_paths_since_7_0": 0,
+      "path_set_sha256": "17489189a4b0fe096edf1ff115cc59f783dc83933f7b26e993ebbe5125db3db7"
+    }
+  },
+  "main_quest_source": {
+    "path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+    "role": "snapshot-local physical support rows; no inferred MainQuest-to-Quest identity",
+    "physical_rows": 4417,
+    "size_bytes": 2017064,
+    "sha256": "ae527bff4405698559f3eab8176f809d13fd100061b1a03923ce1a9edf06986c"
+  },
+  "decoder_contract": {
+    "version": "quest-talk-7.1-physical-v1",
+    "decoder_path": "src/genshin_lore/quest_talk_7_1_physical.py",
+    "talk_root_id": "talkId or exact registered historical root mapping",
+    "talk_child_list": "PCIAMAFDDAA or exact registered historical physical list",
+    "talk_node_id": "id or mapping-specific historical field",
+    "talk_successors": "GLJCECCOEDP or mapping-specific historical field",
+    "talk_text_hash": "LKECPJIFFEE or mapping-specific historical field",
+    "quest_root_id": "id or exact registered historical root mapping",
+    "quest_child_list": "JIJKODHIEED or exact registered historical physical list",
+    "quest_to_talk_list": "DLLABGGCEBM or exact registered historical reference list",
+    "quest_embedded_lists": ["PCIAMAFDDAA", "PFALHAKIILD", "GALIDJOEHOC"],
+    "coordinate_rule": "snapshot-local source path + physical JSON pointer + list ordinal",
+    "absence_rule": "source field absent is explicit; never reinterpreted as complete negative evidence",
+    "unknown_shape_rule": "fail closed; no silent skip or cross-snapshot fallback"
+  },
+  "root_signature_manifest": {
+    "path": "manifests/quest-talk-7.1/root-signature-digests.json",
+    "sha256": "951bc056186b5d410b41f9fec755ce73ed025a9d49cb57aa1b695db030543783",
+    "quest_distinct_signatures": 1378,
+    "talk_distinct_signatures": 46
+  },
+  "textmap_shards": [
+    {"path": "TextMap/TextMapCHS.json", "locale": "CHS", "tier": "main", "size_bytes": 49920231, "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8"},
+    {"path": "TextMap/TextMap_MediumCHS.json", "locale": "CHS", "tier": "medium", "size_bytes": 18801724, "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66"},
+    {"path": "TextMap/TextMapEN.json", "locale": "EN", "tier": "main", "size_bytes": 55719620, "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6"},
+    {"path": "TextMap/TextMap_MediumEN.json", "locale": "EN", "tier": "medium", "size_bytes": 20704568, "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992"},
+    {"path": "TextMap/TextMapJP.json", "locale": "JP", "tier": "main", "size_bytes": 63445300, "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7"},
+    {"path": "TextMap/TextMap_MediumJP.json", "locale": "JP", "tier": "medium", "size_bytes": 23059132, "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844"}
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "contract": "gcg-card-source-7.1-v1",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "files": [
+    {
+      "path": "ExcelBinOutput/GCGDeckCardExcelConfigData.json",
+      "size_bytes": 238541,
+      "sha256": "38525d333ac69c877bb3f68327e1744c67b0dd63a394e2ee653d1c24769ec039",
+      "blob": "7283f79d1345044e6f9a51c2720d7130b3b98100"
+    },
+    {
+      "path": "ExcelBinOutput/GCGCardFaceExcelConfigData.json",
+      "size_bytes": 330756,
+      "sha256": "22ed47a14419429e054c45067fbb48850d7c02f0467934be308542bef80f7052",
+      "blob": "10ba43ac3852efc172a3b104607eaa006f12c920"
+    },
+    {
+      "path": "TextMap/TextMapCHS.json",
+      "size_bytes": 49920231,
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523"
+    },
+    {
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "size_bytes": 18801724,
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d"
+    },
+    {
+      "path": "TextMap/TextMapEN.json",
+      "size_bytes": 55719620,
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1"
+    },
+    {
+      "path": "TextMap/TextMap_MediumEN.json",
+      "size_bytes": 20704568,
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6"
+    },
+    {
+      "path": "TextMap/TextMapJP.json",
+      "size_bytes": 63445300,
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183"
+    },
+    {
+      "path": "TextMap/TextMap_MediumJP.json",
+      "size_bytes": 23059132,
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87"
+    }
+  ],
+  "primary_rows": [
+    629,
+    1258
+  ],
+  "text_fields": {
+    "deck_card": [
+      "storyTitleTextMapHash",
+      "storyDescTextMapHash",
+      "accessDescTextMapHash"
+    ],
+    "card_face": [
+      "nameTextMapHash",
+      "descTextMapHash",
+      "lockTipTextMapHash"
+    ]
+  },
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "relationships": {
+    "deck_card.faceIdList": "all physical CardFace rows with id equal to each explicit face-list locator",
+    "card_face.cardId": "all physical DeckCard rows with id equal to explicit cardId locator"
+  },
+  "text_lookup": "all main physical pairs; Medium only if no main candidate",
+  "corpus_complete": "two complete 7.1 primary files and six snapshot-local TextMaps; not full GCG or 7.1 product"
+}

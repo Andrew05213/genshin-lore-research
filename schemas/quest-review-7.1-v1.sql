@@ -1,0 +1,11 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE evidence_row(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,kind TEXT NOT NULL,source_path TEXT NOT NULL,source_ordinal INTEGER NOT NULL,source_pointer TEXT NOT NULL,native_id TEXT NOT NULL,raw_json TEXT NOT NULL,raw_sha256 TEXT NOT NULL,UNIQUE(run_id,source_path,source_pointer)) WITHOUT ROWID;
+CREATE TABLE locator(id TEXT PRIMARY KEY,row_id TEXT NOT NULL REFERENCES evidence_row(id),role TEXT NOT NULL,source_pointer TEXT NOT NULL,raw_value TEXT NOT NULL,status TEXT NOT NULL,candidate_count INTEGER NOT NULL,UNIQUE(row_id,role,source_pointer)) WITHOUT ROWID;
+CREATE TABLE locator_candidate(id TEXT PRIMARY KEY,locator_id TEXT NOT NULL REFERENCES locator(id),target_source_path TEXT NOT NULL,target_source_pointer TEXT NOT NULL,target_native_id TEXT NOT NULL,UNIQUE(locator_id,target_source_path,target_source_pointer)) WITHOUT ROWID;
+CREATE TABLE text_slot(id TEXT PRIMARY KEY,row_id TEXT NOT NULL REFERENCES evidence_row(id),owner_field TEXT NOT NULL,locale TEXT NOT NULL,raw_hash TEXT NOT NULL,status TEXT NOT NULL,candidate_count INTEGER NOT NULL,UNIQUE(row_id,owner_field,locale)) WITHOUT ROWID;
+CREATE TABLE text_candidate(id TEXT PRIMARY KEY,slot_id TEXT NOT NULL REFERENCES text_slot(id),source_path TEXT NOT NULL,pair_ordinal INTEGER NOT NULL,source_pointer TEXT NOT NULL,raw_text TEXT NOT NULL,raw_text_sha256 TEXT NOT NULL,UNIQUE(slot_id,source_path,pair_ordinal,source_pointer)) WITHOUT ROWID;
+CREATE TABLE release(singleton INTEGER PRIMARY KEY CHECK(singleton=1),manifest_json TEXT NOT NULL) WITHOUT ROWID;
+CREATE INDEX locator_row ON locator(row_id,id);
+CREATE INDEX candidate_locator ON locator_candidate(locator_id,id);
+CREATE INDEX slot_row ON text_slot(row_id,id);
+CREATE INDEX candidate_slot ON text_candidate(slot_id,id);

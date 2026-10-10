@@ -1,0 +1,316 @@
+{
+  "completeness": {
+    "declared_physical_projection_complete": true,
+    "declared_relation_projection_complete": true,
+    "declared_text_projection_complete": true,
+    "full_7_1": false
+  },
+  "contract": "native-book-music-7.1-scope-v1",
+  "dependencies": {
+    "native_message": {
+      "artifact": {
+        "path": "/tmp/native-message-7.1-a.sqlite",
+        "sha256": "e6bfc2448294622dfa19f702aaa74c9ae94158aa03f3eafb7fb12e7aa170c0f5",
+        "size_bytes": 16269312
+      },
+      "family": "native_archive",
+      "family_contract_version": "native-message-7.1-versioned-evidence-v1",
+      "parser_build_id": "nmsg71:60a78c63c569fe6065003831771493b9ba89ab55",
+      "run_id": "nmsg71:d249cd47f222fdf3d669bbb309837507f4e6b9c9"
+    }
+  },
+  "external_candidates": [
+    {
+      "raw_locator": "7012",
+      "relation_kind": "source_authored_push_tips_reference",
+      "target_contract": "native-message-7.1-versioned-evidence-v1",
+      "target_family": "native_archive",
+      "target_native_id": "7012",
+      "target_occurrence_id": "nmsg71:6bda132c531e9e79cfba2c563d0078769c213f1b",
+      "target_parser": "nmsg71:60a78c63c569fe6065003831771493b9ba89ab55",
+      "target_raw_sha256": "6d34271cd2181558295ec76a856c06b0ac18f4aee9e3cee5be80dfd80997fa11",
+      "target_run": "nmsg71:d249cd47f222fdf3d669bbb309837507f4e6b9c9",
+      "target_source_path": "ExcelBinOutput/PushTipsConfigData.json",
+      "target_source_pointer": "/509"
+    },
+    {
+      "raw_locator": "7014",
+      "relation_kind": "source_authored_push_tips_reference",
+      "target_contract": "native-message-7.1-versioned-evidence-v1",
+      "target_family": "native_archive",
+      "target_native_id": "7014",
+      "target_occurrence_id": "nmsg71:9211287e2d7d1c4ca759e269ce52e3ddd56cb720",
+      "target_parser": "nmsg71:60a78c63c569fe6065003831771493b9ba89ab55",
+      "target_raw_sha256": "42492c8d4b659b8c37119522a9f5724ebfb6c07500b785999426e259c9d84af2",
+      "target_run": "nmsg71:d249cd47f222fdf3d669bbb309837507f4e6b9c9",
+      "target_source_path": "ExcelBinOutput/PushTipsConfigData.json",
+      "target_source_pointer": "/511"
+    }
+  ],
+  "family": "native_archive",
+  "family_contract_version": "native-archive-evidence-v1",
+  "files": [
+    {
+      "blob": "9deef42a7fa47b956d9481e56303d8790258525d",
+      "path": "ExcelBinOutput/BookSuitExcelConfigData.json",
+      "sha256": "9818524761136eb51b8c78dc3233fdbbd700ec07f20fe4f426ea807f687965fb",
+      "size_bytes": 4812
+    },
+    {
+      "blob": "38a67fd02dd684377991223c67c501234d389693",
+      "path": "ExcelBinOutput/ActivitySnowRaceThrowBookExcelConfigData.json",
+      "sha256": "4ee8aa197850a5041d277e71c0b29b4a0212e1610198d027674e0bc60b3228ec",
+      "size_bytes": 1996
+    },
+    {
+      "blob": "f54c0538661d4e6ce21fcd4bb53522a10a05c43d",
+      "path": "ExcelBinOutput/MusicGameBookAreaExcelConfigData.json",
+      "sha256": "be91806cd6145cea6788806a17607a293a5d2dc5ea8d95b5e663ec9ce6d0c563",
+      "size_bytes": 467
+    },
+    {
+      "blob": "0cd77c9e3b2ac8007140682dbe9ed18972652156",
+      "path": "ExcelBinOutput/MusicGameBookLabelExcelConfigData.json",
+      "sha256": "7d5c7568c370bf489af3c4a456a082885fa11580f16a76940ecb6d70a4942f80",
+      "size_bytes": 1202
+    },
+    {
+      "blob": "2056e5e7303748541aa5efadc266bc889591cfce",
+      "path": "ExcelBinOutput/MusicGameBookLabelNameExcelConfigData.json",
+      "sha256": "2fcef1167835c50b523ce0e016a7397a2c108866edb1d7a2388091be92da09eb",
+      "size_bytes": 113
+    },
+    {
+      "blob": "47b4a8563bc1ac9e833cd33889db934c219ed675",
+      "path": "ExcelBinOutput/MusicGameBookTitleExcelConfigData.json",
+      "sha256": "c34eee792993ecc5ed57ccac934e70a5a9e3430117ec359e8ee887453c4963e2",
+      "size_bytes": 785
+    },
+    {
+      "blob": "e531068f17aaef27a001951ec82567dc2b8a4463",
+      "path": "ExcelBinOutput/MusicGameBookInstrumentTrialExcelConfigData.json",
+      "sha256": "f08ec621296957286ee0f61ef8468d51da0de9552374153e6d5b8b512de87c72",
+      "size_bytes": 2845
+    },
+    {
+      "blob": "31264c357bff8cb6ab3a10585ea856f8bfedf48f",
+      "path": "ExcelBinOutput/MusicGameBookModExcelConfigData.json",
+      "sha256": "f4e63882dfe80daedce8dda74de17a866bede110e3377628136d0f59fc159363",
+      "size_bytes": 1586
+    },
+    {
+      "blob": "ddc18618f3498be31f4bfeab1dd73576a34f1739",
+      "path": "ExcelBinOutput/MusicGameBookModGroupExcelConfigData.json",
+      "sha256": "0e3b7ccc475a6552ae173d45f186b4130908931755f8f539ad0391003ecf9e60",
+      "size_bytes": 272
+    },
+    {
+      "blob": "a9f612e8b8533ea8a2f376271ea6c4bd23218efb",
+      "path": "ExcelBinOutput/MusicGameBookRecommendTagExcelConfigData.json",
+      "sha256": "2d5e1c01c8d001b4a7a0a3469c18dd4d8292ca3a2d29d80bd2389abe3213e019",
+      "size_bytes": 352
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "reuse_targets": [],
+  "selection_manifest": "manifests/native-archive-7.1/book-music-selection-v1.json",
+  "selection_sha256": "b393b83fd08c4be16dde4130ed2187ea840ef3ec26dd21ee8880e467b67427d3",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "boundary": "book_catalog",
+      "kind": "book_suit",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/BookSuitExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "suitNameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_book_archive",
+      "kind": "snow_race_throw_book",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivitySnowRaceThrowBookExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_area",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookAreaExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "areaNameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_label",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookLabelExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_label_name",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookLabelNameExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_title",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookTitleExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_instrument_trial",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookInstrumentTrialExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_native_message_push_tips_physical_rows",
+          "field": "pushTipsId",
+          "relation_kind": "source_authored_push_tips_reference"
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_mod",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookModExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_mod_group",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookModGroupExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "music_game_catalog",
+      "kind": "music_game_book_recommend_tag",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MusicGameBookRecommendTagExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    }
+  ],
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

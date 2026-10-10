@@ -1,0 +1,470 @@
+{
+  "contract": "native-message-7.1-exact-source-scope-v1",
+  "dependency": {
+    "artifact": {
+      "path_machine_local": "/tmp/quest-narrative-7.1-final-a.sqlite",
+      "sha256": "1ee83e21cf859f8e60eae55948ae5cd551ba64baae3ef9b6539c1625fc74a2dc",
+      "size_bytes": 143749120
+    },
+    "capability": "mainquest_exact_rows",
+    "contract": "quest-narrative-7.1-derived-v1",
+    "family": "quest_narrative_archive",
+    "parser": "qn71:7731834495ba936a1aeb38dcf0d61752c7723826",
+    "physical_target_denominator": 4417,
+    "run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+    "target_artifact_machine_local": "/tmp/quest-narrative-7.1-final-a.sqlite"
+  },
+  "external_candidates": [
+    {
+      "raw_locator": "73090",
+      "target_native_id": "73090",
+      "target_occurrence_id": "qn71:8e31df4c4cc44bd3df09ca7d2a3b9c6f1056343f",
+      "target_raw_sha256": "b5567ba2016e034d30bb39b2c416763122dcc73e8063cdf7ff6ce582f7a993d0",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2622"
+    },
+    {
+      "raw_locator": "73091",
+      "target_native_id": "73091",
+      "target_occurrence_id": "qn71:43aac8d875adda54a489f994faf3e101bb1cdc71",
+      "target_raw_sha256": "6f62c1cf0c0e7252f2b051620e2e6db7252d5962f5de53dc1d33e5255c4fe4f7",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2623"
+    },
+    {
+      "raw_locator": "73092",
+      "target_native_id": "73092",
+      "target_occurrence_id": "qn71:d7fc26d87648f83a1f6adc49a695d8e090935ea7",
+      "target_raw_sha256": "b1e2af90b49fe7c4d47a5b5830f8c759daa6d3e43ab01fc168cc3cd253c273f3",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2624"
+    },
+    {
+      "raw_locator": "73093",
+      "target_native_id": "73093",
+      "target_occurrence_id": "qn71:52cedbc56526d284e4fbc2f62b6083611cabc4de",
+      "target_raw_sha256": "5cec3a652781525a5bbcc9a628c7e867906f83b234da0c92fb3184c4d3d14852",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2625"
+    },
+    {
+      "raw_locator": "73094",
+      "target_native_id": "73094",
+      "target_occurrence_id": "qn71:21a8ce7e11af47688b6472c406061d7acc008167",
+      "target_raw_sha256": "96c4815e80d338b5212abeafeb3b6ca3346301f1868bed2bb78b2e2390f234e3",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2626"
+    },
+    {
+      "raw_locator": "73095",
+      "target_native_id": "73095",
+      "target_occurrence_id": "qn71:9a6133e595555a5361cf4c04f664b667c3ec5a89",
+      "target_raw_sha256": "8156995093419172be5123f97ce053f67f86b0f56eeac82733bd1946bd4c6d33",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2627"
+    },
+    {
+      "raw_locator": "73096",
+      "target_native_id": "73096",
+      "target_occurrence_id": "qn71:0a98e019d3da6c52731608da5b74680216894c3b",
+      "target_raw_sha256": "20328f7742ca03080c5c2d14e284a1a088d31c9d3bd9167612a3d2b5f30b93ce",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2628"
+    },
+    {
+      "raw_locator": "73097",
+      "target_native_id": "73097",
+      "target_occurrence_id": "qn71:7be0cbb1d8bc979ae591e1bd011bcd275610e038",
+      "target_raw_sha256": "2506d802118cf446916430eb511281029a2adecbe187d6da2b139e0fe12567e1",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2629"
+    },
+    {
+      "raw_locator": "73099",
+      "target_native_id": "73099",
+      "target_occurrence_id": "qn71:6fb8e079f0a44a490cb4a35f5d157a7863963641",
+      "target_raw_sha256": "dd8a032a6ec67566d1d52576f8ee3474527c97707dd0875ce6aac454487c92a4",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2631"
+    },
+    {
+      "raw_locator": "73234",
+      "target_native_id": "73234",
+      "target_occurrence_id": "qn71:1ce71a2cfbd715b36009f94496d584a2c9af3e81",
+      "target_raw_sha256": "a8b4ae946b185ebfbbe61664572e8d81b1448a3b6dec7958b5741fef8fb5363b",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2766"
+    },
+    {
+      "raw_locator": "73283",
+      "target_native_id": "73283",
+      "target_occurrence_id": "qn71:77f65c497d62585dd51dd18a87aa72b4eb2a282e",
+      "target_raw_sha256": "ec49176754cd938ec6b4a24c7150142e7a7c222f9807b34e778667151e7b533f",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2815"
+    },
+    {
+      "raw_locator": "73284",
+      "target_native_id": "73284",
+      "target_occurrence_id": "qn71:363fa37d59d075a66eff73bcc1a55b490c195d1f",
+      "target_raw_sha256": "fff7ca9d5a717308052994efb7cfc6426c7b833190c9ff8c956441238b34653c",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2816"
+    },
+    {
+      "raw_locator": "73288",
+      "target_native_id": "73288",
+      "target_occurrence_id": "qn71:41b1db990e50d8572910c32f8052e0058409d876",
+      "target_raw_sha256": "eac81c8a8936d12b6b985f5183323f23210c772b0dc071e1f13721e6173f62d1",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2820"
+    },
+    {
+      "raw_locator": "73324",
+      "target_native_id": "73324",
+      "target_occurrence_id": "qn71:61341cd43c5957a2ce4c860613cb33a2e8c388e6",
+      "target_raw_sha256": "5db701ad5ba835f3b42077e937e76c1504dec51bd361aae11b44552920251be3",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2855"
+    },
+    {
+      "raw_locator": "73325",
+      "target_native_id": "73325",
+      "target_occurrence_id": "qn71:ae5f2d23ab3965996cc92fc628be3b9520d26004",
+      "target_raw_sha256": "dd83526317e075f83a356383ea916486a1f14062e0a74c65c4f860e65ea8a66f",
+      "target_run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "target_source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+      "target_source_pointer": "/2856"
+    }
+  ],
+  "family": "native_archive",
+  "files": [
+    {
+      "blob": "f2cacd2ec66eb71222351ac05c3d12c3a048f95d",
+      "path": "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "sha256": "415283a89eaee8c1e23a37cf07b14fdfc5996f305f56aa2b77d56c6e004f0714",
+      "size_bytes": 1012
+    },
+    {
+      "blob": "5880f84b1aed057c3f0d395b745f0fbb538150ed",
+      "path": "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "sha256": "3cff9a0f7cc0bc7fbe5e9e741b185a58d233ed1ec44ee712bdd1c8a16f031ed8",
+      "size_bytes": 1991
+    },
+    {
+      "blob": "898f42ce8120d23b8b00cf0227aef6c8eb6f7099",
+      "path": "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "sha256": "0f312fd1b9e8000d350ff8654d5185bc0a3193f2c45af08b85d54fcd7996905a",
+      "size_bytes": 1391
+    },
+    {
+      "blob": "51c955d45d836b5a989b1ed157b716b9e19524f4",
+      "path": "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "sha256": "06354baa36e62f5c014e517ef5b0715171d3bf1fca9821d4ecdff74266f6a2ad",
+      "size_bytes": 63320
+    },
+    {
+      "blob": "1b6afab1ed4b697087138830ddeab1d300e598db",
+      "path": "ExcelBinOutput/PushTipsConfigData.json",
+      "sha256": "533cfe1082cc0156d1d94c930da56bed3df53c284b6c134dbe8ff34f27b0b503",
+      "size_bytes": 566724
+    },
+    {
+      "blob": "98f174273b860232d7418c38f1dbaf01eb9a6197",
+      "path": "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "sha256": "d533c821269c5b176c45cf93595cadbe64ab318287f1cdd30dae81ee347395a7",
+      "size_bytes": 874
+    },
+    {
+      "blob": "ea3c225983f179d73ea76e3d6b4e9e30d1e07ef9",
+      "path": "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "sha256": "f1b69c0a8029ea69de69e308b5c762ccc4774684ee36329a3ffaca5b06a1b910",
+      "size_bytes": 1020
+    },
+    {
+      "blob": "99cf5bf805bcc6773313825349689d0469feb8fe",
+      "path": "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "sha256": "9d61d24a4c41f0575fedcf50d8fd1f6d8cd10324ade7a9adb814604de32d9e0e",
+      "size_bytes": 52962
+    },
+    {
+      "blob": "1917b413c960a0a1203c7dd53f343931dcfa806b",
+      "path": "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "sha256": "e67874d7a7c3f0bf5e22016fb67256b9315be3c4ca7da22bb0853e6c50f0bec0",
+      "size_bytes": 3017
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "historical_selection": "manifests/native-archive/message-selection.json",
+  "historical_selection_sha256": "7485b4ef55d5dd734a15c7373a364d52a30f1cb111ba88f468ede28a82eccc57",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "path_delta": {
+    "inherited": [
+      "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "ExcelBinOutput/PushTipsConfigData.json",
+      "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "TextMap/TextMapCHS.json",
+      "TextMap/TextMapEN.json",
+      "TextMap/TextMapJP.json",
+      "TextMap/TextMap_MediumCHS.json",
+      "TextMap/TextMap_MediumEN.json",
+      "TextMap/TextMap_MediumJP.json"
+    ],
+    "newly_selected": [],
+    "no_longer_selected": []
+  },
+  "product_accepted": false,
+  "raw_field_alignment": {
+    "aligned_ids": 20,
+    "alternative_integer_matches": {
+      "DDBKODKACJA": 20
+    },
+    "new": "DDBKODKACJA",
+    "old": "GLPIOOHJNFF",
+    "raw_equal": 20,
+    "semantic_role": "mapping_unresolved"
+  },
+  "row_denominator": {
+    "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json": 6,
+    "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json": 20,
+    "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json": 10,
+    "ExcelBinOutput/NewActivityPushTipsConfigData.json": 226,
+    "ExcelBinOutput/PushTipsConfigData.json": 1786,
+    "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json": 4,
+    "ExcelBinOutput/ServerMessageExcelConfigData.json": 9,
+    "ExcelBinOutput/TemplateReminderExcelConfigData.json": 282,
+    "ExcelBinOutput/TravelCatalogExcelConfigData.json": 15
+  },
+  "selection_rule": "all physical rows in nine historically selected Excel arrays",
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "sources": [
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_gcg_festival_text",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "startDescTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_loli_golf_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "bannerNameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "DDBKODKACJA",
+          "field_continuity_status": "full_20_row_raw_value_alignment;semantic_role_unresolved",
+          "historical_field": "GLPIOOHJNFF",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_notify_archive",
+      "kind": "activity_natlan_notify",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "new_activity_push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "server_message_archive",
+      "kind": "server_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "template_reminder_archive",
+      "kind": "template_reminder",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/PushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "resort_guide_map_text",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "travel_catalog",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "questId",
+          "relation_kind": "source_authored_main_quest_reference"
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    }
+  ],
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

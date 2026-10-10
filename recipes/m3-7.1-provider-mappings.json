@@ -1,0 +1,558 @@
+{
+  "mappings": [
+    {
+      "family": "activity_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:05c4b80aa09b2cbdc68563c36280d7efd8f7dc7e",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:8b23bde341b9b339f1f3b0fc0907bc27f33ebd06",
+      "product_accepted": false,
+      "provider_contract": "activity-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/ActivityExcelConfigData.json",
+      "source_physical_rows": 2,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "activity_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:eb08d3df65f5c4108cb562611baedbc9e11654c9",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:63dd94f3a1dd8d11c63009ff6b519de3f84dfabd",
+      "product_accepted": false,
+      "provider_contract": "activity-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/ActivityExcelConfigData.json",
+      "source_physical_rows": 2,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "NameTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "achievement_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:cb0444ed91ea98cb64f72ead4197f66e3b3ba81b",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:81089cf0eb9fb0fda2a332c6919a01703eb05d83",
+      "product_accepted": false,
+      "provider_contract": "achievement-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/AchievementExcelConfigData.json",
+      "source_physical_rows": 2012,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "achievement_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:b21a664a3567e431861d7f779624deb244d52bbb",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:86a1c2529c0c5c427b32e2e96e3647c9caef1819",
+      "product_accepted": false,
+      "provider_contract": "achievement-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/AchievementExcelConfigData.json",
+      "source_physical_rows": 2012,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "titleTextMapHash",
+        "descTextMapHash",
+        "ps5TitleTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "avatar_config_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:0ecef9acfb5183e13b4e1d7d58adee52940618c2",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:ccd2ac6c5a9b396c137eee91f6bdc23d5f397b06",
+      "product_accepted": false,
+      "provider_contract": "avatar-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "source_physical_rows": 167,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "avatar_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:fd8709f06b74caa33cf5406b04aaf32f36ca00b2",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:371271dc2f90359d64e3c95319b564a2b633beab",
+      "product_accepted": false,
+      "provider_contract": "avatar-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "source_physical_rows": 167,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "coopPicNameHash",
+        "gachaCardNameHash",
+        "gachaImageNameHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "dungeon_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:49827364d454d9b66a0df33b91bdb9dcfdcc99bf",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:20c0bbb1a6a3f1badd7a31835d2446b079b0064d",
+      "product_accepted": false,
+      "provider_contract": "dungeon-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/DungeonExcelConfigData.json",
+      "source_physical_rows": 2377,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "dungeon_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:1229e93a9959953a6eac152603d0aaffbe7817b1",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:3da75152d771d8fc3fcb790b8c31515ffa4dbc7a",
+      "product_accepted": false,
+      "provider_contract": "dungeon-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/DungeonExcelConfigData.json",
+      "source_physical_rows": 2377,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "displayNameTextMapHash",
+        "descTextMapHash",
+        "gearDescTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "monster_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:9a6b115a988de58693786777b9671690b16f4335",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:ba389411c8a65f201573af199a49e41c114b0833",
+      "product_accepted": false,
+      "provider_contract": "monster-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/MonsterExcelConfigData.json",
+      "source_physical_rows": 3408,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "monster_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:22bf6c61b634d653f1171b263e47f4cfbb7231bc",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:4cd146ec7cb9de4635172bd14abff2892d770095",
+      "product_accepted": false,
+      "provider_contract": "monster-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/MonsterExcelConfigData.json",
+      "source_physical_rows": 3408,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "npc_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:43d0d8211b8a119418308504f0a0c878009b3730",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:5fd9f98e67e49b5a45451556ec37debf53532973",
+      "product_accepted": false,
+      "provider_contract": "npc-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "source_physical_rows": 14444,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "npc_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:9c2505e2bcaf639cd08d99810f371529b243909c",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:827da8ba50f5bfc2918a013b934802d523c04925",
+      "product_accepted": false,
+      "provider_contract": "npc-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "source_physical_rows": 14444,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "scene_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:487ec6a15c9745267a292d80a3a339f00135bd87",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:b3403a3bd678fd0cba1191fa15b927fec0e821b8",
+      "product_accepted": false,
+      "provider_contract": "scene-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/SceneExcelConfigData.json",
+      "source_physical_rows": 2377,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "scene_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:82379de5230a7650424ba7abc9386a96a7124faf",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:3687935444a2fe09117459791d332503bc245a89",
+      "product_accepted": false,
+      "provider_contract": "scene-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/SceneExcelConfigData.json",
+      "source_physical_rows": 2377,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v2"
+    },
+    {
+      "family": "weapon_config_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:b5b9106ebae0d8ba7e35157a7853e26a18d2ea30",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:46ab64870b990623c06d16376f180f60a054c65a",
+      "product_accepted": false,
+      "provider_contract": "weapon-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/WeaponExcelConfigData.json",
+      "source_physical_rows": 287,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "weapon_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:273db17292489bd257a9acd2441124eb8f9343c7",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:ef0c7392d1608030f7d13a758c8c95d25ef2dee8",
+      "product_accepted": false,
+      "provider_contract": "weapon-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/WeaponExcelConfigData.json",
+      "source_physical_rows": 287,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "gachaCardNameHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "reliquary_config_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:732dccd3e6be55af1facea4af50983ae524617e7",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:5e0b7eaad0731be1c9a3d79af22cef7f25c955fc",
+      "product_accepted": false,
+      "provider_contract": "reliquary-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/ReliquaryExcelConfigData.json",
+      "source_physical_rows": 4352,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "reliquary_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:8f324e935628692242fc9219885f6efb0b310af1",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:f146d0291fb50599aba0266c2c1930bcb2824cc5",
+      "product_accepted": false,
+      "provider_contract": "reliquary-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/ReliquaryExcelConfigData.json",
+      "source_physical_rows": 4352,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    },
+    {
+      "family": "material_config_archive",
+      "historical_status_adapter": null,
+      "ingest_run_id": "m3-7.1-run:6ce889a1c61d5a146435f4c7a8e5fc42f8ffcea3",
+      "integration_adapter_sha256": null,
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:d72fb841b3b6a04c374d089db9e93f922c9c9071",
+      "product_accepted": false,
+      "provider_contract": "material-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/MaterialExcelConfigData.json",
+      "source_physical_rows": 10512,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [],
+      "textmap_observation": null,
+      "textmap_sources": [],
+      "version": "v1"
+    },
+    {
+      "family": "material_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "ingest_run_id": "m3-7.1-run:0b0db1d1429d4dcdcc973507f16ed4de71fac59c",
+      "integration_adapter_sha256": "3d054ee12980a47eeafb44908a6b65e557436bc5459717aeb76d7edd91186bed",
+      "logical_identity_created": false,
+      "parser_build_id": "m3-7.1-parser:148d6e3bc8b26c45803e2ad343effe3e48551f3e",
+      "product_accepted": false,
+      "provider_contract": "material-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_path": "ExcelBinOutput/MaterialExcelConfigData.json",
+      "source_physical_rows": 10512,
+      "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_7_1_MAPPING",
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "effectDescTextMapHash",
+        "interactionTitleTextMapHash",
+        "specialDescTextMapHash",
+        "typeDescTextMapHash"
+      ],
+      "textmap_observation": {
+        "ingest_run_id": "m3-71-textmap-run:1a9c197b7f88b201d6cc2f1a063b034de4c95b42",
+        "parser_build_id": "m3-71-textmap-parser:68678bc82b9d13d46018579e53a2532fec23b011",
+        "scope": "family-local exact six-file TextMap observation; no separate shard",
+        "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+      },
+      "textmap_sources": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ],
+      "version": "v2"
+    }
+  ],
+  "role": "rebuild recipe; no artifact qualification inherited"
+}

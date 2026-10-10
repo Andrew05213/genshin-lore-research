@@ -1,0 +1,117 @@
+{
+  "7_0_fallback": false,
+  "contract": "mail-7.1-exact-source-scope-v1",
+  "cross_snapshot_identity_merge": false,
+  "field_continuity": {
+    "aligned_source_owned_ids": 6,
+    "candidate_fields": {
+      "AICANPKILKN": {
+        "aligned_equal": 6,
+        "all_six_integer": true,
+        "distinct_values": 6
+      },
+      "DNEMPILDKPH": {
+        "aligned_equal": 0,
+        "all_six_integer": true,
+        "distinct_values": 5
+      },
+      "HFAAGKKMHFH": {
+        "aligned_equal": 0,
+        "all_six_integer": true,
+        "distinct_values": 6
+      }
+    },
+    "exact_raw_value_matches": 6,
+    "game_semantic_title_or_body_role_inferred": false,
+    "historical_role": "second AlchemySimLetter text locator observation",
+    "new_field": "AICANPKILKN",
+    "old_field": "ODPMDNBBMAB",
+    "unique_full_alignment": true
+  },
+  "files": [
+    {
+      "blob": "3a83186e992b3e63c2c488d94cfca63eeee3d4e5",
+      "path": "ExcelBinOutput/MailExcelConfigData.json",
+      "sha256": "b73ee65b3ddcef0a841e9eff42de366f04cecc5fd4c598783ed5099a4811bab9",
+      "size_bytes": 68447
+    },
+    {
+      "blob": "c362f36f53c9646f821a17c7affc91f39cb30fa3",
+      "path": "ExcelBinOutput/BirthdayMailExcelConfigData.json",
+      "sha256": "cf1f4cb2f25f2acaf024e60073781106796d8152679c123d3ed922d78dc57a4b",
+      "size_bytes": 415
+    },
+    {
+      "blob": "485e3803ca5a7d45aa6d9d826b26a6929280ecef",
+      "path": "ExcelBinOutput/AlchemySimLetterExcelConfigData.json",
+      "sha256": "69600c7eff92ae3cc609d8e3f45795057a3e8d42018d3ff8383e8a307e3d700b",
+      "size_bytes": 1250
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "primary_sources": [
+    "ExcelBinOutput/MailExcelConfigData.json",
+    "ExcelBinOutput/BirthdayMailExcelConfigData.json",
+    "ExcelBinOutput/AlchemySimLetterExcelConfigData.json"
+  ],
+  "product_accepted": false,
+  "row_denominator": {
+    "alchemy_sim_letter": 6,
+    "birthday_schedule": 3,
+    "mail_template": 323
+  },
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "text_fields_by_source": {
+    "alchemy_sim_letter": [
+      "contentTextMapHash",
+      "AICANPKILKN"
+    ],
+    "mail_template": [
+      "titleTextMapHash",
+      "senderTextMapHash",
+      "contentTextMapHash"
+    ]
+  }
+}

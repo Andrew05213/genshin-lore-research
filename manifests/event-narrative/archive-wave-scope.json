@@ -1,0 +1,1437 @@
+{
+  "boundaries": [
+    "trade_show",
+    "dreambook",
+    "snezbook",
+    "agent_recon",
+    "daily_staff",
+    "snow_race_story",
+    "animal_view"
+  ],
+  "contract": "event-narrative-archive-wave-source-v1",
+  "corpus_complete": true,
+  "coverage": "complete physical-row, declared text-locator, source-local relation, and exact explicit Talk projection for seven frozen Activity/Event narrative boundaries",
+  "excluded_clusters": [
+    {
+      "cluster": "TpsGlassesChat",
+      "reason": "high-value but obfuscated owner and local graph namespaces are not yet closed"
+    },
+    {
+      "cluster": "BubbleTalk/Dialog",
+      "reason": "mixed generic gameplay/UI/Talk corpus already covered by other physical evidence contracts"
+    },
+    {
+      "cluster": "battle/reward/score/shop/schedule/UI-only Activity tables",
+      "reason": "no coherent player-readable narrative boundary"
+    }
+  ],
+  "family_contract_version": "event-narrative-evidence-v3",
+  "files": [
+    {
+      "blob": "dc9f1d402a3db27020a842f32f9967c7cad9b82e",
+      "path": "ExcelBinOutput/ActivityTradeShowOverAllExcelConfigData.json",
+      "sha256": "a731e30e4359cf55aa6d7d0857fd2a5f457406481bb2184509f22b48e3ebf3d3",
+      "size_bytes": 1098
+    },
+    {
+      "blob": "837f941f4fd581fbccde4373387feb466fea4865",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusExcelConfigData.json",
+      "sha256": "47f6c4888e06cf64d6f6fe99c61f064cb93666ec571df08afcb339416f173813",
+      "size_bytes": 1561
+    },
+    {
+      "blob": "f706e9358a3ed6dfd87a5ad08e9b06e333f29535",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusQuestExcelConfigData.json",
+      "sha256": "971dfcf7feec8e43ddfdc710d6d05cfe30970fb3f5f0485a60fe5f71ef7f93e7",
+      "size_bytes": 4235
+    },
+    {
+      "blob": "96ed15316e7dddb86ba523b242adfdaa569479ac",
+      "path": "ExcelBinOutput/DreamBookInvestDetailExcelConfigData.json",
+      "sha256": "1f28efa884925650291473a489bba47ecbe445decdc51ab727f03aeeefb13d9f",
+      "size_bytes": 2685
+    },
+    {
+      "blob": "a5a6187529d0d5b8815446524c04f471541ce22b",
+      "path": "ExcelBinOutput/DreamBookInvestigationExcelConfigData.json",
+      "sha256": "d69f00a39b119478902ec13b86a962fc55ad7b6aedbfca6373c340c5b7e21795",
+      "size_bytes": 1849
+    },
+    {
+      "blob": "7c6fa9367c8c00bace511573c8c5b18df56a2197",
+      "path": "ExcelBinOutput/DreamBookPhotoAvatarExcelConfigData.json",
+      "sha256": "f69c7fbd2bf0a14e5dabd9de80dcfdf7bdf335c87127226d055ee3552e8264af",
+      "size_bytes": 3536
+    },
+    {
+      "blob": "472979bb36334bf24bfcd72b633fba00ab6c2c45",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionExcelConfigData.json",
+      "sha256": "9bbc58265e47b46ce99b7c70bc6215fd452b42fc894585df537eefaa76a3da51",
+      "size_bytes": 1973
+    },
+    {
+      "blob": "e10507b7d34687110703402202560cafc8a065f8",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionReminderExcelConfigData.json",
+      "sha256": "42c7ce40736154c72f691abce65358c3bea4bf50dd1090500ced380002bbe315",
+      "size_bytes": 7340
+    },
+    {
+      "blob": "d12575207383cd2b6ec6f2ef9047635683820d0f",
+      "path": "ExcelBinOutput/DreamBookPhotoPickExcelConfigData.json",
+      "sha256": "1c16fe6dd3494a1bc5b5b2dd7bd03298e540f846afc55c02edf498927d167abf",
+      "size_bytes": 273
+    },
+    {
+      "blob": "bd69bbe54e18538e98147bcef8f3bde2e7c9830c",
+      "path": "ExcelBinOutput/DreamBookPhotoPickReminderExcelConfigData.json",
+      "sha256": "04d2efde508b3a1f2916b81945901526c2d223ae17710b7fa6c0a21ca9cf38b8",
+      "size_bytes": 3851
+    },
+    {
+      "blob": "a26ddebcc8439fcf5124f5f23f56a3426b7fb3f1",
+      "path": "ExcelBinOutput/SnezBookAreaExcelConfigData.json",
+      "sha256": "5ea870172b65d5ff4bf0daa14129d3aab35aa106c348c8299a00a8e61b0ca855",
+      "size_bytes": 471
+    },
+    {
+      "blob": "8fbc3caec66efb8bc5522d0b836d62bb0d525755",
+      "path": "ExcelBinOutput/SnezBookOfferingExcelConfigData.json",
+      "sha256": "cf7598421f6bdcc3f0c61364ee06ae2cbb6a838e28ba44c79b2ef98520880944",
+      "size_bytes": 1386
+    },
+    {
+      "blob": "f62e12508ba047c7d84e3ff7123e905c980cf0cb",
+      "path": "ExcelBinOutput/SnezBookQuestChunkExcelConfigData.json",
+      "sha256": "3f0fba96c6adeff49dde88474098a8e1cea06d20a4bdfc16f03ef117d4295240",
+      "size_bytes": 1444
+    },
+    {
+      "blob": "e7342b81d08e1c01b06d71f6255b2ead25c7106d",
+      "path": "ExcelBinOutput/SnezBookQuestQuoteExcelConfigData.json",
+      "sha256": "38dbf4137c378a8df141c47b3d6f59e4f93fceab5f6b0847440b6bef580f3a30",
+      "size_bytes": 9848
+    },
+    {
+      "blob": "d7ddf49966b36601e08a06ec9baf876de9c7e90c",
+      "path": "ExcelBinOutput/SnezBookTheGreyExcelConfigData.json",
+      "sha256": "cf6df38beffa58d9a52e80122c6f9965a721d49bf5f1234897e239c25694b3a9",
+      "size_bytes": 1856
+    },
+    {
+      "blob": "b95295df30a5b8b99576d2c96422ce59ef2b194a",
+      "path": "ExcelBinOutput/SnezBookWeatherExcelConfigData.json",
+      "sha256": "1953d3ba18553e4b9b063f7757846c06de510423fd19b05eec7b206638b3b22a",
+      "size_bytes": 304
+    },
+    {
+      "blob": "0637a088a01e8ddab3bf3fa98dbe804cbde1a0dc",
+      "path": "ExcelBinOutput/SnezBookCharacterExtraExcelConfigData.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "size_bytes": 2
+    },
+    {
+      "blob": "be55dd947a85472530e53c02b67310ecfaa634b7",
+      "path": "ExcelBinOutput/SnezBookOfferingGameplayExcelConfigData.json",
+      "sha256": "ab1b8a5a1cd5ea4a142f3498a6b5138f17b8fb7a46e248fbe6af21321e1f9bbd",
+      "size_bytes": 1711
+    },
+    {
+      "blob": "55168227c41513fe54b7555e2edd85ff6ba910b6",
+      "path": "ExcelBinOutput/SnezBookOverallExcelConfigData.json",
+      "sha256": "439c5f2b55cc6044c7ea8e060f31a88ad816a9ebda5ad836b06fe2bdce755232",
+      "size_bytes": 371
+    },
+    {
+      "blob": "1f59eaeed982bd47cb8d886a369691eb0652948e",
+      "path": "ExcelBinOutput/AgentReconClueExcelConfigData.json",
+      "sha256": "c5beb5dd7b9e201a630681f49520846ed1fabe761d22e3213a4b15db978687de",
+      "size_bytes": 7492
+    },
+    {
+      "blob": "6ca79fc4479bbae50e638bfdf75ed8b6d227545d",
+      "path": "ExcelBinOutput/AgentReconConstExcelConfigData.json",
+      "sha256": "51a314bb4cb04729cefbd1d6c0da4af5c990a6cf95b1c85cafa5f4d93de74dfb",
+      "size_bytes": 251
+    },
+    {
+      "blob": "8425012080a96ddce48631410475d25a85a19bf2",
+      "path": "ExcelBinOutput/AgentReconLevelExcelConfigData.json",
+      "sha256": "5e191b96028fb5689768ffba0db3b36c784a3e5682cea5b969a62e91746c5bbc",
+      "size_bytes": 8715
+    },
+    {
+      "blob": "33d2b76a4b84991b5dadc08c60d7b5b5df2700d1",
+      "path": "ExcelBinOutput/AgentReconSuspectExcelConfigData.json",
+      "sha256": "e5df8e23f84723ec06c9d0a708a66bfd5ee9684ddf1afbf4e7b186f12b7d5e02",
+      "size_bytes": 1017
+    },
+    {
+      "blob": "bd7c87f931cf6af343d7d636df9600469e2eea73",
+      "path": "ExcelBinOutput/DailyStaffCommentsExcelConfigData.json",
+      "sha256": "791124851e06003687158f49fa221b4ca29d53d2899fa9001c49138f694f8996",
+      "size_bytes": 3589
+    },
+    {
+      "blob": "5786caeb1f7483e1f504a2d85ec87d160cc4f962",
+      "path": "ExcelBinOutput/DailyStaffIntroductionExcelConfigData.json",
+      "sha256": "d59ee0c2e7132a4daee766cc0429edd7aa43001071f5b19756b1261c1afdb40a",
+      "size_bytes": 870
+    },
+    {
+      "blob": "ede5366a6e94824541d1b53b157ddb637a16031e",
+      "path": "ExcelBinOutput/DailyStaffOptionExcelConfigData.json",
+      "sha256": "8b69e89f92684810d38747466bcb38bc9e2ba4ba2c407d211e29e40b34f8461c",
+      "size_bytes": 9940
+    },
+    {
+      "blob": "3001e5c5e70e20f2bbe48f261a6c7ca8d1b52b1d",
+      "path": "ExcelBinOutput/ActivitySnowRaceStoryExcelConfigData.json",
+      "sha256": "ce8a0bd43af25e1f20e76b369c4060102ca0c0b81211373f3980f7992a70285c",
+      "size_bytes": 1047
+    },
+    {
+      "blob": "daab0a31b34099c455dd5f6b883236907ee1c6df",
+      "path": "ExcelBinOutput/ActivityAnimalViewOverallDataExcelConfigData.json",
+      "sha256": "d3443a01bc63dee21768008ffefa9c270f32a9ae0dd5d8ad0436edb30c194ccc",
+      "size_bytes": 282
+    },
+    {
+      "blob": "d6efc12785771aeafec190d274b400d79e0f62dd",
+      "path": "ExcelBinOutput/ActivityAnimalViewLevelExcelConfigData.json",
+      "sha256": "7764655cab21c1b7eaffed17c8baef73c32712f4d471d76540500eadbf8ca932",
+      "size_bytes": 2498
+    },
+    {
+      "blob": "dd2b24cdcad4d781ad7ee6175019eee88eefd9ca",
+      "path": "ExcelBinOutput/ActivityAnimalViewTargetExcelConfigData.json",
+      "sha256": "c16e3604babc054fb42223559b12d3d942678660572fdd7af3f5385cd1ffd459",
+      "size_bytes": 6999
+    },
+    {
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "size_bytes": 48771857
+    },
+    {
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "size_bytes": 18550916
+    },
+    {
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "size_bytes": 54368516
+    },
+    {
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "size_bytes": 20424271
+    },
+    {
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "size_bytes": 61908087
+    },
+    {
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "size_bytes": 22744816
+    },
+    {
+      "blob": "a13b6a583a33b1a3d7a6faf40dcb1eb5388152a5",
+      "path": "BinOutput/Talk/Activity/0da90a06.json",
+      "sha256": "3190a430c94f5f290b59a5c4eb944f94f320794ff7dca9390fb5ffccb07bab44",
+      "size_bytes": 14116
+    },
+    {
+      "blob": "59a553fdd0d2f9a794298084c74a1bae39f05ff8",
+      "path": "BinOutput/Talk/Activity/11bccb4c.json",
+      "sha256": "94c18d0228a1eaf655bbb424ebadf0bf07ca245aedc0e3db8982fa785e5e664a",
+      "size_bytes": 11554
+    },
+    {
+      "blob": "f15d1cc546f95982e462a10560cc680d194e1ca0",
+      "path": "BinOutput/Talk/Activity/190d99eb.json",
+      "sha256": "524462c931e11f2d11c1e8a03309ea3355a958a14f0b27e4a2d1313391ff06a7",
+      "size_bytes": 16030
+    },
+    {
+      "blob": "f6dab13a79f39e404386321fc4e8105570354d03",
+      "path": "BinOutput/Talk/Activity/2883c2eb.json",
+      "sha256": "aebd955e44b35f74bb026c686fd724dcfbe47d120da3580d5ba0e61bac117a95",
+      "size_bytes": 15391
+    },
+    {
+      "blob": "797d1f975101a44803b2bdd0d10cd15d553bb30d",
+      "path": "BinOutput/Talk/Activity/4020901.json",
+      "sha256": "688848a51f544c881ba47761b616e68b15f1241a5d43465716e7d0f5721c8ec7",
+      "size_bytes": 23918
+    },
+    {
+      "blob": "9c4a83a2dc6f9ddd677918927cf58f7cda2c5211",
+      "path": "BinOutput/Talk/Activity/4020902.json",
+      "sha256": "be30b72c29b969b638f524e3e2a04dd09e7954f16888548b0885012a728f97a2",
+      "size_bytes": 15967
+    },
+    {
+      "blob": "810a063d261adf0129017f0b339b54c3a52d2f08",
+      "path": "BinOutput/Talk/Activity/4020903.json",
+      "sha256": "ba5b6ec1bf4e11f7967c2b5e2cc4aed72bd91b304e31215b84650c4bf0a6b7f0",
+      "size_bytes": 8689
+    },
+    {
+      "blob": "35afcb943d98cbc9d1b546c43e56e6a003ba6c9f",
+      "path": "BinOutput/Talk/Activity/4020904.json",
+      "sha256": "f9e4f19a3982d03055fe877f9cb66c292c3dd97646d65cf23bb4a67db077a2df",
+      "size_bytes": 8676
+    },
+    {
+      "blob": "7014531b1c828c3ccb19fec8bc291d655a38cb8a",
+      "path": "BinOutput/Talk/Activity/4020905.json",
+      "sha256": "c4fcb004723746639cba734834e7b49b59a2ede5504fb9813b0b763dfb7c3dd1",
+      "size_bytes": 10679
+    },
+    {
+      "blob": "f403499e994042085e5258b882d08ef5eec219c7",
+      "path": "BinOutput/Talk/Activity/4020906.json",
+      "sha256": "a59a2ed817a66d077a6847194569d641ca5b9940159c0b9b933f859926112f2b",
+      "size_bytes": 9997
+    },
+    {
+      "blob": "bd917ff34e4b88455778145db234eaa4cf5fd314",
+      "path": "BinOutput/Talk/Activity/4020907.json",
+      "sha256": "a8f789317b4fade4b9c7c478faa17d12652b66e14efc621455edd95e613fb505",
+      "size_bytes": 9354
+    },
+    {
+      "blob": "0efc3c48f5f3acc0bbec3bbce085979d0e8a2f33",
+      "path": "BinOutput/Talk/Activity/4020908.json",
+      "sha256": "718c31112fc40ecfe7e6be12af2cf18d6b82a59963cc27acb1909fb500dcc08c",
+      "size_bytes": 7357
+    },
+    {
+      "blob": "3e8ce67d91cda3e2eb85d5b21244d9fd1ef9b0dc",
+      "path": "BinOutput/Talk/Activity/4020909.json",
+      "sha256": "16e5960c68bcc3c371e32936bdab25377064223abf1116cf529199286f25fc82",
+      "size_bytes": 6023
+    },
+    {
+      "blob": "2b820e1405cf57b4f25677c3c7eb47587430e5cb",
+      "path": "BinOutput/Talk/Activity/4020910.json",
+      "sha256": "3ad68b23336bbcec6c314f54fae1e3ab307cdd25e5c6d0447114273deb057d55",
+      "size_bytes": 16630
+    },
+    {
+      "blob": "dc4fcaffc56aa886dd224ba3494dc738c6d6fbd5",
+      "path": "BinOutput/Talk/Activity/4020911.json",
+      "sha256": "dc6159786d81a8f630c59118ef7fa02ccf51a92c098182e2a959cf06aa6aa7e2",
+      "size_bytes": 14644
+    },
+    {
+      "blob": "befd3630627f9098822a4c5aba6b45fbce9fe662",
+      "path": "BinOutput/Talk/Activity/4020912.json",
+      "sha256": "66fa4a229c996098e40d5fdeeeb4cbca19fa3a06a47c91c1156e4472669d0fcd",
+      "size_bytes": 13982
+    },
+    {
+      "blob": "e4b2b27ce22331d7d288b9c31984c22d7b77d2fa",
+      "path": "BinOutput/Talk/Activity/4020913.json",
+      "sha256": "d886eb6546e6ebadcf3fe87d26b8ec3d8775c2e11baa50266d3e3e3b58c11f06",
+      "size_bytes": 14645
+    },
+    {
+      "blob": "2123067a180018ad80e464bb4017d4df80c3d75b",
+      "path": "BinOutput/Talk/Activity/4020914.json",
+      "sha256": "7acbaaef9b87be652d3a9ce338819e4ff57a3fa7edc1f9898b98776d402eb4d8",
+      "size_bytes": 11986
+    },
+    {
+      "blob": "00dcc447151175e0b78e04889910b3d04396ca0d",
+      "path": "BinOutput/Talk/Activity/4020915.json",
+      "sha256": "696b1dafc7eb49f1750c100905ac118dcd5b3abfea3d262f20902a3f853eb09e",
+      "size_bytes": 13324
+    },
+    {
+      "blob": "ae11abc5dbe9623f2114ae79b0fb2967a16cf9a0",
+      "path": "BinOutput/Talk/Activity/4020916.json",
+      "sha256": "fa8a76f099ad6f6c5c1f9de119c530f38f7b98468bdcf3860d9e24c3d8ebddd0",
+      "size_bytes": 11330
+    },
+    {
+      "blob": "fc365ba52f6b29d105d1f94bb56d5439afa6c794",
+      "path": "BinOutput/Talk/Activity/4020917.json",
+      "sha256": "44acb942d26ceac38323d9ceb6aa8a2a3fd97027408f44d41232a9085f4950aa",
+      "size_bytes": 35211
+    },
+    {
+      "blob": "7f97369306aa408624492815e17587215c5fe566",
+      "path": "BinOutput/Talk/Activity/52cc655b.json",
+      "sha256": "c8b5aafdf54f7a9a2aefd6e3ae8dac7b270efca4fdb4e9984e81d64993d12536",
+      "size_bytes": 8377
+    },
+    {
+      "blob": "a3ffbe184c23f3cfe9e84182cc2f23760f7abf6a",
+      "path": "BinOutput/Talk/Activity/54b2dac4.json",
+      "sha256": "ef54b089b3f68c3c25ded677750b810c275d7effd1bf607bdb751849a0bc39df",
+      "size_bytes": 9018
+    },
+    {
+      "blob": "649c131c4281608b401ef5b9ab6757855ab6933a",
+      "path": "BinOutput/Talk/Activity/56534c51.json",
+      "sha256": "edfa2daf0389c50567bf39f82b0dedb969f51750c68c9b7ac4d0e766a5244797",
+      "size_bytes": 23054
+    },
+    {
+      "blob": "782acccb1a9f905724fa7c2a571fb02fb32317e8",
+      "path": "BinOutput/Talk/Activity/5eb8657c.json",
+      "sha256": "9a74feddd8af59b91660c5977a390d2ff3692f07a8ced30d53a120998c93e63c",
+      "size_bytes": 33939
+    },
+    {
+      "blob": "d8ac21dbfbef267e3a9fb2cbd82511cbf65859f9",
+      "path": "BinOutput/Talk/Activity/8c34d2f1.json",
+      "sha256": "0fa5e90de6e202cbcbbc9a667cd36b4b3e9fb2c0fd08e3df511573656f269dca",
+      "size_bytes": 14117
+    },
+    {
+      "blob": "2e08496666c2fbd12042adf4e429dd70cfe1a2b2",
+      "path": "BinOutput/Talk/Activity/b860bde5.json",
+      "sha256": "174b598d5f439e67940357cff3b13feeb613e6d48048bc06041f7cc58b1004c4",
+      "size_bytes": 12844
+    },
+    {
+      "blob": "c1c2b74de611b271d06c5cd09b05efd6e8e17ff8",
+      "path": "BinOutput/Talk/Activity/c89808ae.json",
+      "sha256": "52b1edb0b6c554b5440e3ec03f3ee219e25e86c9bac8d6568d91075d4dffe94d",
+      "size_bytes": 5807
+    },
+    {
+      "blob": "03cf7c06fbe7f545d8aa46e9a5e00ddaf30d1468",
+      "path": "BinOutput/Talk/Activity/c94dd380.json",
+      "sha256": "a394a3bea1d1cdab97b263e82912fa3e4a6f2cf9bd8b44e8ecb683cb979aa8d7",
+      "size_bytes": 8364
+    },
+    {
+      "blob": "0d4aa25cb23b1600ce6bcdc2a912f032b281b978",
+      "path": "BinOutput/Talk/Activity/d19f3636.json",
+      "sha256": "a36276850867512a0ee03d14ce409f5b97a251f3d9144289a53ce70e68a45d94",
+      "size_bytes": 10295
+    },
+    {
+      "blob": "1138d4363889ce6d1bb9151b90628c148f498f11",
+      "path": "BinOutput/Talk/Activity/e9e355d6.json",
+      "sha256": "90d11c8992e9d069024f33bb5c44f3bcd2c47e99d589c9f2a6a4fbb9987a4169",
+      "size_bytes": 9637
+    },
+    {
+      "blob": "a9fd71953e464f999217523f80b5da70aca18205",
+      "path": "BinOutput/Talk/Activity/f0f16df8.json",
+      "sha256": "47f298c02dfea384e9b05e8a71296245414e151e305eb928e84f8a7966660dd8",
+      "size_bytes": 13478
+    },
+    {
+      "blob": "f94a3cce8caa9ee065044ad7fffa94fcfcb0c604",
+      "path": "BinOutput/Talk/Activity/fa037ef1.json",
+      "sha256": "1f6b5fb13b93383d54f4b762f8583ace51a7118afb5bcdb0996d56b03bd6be5a",
+      "size_bytes": 7093
+    },
+    {
+      "blob": "9d3d171412540f0a0ecd0d9e11c2cf250a892c60",
+      "path": "BinOutput/Talk/Activity/fdc3eece.json",
+      "sha256": "67346945d22aa8cc504e1dc354ba35af9365ed0be78aeaf55df4d14b7306987b",
+      "size_bytes": 10922
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_talk": false,
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "row_denominator": {
+    "agent_recon_clue": 25,
+    "agent_recon_const": 1,
+    "agent_recon_level": 6,
+    "agent_recon_suspect": 3,
+    "animal_view_level": 6,
+    "animal_view_overall": 1,
+    "animal_view_target": 18,
+    "daily_staff_comments": 24,
+    "daily_staff_introduction": 6,
+    "daily_staff_option": 13,
+    "dreambook_invest_detail": 24,
+    "dreambook_investigation": 6,
+    "dreambook_photo_avatar": 13,
+    "dreambook_photo_deduction": 6,
+    "dreambook_photo_deduction_reminder": 78,
+    "dreambook_photo_pick": 3,
+    "dreambook_photo_pick_reminder": 39,
+    "snezbook_area": 1,
+    "snezbook_character_extra": 0,
+    "snezbook_grey": 6,
+    "snezbook_offering": 3,
+    "snezbook_offering_gameplay": 8,
+    "snezbook_overall": 1,
+    "snezbook_quest_chunk": 6,
+    "snezbook_quest_quote": 21,
+    "snezbook_weather": 3,
+    "snow_race_story": 5,
+    "trade_show_bonus": 10,
+    "trade_show_bonus_quest": 17,
+    "trade_show_overall": 1
+  },
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "sources": [
+    {
+      "boundary": "trade_show",
+      "internal_relations": [],
+      "kind": "trade_show_overall",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityTradeShowOverAllExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "trade_show",
+      "internal_relations": [
+        {
+          "field": "BLANOIAPJLF",
+          "relation_kind": "source_authored_bonus_quest_reference",
+          "shape": "array_scalar",
+          "target_kind": "trade_show_bonus_quest"
+        }
+      ],
+      "kind": "trade_show_bonus",
+      "native_id_field": "bonusId",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusExcelConfigData.json",
+      "relation_lookup_field": "bonusId",
+      "text_owners": []
+    },
+    {
+      "boundary": "trade_show",
+      "internal_relations": [],
+      "kind": "trade_show_bonus_quest",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusQuestExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "talk_relations": [
+        {
+          "field": "talkId",
+          "relation_kind": "source_authored_talk_reference",
+          "shape": "scalar"
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [],
+      "kind": "dreambook_invest_detail",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/DreamBookInvestDetailExcelConfigData.json",
+      "relation_lookup_field": "BJIGHLMNFNI",
+      "text_owners": [
+        {
+          "field": "LJEDOJEFJDL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [
+        {
+          "field": "ELGNNIAGEKN",
+          "relation_kind": "source_authored_invest_detail_reference",
+          "shape": "array_scalar",
+          "target_kind": "dreambook_invest_detail"
+        },
+        {
+          "field": "KJMNOJPELKG",
+          "relation_kind": "source_authored_selected_detail_reference",
+          "shape": "array_scalar",
+          "target_kind": "dreambook_invest_detail"
+        }
+      ],
+      "kind": "dreambook_investigation",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/DreamBookInvestigationExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "MLKIONFCPMG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [],
+      "kind": "dreambook_photo_avatar",
+      "native_id_field": "avatarId",
+      "path": "ExcelBinOutput/DreamBookPhotoAvatarExcelConfigData.json",
+      "relation_lookup_field": "avatarId",
+      "text_owners": [
+        {
+          "field": "AHKIPKNOOOM",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GFHPFKJEKPH",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "IGEODMNJFGC",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "KHIKGMOHKLM",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [
+        {
+          "field": "APJMLIKCFBO",
+          "relation_kind": "source_authored_deduction_avatar_reference",
+          "shape": "array_scalar",
+          "target_kind": "dreambook_photo_avatar"
+        }
+      ],
+      "kind": "dreambook_photo_deduction",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionExcelConfigData.json",
+      "relation_lookup_field": "MLIHHJHPHLM",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "HEFMBLGEKNL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [
+        {
+          "field": "avatarId",
+          "relation_kind": "source_authored_reminder_avatar_reference",
+          "shape": "scalar",
+          "target_kind": "dreambook_photo_avatar"
+        },
+        {
+          "field": "MLIHHJHPHLM",
+          "relation_kind": "source_authored_deduction_stage_reference",
+          "shape": "scalar",
+          "target_kind": "dreambook_photo_deduction"
+        }
+      ],
+      "kind": "dreambook_photo_deduction_reminder",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionReminderExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [],
+      "kind": "dreambook_photo_pick",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/DreamBookPhotoPickExcelConfigData.json",
+      "relation_lookup_field": "PNIONLOFLID",
+      "text_owners": [
+        {
+          "field": "KGBACLNLPFP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "dreambook",
+      "internal_relations": [
+        {
+          "field": "avatarId",
+          "relation_kind": "source_authored_pick_avatar_reference",
+          "shape": "scalar",
+          "target_kind": "dreambook_photo_avatar"
+        },
+        {
+          "field": "PNIONLOFLID",
+          "relation_kind": "source_authored_pick_stage_reference",
+          "shape": "scalar",
+          "target_kind": "dreambook_photo_pick"
+        }
+      ],
+      "kind": "dreambook_photo_pick_reminder",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/DreamBookPhotoPickReminderExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [
+        {
+          "field": "CNJBGIDKHIC",
+          "relation_kind": "source_authored_area_offering_reference",
+          "shape": "array_scalar",
+          "target_kind": "snezbook_offering"
+        },
+        {
+          "field": "LKCHDKFDFDO",
+          "relation_kind": "source_authored_area_grey_reference",
+          "shape": "array_scalar",
+          "target_kind": "snezbook_grey"
+        }
+      ],
+      "kind": "snezbook_area",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookAreaExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_offering",
+      "native_id_field": "offeringId",
+      "path": "ExcelBinOutput/SnezBookOfferingExcelConfigData.json",
+      "relation_lookup_field": "offeringId",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "unlockTipsTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [
+        {
+          "field": "OKBGGPBONDJ",
+          "relation_kind": "source_authored_chunk_quote_reference",
+          "shape": "array_scalar",
+          "target_kind": "snezbook_quest_quote"
+        }
+      ],
+      "kind": "snezbook_quest_chunk",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookQuestChunkExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "JLHKCIMGDNC",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "unlockTipsTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_quest_quote",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookQuestQuoteExcelConfigData.json",
+      "relation_lookup_field": "IFEIKCJLFBP",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "DEJGEONKPFD",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "MLBJBKKONKL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_grey",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookTheGreyExcelConfigData.json",
+      "relation_lookup_field": "DNKJKDPKFMM",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "unlockTipsTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_weather",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookWeatherExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_character_extra",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookCharacterExtraExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_offering_gameplay",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookOfferingGameplayExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "snezbook",
+      "internal_relations": [],
+      "kind": "snezbook_overall",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/SnezBookOverallExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "agent_recon",
+      "internal_relations": [],
+      "kind": "agent_recon_clue",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/AgentReconClueExcelConfigData.json",
+      "relation_lookup_field": "CGFABKFIHJJ",
+      "text_owners": [
+        {
+          "field": "GPLGJOECOOG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "agent_recon",
+      "internal_relations": [],
+      "kind": "agent_recon_const",
+      "native_id_field": "activityId",
+      "path": "ExcelBinOutput/AgentReconConstExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "agent_recon",
+      "internal_relations": [
+        {
+          "field": "BHIJCLLAMOJ",
+          "relation_kind": "source_authored_level_clue_reference",
+          "shape": "array_scalar",
+          "target_kind": "agent_recon_clue"
+        }
+      ],
+      "kind": "agent_recon_level",
+      "native_id_field": "levelID",
+      "path": "ExcelBinOutput/AgentReconLevelExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "CIHECMMBFOL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GPCEEADCDHG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "IFECLGCODNO",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "IPBDJBLOMAG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "LIIEJOFDAJI",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "MGNIJKBLOBH",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "MONDHIHJAMO",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "PIBNGNLGGFM",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "agent_recon",
+      "internal_relations": [],
+      "kind": "agent_recon_suspect",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/AgentReconSuspectExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "CFIHGFDKBFA",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "daily_staff",
+      "internal_relations": [],
+      "kind": "daily_staff_comments",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/DailyStaffCommentsExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "JEAOOGAJBNG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GKIBOIGLIIB",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "daily_staff",
+      "internal_relations": [],
+      "kind": "daily_staff_introduction",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/DailyStaffIntroductionExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "IJIPGAAFPEG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "OIDGDIKOIOK",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "daily_staff",
+      "internal_relations": [],
+      "kind": "daily_staff_option",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/DailyStaffOptionExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "snow_race_story",
+      "internal_relations": [],
+      "kind": "snow_race_story",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivitySnowRaceStoryExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "EGDNBADCFHG",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "GNAJNCPHHIP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "lockDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "animal_view",
+      "internal_relations": [],
+      "kind": "animal_view_overall",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ActivityAnimalViewOverallDataExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "animal_view",
+      "internal_relations": [
+        {
+          "field": "JBDHCIGDOEJ",
+          "relation_kind": "source_authored_level_target_reference",
+          "shape": "array_scalar",
+          "target_kind": "animal_view_target"
+        }
+      ],
+      "kind": "animal_view_level",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityAnimalViewLevelExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "levelTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "EENONHBLHLO",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "HOJPKLLLNGB",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "animal_view",
+      "internal_relations": [],
+      "kind": "animal_view_target",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityAnimalViewTargetExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "OJLGGIJKKOI",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ],
+  "talk_candidate_namespace": {
+    "artifacts": [
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:a5c566f94d8d9d8af19c0073b0d51cc38e550ad6",
+        "scope_kind": "quest_linked",
+        "sha256": "3f7cd77283e7c9507646d6902dd798eaaede620e67572bd7b8ff4b2305676065",
+        "size_bytes": 2171842560
+      },
+      {
+        "parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+        "run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+        "scope_kind": "mapped_complement",
+        "sha256": "4aff314d945ade7f885c9cf948b7b1ee46d55c6dd6f22f720fe1c137c91fea21",
+        "size_bytes": 727257088
+      }
+    ],
+    "kind": "accepted_mapped_talk_program_roots_v7",
+    "mapped_program_denominator": 50862,
+    "required_container_kind": "talk_root",
+    "search_complete": true
+  },
+  "talk_candidates": [
+    {
+      "raw_locator": "4020901",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:26031324167a4eea2b375562a5ace47931ecccfd",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020901.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020901",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:666239daeb7f24bd9278e7887c0e2d3f5836bfea",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/56534c51.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020902",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:935b200e52cfe45f1aafc1d6244ca264d06c62f3",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/2883c2eb.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020902",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:513988719bbcef2b34683a5eba1a2b8e67946c30",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020902.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020903",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b91a82c59db24c5f12538903b13ea351c92dcf95",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020903.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020903",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:f494cf4c457cfe3d089514055e57c433d60f2b6d",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/52cc655b.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020904",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:d8996b068a5d587ae63a924fdb5df461f1355b2d",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020904.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020904",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:67bf76de807dbdbb068ef120274e30ac9b082d77",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/c94dd380.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020905",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:f82d999e89cf92c566ed7606c5fe9bc370e30a28",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020905.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020905",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:50a0dd95a88ab35b0c677d118ebe7e1fc8372799",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/d19f3636.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020906",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:a50126317412456b39c8e8e389378b87434b3c76",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020906.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020906",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:02d4b570a99c6d4d7c3a56f41b1685bb8a74bd9d",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/e9e355d6.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020907",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:3a02c1f25b0972eeb851f159483ee0a7b031c24b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020907.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020907",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:1027785b6a9d5aa55f45b5d672bbf301162e19a9",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/54b2dac4.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020908",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:492279abb35db3ea94ae431f6e8737bf42651e33",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020908.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020908",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:2967069ad5e293ee53dba4062fe298cdd30e2a94",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/fa037ef1.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020909",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:1d0dbaa8ca4cdb2a1dc3df06fd0ea6c2d60c40c2",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020909.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020909",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:922b8da7f395e257e9f9c815f29920412f948519",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/c89808ae.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020910",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:d9a238a157ac786f52cf45fc225ac198b5b1fd43",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/190d99eb.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020910",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:71002df33e946ae554308d8cacf9a6c3b0ef2a92",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020910.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020911",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:6911dcaaf85c8b0b9c28bc405d8ab2c929f0af3c",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/0da90a06.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020911",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:3f96fad04ea9df26b70f2eb4e0f10b49b0ac4af1",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020911.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020912",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:7f02777a15ce02c901c1e9fdb3fa057890b45f0f",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020912.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020912",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:aec7ad48286581abfc193fbd7fd71e406edd74de",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/f0f16df8.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020913",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:3d613d692c3568e5e5642201d69310d7a8128647",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020913.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020913",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:48f0128c7a46a13c624a895f3d0004cbd3d2760c",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/8c34d2f1.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020914",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:ee70e08e773c5492b478f65bdf6699c8d8357010",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/11bccb4c.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020914",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:c1b1e6e9db9bdba4ab8085e0da236060bacdbc2c",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020914.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020915",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:2f0bf7515f320babfcfb6511d7e72301862e51bd",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020915.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020915",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:dfe93680b1354fda5dfc409a094660e4c623a540",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/b860bde5.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020916",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:827f9bb5d25e6b1f0fef3dfa6bc9e3a7277ed7af",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020916.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020916",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:b73bbc9bf092ec91aed18bb173961c48502abc3b",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/fdc3eece.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020917",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:6a245c1585366ca68d89a671d698ac343569320e",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/4020917.json",
+      "target_source_pointer": "/"
+    },
+    {
+      "raw_locator": "4020917",
+      "scope_kind": "mapped_complement",
+      "target_occurrence_id": "qt-container:94ae4d89c8306898c7e3450f6a5f36bdaf17a656",
+      "target_parser_build_id": "parser-build:b1b1c2d67bc34704ac7ca37bfbc5f8e57629f062",
+      "target_run_id": "ingest-run:d0f0aba332eac6b7d00937e690b74d599f281c4f",
+      "target_source_path": "BinOutput/Talk/Activity/5eb8657c.json",
+      "target_source_pointer": "/"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "relative_path": "BinOutput/Voice/Items/1248787199.json"
+    },
+    {
+      "relative_path": "BinOutput/Voice/Items/1560160621.json"
+    },
+    {
+      "relative_path": "BinOutput/Voice/Items/2939652103.json"
+    },
+    {
+      "relative_path": "BinOutput/Voice/Items/750982387.json"
+    },
+    {
+      "relative_path": "BinOutput/Voice/Lut/Lut.json"
+    },
+    {
+      "relative_path": "ExcelBinOutput/AvatarExcelConfigData.json"
+    },
+    {
+      "relative_path": "ExcelBinOutput/FetterInfoExcelConfigData.json"
+    },
+    {
+      "relative_path": "ExcelBinOutput/FetterStoryExcelConfigData.json"
+    },
+    {
+      "relative_path": "ExcelBinOutput/FettersExcelConfigData.json"
+    },
+    {
+      "relative_path": "TextMap/TextMapCHS.json"
+    },
+    {
+      "relative_path": "TextMap/TextMapEN.json"
+    },
+    {
+      "relative_path": "TextMap/TextMapJP.json"
+    },
+    {
+      "relative_path": "TextMap/TextMap_MediumCHS.json"
+    },
+    {
+      "relative_path": "TextMap/TextMap_MediumEN.json"
+    },
+    {
+      "relative_path": "TextMap/TextMap_MediumJP.json"
+    }
+  ]
+}

@@ -1,0 +1,621 @@
+{
+  "capabilities": [
+    {
+      "capability_id": "character_avatar",
+      "contract": "character-7.1-lore-successor-v1",
+      "family": "character_archive",
+      "limitations": [
+        "Character/Fetter Voice only",
+        "physical owner candidates are not logical identity"
+      ],
+      "parser": "character71-lore:2151334c6600d70c6eaef178b3771f4e05a3f23b",
+      "route": "character",
+      "run": "character71-lore:a67acd4ab0c02ce0072345dd326d859c0758ee3b",
+      "selector": "avatar",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_BOUNDED_CAPABILITY",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "character_fetter_info",
+      "contract": "character-7.1-lore-successor-v1",
+      "family": "character_archive",
+      "limitations": [
+        "Character/Fetter Voice only",
+        "physical owner candidates are not logical identity"
+      ],
+      "parser": "character71-lore:2151334c6600d70c6eaef178b3771f4e05a3f23b",
+      "route": "character",
+      "run": "character71-lore:a67acd4ab0c02ce0072345dd326d859c0758ee3b",
+      "selector": "fetter_info",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_BOUNDED_CAPABILITY",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "character_story",
+      "contract": "character-7.1-lore-successor-v1",
+      "family": "character_archive",
+      "limitations": [
+        "Character/Fetter Voice only",
+        "physical owner candidates are not logical identity"
+      ],
+      "parser": "character71-lore:2151334c6600d70c6eaef178b3771f4e05a3f23b",
+      "route": "character",
+      "run": "character71-lore:a67acd4ab0c02ce0072345dd326d859c0758ee3b",
+      "selector": "story",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_BOUNDED_CAPABILITY",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "character_voice",
+      "contract": "character-7.1-voice-successor-v1",
+      "family": "character_archive",
+      "limitations": [
+        "Character/Fetter Voice only",
+        "physical owner candidates are not logical identity"
+      ],
+      "parser": "character71-voice:21f93cb088567d1dc5486eda1386f57723847cb7",
+      "route": "character",
+      "run": "character71-voice:72f47f869f516c7f74d2f1879f55b591d6803046",
+      "selector": "voice",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_BOUNDED_CAPABILITY",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "codexquest_archive",
+      "contract": "codexquest-7.1-physical-text-foundation-v1",
+      "family": "codexquest_archive",
+      "limitations": [
+        "new root signatures 267+230+2 retain source-authored raw structure but have unresolved historical section/node roles",
+        "metadata-only roots BinOutput/CodexQuest/361.json and 41001.json lack JIJKODHIEED; BinOutput/CodexQuest/1000.json has a section without DCBDMJAPBOK",
+        "resolved_unique navigation status means one physical equality candidate only, not proven logical relation"
+      ],
+      "parser": "cq71:3223dd6687be92fa4a47fab72f365ce01a0061d1",
+      "route": "quest",
+      "run": "cq71:cc78c994028112693148a963448e1ab394c14cf6",
+      "selector": "codexquest_archive",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "document_archive",
+      "contract": "document-7.1-evidence-v1",
+      "family": "document_archive",
+      "limitations": [
+        "source-authored/exact title mapping only",
+        "ambiguous and unresolved titles retained"
+      ],
+      "parser": "document71:774dca9a38b7380d17195e9cf2b510191cad15a1",
+      "route": "source_context",
+      "run": "document71:cbe8e0efeabbb8dbc91e88af9bf6db809d3bfe6c",
+      "selector": "document_archive",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_narrative_10",
+      "contract": "event-narrative-evidence-v1",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-10 selected source boundary only",
+        "candidate navigation not logical relation"
+      ],
+      "parser": "event10-71:d092058ed688cbe46d1de8396d87bdfd8e43d6b2",
+      "route": "event_10",
+      "run": "event10-71:fd2c94d1bb639df928680da0510568a33bbbb6d7",
+      "selector": "component-10",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_narrative_11",
+      "contract": "event-narrative-evidence-v2",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-11 selected source boundary only",
+        "candidate navigation not logical relation"
+      ],
+      "parser": "event11-71:edcb390e188a1815769d560ea806f02542b99206",
+      "route": "event_11",
+      "run": "event11-71:cac8b66a928dca4e6eefeff7a76cd0859a73ab52",
+      "selector": "component-11",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_narrative_12",
+      "contract": "event-narrative-evidence-v3",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-12 selected source boundary only",
+        "candidate navigation not logical relation"
+      ],
+      "parser": "filmfest71:4b10d1e81b4c23ffc7076dc21502a41aad7159ee",
+      "route": "event_12",
+      "run": "filmfest71:11be7f3abbbb48419831929c25cd597567a6ab56",
+      "selector": "component-12",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_narrative_14",
+      "contract": "event-narrative-evidence-v3",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-14 selected source boundary only",
+        "candidate navigation not logical relation"
+      ],
+      "parser": "tps71:aa2dbd23cafb7f09e2562ab34b5b1ccdc8f38eaf",
+      "route": "event_14",
+      "run": "tps71:da20fc346a3082ffe78b1f636050e87ad4dbdd76",
+      "selector": "component-14",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_narrative_15",
+      "contract": "event-narrative-evidence-v3",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-15 selected source boundary only",
+        "candidate navigation not logical relation"
+      ],
+      "parser": "event-narrative:04a8819139bc526ab1f33ecbd58445201c119730",
+      "route": "event_15",
+      "run": "event-narrative:3bd012e95fb8af53f636da952e8f7137101abd1e",
+      "selector": "component-15",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_native_text_17",
+      "contract": "event-native-text-wave-7.1-versioned-evidence-v1",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-17 selected boundary only",
+        "candidate navigation not logical ownership"
+      ],
+      "parser": "event71:b3d9f63f9c98a08f6a1f25f93a4ce9184ab03aa8",
+      "route": "event17",
+      "run": "event71:a669a46823ed68dee399efc7bf249ca03de67c74",
+      "selector": "component-17",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "event_physical_13",
+      "contract": "event13-7.1-physical-runtime-v1",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-13 physical capability only; not historical exact replacement",
+        "raw Reminder semantic_owner_mapping_unresolved=true",
+        "no inferred text-owner role"
+      ],
+      "parser": "event13-71:f57fa9df25e2cbacee996f46bfed77dfeac3e74c",
+      "route": "physical_sqlite",
+      "run": "event13-71:d7402d6d4732989f42a426e157f7e3e9abbe5221",
+      "selector": "event13",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "event_physical_16",
+      "contract": "event16-7.1-physical-runtime-v1",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-16 physical capability only; not historical exact replacement",
+        "raw Reminder semantic_owner_mapping_unresolved=true",
+        "no inferred text-owner role"
+      ],
+      "parser": "event16-18-71:81e52abf11003b4d92281ab24c80f95b45db5926",
+      "route": "physical_sqlite",
+      "run": "event16-18-71:5e39997d0aa93eb0d94aae94e4fb5683a8ecb7e5",
+      "selector": "event16",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "event_physical_18",
+      "contract": "event18-7.1-physical-runtime-v1",
+      "family": "event_narrative_archive",
+      "limitations": [
+        "component-18 physical capability only; not historical exact replacement",
+        "raw Reminder semantic_owner_mapping_unresolved=true",
+        "no inferred text-owner role"
+      ],
+      "parser": "event16-18-71:81e52abf11003b4d92281ab24c80f95b45db5926",
+      "route": "physical_sqlite",
+      "run": "event16-18-71:eab469cd5b3908361afb11a6f54274499556d03f",
+      "selector": "event18",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "loading_tips",
+      "contract": "loading-tips-evidence-v1",
+      "family": "loading_tips_archive",
+      "limitations": [
+        "Loading Tips selected physical/TextMap boundary only"
+      ],
+      "parser": "lt71:6a2d0912ff9a300bb436684dca9592be92a327e2",
+      "route": "loading_tips_71",
+      "run": "lt71:e58f889c660215867c4b2076fcb292009ac1261b",
+      "selector": "loading_tips",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "mail_narrative",
+      "contract": "mail-narrative-7.1-versioned-evidence-v2",
+      "family": "mail_narrative_archive",
+      "limitations": [
+        "Alchemy secondary owner field continuity unproven; semantic mapping unresolved"
+      ],
+      "parser": "mail71:29d5795928d0edc1999d814889e45842e818840e",
+      "route": "mail_71",
+      "run": "mail71:51056992ecf286f1b61f340813de2550b602f436",
+      "selector": "mail",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_TEXT_STANDALONE_CANDIDATE_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "narrative_dialog",
+      "contract": "dialog-7.1-narrative-physical-v1",
+      "family": "dialog_archive",
+      "limitations": [
+        "physical candidate navigation only",
+        "historical full NPC contract not asserted"
+      ],
+      "parser": "narrative71-parser:a59907e1829a5c83a9aa3c9be22be0faa1355f2ead3c216b6493f9d971c1b443",
+      "route": "narrative",
+      "run": "narrative71-run:6dd5ad376c756a9031d0e09be1a730168d096b29d1e7b0d289e56b77e5431e92",
+      "selector": "dialog",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "narrative_npc",
+      "contract": "npc-7.1-narrative-physical-v1",
+      "family": "npc_archive",
+      "limitations": [
+        "physical candidate navigation only",
+        "historical full NPC contract not asserted"
+      ],
+      "parser": "narrative71-parser:a59907e1829a5c83a9aa3c9be22be0faa1355f2ead3c216b6493f9d971c1b443",
+      "route": "narrative",
+      "run": "narrative71-run:8dbf56ba3b82197ed9e8fe1059e4ae56404e03f7fc1da59d1c93bdc0d7384312",
+      "selector": "npc",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "narrative_reminder",
+      "contract": "reminder-7.1-narrative-physical-v1",
+      "family": "reminder_archive",
+      "limitations": [
+        "physical candidate navigation only",
+        "historical full NPC contract not asserted",
+        "semantic_owner_mapping_unresolved=true",
+        "numeric TextMap hits are observations, not body/title/speaker"
+      ],
+      "parser": "narrative71-parser:a59907e1829a5c83a9aa3c9be22be0faa1355f2ead3c216b6493f9d971c1b443",
+      "route": "narrative",
+      "run": "narrative71-run:bf0c2e788b5ee7cefe0a6417cfd248d23e293c0ee946e5554f31f1a8748124f1",
+      "selector": "reminder",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "RAW_ONLY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "native_aux_quest",
+      "contract": "native-archive-evidence-v1",
+      "family": "native_archive",
+      "limitations": [
+        "selected Native source boundary only",
+        "physical candidates are not logical identity"
+      ],
+      "parser": "naq71-parser:cdc6ef05e892bad8f16821ef95f5120e0e5f049a",
+      "route": "native_archive_aux_quest",
+      "run": "naq71-run:b23d18d9d4516c8cc06e20b626910a589c25584f",
+      "selector": "aux_quest",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "native_book_music",
+      "contract": "native-archive-evidence-v1",
+      "family": "native_archive",
+      "limitations": [
+        "selected Native source boundary only",
+        "physical candidates are not logical identity"
+      ],
+      "parser": "nbm71-parser:ce23d6045626b0ebc41f16e4d03ecd2df23aac34",
+      "route": "native_archive_book_music",
+      "run": "nbm71-run:cd54f3f4bc2f8c468b1dc948ef6beec824ca0ff7",
+      "selector": "book_music",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "native_bulk",
+      "contract": "native-archive-evidence-v1",
+      "family": "native_archive",
+      "limitations": [
+        "Native Bulk selected source boundary only"
+      ],
+      "parser": "native-archive-7.1-parser:a38e783674a577a33042e06a1ff5d864264ba125",
+      "route": "native_bulk_71",
+      "run": "native-archive-7.1-run:c0db257b594a031236acbf9e3f667912b99f3ffc",
+      "selector": "bulk",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "native_high_value_physical",
+      "contract": "native26-7.1-physical-text-candidate-v1",
+      "family": "native_archive",
+      "limitations": [
+        "physical TextMap candidate observations only",
+        "117 historical owner row slots unprojectable",
+        "semantic owner mapping unresolved; not historical exact replacement"
+      ],
+      "parser": "native26-71:6ecff09a40f76316e11ff5fe9d40667755968555",
+      "route": "physical_sqlite",
+      "run": "native26-71:7190b809fb12b8de03710e245f08792c8dda6cd8",
+      "selector": "native26",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "native_message",
+      "contract": "native-message-7.1-versioned-evidence-v1",
+      "family": "native_archive",
+      "limitations": [
+        "Native Message selected boundary only",
+        "source-owned mapping role unresolved"
+      ],
+      "parser": "nmsg71:60a78c63c569fe6065003831771493b9ba89ab55",
+      "route": "native_message",
+      "run": "nmsg71:d249cd47f222fdf3d669bbb309837507f4e6b9c9",
+      "selector": "message",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    },
+    {
+      "capability_id": "native_successor_physical",
+      "contract": "native21-7.1-physical-runtime-v1",
+      "family": "native_archive",
+      "limitations": [
+        "9 source-owned owner fields remain mapping_unresolved",
+        "MainQuest equality is not a semantic relation",
+        "not historical exact replacement"
+      ],
+      "parser": "native21-71:5b1f86e9a7c5b51bc180b6e085ecd444b90b2681",
+      "route": "physical_sqlite",
+      "run": "native21-71:9e2b94bd2440c9989657eb44f5b12faa96f8ad8d",
+      "selector": "native21",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "quest_narrative_archive",
+      "contract": "quest-narrative-7.1-derived-v1",
+      "family": "quest_narrative_archive",
+      "limitations": [
+        "7.1 NFGFDHPPBIF is a raw child locator observation, not proven historical subId continuity",
+        "physical child ordinal is not historical source-authored semantic order; semantic_order_status=unresolved",
+        "historical RC child locator has no QuestExcel candidate for 1,843 values"
+      ],
+      "parser": "qn71:7731834495ba936a1aeb38dcf0d61752c7723826",
+      "route": "quest",
+      "run": "qn71:04d05578d2e24ba3b4f2f25aed529cc5d44f30ea",
+      "selector": "quest_narrative_archive",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "PHYSICAL_CAPABILITY_ACCEPTED",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "quest_review_archive",
+      "contract": "quest-review-archive-7.1-evidence-v1",
+      "family": "quest_review_archive",
+      "limitations": [
+        "Summary-ID exact target binding accepted; relation role remains mapping_unresolved"
+      ],
+      "parser": "qr71:528398855cef41450d73b6868822362e68ff43fb",
+      "route": "quest",
+      "run": "qr71:8daed4b76de51c9ff93464ba197bab957f2a181e",
+      "selector": "quest_review_archive",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_EXACT_REPLACEMENT",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "quest_talk_physical",
+      "contract": "quest-talk-7.1-standalone-physical-v1",
+      "family": "quest_talk",
+      "limitations": [
+        "Quest/Talk physical container only; no full 7.1 Research corpus"
+      ],
+      "parser": "parser-build:b3e63a30ca580a63105fa23753520609eabf82e2",
+      "route": "quest",
+      "run": "ingest-run:5aaa18b9faab498f9c5d8203e61ee5681418f752",
+      "selector": "quest_talk_physical",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "read",
+        "inspect",
+        "follow"
+      ]
+    },
+    {
+      "capability_id": "readable_archive",
+      "contract": "readable-7.1-evidence-v1",
+      "family": "readable_archive",
+      "limitations": [
+        "source-authored/exact title mapping only",
+        "ambiguous and unresolved titles retained"
+      ],
+      "parser": "readable71-parser:7effb0fbe692ef8f5e33cc7864b33b6db4bac371",
+      "route": "source_context",
+      "run": "readable71-run:8fe6257d747e2403d334c1075df9540c4e47d6c8",
+      "selector": "readable_archive",
+      "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+      "status": "ACCEPTED_STANDALONE_CANDIDATE",
+      "supported_operations": [
+        "search",
+        "read",
+        "inspect"
+      ]
+    }
+  ],
+  "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
+}

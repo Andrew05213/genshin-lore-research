@@ -1,0 +1,420 @@
+{
+  "experiment_date": "2026-10-08",
+  "verdict": "PARTIAL_PUBLIC_DATABASE_REBUILD",
+  "scope": "Public source archive rebuildability, not deployed release requalification",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "source_download": "NOT_RUN; existing clean pinned upstream Git checkout used as source input",
+  "deployed_database_reuse": false,
+  "frozen_full_target": {
+    "release": "research71-bounded-v1.1",
+    "artifact_inputs": 35,
+    "component_bindings": 62,
+    "core_providers": 33,
+    "automatic_full_rebuild": false
+  },
+  "successful_components": [
+    {
+      "component": "achievement_archive",
+      "artifact": {
+        "sha256": "9539bbff90488cdcc1d1a0f699c72a703857628f6ef0afe6c5f4abd6c5d60e93",
+        "size_bytes": 30560256
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 2190,
+        "CHS:resolved_unique": 3846,
+        "EN:missing": 2190,
+        "EN:resolved_unique": 3846,
+        "JP:missing": 2190,
+        "JP:resolved_unique": 3846,
+        "text_candidates": 11538,
+        "text_owners": 6036,
+        "text_resolutions": 18108,
+        "v1_rows": 2012,
+        "v2_rows": 2012
+      }
+    },
+    {
+      "component": "activity_archive",
+      "artifact": {
+        "sha256": "95d9149a8b274cc14d67eeda76aefd973d245df08e280fd14b0dd80abbaea1e1",
+        "size_bytes": 94208
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 2,
+        "EN:missing": 2,
+        "JP:missing": 2,
+        "text_candidates": 0,
+        "text_owners": 2,
+        "text_resolutions": 6,
+        "v1_rows": 2,
+        "v2_rows": 2
+      }
+    },
+    {
+      "component": "avatar_config_archive",
+      "artifact": {
+        "sha256": "de8fb38cbf38b0374cad248dd14b117e877001934f938ea0bab053a02418b9b6",
+        "size_bytes": 4075520
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 423,
+        "CHS:resolved_unique": 298,
+        "EN:missing": 428,
+        "EN:resolved_unique": 293,
+        "JP:missing": 428,
+        "JP:resolved_unique": 293,
+        "text_candidates": 884,
+        "text_owners": 721,
+        "text_resolutions": 2163,
+        "v1_rows": 167,
+        "v2_rows": 167
+      }
+    },
+    {
+      "component": "character_foundation",
+      "artifact": {
+        "sha256": "20e065491d3696555fbeaae104c95284a9f7e9ae439861613a984829b6a1b8ef",
+        "size_bytes": 108290048
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run"
+    },
+    {
+      "component": "dungeon_archive",
+      "artifact": {
+        "sha256": "53e14e6a691026655c22847345f3350aec40196b898314c9c0207f9e552f350c",
+        "size_bytes": 51736576
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 4978,
+        "CHS:resolved_unique": 4530,
+        "EN:missing": 7838,
+        "EN:resolved_unique": 1670,
+        "JP:missing": 7838,
+        "JP:resolved_unique": 1670,
+        "text_candidates": 7870,
+        "text_owners": 9508,
+        "text_resolutions": 28524,
+        "v1_rows": 2377,
+        "v2_rows": 2377
+      }
+    },
+    {
+      "component": "material_config_archive",
+      "artifact": {
+        "sha256": "9b0be0a91afa52053f17b4f8dfd2b29aa741439bfee99902f38619ee3bedf2c0",
+        "size_bytes": 361717760
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 33515,
+        "CHS:resolved_unique": 29557,
+        "EN:missing": 34126,
+        "EN:resolved_unique": 28946,
+        "JP:missing": 34112,
+        "JP:resolved_unique": 28960,
+        "text_candidates": 87463,
+        "text_owners": 63072,
+        "text_resolutions": 189216,
+        "v1_rows": 10512,
+        "v2_rows": 10512
+      }
+    },
+    {
+      "component": "monster_archive",
+      "artifact": {
+        "sha256": "b4fd8200eca028e4c66f857a2cd04c79ae59366429cdc4217ee145ba85472560",
+        "size_bytes": 38920192
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 3408,
+        "EN:missing": 3408,
+        "JP:missing": 3408,
+        "text_candidates": 0,
+        "text_owners": 3408,
+        "text_resolutions": 10224,
+        "v1_rows": 3408,
+        "v2_rows": 3408
+      }
+    },
+    {
+      "component": "narrative_dialog",
+      "artifact": {
+        "sha256": "7d5deb13999ef7262b3eb97165e452b564929b6e66bc434b9f16f44d3da3caf6",
+        "size_bytes": 507940864
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": false,
+      "successful_round": "directed_final",
+      "verified_counts": {
+        "locator": 417117,
+        "physical_candidate": 348414,
+        "physical_row": 203908,
+        "release": 1,
+        "text_candidate": 312951,
+        "text_owner": 611724,
+        "text_resolution": 1835172
+      }
+    },
+    {
+      "component": "narrative_npc",
+      "artifact": {
+        "sha256": "333f8abe527abcfe253575581ae4dea2517eec45b8ec1b13239b098ff0615ac9",
+        "size_bytes": 24797184
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": false,
+      "successful_round": "directed_final",
+      "verified_counts": {
+        "locator": 0,
+        "physical_candidate": 0,
+        "physical_row": 14444,
+        "release": 1,
+        "text_candidate": 37405,
+        "text_owner": 14444,
+        "text_resolution": 43332
+      }
+    },
+    {
+      "component": "narrative_reminder",
+      "artifact": {
+        "sha256": "c831ea4f77741ff7b95c10c83e478011622d80f7becdfd20bc6d7262db8edc94",
+        "size_bytes": 41635840
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": false,
+      "successful_round": "directed_final",
+      "verified_counts": {
+        "locator": 18541,
+        "physical_candidate": 5884,
+        "physical_row": 18541,
+        "release": 1,
+        "text_candidate": 94544,
+        "text_owner": 37189,
+        "text_resolution": 111567
+      }
+    },
+    {
+      "component": "npc_archive",
+      "artifact": {
+        "sha256": "734008d4a59f632b38489ce44a4c58052f9bd7efd9700f2da65549fbd276f04b",
+        "size_bytes": 111685632
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 391,
+        "CHS:resolved_unique": 14053,
+        "EN:missing": 2776,
+        "EN:resolved_unique": 11668,
+        "JP:missing": 2760,
+        "JP:resolved_unique": 11684,
+        "text_candidates": 37405,
+        "text_owners": 14444,
+        "text_resolutions": 43332,
+        "v1_rows": 14444,
+        "v2_rows": 14444
+      }
+    },
+    {
+      "component": "reliquary_config_archive",
+      "artifact": {
+        "sha256": "97177110ac58dc7287f59ece3bfb2083520cc6363db194e5101662e7ed27cc9c",
+        "size_bytes": 79302656
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 75,
+        "CHS:resolved_unique": 8629,
+        "EN:missing": 385,
+        "EN:resolved_unique": 8319,
+        "JP:missing": 381,
+        "JP:resolved_unique": 8323,
+        "text_candidates": 25271,
+        "text_owners": 8704,
+        "text_resolutions": 26112,
+        "v1_rows": 4352,
+        "v2_rows": 4352
+      }
+    },
+    {
+      "component": "scene_archive",
+      "artifact": {
+        "sha256": "301f7f3323d1621edb7d50e0f9d3931788aea7ed003c8d0c292bbbb6d61166df",
+        "size_bytes": 5419008
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "text_candidates": 0,
+        "text_owners": 0,
+        "text_resolutions": 0,
+        "v1_rows": 2377,
+        "v2_rows": 2377
+      }
+    },
+    {
+      "component": "weapon_config_archive",
+      "artifact": {
+        "sha256": "60e75c172b93b6fc98e3b0d20f4d3aa05943601847050a6eb392a45b0c765a40",
+        "size_bytes": 6680576
+      },
+      "source_verification": "PASS",
+      "byte_exact_fresh_AB": true,
+      "full_build_report_AB_equal": true,
+      "successful_round": "path_fix_full_component_run",
+      "verified_counts": {
+        "CHS:missing": 330,
+        "CHS:resolved_unique": 531,
+        "EN:missing": 323,
+        "EN:resolved_unique": 538,
+        "JP:missing": 323,
+        "JP:resolved_unique": 538,
+        "text_candidates": 1607,
+        "text_owners": 861,
+        "text_resolutions": 2583,
+        "v1_rows": 287,
+        "v2_rows": 287
+      }
+    }
+  ],
+  "successful_component_count": 14,
+  "successful_component_database_bytes": 1372856320,
+  "rounds": [
+    {
+      "round": "initial",
+      "archive_sha256": "2554886046724267321a1191a85df0fb4a028311c98ff16d16aedeb44c211753",
+      "all_registered_components_attempted": 14,
+      "command_and_verification_pass": 11,
+      "command_failures": [
+        "narrative_npc",
+        "narrative_dialog",
+        "narrative_reminder"
+      ],
+      "failure": "relative output path passed to SQLite file URI verifier",
+      "summary_sha256": "083e000ff511ec838d60be01266977352e74ef4ec21a5d50776b4a12576dc078",
+      "unified_probe": "INVALID_HARNESS_PATH: relative PYTHONPATH; retained but not used to diagnose missing source modules"
+    },
+    {
+      "round": "path_fix",
+      "archive_sha256": "672bcb609037c43a44ec59866fdf357b97a2040fd97d2f536d5d9bd074aa9cad",
+      "all_registered_components_attempted": 14,
+      "command_and_verification_pass": 11,
+      "narrative_source_oracles_pass": 3,
+      "command_failures": [
+        "narrative_npc",
+        "narrative_dialog",
+        "narrative_reminder"
+      ],
+      "failure": "valid narrative verdict=PASS was not adapted to common status envelope",
+      "summary_sha256": "1a80142d61402d4b4fbc4b1329b5898241c65c1977684fe3519e8e7d8e6c70cf",
+      "unified_probe": "FAIL: missing manifests/research-7.1/7.1-capability-registry-v1.json",
+      "capacity_argument_note": "48,000,000,000 B was a conservative preflight bound, not a measured sample"
+    },
+    {
+      "round": "directed_final",
+      "archive_sha256": "f0a38912461dd4606422b0da0d9993d797e0c553a3247e690d2d1e2f53f8feaf",
+      "directed_components": [
+        "narrative_npc",
+        "narrative_dialog",
+        "narrative_reminder"
+      ],
+      "command_and_verification_pass": 3,
+      "summary_sha256": "1676eb698e4c4ad2f9ed4976b1bb1f197f461d0ff3effe9738eb477b980530ff",
+      "unified_probe": "FAIL: missing manifests/research-7.1/7.1-capability-registry-v1.json"
+    }
+  ],
+  "installation": {
+    "platform": "Linux",
+    "python": "3.12",
+    "new_venv": true,
+    "requirements_install": "PASS via approved network execution; initial sandbox attempt failed and was retained in tool record",
+    "editable_install": "PASS",
+    "license_expression": "AGPL-3.0-only",
+    "jsonschema": "4.26.0",
+    "mcp": "2.1.1",
+    "initial_full_component_runs_environment": "Existing dependency environment with exported source explicitly selected by rebuild entry",
+    "directed_final_environment": "Fresh dependency environment; exported source selected by absolute PYTHONPATH"
+  },
+  "fixed_entry_bugs": [
+    "Normalize source and output root to absolute paths",
+    "Preserve narrative verdict and adapt it to common status without weakening the independent verifier"
+  ],
+  "failed_full_probes": [
+    {
+      "step": "Schema20 core assembly",
+      "exit_code": 1,
+      "missing_dependency": "manifests/m3-7.1-provider/accepted-exact-mappings-v1.json"
+    },
+    {
+      "step": "Character text successor using freshly rebuilt foundation",
+      "exit_code": 1,
+      "missing_dependency": "manifests/character-7.1-physical-foundation/immutable-runtime.json"
+    },
+    {
+      "step": "Unified Research assembly",
+      "exit_code": 1,
+      "missing_dependency": "manifests/research-7.1/7.1-capability-registry-v1.json"
+    }
+  ],
+  "other_code_referenced_dependencies_not_in_archive": [
+    "manifests/special-core-7.1/accepted-exact-mappings-v1.json",
+    "manifests/special-core-7.1/input-contract-v1.json",
+    "manifests/document-readable-7.1/source-scope.json",
+    "manifests/quest-talk-physical/shapes-v1.json",
+    "scripts/verify_research71_complete_candidate.py"
+  ],
+  "build_report_determinism_note": "Fresh A/B database bytes match for all 14 components. Complete build reports match for 11; narrative reports differ in space_preflight, inclusive_space, promotion_inode and build_seconds. No claim of byte-identical narrative reports or successful strict --compare for those reports.",
+  "runtime_acceptance": "NOT_RUN: no complete freshly rebuilt Research index/profile",
+  "full_rebuild": "FAIL: incomplete portable construction/qualification dependency chain",
+  "raw_logs_and_failed_outputs_retained_locally": true,
+  "game_artifacts_in_public_archive": false,
+  "authority_unchanged": {
+    "current_manifest_sha256": "5b5b9781718b9b2505617b081daa5614267d2c4ee506a82ecc3eab376ec441fb"
+  },
+  "capacity": {
+    "allocated_before_bytes": 46263914524,
+    "allocated_after_builds_bytes": 49697624122,
+    "hard_limit_bytes": 90000000000,
+    "warning_bytes": 77309411328,
+    "hard_headroom_after_builds_bytes": 40302375878,
+    "host_free_after_builds_bytes": 167287603200,
+    "scope": "repository/worktrees, attributable project tmp, configured source/runtime inputs and semantic model roots; device/inode deduplicated"
+  }
+}

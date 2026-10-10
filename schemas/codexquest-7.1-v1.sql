@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=ON;
+CREATE TABLE codex_root(id TEXT PRIMARY KEY,run_id TEXT NOT NULL,source_path TEXT NOT NULL UNIQUE,git_blob_oid TEXT NOT NULL,raw_sha256 TEXT NOT NULL,raw_bytes BLOB NOT NULL,shape TEXT NOT NULL,native_id TEXT NOT NULL,quest_type_raw TEXT,section_state TEXT NOT NULL,section_count INTEGER NOT NULL,semantic_mapping TEXT NOT NULL CHECK(semantic_mapping IN ('historical_physical','new_shape_unresolved'))) WITHOUT ROWID;
+CREATE TABLE codex_child(id TEXT PRIMARY KEY,root_id TEXT NOT NULL REFERENCES codex_root(id),kind TEXT NOT NULL CHECK(kind IN ('section_like','node_like')),source_pointer TEXT NOT NULL,physical_ordinal INTEGER NOT NULL,raw_json TEXT NOT NULL,raw_sha256 TEXT NOT NULL,UNIQUE(root_id,source_pointer)) WITHOUT ROWID;
+CREATE TABLE codex_navigation(id TEXT PRIMARY KEY,root_id TEXT NOT NULL REFERENCES codex_root(id),kind TEXT NOT NULL CHECK(kind IN ('questcodex_reverse_equality','mainquest_equality')),source_pointer TEXT NOT NULL,raw_locator TEXT NOT NULL,status TEXT NOT NULL,candidate_count INTEGER NOT NULL,search_complete INTEGER NOT NULL,UNIQUE(root_id,kind)) WITHOUT ROWID;
+CREATE TABLE codex_candidate(id TEXT PRIMARY KEY,navigation_id TEXT NOT NULL REFERENCES codex_navigation(id),target_source_path TEXT NOT NULL,target_pointer TEXT NOT NULL,target_native_id TEXT NOT NULL,target_occurrence_id TEXT NOT NULL,target_run TEXT NOT NULL,UNIQUE(navigation_id,target_source_path,target_pointer,target_run,target_occurrence_id)) WITHOUT ROWID;
+CREATE TABLE codex_text_slot(id TEXT PRIMARY KEY,root_id TEXT NOT NULL REFERENCES codex_root(id),source_pointer TEXT NOT NULL,source_label TEXT NOT NULL,raw_hash TEXT NOT NULL,locale TEXT NOT NULL,status TEXT NOT NULL,candidate_count INTEGER NOT NULL,semantic_owner_status TEXT NOT NULL,UNIQUE(root_id,source_pointer,locale)) WITHOUT ROWID;
+CREATE TABLE codex_text_candidate(id TEXT PRIMARY KEY,slot_id TEXT NOT NULL REFERENCES codex_text_slot(id),source_path TEXT NOT NULL,pair_ordinal INTEGER NOT NULL,source_pointer TEXT NOT NULL,raw_text TEXT NOT NULL,raw_text_sha256 TEXT NOT NULL,UNIQUE(slot_id,source_path,pair_ordinal,source_pointer)) WITHOUT ROWID;
+CREATE TABLE codex_release(singleton INTEGER PRIMARY KEY CHECK(singleton=1),manifest_json TEXT NOT NULL) WITHOUT ROWID;
+CREATE INDEX codex_root_native ON codex_root(native_id,id);
+CREATE INDEX codex_child_root ON codex_child(root_id,kind,id);
+CREATE INDEX codex_candidate_navigation ON codex_candidate(navigation_id,id);
+CREATE INDEX codex_slot_root ON codex_text_slot(root_id,id);
+CREATE INDEX codex_text_candidate_slot ON codex_text_candidate(slot_id,id);

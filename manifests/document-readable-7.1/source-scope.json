@@ -1,0 +1,107 @@
+{
+  "contract": "document-readable-7.1-source-scope-v1",
+  "document_primary_rows": 1862,
+  "document_source_row_counts": {
+    "ExcelBinOutput/DocumentExcelConfigData.json": 1862,
+    "ExcelBinOutput/DocumentLocalizationFormatExcelConfigData.json": 65,
+    "ExcelBinOutput/DynamicBookDetailsExcelConfigData.json": 15,
+    "ExcelBinOutput/DynamicBookExcelConfigData.json": 2,
+    "ExcelBinOutput/LocalizationExcelConfigData.json": 2247
+  },
+  "document_sources": [
+    {
+      "blob": "e79c7d760e0f0e99f32550f5c29a1d046f28730f",
+      "path": "ExcelBinOutput/DocumentExcelConfigData.json",
+      "sha256": "101aaaf9c0cbb161d4c0f59da1314bd427cbe954a43fec6d9483fdda4aa38a47",
+      "size_bytes": 368918
+    },
+    {
+      "blob": "14bf65db07f1672419c6de09f8ab5ce7e8e8441e",
+      "path": "ExcelBinOutput/DocumentLocalizationFormatExcelConfigData.json",
+      "sha256": "06f611ae2290e7111cef6b3c5baf350a6c70018f798e4adf4aab627f36bedac7",
+      "size_bytes": 2376
+    },
+    {
+      "blob": "09049a1a8200c6dafc1b83404ab20b7ba4efa2a0",
+      "path": "ExcelBinOutput/DynamicBookDetailsExcelConfigData.json",
+      "sha256": "1bb95e6623092712ac75cd9297786bf001d9be6e186c00f9ea7bca272d413e15",
+      "size_bytes": 1913
+    },
+    {
+      "blob": "d3e085c73ac9498ab9e331d8bca205653a3ed368",
+      "path": "ExcelBinOutput/DynamicBookExcelConfigData.json",
+      "sha256": "ed8a7915ac379dc7fa36fbfc8eab3a8856a429af09cdcf1f99514be2889eba32",
+      "size_bytes": 243
+    },
+    {
+      "blob": "16894b6ee5242748e7ccf9909506b1f364bd407e",
+      "path": "ExcelBinOutput/LocalizationExcelConfigData.json",
+      "sha256": "a9e06e01c352bd7d3d30a2ea1c4fdddb10cb9c29a94b8ff544fbca6f3017cb79",
+      "size_bytes": 1948032
+    },
+    {
+      "blob": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+      "size_bytes": 49920231
+    },
+    {
+      "blob": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+      "size_bytes": 18801724
+    },
+    {
+      "blob": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+      "size_bytes": 55719620
+    },
+    {
+      "blob": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+      "size_bytes": 20704568
+    },
+    {
+      "blob": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+      "size_bytes": 63445300
+    },
+    {
+      "blob": "ed32257c5b6329e65fef837189d111262d655c87",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+      "size_bytes": 23059132
+    }
+  ],
+  "locator_fields_7_1": [
+    "MBOPLLJEHCJ",
+    "FCNGPFLCLFA",
+    "enPath",
+    "jpPath"
+  ],
+  "old_chs_locator_fields_absent": [
+    "DEFNEHAFMMA",
+    "JDNBKKPEFAI"
+  ],
+  "product_accepted": false,
+  "r0_dependency": {
+    "ingest_run_id": "ir-batch-m3-r0-physical-7.1:9fc2c32cc6bb81dd6091e504d43e40bdcf930ea2",
+    "sha256": "216988588bdb059f9ab87d11fb068121b82f1a27ea5df249025315f9e8e2810e",
+    "size_bytes": 4711841792
+  },
+  "readable": {
+    "added_paths": 135,
+    "file_count": 28785,
+    "inherited_paths": 28650,
+    "path_blob_set_sha256": "529a23084f63ec014865c64e7baaf16942ea03073cb54381de852becb92a818d",
+    "removed_paths": 0
+  },
+  "snapshot_id": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "status": "candidate_scope",
+  "support_role": "DocumentLocalizationFormat/DynamicBookDetails/DynamicBook sealed source inventory; current Document projection consumes no fields from them"
+}

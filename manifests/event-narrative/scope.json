@@ -1,0 +1,296 @@
+{
+  "contract": "event-narrative-source-v1",
+  "source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_tree": "d891ef1d95fdd6c27a1da8a32ea7a61b483647a6",
+  "snapshot_id": "anime-game-data:7.0:26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "files": [
+    {
+      "path": "ExcelBinOutput/ActivityNatlanDrillCollectChatExcelConfigData.json",
+      "size_bytes": 8481,
+      "sha256": "96082cfb9f745057cc8c5530a1b22aa658f8ee26bf59f25d705e585704ea99e2",
+      "blob": "013249089363e87377d6d1838eaa05e702bc5906"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookChapterExcelConfigData.json",
+      "size_bytes": 2202,
+      "sha256": "ee1e4d0ec0db711ae6a9770020c2a0a72018fdbf58158a6650ade95ce8ba39aa",
+      "blob": "a259a76c7c6d3e15151ccbedd36aba5444173a8e"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookConstValueExcelConfigData.json",
+      "size_bytes": 380,
+      "sha256": "5aa19c2d81b0dabde4fb6555674e97f0b34232247f2d264512ae23fd2bf8aa13",
+      "blob": "1641e6ce866de29d568ab2d30b5bcf6248354e86"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookDialogExcelConfigData.json",
+      "size_bytes": 78041,
+      "sha256": "296ad0484b3a4043821536e1de93c113e76ab3ab232a5b4c9bb2a6867e4b2503",
+      "blob": "a529ee127f65d838fab1e15dfbb6f97b030191d5"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookEnterExcelConfigData.json",
+      "size_bytes": 5325,
+      "sha256": "13f12b4546a1fe79d75d4ae03a57179b5b3484b344e47d513746596f501514f9",
+      "blob": "75d3f08f3d513f2c1f0ed0a2fbbcb2932e7cd43a"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookEventExcelConfigData.json",
+      "size_bytes": 795,
+      "sha256": "9b703136d1b05fd3160e9637d40495a512a15cf137d2a61de70511346038fe3d",
+      "blob": "7ec3c952dcea5b412b03298a59d82f8611ecd3de"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookOpenExcelConfigData.json",
+      "size_bytes": 386,
+      "sha256": "ef76b4c6962f6e0faa55401e115a708b9d8e5552ef6138970c768865a03c8cdf",
+      "blob": "9718fce60df216747a9da13c620163880038dd0e"
+    },
+    {
+      "path": "ExcelBinOutput/MagicStorybookPageExcelConfigData.json",
+      "size_bytes": 8052,
+      "sha256": "7c2fe8ad18321f6aa4dc754ae93e895794197fa0d33a4c00d1063e22ff90118c",
+      "blob": "f905420576ca94183d304752a02bd8d7ea731bec"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionExcelConfigData.json",
+      "size_bytes": 5864,
+      "sha256": "615364acdd3cb8508bcf5b64c3ec542fd5113401bd4c96caa0ff9178fcf2be2a",
+      "blob": "49e0eef4560685b65da0ae08abfc37a97980a81c"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionInfoExcelConfigData.json",
+      "size_bytes": 1887,
+      "sha256": "3e5e764bca8ba284582141ad5efc12731991ff32a0ffa7aff4611ff11509d5ea",
+      "blob": "3952a3c16eeaea89487bd904d6e276b2aa0a0090"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionInfoItemExcelConfigData.json",
+      "size_bytes": 2822,
+      "sha256": "1e25a0475ce20dba2b959580d7aea068168ef1ae656695e5c330a212f4411f5b",
+      "blob": "a4e54a900d30658a8f4b0e69196a5f13bc260bde"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionTopicExcelConfigData.json",
+      "size_bytes": 3094,
+      "sha256": "47e06f50e33979a63d6500f851dd8e5390ba7513d42a492352a22bd32a988408",
+      "blob": "40e6adcf5f43b40402ddc153e1c0e1ca7b8089f0"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionConclusionExcelConfigData.json",
+      "size_bytes": 2779,
+      "sha256": "22ab476f5d30de5c7947c354ae9a24d0f8ae1fdf7e8ce8be7dc8d3d678d27278",
+      "blob": "bed6550b46857fd61fe539fb7083a7d13e04b134"
+    },
+    {
+      "path": "ExcelBinOutput/DialogicDeductionConditionExcelConfigData.json",
+      "size_bytes": 13813,
+      "sha256": "3604e5a88bd9fbe5aa0765857e89123319a3c0e31b5220ae4a91c0c77a35a949",
+      "blob": "d6dc554749976f5284cd6ec790198c926cff6960"
+    },
+    {
+      "path": "TextMap/TextMapCHS.json",
+      "size_bytes": 48771857,
+      "sha256": "4fb047433ff43936457dfbfd5fb68ff1dd8f90cd3384de74cdcf13416ec3a607",
+      "blob": "8c2a31b9e4466bfafb3cf795ae5ec6bb3d456881"
+    },
+    {
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "size_bytes": 18550916,
+      "sha256": "5231cb762579e6b2d3a4bd7a427d642afafc3d2983aa9f75269b5ba7b0082d38",
+      "blob": "334f9b24c5ffff6a47a77eaab6adac4f2dcc3bc4"
+    },
+    {
+      "path": "TextMap/TextMapEN.json",
+      "size_bytes": 54368516,
+      "sha256": "640704947a9da215c82352b3dfaf0489169998fc212ad62a2e77f077ecb8af7f",
+      "blob": "e4f6094219e7609b8145cd7835034b1717880092"
+    },
+    {
+      "path": "TextMap/TextMap_MediumEN.json",
+      "size_bytes": 20424271,
+      "sha256": "bd93680447c1ca07e2263ff3f7771afb29f0c584473007ade4e4705f6e289bbd",
+      "blob": "5ed1e79e923f016dfa7db009390d07dca8f0917a"
+    },
+    {
+      "path": "TextMap/TextMapJP.json",
+      "size_bytes": 61908087,
+      "sha256": "fa6771ebdd8b9866b6d1777aa62c0cad43454e65e936c74a87491f2d9de45167",
+      "blob": "7ef028f518c0ca9fae530775ed3c85641e6696ea"
+    },
+    {
+      "path": "TextMap/TextMap_MediumJP.json",
+      "size_bytes": 22744816,
+      "sha256": "367a332abedf4e10be7212cc7a387fc64e563d276f75e60f3ccd89d33eeadebd",
+      "blob": "12485b4ca9f5fc9fa1af41d8786011d4be834990"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "natlan_drill_chat",
+      "boundary": "complete ActivityNatlanDrillCollectChat physical rows",
+      "path": "ExcelBinOutput/ActivityNatlanDrillCollectChatExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": [
+        "nameTextMapHash",
+        "contentTextMapHash"
+      ]
+    },
+    {
+      "kind": "magic_storybook_chapter",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookChapterExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": [
+        "titleTextMapHash",
+        "BABFAGANLLO",
+        "OOGNLDCPFGP"
+      ],
+      "owner_roles": {
+        "BABFAGANLLO": "mapping_unresolved",
+        "OOGNLDCPFGP": "mapping_unresolved"
+      }
+    },
+    {
+      "kind": "magic_storybook_const",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookConstValueExcelConfigData.json",
+      "native_id_field": "name",
+      "text_fields": []
+    },
+    {
+      "kind": "magic_storybook_dialog",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookDialogExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "contentTextMapHash"
+      ]
+    },
+    {
+      "kind": "magic_storybook_enter",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookEnterExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": [
+        "OOGNLDCPFGP"
+      ],
+      "owner_roles": {
+        "OOGNLDCPFGP": "mapping_unresolved"
+      }
+    },
+    {
+      "kind": "magic_storybook_event",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookEventExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "magic_storybook_open",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookOpenExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "magic_storybook_page",
+      "boundary": "complete seven-table MagicStorybook archive",
+      "path": "ExcelBinOutput/MagicStorybookPageExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "dialogic_deduction_root",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionExcelConfigData.json",
+      "native_id_field": "id",
+      "text_fields": []
+    },
+    {
+      "kind": "dialogic_deduction_info",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionInfoExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "titleTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "kind": "dialogic_deduction_item",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionInfoItemExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "contentTextMapHash"
+      ]
+    },
+    {
+      "kind": "dialogic_deduction_topic",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionTopicExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "titleTextMapHash"
+      ]
+    },
+    {
+      "kind": "dialogic_deduction_conclusion",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionConclusionExcelConfigData.json",
+      "native_id_field": "conclusionId",
+      "text_fields": [
+        "titleTextMapHash"
+      ]
+    },
+    {
+      "kind": "dialogic_deduction_condition",
+      "boundary": "complete six-table DialogicDeduction archive",
+      "path": "ExcelBinOutput/DialogicDeductionConditionExcelConfigData.json",
+      "native_id_field": null,
+      "text_fields": [
+        "DJKCDDJINCM",
+        "KICANIKCAJK"
+      ],
+      "owner_roles": {
+        "DJKCDDJINCM": "mapping_unresolved",
+        "KICANIKCAJK": "mapping_unresolved"
+      }
+    }
+  ],
+  "row_denominator": {
+    "natlan_drill_chat": 42,
+    "magic_storybook_chapter": 6,
+    "magic_storybook_const": 3,
+    "magic_storybook_dialog": 103,
+    "magic_storybook_enter": 36,
+    "magic_storybook_event": 11,
+    "magic_storybook_open": 4,
+    "magic_storybook_page": 58,
+    "dialogic_deduction_root": 6,
+    "dialogic_deduction_info": 6,
+    "dialogic_deduction_item": 28,
+    "dialogic_deduction_topic": 27,
+    "dialogic_deduction_conclusion": 27,
+    "dialogic_deduction_condition": 59
+  },
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "text_lookup": "all physical main candidates first; Medium only when main has no candidate",
+  "declared_relations": [],
+  "relationship_policy": "obfuscated equality-like fields remain raw/opaque; zero cross-family or semantic relations are declared",
+  "current_product_physical_overlap": {
+    "ActivityExcelConfigData": 0,
+    "Mail": 0,
+    "Document": 0,
+    "Quest/Talk/Review": 0
+  },
+  "coverage": "complete Natlan drill chat, seven-table Magic Storybook, and six-table Dialogic Deduction physical/text projection",
+  "corpus_complete": true,
+  "full_activity": false,
+  "full_7_0": false
+}

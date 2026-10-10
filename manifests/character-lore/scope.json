@@ -1,0 +1,34 @@
+{
+  "files": [
+    {
+      "path": "ExcelBinOutput/AvatarCostumeExcelConfigData.json"
+    },
+    {
+      "path": "ExcelBinOutput/ProfilePictureExcelConfigData.json"
+    },
+    {
+      "path": "ExcelBinOutput/AvatarRenameExcelConfigData.json"
+    },
+    {
+      "path": "ExcelBinOutput/AvatarExcelConfigData.json"
+    },
+    {
+      "path": "TextMap/TextMapCHS.json"
+    },
+    {
+      "path": "TextMap/TextMap_MediumCHS.json"
+    },
+    {
+      "path": "TextMap/TextMapEN.json"
+    },
+    {
+      "path": "TextMap/TextMap_MediumEN.json"
+    },
+    {
+      "path": "TextMap/TextMapJP.json"
+    },
+    {
+      "path": "TextMap/TextMap_MediumJP.json"
+    }
+  ]
+}

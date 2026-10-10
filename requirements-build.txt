@@ -1,0 +1,5 @@
+# Direct dependencies observed in the successful local build smoke.
+# This is not a full transitive lockfile; Python/SQLite versions also matter.
+jsonschema==4.26.0
+mcp==2.1.1
+numpy==2.5.3

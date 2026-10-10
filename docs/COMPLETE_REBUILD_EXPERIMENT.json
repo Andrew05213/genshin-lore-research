@@ -1,0 +1,36 @@
+{
+  "status": "PASS_COMPLETE_BOUNDED_DATA_REBUILD",
+  "date": "2026-10-08",
+  "tested_archive_sha256": "363953e0bf48281d39f9b4377dbaf2cce95998cee3684c1716caf738169f5235",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "historical_source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "existing_database_reuse": false,
+  "resume_reuse_in_final_run": false,
+  "source_download": "NOT_RUN: existing clean pinned Git checkouts",
+  "formal_release_accepted": false,
+  "semantic_overlay": "NOT_REBUILT",
+  "model_autonomous_acceptance": "NOT_RUN",
+  "environment": {"python": "3.12.3", "sqlite": "3.45.1", "numpy": "2.5.3", "mcp": "2.1.1", "jsonschema": "4.26.0", "platform": "Linux"},
+  "core_contracts": 33,
+  "exact_inputs": 35,
+  "exact_input_bytes": 6706642944,
+  "qualified_stage_receipts_including_index": 60,
+  "artifacts": {
+    "core": {"size_bytes": 1049948160, "sha256": "3e1aaf1825f62235c96d74d82f85dd4a4cfd193377f66f24c77948e1fdf5f463"},
+    "r0": {"size_bytes": 4711841792, "sha256": "216988588bdb059f9ab87d11fb068121b82f1a27ea5df249025315f9e8e2810e"},
+    "index": {"size_bytes": 6569836544, "sha256": "9392b0a9b33e92fc6a0c40b4d121d0b37bb9575900d84617c4bd70467b0356e1"}
+  },
+  "index_counts": {"source_artifact": 35, "adapter_coverage": 195, "research_container": 921382, "research_text": 3761013, "research_relation": 663590, "research_candidate": 446132},
+  "full_text_and_relation_candidate_oracle": "PASS",
+  "mcp_transport": "PASS",
+  "book": {"pages": 12, "physical_ordinals": [0, 84], "physical_lines": 85, "file_eof": true, "all_long_line_character_eof": "NOT_ASSERTED"},
+  "story": {"initial_range": [0, 400], "continued_range": [400, 576], "total_chars": 576, "range_inspect_and_segment_sha": "PASS"},
+  "wall_seconds": {"source_check": 0.268, "complete_build": 2549.732, "runtime_check": 24.046, "mcp_check": 36.718, "total": 2610.764},
+  "log_sha256": {
+    "complete_build": "4792f0423d2b8b2a91830ce17b0ab9d261ed92f2bc5de2ec5705a6c2f153efd1",
+    "runtime": "ec426d59b95719582066cb6488ddf7a173b12ad1e7854da8958222e3673aac95",
+    "mcp": "c23d733bb79ab45e6bfae0f7b28a34dd96cd7cceea9a9470aa14c0317b905b79"
+  },
+  "retained_boundaries": {"historical_contract_gaps": 8, "historical_component_gap_records": 12, "full_game_coverage": false}
+}

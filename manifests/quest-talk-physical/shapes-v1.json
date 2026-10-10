@@ -1,0 +1,427 @@
+{
+  "contract": "quest-talk-physical-shapes-v1",
+  "shapes": [
+    {
+      "root_keys": [
+        "<KEANLMNFLAK>k__BackingField",
+        "AGHCDKBOCDA",
+        "AHBCHEKIJIG",
+        "AMPCFGAEJEH",
+        "ANKFNLMKOII",
+        "BBIEPOAIEPB",
+        "BLCEJLFCFPH",
+        "BNEMOPMNCDK",
+        "CEIKNLNJIFM",
+        "CENHDADLMEB",
+        "CFPHHPAIJMA",
+        "CPHMBMLPLKC",
+        "DEKDLEHHBFL",
+        "DLBCIKDFIHK",
+        "DMBLBLLOKBE",
+        "EAEHJOJPIOG",
+        "ECFKGNHEMFH",
+        "EIAPLOEDCAK",
+        "FEDMODOBJHL",
+        "FMEEPGFAKOL",
+        "GEFMEJAOAMA",
+        "GFKGPLFBCFL",
+        "GIIPBNJFFAK",
+        "GIKJHFNBGOK",
+        "GJPJDDJJPGE",
+        "HFEDPEPIDDA",
+        "HGBOMAONAKL",
+        "IBPNPMIDMFI",
+        "ICDJJGGGODF",
+        "IDMJLOHKBOJ",
+        "IHFGIKOPDJN",
+        "ILFNAKCBDFF",
+        "IOGEOIEIOBB",
+        "JBONINPKGJB",
+        "JIOLPCLFAJP",
+        "KDHDHNPIKKD",
+        "KENKIPCKHGM",
+        "KNIODKFMILD",
+        "KPHCGPCHCKP",
+        "LALLFKKNJIB",
+        "LKHOBJPDMOC",
+        "MCLHFNBBMCG",
+        "MKBGGGMJLJD",
+        "MPHFDFBFEIB",
+        "NACEBHGFCFK",
+        "NIHCPBOLGIH",
+        "ODDCDIJFIJE",
+        "ODDHNDOAGCO",
+        "ONLJHMONMMC",
+        "OOOECICNLKH",
+        "PJFNMCDGLJC"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "blossom",
+      "reference_field": null
+    },
+    {
+      "root_keys": [
+        "AADKDKPMGNO",
+        "GALIDJOEHOC",
+        "HAHEIAHBPEJ"
+      ],
+      "kind": "talk_root",
+      "mapping": "alt"
+    },
+    {
+      "root_keys": [
+        "AAOAAFLLOJI",
+        "FEOACBMDCKJ",
+        "JNMCHAGDLOL"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_a"
+    },
+    {
+      "root_keys": [
+        "ADHLLDAPKCM",
+        "MOEOFGCKILF",
+        "PAINLIBBLDK"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_c"
+    },
+    {
+      "root_keys": [
+        "ALBFHGKNMLK",
+        "IOKNFDJFGDH",
+        "PFALHAKIILD"
+      ],
+      "kind": "talk_root",
+      "mapping": "rc"
+    },
+    {
+      "root_keys": [
+        "BMFEMALEAIO",
+        "OJACLOOEAMG"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "rc",
+      "reference_field": "OJACLOOEAMG"
+    },
+    {
+      "root_keys": [
+        "BPEHONLLNNK",
+        "GDDPNNHLGBL",
+        "LDLMECNIJFC"
+      ],
+      "kind": "talk_root",
+      "mapping": "third"
+    },
+    {
+      "root_keys": [
+        "DANPPPLPAEE",
+        "groupId",
+        "talks"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "normalized",
+      "reference_field": "talks"
+    },
+    {
+      "root_keys": [
+        "DLPKMDPABFM",
+        "LBPGKDMGFBN",
+        "LOJEOMAPIIM"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_d"
+    },
+    {
+      "root_keys": [
+        "DMIMNILOLKP",
+        "JCFGGIACLFH",
+        "JEMDGACPOPC"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "older_b",
+      "reference_field": "DMIMNILOLKP"
+    },
+    {
+      "root_keys": [
+        "EJNBCOLPBMC",
+        "OJACLOOEAMG"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "rc",
+      "reference_field": "OJACLOOEAMG"
+    },
+    {
+      "root_keys": [
+        "FAJAGGKJICO",
+        "OJACLOOEAMG"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "rc",
+      "reference_field": "OJACLOOEAMG"
+    },
+    {
+      "root_keys": [
+        "FEOACBMDCKJ",
+        "JNMCHAGDLOL"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_a"
+    },
+    {
+      "root_keys": [
+        "GFFJADIFFGO",
+        "NFFIGDHFAJG"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "alt",
+      "reference_field": "NFFIGDHFAJG"
+    },
+    {
+      "root_keys": [
+        "HFIMFOOGLLF",
+        "NFFIGDHFAJG"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "alt",
+      "reference_field": "NFFIGDHFAJG"
+    },
+    {
+      "root_keys": [
+        "JDOFKFPHIDC",
+        "PCNNNPLAEAI"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "older_a",
+      "reference_field": "PCNNNPLAEAI"
+    },
+    {
+      "root_keys": [
+        "KJNKFMPAGAA",
+        "OMNDEBJIOCP",
+        "PBAEPDPNKEJ"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_b"
+    },
+    {
+      "root_keys": [
+        "KJNKFMPAGAA",
+        "PBAEPDPNKEJ"
+      ],
+      "kind": "talk_root",
+      "mapping": "older_b"
+    },
+    {
+      "root_keys": [
+        "OAENEGDKPNB",
+        "OJACLOOEAMG",
+        "OOIJCIKMBOJ"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "rc",
+      "reference_field": "OJACLOOEAMG"
+    },
+    {
+      "root_keys": [
+        "PGCNMMEBDIE",
+        "talks"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "normalized",
+      "reference_field": "talks"
+    },
+    {
+      "root_keys": [
+        "activityId",
+        "talks"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "normalized",
+      "reference_field": "talks"
+    },
+    {
+      "root_keys": [
+        "coinType",
+        "dialogList",
+        "talkId"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    },
+    {
+      "root_keys": [
+        "configId",
+        "groupId",
+        "talks"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "normalized",
+      "reference_field": "talks"
+    },
+    {
+      "root_keys": [
+        "damageRatio",
+        "dialogList",
+        "talkId"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    },
+    {
+      "root_keys": [
+        "damageRatio",
+        "talkId"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    },
+    {
+      "root_keys": [
+        "defaultVocalBoneName"
+      ],
+      "kind": "mapping_unresolved",
+      "mapping": null
+    },
+    {
+      "root_keys": [
+        "dialogList",
+        "talkId"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    },
+    {
+      "root_keys": [
+        "dialogList",
+        "talkId",
+        "type"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    },
+    {
+      "root_keys": [
+        "npcId",
+        "talks"
+      ],
+      "kind": "reference_wrapper",
+      "mapping": "normalized",
+      "reference_field": "talks"
+    },
+    {
+      "root_keys": [
+        "talkId",
+        "type"
+      ],
+      "kind": "talk_root",
+      "mapping": "normalized"
+    }
+  ],
+  "dialogue_fields": {
+    "rc": {
+      "root_id": "IOKNFDJFGDH",
+      "list": "PFALHAKIILD",
+      "node_id": "OIFGMOHKPOI",
+      "next": "KMLAFCBMFEI",
+      "text_hash": "OACNIBLFFDI"
+    },
+    "alt": {
+      "root_id": "AADKDKPMGNO",
+      "list": "GALIDJOEHOC",
+      "node_id": "NFIEHACCECI",
+      "next": "GBLICFDCPCK",
+      "text_hash": "AIGJBMCHCJG",
+      "text_mapping": "unresolved_codec"
+    },
+    "third": {
+      "root_id": "LDLMECNIJFC",
+      "list": "GDDPNNHLGBL",
+      "node_id": "ANKFNLMKOII",
+      "next": "OMAHHDBCAPB",
+      "text_hash": "DMIFDJDEFAL"
+    },
+    "normalized": {
+      "root_id": "talkId",
+      "list": "dialogList",
+      "node_id": "id",
+      "next": "nextDialogs",
+      "text_hash": "talkContentTextMapHash"
+    },
+    "older_a": {
+      "root_id": "FEOACBMDCKJ",
+      "list": "AAOAAFLLOJI",
+      "node_id": "CCFPGAKINNB",
+      "next": "FNNPCGIAELE",
+      "text_hash": "BDOKCLNNDGN"
+    },
+    "older_b": {
+      "root_id": "PBAEPDPNKEJ",
+      "list": "KJNKFMPAGAA",
+      "node_id": "JOLEJEFDNJJ",
+      "next": "CLMNEDLMAJL",
+      "text_hash": "EMKCOIBADBJ"
+    },
+    "older_c": {
+      "root_id": "ADHLLDAPKCM",
+      "list": "MOEOFGCKILF",
+      "node_id": "ILHDNJDDEOP",
+      "next": "OCPFKNFFMMF",
+      "text_hash": "GABLFFECBDO"
+    },
+    "older_d": {
+      "root_id": "LBPGKDMGFBN",
+      "list": "LOJEOMAPIIM",
+      "node_id": "BLKKAMEMBBJ",
+      "next": "FLCJOHFLGND",
+      "text_hash": "CMKPOJOEHHA"
+    }
+  },
+  "reference_fields": {
+    "rc": {
+      "id": "OIFGMOHKPOI",
+      "init": "MCIAGDCECPL"
+    },
+    "alt": {
+      "id": "NFIEHACCECI",
+      "init": "BKHBKMLIPLN"
+    },
+    "normalized": {
+      "id": "id",
+      "init": "initDialog"
+    },
+    "older_a": {
+      "id": "CCFPGAKINNB",
+      "init": null
+    },
+    "older_b": {
+      "id": "JOLEJEFDNJJ",
+      "init": "FBALOFKGJKN"
+    },
+    "blossom": {
+      "id": "ANKFNLMKOII",
+      "init": "GIIPBNJFFAK"
+    }
+  },
+  "quest_fields": {
+    "rc": {
+      "id": "OIFGMOHKPOI",
+      "references": "OJACLOOEAMG",
+      "subquests": "EBNBLBEIFFJ"
+    },
+    "alt": {
+      "id": "NFIEHACCECI",
+      "references": "NFFIGDHFAJG",
+      "subquests": "MEGJPCLADOG"
+    }
+  },
+  "namespace": "physical_dialogue_program_native_talk_id",
+  "wrapper_exclusion": "reference/config declarations without dialogue-program list are not dialogue-root candidates; delivered separately",
+  "unresolved_policy": "candidate_search_complete=false; never infer zero candidates or absence",
+  "text_mapping_contract": {
+    "literal_lookup": "Physical raw integer lookup is preserved in locator_json even when encoding is unresolved; it does not establish semantic text absence.",
+    "alt": "AIGJBMCHCJG is a raw content-shaped locator; +512 versus XOR512 is unresolved. No transformed text is delivered.",
+    "unresolved_status": "mapping_unresolved",
+    "unresolved_raw_text": null
+  }
+}
