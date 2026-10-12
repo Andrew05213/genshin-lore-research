@@ -14,7 +14,7 @@ READONLY=ToolAnnotations(readOnlyHint=True,destructiveHint=False,idempotentHint=
 
 def create_server(service:ResearchQuery)->MCPServer:
  handoff=getattr(service,'citation_handoff',None)
- server=MCPServer(name="genshin-lore-research",version="1.0.0",instructions="Frozen evidence research profile; no latest/default run selection." + (" Opt-in citation transport: use supplied [H...:R...:E...] handles in evidence_ref inputs and near final claims; inspect final material. Program expands exact refs after capture, not claims. Handles expire with this connection." if handoff else ""))
+ server=MCPServer(name="genshin-lore-research",version="1.0.0",instructions="Frozen evidence research profile; no latest/default run selection. Search literal subject keywords, not whole questions. For dialogue investigations, read source-connected context with read_evidence view='dialogue' and supplied cursors; follow dialogue_predecessor for earlier context when needed. Source-role labels are not proof of a unique story actor. Cite returned text refs after inspect. Keep source facts, character statements, interpretation and prediction separate. Branch connections do not prove playback order. Missing titles are not permission to invent a quest or scene. Stop when concrete questions are answered; do not repeat equivalent searches." + (" Opt-in citation transport: use supplied [H...:R...:E...] handles in evidence_ref inputs and near final claims; inspect final material. Program expands exact refs after capture, not claims. Handles expire with this connection." if handoff else ""))
  def wrap(fn,*a,**kw):
   try:
    args=list(a)
@@ -30,9 +30,9 @@ def create_server(service:ResearchQuery)->MCPServer:
  def describe_corpus(corpus_ref:str,detail:str|None=None)->dict[str,Any]:return wrap(service.describe,corpus_ref,detail)
  @server.tool(name="search_evidence",description="Literal search by default; optional corpus-backed lexical, semantic, or sparse-first hybrid candidate discovery with exact evidence recheck.",annotations=READONLY)
  def search_evidence(corpus_ref:str,query:str,locale:str|None=None,families:list[str]|None=None,source_prefix:str|None=None,limit:int=20,cursor:str|None=None,mode:str="literal",domain:str|None=None,story_release:str|None=None)->dict[str,Any]:return wrap(service.search,corpus_ref,query,locale,families,source_prefix,limit,cursor,mode,domain,story_release)
- @server.tool(name="read_evidence",description="Read exact evidence and bounded same-container context.",annotations=READONLY)
- def read_evidence(corpus_ref:str,evidence_ref:str,before:int=0,after:int=0,limit:int=20,cursor:str|None=None)->dict[str,Any]:return wrap(service.read,corpus_ref,evidence_ref,before,after,limit,cursor)
- @server.tool(name="follow_evidence",description="Follow only stored source-authored evidence relations.",annotations=READONLY)
+ @server.tool(name="read_evidence",description="Read exact evidence. Default physical view preserves same-container before/after. For Dialog/Talk, view='dialogue' returns bounded source-connected nodes, source-role names and supported quest title candidates; reuse its cursor with the same anchor/limit/locale. Branch links are not narrative chronology. Inspect the returned text refs, not node IDs.",annotations=READONLY)
+ def read_evidence(corpus_ref:str,evidence_ref:str,before:int=0,after:int=0,limit:int=20,cursor:str|None=None,view:str='physical',locale:str='CHS')->dict[str,Any]:return wrap(service.read,corpus_ref,evidence_ref,before,after,limit,cursor,view=view,locale=locale)
+ @server.tool(name="follow_evidence",description="Follow only source-authored evidence relations. For Dialog/Talk, relation_kind='dialogue_predecessor' finds checked local incoming links to read earlier context; it is not narrative chronology.",annotations=READONLY)
  def follow_evidence(corpus_ref:str,evidence_ref:str,relation_kind:str|None=None,limit:int=20,cursor:str|None=None,resolve_targets:bool=True)->dict[str,Any]:return wrap(service.follow,corpus_ref,evidence_ref,relation_kind,limit,cursor,resolve_targets)
  @server.tool(name="inspect_evidence",description="Return citation-grade physical provenance for exact evidence.",annotations=READONLY)
  def inspect_evidence(corpus_ref:str,evidence_ref:str)->dict[str,Any]:return wrap(service.inspect,corpus_ref,evidence_ref)

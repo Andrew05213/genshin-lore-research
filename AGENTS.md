@@ -19,3 +19,4 @@
 - 原文引用支持紧邻事实；保留来源限定语，解释和预测与事实分开。
 - 已配置研究服务时，研究 Agent 通过 MCP 读取并检查引用。构建器与独立验证器可以直接读取上游源码。
 - 允许互联网研究、文学解释与预测，分别标明来源、依据和假设。
+- 对白研究先取得必要前后文和来源角色标注，再解释内容；使用声明的 `read_evidence(view="dialogue")` 与续读 cursor，前驱由 `follow_evidence(relation_kind="dialogue_predecessor")` 取得。来源引用解析与唯一剧情人物身份分别判断，不能把遍历顺序写成播放顺序。具体支持范围见 [对白阅读](docs/DIALOGUE_READING.md)。

@@ -44,6 +44,7 @@ git -C data/AnimeGameData checkout --detach 9587d1afbd9ab0419cdd00dc05ecd114b9e3
 - **检索与证据分离**：literal 是默认检索方式；lexical/semantic/hybrid 用于显式发现候选，最终引用仍回读原始证据。
 - **关系保留限制**：同名、相同 ID 或相似文本不自动证明同一人物、说话者、归属或剧情顺序。
 - **按需读取**：实现包含 Book/Story 有界续读和引用检查，不以少量摘录冒充完整正文。
+- **对白上下文**：显式对白阅读路径保留来源角色标注、分支、续读与可核验的任务标题候选；不按编号或相同台词猜说话者和任务归属。启动与限制见 [对白阅读指南](docs/DIALOGUE_READING.md)。
 
 完整入口生成本次数据的 bundle、profile 和运行配置；单个组件成功不等于整库可用。literal 是该入口的默认发现方式，semantic overlay 未随基础数据自动构建。生成数据经过独立来源核验，但不自动继承原部署的正式 release 验收身份，也不声明全游戏覆盖。详见 [架构说明](docs/ARCHITECTURE.md)。
 

@@ -481,7 +481,18 @@ class ResearchQuery:
  def _order_position(self,row,mode):
   if mode=='physical_ordinal':return {'null_ordinal':int(row['ordinal'] is None),'ordinal':int(row['ordinal'] or 0),'child_id':str(row['child_id'] or ''),'id':int(row['id'])}
   return {'source_path':str(row['text_source_path']),'pointer':str(row['text_source_pointer']),'child_id':str(row['child_id'] or ''),'id':int(row['id'])}
- def read(self,corpus_ref,evidence_ref,before=0,after=0,limit=50,cursor=None):
+ def _decorate_read(self,item,row,container):
+  result=self._decorate_context(item,row,container)
+  from .research_dialogue_context import DialogueContext
+  dialogue=DialogueContext(self)
+  if dialogue.supports(container):result['dialogue_source']=dialogue.card(container,row['locale'] if row is not None and row['locale'] in ('CHS','EN','JP') else 'CHS')
+  return result
+ def read(self,corpus_ref,evidence_ref,before=0,after=0,limit=50,cursor=None,view='physical',locale='CHS'):
+  if view=='dialogue':
+   if before or after:raise ValueError('dialogue view uses source connections, not before/after windows')
+   from .research_dialogue_context import DialogueContext
+   return DialogueContext(self).read(corpus_ref,evidence_ref,limit,cursor,locale)
+  if view!='physical':raise ValueError('read view must be physical or dialogue')
   self._require(corpus_ref);ref=decode_ref(evidence_ref);limit=max(1,min(int(limit),100));before=max(0,min(int(before),50));after=max(0,min(int(after),50))
   if ref['kind']=='text':
    row=self._text_for(ref);container=self.db.execute('select * from research_container where id=?',(row['container_id'],)).fetchone();policy=self._ordering_policy(container);position=self._order_position(row,policy['mode']);tagged=[]
@@ -492,7 +503,7 @@ class ResearchQuery:
    for side,x in tagged:self._recheck_text(x);context.append({'evidence_ref':self._text_ref(x),'ordinal':x['ordinal'],'locale':x['locale'],'raw_text':x['raw_text'],'pointer':x['text_source_pointer'],'context_position':side})
    truncated=False
    while context and len(json.dumps({'raw_text':row['raw_text'],'context':context},ensure_ascii=False,separators=(',',':')).encode())>220000:context.pop();truncated=True
-   return self._decorate_context({'evidence_ref':evidence_ref,'container_ref':self._container_ref(container),'raw_text':row['raw_text'],'provenance':self._text_provenance(row),'context':context,'context_scope':'same physical Talk container' if container['container_kind']=='talk_root' else 'same physical container','physical_container':container['occurrence_id'],'ordering_basis':policy['basis'],'before_delivered':sum(x['context_position']=='before' for x in context),'after_delivered':sum(x['context_position']=='after' for x in context),'context_supported':policy['context_supported'],'context_truncated':truncated,'recommended_next_actions':['inspect_evidence','follow_evidence']},row,container)
+   return self._decorate_read({'evidence_ref':evidence_ref,'container_ref':self._container_ref(container),'raw_text':row['raw_text'],'provenance':self._text_provenance(row),'context':context,'context_scope':'same physical Talk container' if container['container_kind']=='talk_root' else 'same physical container','physical_container':container['occurrence_id'],'ordering_basis':policy['basis'],'before_delivered':sum(x['context_position']=='before' for x in context),'after_delivered':sum(x['context_position']=='after' for x in context),'context_supported':policy['context_supported'],'context_truncated':truncated,'recommended_next_actions':['inspect_evidence','follow_evidence']},row,container)
   container=self._container_for(ref)
   if isinstance(container,dict) and container.get('adapter_runtime'):
    if cursor is not None:raise ValueError('cursor scope mismatch')
@@ -503,7 +514,7 @@ class ResearchQuery:
    if len(json.dumps({'context':items+[item]},ensure_ascii=False,separators=(',',':')).encode())>220000:break
    items.append(item)
   more=len(rows)>len(items);last_row=items and rows[len(items)-1];position=self._order_position(last_row,policy['mode']) if last_row else None
-  return self._decorate_context({'evidence_ref':evidence_ref,'metadata':self._container_payload(container),'context':items,'delivered_count':len(items),'next_cursor':self._cursor(scope,position) if more and position else None,'scope_complete':not more,'context_scope':'same physical Talk container' if container['container_kind']=='talk_root' else 'same physical container','physical_container':container['occurrence_id'],'ordering_basis':policy['basis'],'context_supported':policy['context_supported'],'partial':False,'recommended_next_actions':['inspect_evidence','follow_evidence']},None,container)
+  return self._decorate_read({'evidence_ref':evidence_ref,'metadata':self._container_payload(container),'context':items,'delivered_count':len(items),'next_cursor':self._cursor(scope,position) if more and position else None,'scope_complete':not more,'context_scope':'same physical Talk container' if container['container_kind']=='talk_root' else 'same physical container','physical_container':container['occurrence_id'],'ordering_basis':policy['basis'],'context_supported':policy['context_supported'],'partial':False,'recommended_next_actions':['inspect_evidence','follow_evidence']},None,container)
  def _container_payload(self,r):return {'family':r['evidence_family'],'contract':r['evidence_contract'],'parser':r['evidence_parser'],'run':r['evidence_run'],'occurrence_id':r['occurrence_id'],'container_kind':r['container_kind'],'source_path':r['source_path'],'source_pointer':r['source_pointer']}
  def _text_provenance(self,r):return {'kind':'text','snapshot':self.manifest['snapshot'],'source_file':r['text_source_path'],'source_file_sha256':r['text_source_file_sha256'],'source_git_blob':r['text_source_git_blob'],'source_pointer':r['text_source_pointer'],'physical_pair_ordinal':r['physical_pair_ordinal'],'family':r['evidence_family'],'contract':r['evidence_contract'],'parser':r['evidence_parser'],'run':r['evidence_run'],'occurrence':r['occurrence_id'],'child':r['child_id']}
  def inspect(self,corpus_ref,evidence_ref):
@@ -557,6 +568,13 @@ class ResearchQuery:
     if name in cols and got[name] is not None and str(got[name])!=str(c[projected]):raise ResearchUnavailable('relation candidate target drift: '+projected)
   if 'npc_id' in cols and str(got['npc_id'])!=str(c['raw_target']):raise ResearchUnavailable('relation candidate raw target drift')
  def follow(self,corpus_ref,evidence_ref,relation_kind=None,limit=50,cursor=None,resolve_targets=True):
+  if relation_kind=='dialogue_predecessor':
+   from .research_dialogue_context import DialogueContext
+   result=DialogueContext(self).predecessors(corpus_ref,evidence_ref,limit,cursor)
+   if not resolve_targets:
+    for item in result['items']:
+     for candidate in item['candidates']:candidate['target_evidence_ref']=None
+   return result
   self._require(corpus_ref);ref=decode_ref(evidence_ref);container=self._container_for(ref) if ref['kind']=='container' else self.db.execute('select c.* from research_text t join research_container c on c.id=t.container_id where t.id=?',(self._text_for(ref)['id'],)).fetchone();limit=max(1,min(int(limit),100));scope={'op':'follow','container':container['id'],'kind':relation_kind,'limit':limit};state=self._after(cursor,scope)
   if isinstance(container,dict) and container.get('adapter_runtime'):return {'items':[],'delivered_count':0,'next_cursor':None,'scope_complete':True,'partial':False,'unsupported_relation_scope':False,'recommended_next_actions':['read_evidence','inspect_evidence']}
   dynamic=relations_for(self,container,relation_kind)
