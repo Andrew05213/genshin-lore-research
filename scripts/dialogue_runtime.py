@@ -4,6 +4,7 @@ Does not mutate receipts, regenerate the index, or claim release acceptance.
 """
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -78,6 +79,7 @@ def main():
     p.add_argument('--released-runtime-root', type=Path,
                    help='optional retained v1.1 code root; runs its original formal qualification, never falls back')
     p.add_argument('--citation-receipts', type=Path,
+                   default=os.environ.get('GENSHIN_CITATION_HANDOFF_DIR'),
                    help='optional existing scoped-handle transport; private receipts remain local')
     a = p.parse_args(); query = open_query(a.config, a.released_runtime_root)
     try:
