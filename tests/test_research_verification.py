@@ -5,7 +5,7 @@ import sqlite3
 
 import pytest
 
-from scripts.validators.research_dataset import verify_projection_counts
+from scripts.validators.research_dataset import verify_projection_counts, verify_source_declarations
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,6 +27,26 @@ def fixture():
 def test_all_declared_rowsets_present():
     db = fixture()
     verify_projection_counts(db)
+    db.close()
+
+
+def test_entire_missing_component_is_not_successful_empty_verification():
+    db = fixture()
+    db.execute('CREATE TABLE source_artifact(source_key,artifact_family,artifact_contract,artifact_parser,artifact_run,size_bytes,sha256)')
+    db.execute("INSERT INTO source_artifact VALUES('fixture','family','contract','parser','run',1,'seal')")
+    component = {'source_key': 'fixture', 'family': 'family', 'contract': 'contract',
+                 'parser': 'parser', 'run': 'run', 'artifact': {'size_bytes': 1, 'sha256': 'seal'},
+                 'adapter': 'formal_compatible'}
+    manifest = {'components': [component]}
+    verify_source_declarations(db, manifest)
+    db.execute('DELETE FROM adapter_coverage')
+    with pytest.raises(ValueError, match='projection coverage is missing'):
+        verify_source_declarations(db, manifest)
+    component['adapter'] = 'dependency_only'
+    verify_source_declarations(db, manifest)  # Explicit nonprojected dependency remains legal.
+    db.execute('DELETE FROM source_artifact')
+    with pytest.raises(ValueError, match='source component rowset differs'):
+        verify_source_declarations(db, manifest)
     db.close()
 
 

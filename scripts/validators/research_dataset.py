@@ -16,6 +16,28 @@ from genshin_lore.research_index import sha256_file
 KEYS={}
 
 
+def verify_source_declarations(index, manifest):
+    """An omitted component must not turn an empty loop into success."""
+    expected = {c['source_key']: c for c in manifest['components']}
+    if len(expected) != len(manifest['components']):
+        raise ValueError('duplicate manifest source key')
+    actual = {r['source_key']: r for r in index.execute('SELECT * FROM source_artifact')}
+    if set(actual) != set(expected):
+        raise ValueError('index source component rowset differs from manifest')
+    covered = {r[0] for r in index.execute('SELECT DISTINCT source_key FROM adapter_coverage')}
+    for key, component in expected.items():
+        row = actual[key]
+        for field in ('family', 'contract', 'parser', 'run'):
+            if row['artifact_'+field] != component[field]:
+                raise ValueError('index source identity differs from manifest: '+key)
+        if (row['size_bytes'], row['sha256']) != (component['artifact']['size_bytes'], component['artifact']['sha256']):
+            raise ValueError('index source seal differs from manifest: '+key)
+        if component['adapter'] != 'dependency_only' and key not in covered:
+            raise ValueError('component projection coverage is missing: '+key)
+    if not covered <= set(expected):
+        raise ValueError('coverage references undeclared component')
+
+
 def verify_projection_counts(index):
     """Check actual index rowsets, not the builder's indexed_count claims.
 
@@ -108,6 +130,7 @@ def owner(src,table,record):
 
 def verify_connection(index,manifest,bindings):
     index.row_factory=sqlite3.Row
+    verify_source_declarations(index, manifest)
     provenance_path=Path(bindings['provenance_artifact']);provenance_seal=manifest['provenance_dependency']
     if provenance_path.stat().st_size!=provenance_seal['size_bytes'] or sha256_file(provenance_path)!=provenance_seal['sha256']:raise ValueError('independent snapshot-local provenance seal drift')
     provenance=sqlite3.connect(provenance_path.as_uri()+'?mode=ro&immutable=1',uri=True)
