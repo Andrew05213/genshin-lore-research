@@ -9,11 +9,78 @@ import argparse
 import hashlib
 import json
 import sqlite3
+import sys
 from pathlib import Path
 
+# Also support the documented source-checkout script invocation from any cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from genshin_lore.research_index import sha256_file
+from scripts.validators.research_index import expected_adapter_tables, explicit_text_tables
 
 KEYS={}
+
+# Independent source contracts, not the builder's emitted coverage rows or
+# projection functions. None means that this adapter deliberately has no
+# container/text projection (e.g. binding-only and character text overlays).
+SOURCE_PROJECTIONS = {
+    'character_foundation': ('foundation_primary_row', None),
+    'character_text': (None, 'candidate'),
+    'quest_review_binding': (None, None),
+    'quest_narrative_archive': ('excel_row', 'text_candidate'),
+    'quest_review_archive': ('evidence_row', 'text_candidate'),
+    'codexquest_archive': ('codex_root', 'codex_text_candidate'),
+    'native_message': ('native71_row', 'native71_text'),
+    'event_native_text_17': ('event71_row', 'event71_text'),
+    'native_successor_physical': ('row_occurrence', 'text_candidate'),
+    'native_high_value_physical': ('row_occurrence', 'text_candidate'),
+    'event_physical_13': ('physical_row', 'textmap_candidate'),
+    'event_physical_16': ('selected_occurrence', None),
+    'event_physical_18': ('selected_occurrence', None),
+    'quest_talk_physical': ('physical_container', 'text_slot'),
+    'narrative_npc': ('physical_row', 'text_candidate'),
+    'narrative_dialog': ('physical_row', 'text_candidate'),
+    'narrative_reminder': ('physical_row', 'text_candidate'),
+}
+SOURCE_RELATIONS = {
+    'character_foundation': ('foundation_relation', 'foundation_candidate'),
+    'quest_review_binding': ('bound_locator', 'bound_candidate'),
+    'native_message': ('native71_relation', 'native71_candidate'),
+    'event_native_text_17': ('event71_relation', 'event71_candidate'),
+    'native_successor_physical': ('relation_locator', 'relation_candidate'),
+    'native_high_value_physical': ('relation_locator', 'relation_candidate'),
+    'codexquest_archive': ('codex_navigation', 'codex_candidate'),
+    'narrative_npc': ('locator', 'physical_candidate'),
+    'narrative_dialog': ('locator', 'physical_candidate'),
+    'narrative_reminder': ('locator', 'physical_candidate'),
+}
+
+
+def verify_required_source_projections(index, manifest, sources):
+    """Coverage cannot choose its own denominator or downgrade required work."""
+    for component in manifest['components']:
+        key, mode = component['source_key'], component['adapter']
+        if mode == 'dependency_only':
+            continue
+        src = sources[key]
+        if mode in ('core33', 'formal_compatible', 'talk_physical'):
+            required = expected_adapter_tables(src, component['family'])
+            full = {(kind, table) for kind, table in required if kind == 'container' or
+                    (kind == 'text' and table in explicit_text_tables(src, component['family']))}
+        else:
+            if mode not in SOURCE_PROJECTIONS:
+                raise ValueError('unknown required source projection contract: '+mode)
+            required = {(kind, table) for kind, table in
+                        zip(('container', 'text'), SOURCE_PROJECTIONS[mode]) if table is not None}
+            required.update(zip(('relation', 'candidate'), SOURCE_RELATIONS.get(mode, ())))
+            full = required
+        declarations = {(r['projection_kind'], r['source_table']): r for r in index.execute(
+            'SELECT * FROM adapter_coverage WHERE source_key=?', (key,))}
+        if not required <= declarations.keys():
+            raise ValueError('required source projection declaration missing: '+key)
+        for projection in full:
+            row = declarations[projection]
+            if row['status'] != 'complete' or row['indexed_count'] != row['denominator']:
+                raise ValueError('required source projection incomplete: '+key+': '+projection[1])
 
 
 def verify_source_declarations(index, manifest):
@@ -144,6 +211,7 @@ def verify_connection(index,manifest,bindings):
         source_seals.append({'source_key':key,'artifact':seal})
     nc=nt=nr=nk=0;terminal=[];family_sources={};reuse_rows=[];second_hops={'verified_indexed_targets':0,'verified_projection_reuse_targets':0,'not_index_addressable':0,'target_scope_unknown':0,'locator_not_declared_as_target_primary_native_id':0}
     try:
+        verify_required_source_projections(index, manifest, sources)
         verify_projection_counts(index)
         for r in index.execute('SELECT * FROM research_container ORDER BY id'):
             src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
