@@ -151,6 +151,66 @@ def test_verifier_cannot_change_artifact(tmp_path):
     assert not (build.output/'fixture/verified.json').exists()
 
 
+def r0_fixture(tmp_path, monkeypatch, **overrides):
+    from types import SimpleNamespace
+    from scripts import build as build_script
+    build = job(tmp_path)
+
+    def native_builder(source, path, **kwargs):
+        assert not path.exists(), 'R0 builder reran over an existing artifact'
+        path.write_bytes(b'synthetic R0 artifact')
+        actual = seal(path)
+        return {'status': 'verified', 'artifact_size_bytes': actual['size_bytes'],
+                'artifact_sha256': actual['sha256'], 'snapshot_id': build_script.SNAPSHOT,
+                **overrides}
+
+    monkeypatch.setattr(build_script, 'module',
+                        lambda _: SimpleNamespace(build_r0_artifact=native_builder))
+    return build, build_script
+
+
+def test_r0_native_report_is_adapted_verified_and_resumable(tmp_path, monkeypatch):
+    build, script = r0_fixture(tmp_path, monkeypatch)
+    calls = []
+
+    def independent_verifier(name, arguments, result):
+        assert name == 'validators/source_archive.py'
+        assert Path(arguments[3]) == build.path('r0')
+        calls.append(name)
+        return {'status': 'PASS'}
+
+    monkeypatch.setattr(script, 'script_verify', independent_verifier)
+    build.r0()
+    report = json.loads((build.output/'r0/build.json').read_text())
+    assert report['status'] == 'verified'  # Builder status is not qualification.
+    assert report['artifact'] == seal(build.path('r0'))
+    assert report['artifact_size_bytes'] == report['artifact']['size_bytes']
+    assert report['artifact_sha256'] == report['artifact']['sha256']
+    assert (build.output/'r0/verified.json').is_file()
+    monkeypatch.setattr(script, 'script_verify', lambda *_: pytest.fail('verifier reran'))
+    build.r0()
+    assert calls == ['validators/source_archive.py']
+
+
+@pytest.mark.parametrize('wrong', [{'artifact_size_bytes': 0}, {'artifact_sha256': '0' * 64}])
+def test_r0_native_seal_mismatch_still_rejects(tmp_path, monkeypatch, wrong):
+    build, script = r0_fixture(tmp_path, monkeypatch, **wrong)
+    monkeypatch.setattr(script, 'script_verify', lambda *_: pytest.fail('bad seal reached verifier'))
+    with pytest.raises(ValueError, match='builder report artifact seal mismatch'):
+        build.r0()
+    assert not (build.output/'r0/verified.json').exists()
+    assert list((build.output/'r0').glob('failure-*.json'))
+
+
+def test_r0_builder_verified_status_cannot_replace_source_verification(tmp_path, monkeypatch):
+    build, script = r0_fixture(tmp_path, monkeypatch)
+    monkeypatch.setattr(script, 'script_verify', lambda *_: {'status': 'NOT_RUN'})
+    with pytest.raises(ValueError, match='verification rejected'):
+        build.r0()
+    assert not (build.output/'r0/verified.json').exists()
+    assert json.loads((build.output/'r0/verify.json').read_text())['status'] == 'NOT_RUN'
+
+
 @pytest.mark.parametrize('optimized', [False, True])
 def test_research_schema_validation_survives_python_optimization(optimized):
     code = """import sqlite3

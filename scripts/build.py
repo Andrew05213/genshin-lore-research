@@ -307,8 +307,14 @@ class Rebuild:
         b=module('batch_m3_physical')
         parser='pb-batch-m3-r0-physical-7.1:23e78b08f997ab610cd55a11f91f2f4c252260af'
         run='ir-batch-m3-r0-physical-7.1:9fc2c32cc6bb81dd6091e504d43e40bdcf930ea2'
-        self.task('r0',lambda p:b.build_r0_artifact(self.source,p,repo_root=ROOT,snapshot_id=SNAPSHOT,
-                  parser_build_id=parser,ingest_run_id=run,artifact_limit_bytes=6*1024**3),
+        def build(path):
+            report=b.build_r0_artifact(self.source,path,repo_root=ROOT,snapshot_id=SNAPSHOT,
+                  parser_build_id=parser,ingest_run_id=run,artifact_limit_bytes=6*1024**3)
+            # Adapt R0's native report; task still compares this declared seal
+            # to actual bytes and requires the independent source verifier.
+            return {**report,'artifact':{'size_bytes':report['artifact_size_bytes'],
+                                        'sha256':report['artifact_sha256']}}
+        self.task('r0',build,
                   lambda p,r:script_verify('validators/source_archive.py',('--source',self.source,'--artifact',p,'--output',p.parent/'source-oracle.json'),p.parent/'source-oracle.json'))
 
     def readable(self):
