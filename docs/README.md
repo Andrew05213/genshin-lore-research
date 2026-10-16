@@ -14,6 +14,7 @@
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |
+| [工程质量记录](engineering-quality.md) | 构建可信度、输出隔离、MCP 兼容、CI、实际执行与未运行项 |
 | [目录与命名规范](naming.md) | 常用入口、旧命令迁移与保留历史名称的原因 |
 | [源码分发与数据留存](distribution.md) | 分发文件、生成数据与许可状态 |
 | [构建验证记录](history/component-build-validation.json) | 固定快照和已执行构建的机器可读结果 |

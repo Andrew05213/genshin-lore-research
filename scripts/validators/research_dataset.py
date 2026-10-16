@@ -16,6 +16,62 @@ from genshin_lore.research_index import sha256_file
 KEYS={}
 
 
+def verify_source_declarations(index, manifest):
+    """An omitted component must not turn an empty loop into success."""
+    expected = {c['source_key']: c for c in manifest['components']}
+    if len(expected) != len(manifest['components']):
+        raise ValueError('duplicate manifest source key')
+    actual = {r['source_key']: r for r in index.execute('SELECT * FROM source_artifact')}
+    if set(actual) != set(expected):
+        raise ValueError('index source component rowset differs from manifest')
+    covered = {r[0] for r in index.execute('SELECT DISTINCT source_key FROM adapter_coverage')}
+    for key, component in expected.items():
+        row = actual[key]
+        for field in ('family', 'contract', 'parser', 'run'):
+            if row['artifact_'+field] != component[field]:
+                raise ValueError('index source identity differs from manifest: '+key)
+        if (row['size_bytes'], row['sha256']) != (component['artifact']['size_bytes'], component['artifact']['sha256']):
+            raise ValueError('index source seal differs from manifest: '+key)
+        if component['adapter'] != 'dependency_only' and key not in covered:
+            raise ValueError('component projection coverage is missing: '+key)
+    if not covered <= set(expected):
+        raise ValueError('coverage references undeclared component')
+
+
+def verify_projection_counts(index):
+    """Check actual index rowsets, not the builder's indexed_count claims.
+
+    Every present row is subsequently source-reconstructed by this oracle.
+    Counts plus unique physical locators prevent omission/duplication from
+    being hidden by an unchanged adapter_coverage report.
+    """
+    if index.execute('PRAGMA foreign_key_check').fetchone() is not None:
+        raise ValueError('Research index contains dangling physical references')
+    declarations = {}
+    for row in index.execute('SELECT * FROM adapter_coverage'):
+        key = (row['source_key'], row['projection_kind'], row['source_table'])
+        if key in declarations:
+            raise ValueError('ambiguous duplicate coverage declaration')
+        declarations[key] = row['indexed_count']
+    actual = {}
+    for kind, table in [('container', 'research_container'), ('text', 'research_text'),
+                        ('relation', 'research_relation'), ('candidate', 'research_candidate')]:
+        relation_join = ' JOIN research_relation z ON z.id=r.relation_id' if kind == 'candidate' else ''
+        source = 'z.source_key' if kind == 'candidate' else 'r.source_key'
+        groups = index.execute(f'SELECT {source},r.source_table,COUNT(*) FROM {table} r{relation_join} '
+                               f'GROUP BY {source},r.source_table')
+        for source_key, source_table, count in groups:
+            actual[source_key, kind, source_table] = count
+        duplicates = index.execute(f'SELECT 1 FROM {table} r{relation_join} GROUP BY {source},'
+            'r.source_table,r.pk_column,r.pk_value HAVING COUNT(*)>1 LIMIT 1').fetchone()
+        if duplicates:
+            raise ValueError('duplicate exact source occurrence in '+table)
+    if any(key not in declarations for key in actual):
+        raise ValueError('indexed rowset lacks coverage declaration')
+    if any(actual.get(key, 0) != count for key, count in declarations.items()):
+        raise ValueError('actual indexed rowset differs from coverage count')
+
+
 def canon(value):
     def blob(v):
         if isinstance(v,bytes):return {'bytes_sha256':hashlib.sha256(v).hexdigest(),'size_bytes':len(v)}
@@ -74,6 +130,7 @@ def owner(src,table,record):
 
 def verify_connection(index,manifest,bindings):
     index.row_factory=sqlite3.Row
+    verify_source_declarations(index, manifest)
     provenance_path=Path(bindings['provenance_artifact']);provenance_seal=manifest['provenance_dependency']
     if provenance_path.stat().st_size!=provenance_seal['size_bytes'] or sha256_file(provenance_path)!=provenance_seal['sha256']:raise ValueError('independent snapshot-local provenance seal drift')
     provenance=sqlite3.connect(provenance_path.as_uri()+'?mode=ro&immutable=1',uri=True)
@@ -87,6 +144,7 @@ def verify_connection(index,manifest,bindings):
         source_seals.append({'source_key':key,'artifact':seal})
     nc=nt=nr=nk=0;terminal=[];family_sources={};reuse_rows=[];second_hops={'verified_indexed_targets':0,'verified_projection_reuse_targets':0,'not_index_addressable':0,'target_scope_unknown':0,'locator_not_declared_as_target_primary_native_id':0}
     try:
+        verify_projection_counts(index)
         for r in index.execute('SELECT * FROM research_container ORDER BY id'):
             src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
             path=got.get('source_path',got.get('source_file_path'));ptr=got.get('pointer',got.get('source_pointer'))

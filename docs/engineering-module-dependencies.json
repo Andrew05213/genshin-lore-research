@@ -1,0 +1,2363 @@
+{
+  "method": "Conservative AST imports + literal import_module/module calls; build recipe literal bases; potential dependency, not runtime trace or proof of dead code",
+  "counts": {
+    "A_public_runtime": 106,
+    "B_current_build_only": 116,
+    "C_historical_entry_closure": 72,
+    "D_maintenance_only": 15,
+    "E_proven_unreachable": 0,
+    "unclassified_dynamic_review_required": 98
+  },
+  "groups": {
+    "A_public_runtime": [
+      "genshin_lore",
+      "genshin_lore._quest_corpus_db_audit",
+      "genshin_lore._quest_corpus_release_contract",
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m5d_retrieval",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.canary",
+      "genshin_lore.character_7_1_bounded",
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.character_phase4c2_manifest",
+      "genshin_lore.character_phase4c2_release_contract",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c4b_manifest",
+      "genshin_lore.character_phase4c5b_manifest",
+      "genshin_lore.citation_handoff",
+      "genshin_lore.db",
+      "genshin_lore.dialogue",
+      "genshin_lore.dialogue.context",
+      "genshin_lore.discovery",
+      "genshin_lore.errors",
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_filmfest_7_1_runtime",
+      "genshin_lore.event_legacy_7_1_runtime",
+      "genshin_lore.event_narrative_retrieval",
+      "genshin_lore.event_narrative_source",
+      "genshin_lore.event_native_text_7_1_runtime",
+      "genshin_lore.event_photo_echo_7_1_runtime",
+      "genshin_lore.event_successor_7_1_runtime",
+      "genshin_lore.event_tps_7_1_runtime",
+      "genshin_lore.family_evidence",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.lexical_discovery",
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.mail_7_1_runtime",
+      "genshin_lore.mail_archive_source",
+      "genshin_lore.mapping",
+      "genshin_lore.mcp_transport",
+      "genshin_lore.narrative_7_1_bounded",
+      "genshin_lore.narrative_7_1_contract",
+      "genshin_lore.narrative_7_1_verify",
+      "genshin_lore.narrative_assistant_7_1",
+      "genshin_lore.native_archive_retrieval",
+      "genshin_lore.native_aux_quest_7_1_compat",
+      "genshin_lore.native_book_music_7_1_compat",
+      "genshin_lore.native_message_7_1_runtime",
+      "genshin_lore.parsers",
+      "genshin_lore.pipeline",
+      "genshin_lore.quest_corpus_evidence",
+      "genshin_lore.quest_corpus_maintenance",
+      "genshin_lore.quest_corpus_manifest",
+      "genshin_lore.quest_derived_7_1_bounded",
+      "genshin_lore.quest_resolution",
+      "genshin_lore.quest_talk_scope",
+      "genshin_lore.quest_talk_source_verifier",
+      "genshin_lore.research71_candidate_adapters",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research71_minor_release",
+      "genshin_lore.research71_preview_server",
+      "genshin_lore.research71_release",
+      "genshin_lore.research71_successor",
+      "genshin_lore.research71_unified",
+      "genshin_lore.research_7_1_bounded",
+      "genshin_lore.research_adapters",
+      "genshin_lore.research_index",
+      "genshin_lore.research_navigation",
+      "genshin_lore.research_query",
+      "genshin_lore.research_refs",
+      "genshin_lore.research_server",
+      "genshin_lore.research_source_context",
+      "genshin_lore.research_story_7_0",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.semantic_discovery",
+      "genshin_lore.source",
+      "genshin_lore.source_context_7_1_build",
+      "genshin_lore.source_context_7_1_runtime",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.static_book1_maintenance",
+      "genshin_lore.static_book1_manifest",
+      "genshin_lore.static_book1_verification_contract",
+      "genshin_lore.static_phase4b2_maintenance",
+      "genshin_lore.static_phase4b2_manifest",
+      "genshin_lore.static_phase4b2_verification_contract",
+      "genshin_lore.static_phase4b3_manifest",
+      "genshin_lore.static_phase4b3_verification_contract",
+      "genshin_lore.static_phase4b5_reliquary_manifest",
+      "genshin_lore.static_phase4b5_reliquary_verification_contract",
+      "genshin_lore.static_phase4b6_material_manifest",
+      "genshin_lore.static_phase4b6_material_verification_contract",
+      "genshin_lore.talk_evidence",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.tutorial_phase4d2a_contract",
+      "genshin_lore.tutorial_phase4d2a_evidence",
+      "genshin_lore.tutorial_phase4d2a_maintenance",
+      "genshin_lore.tutorial_phase4d2a_manifest",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.tutorial_phase4d2b_contract",
+      "genshin_lore.tutorial_phase4d2b_evidence",
+      "genshin_lore.tutorial_phase4d2b_maintenance",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util",
+      "genshin_lore.wave1_rebuild_contract",
+      "genshin_lore.wave1_rebuild_maintenance",
+      "scripts.runtime_config",
+      "scripts.serve",
+      "scripts.serve_dialogue"
+    ],
+    "B_current_build_only": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m1_verifier",
+      "genshin_lore.batch_m2_avatar",
+      "genshin_lore.batch_m2_replay",
+      "genshin_lore.batch_m2_verifier",
+      "genshin_lore.batch_m3_physical",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.batch_release",
+      "genshin_lore.batch_space",
+      "genshin_lore.build_metrics",
+      "genshin_lore.character_7_1_foundation_build",
+      "genshin_lore.character_7_1_foundation_verify",
+      "genshin_lore.character_7_1_physical",
+      "genshin_lore.character_7_1_successor_build",
+      "genshin_lore.character_7_1_successor_verify",
+      "genshin_lore.character_7_1_voice",
+      "genshin_lore.codexquest_build",
+      "genshin_lore.codexquest_source",
+      "genshin_lore.codexquest_verify",
+      "genshin_lore.direct_text_7_1_build",
+      "genshin_lore.direct_text_7_1_source",
+      "genshin_lore.direct_text_7_1_verify",
+      "genshin_lore.direct_text_source",
+      "genshin_lore.document_7_1_build",
+      "genshin_lore.document_7_1_physical",
+      "genshin_lore.document_7_1_verify",
+      "genshin_lore.document_build",
+      "genshin_lore.document_source",
+      "genshin_lore.document_verify",
+      "genshin_lore.event13_7_1_physical",
+      "genshin_lore.event13_7_1_physical_verify",
+      "genshin_lore.event16_18_7_1_selection",
+      "genshin_lore.event16_18_7_1_selection_verify",
+      "genshin_lore.event_filmfest_7_1_build",
+      "genshin_lore.event_filmfest_7_1_verify",
+      "genshin_lore.event_legacy_7_1_build",
+      "genshin_lore.event_legacy_7_1_verify",
+      "genshin_lore.event_narrative_release",
+      "genshin_lore.event_native_text_7_1_build",
+      "genshin_lore.event_native_text_7_1_verify",
+      "genshin_lore.event_photo_echo_7_1_build",
+      "genshin_lore.event_photo_echo_7_1_verify",
+      "genshin_lore.event_successor_7_1_build",
+      "genshin_lore.event_successor_7_1_verify",
+      "genshin_lore.event_tps_7_1_build",
+      "genshin_lore.event_tps_7_1_verify",
+      "genshin_lore.gcg_card_7_1_build",
+      "genshin_lore.gcg_card_7_1_source",
+      "genshin_lore.gcg_card_7_1_verify",
+      "genshin_lore.gcg_card_build",
+      "genshin_lore.gcg_card_source",
+      "genshin_lore.gcg_card_verify",
+      "genshin_lore.loading_tips_7_1_build",
+      "genshin_lore.loading_tips_7_1_source",
+      "genshin_lore.loading_tips_7_1_verify",
+      "genshin_lore.loading_tips_build",
+      "genshin_lore.loading_tips_verify",
+      "genshin_lore.m3_7_1_provider_build",
+      "genshin_lore.m3_7_1_provider_integration",
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.mail_7_1_build",
+      "genshin_lore.mail_7_1_verify",
+      "genshin_lore.narrative_7_1_build",
+      "genshin_lore.native21_7_1_build",
+      "genshin_lore.native21_7_1_verify",
+      "genshin_lore.native26_7_1_physical",
+      "genshin_lore.native26_7_1_verify",
+      "genshin_lore.native_archive_build",
+      "genshin_lore.native_archive_verify",
+      "genshin_lore.native_aux_quest_7_1_build",
+      "genshin_lore.native_aux_quest_7_1_verify",
+      "genshin_lore.native_book_music_7_1_build",
+      "genshin_lore.native_book_music_7_1_verify",
+      "genshin_lore.native_bulk_7_1_build",
+      "genshin_lore.native_bulk_7_1_verify",
+      "genshin_lore.native_message_7_1_build",
+      "genshin_lore.native_message_7_1_verify",
+      "genshin_lore.quest_narrative_build",
+      "genshin_lore.quest_narrative_source",
+      "genshin_lore.quest_narrative_verify",
+      "genshin_lore.quest_review_build",
+      "genshin_lore.quest_review_source",
+      "genshin_lore.quest_review_verify",
+      "genshin_lore.quest_talk_7_1_build",
+      "genshin_lore.quest_talk_7_1_physical",
+      "genshin_lore.quest_talk_7_1_verify",
+      "genshin_lore.quest_talk_physical_build",
+      "genshin_lore.quest_talk_physical_shapes",
+      "genshin_lore.quest_talk_physical_verify",
+      "genshin_lore.readable_7_1_build",
+      "genshin_lore.readable_7_1_verify",
+      "genshin_lore.research71_candidate_relations",
+      "genshin_lore.schema20_7_1_candidate",
+      "genshin_lore.schema20_7_1_guards",
+      "genshin_lore.schema20_7_1_oracle",
+      "genshin_lore.schema20_7_1_special",
+      "genshin_lore.schema20_7_1_special_oracle",
+      "genshin_lore.shard_builder",
+      "genshin_lore.source_integrity",
+      "genshin_lore.storage_policy",
+      "genshin_lore.talk_physical_7_1",
+      "scripts.build",
+      "scripts.build_component",
+      "scripts.build_support",
+      "scripts.builders.codexquest",
+      "scripts.builders.quest_narrative",
+      "scripts.builders.quest_review",
+      "scripts.builders.quest_review_binding_v2",
+      "scripts.builders.research_dataset",
+      "scripts.maintenance.quest_review_fields",
+      "scripts.validators.codexquest",
+      "scripts.validators.quest_narrative",
+      "scripts.validators.quest_review",
+      "scripts.validators.quest_review_binding_v2",
+      "scripts.validators.talk_physical"
+    ],
+    "C_historical_entry_closure": [
+      "genshin_lore.artifact_io",
+      "genshin_lore.batch_m4_receipt",
+      "genshin_lore.batch_m4_release",
+      "genshin_lore.batch_m4_retrieval",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5e_receipt",
+      "genshin_lore.batch_m5e_retrieval",
+      "genshin_lore.batch_m5e_runtime_oracle",
+      "genshin_lore.batch_q2_uplift",
+      "genshin_lore.batch_r1_repository",
+      "genshin_lore.batch_r1_schema19",
+      "genshin_lore.batch_r2_retrieval",
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.batch_r3_uplift",
+      "genshin_lore.batch_r4_runtime",
+      "genshin_lore.character_lore_retrieval",
+      "genshin_lore.character_phase4c2_evidence",
+      "genshin_lore.character_phase4c4b_evidence",
+      "genshin_lore.character_phase4c4b_maintenance",
+      "genshin_lore.character_phase4c4b_release_contract",
+      "genshin_lore.character_phase4c5b_evidence",
+      "genshin_lore.character_phase4c5b_maintenance",
+      "genshin_lore.character_phase4c5b_release_contract",
+      "genshin_lore.character_retrieval",
+      "genshin_lore.cli",
+      "genshin_lore.codexquest_retrieval",
+      "genshin_lore.direct_text_retrieval",
+      "genshin_lore.document_retrieval",
+      "genshin_lore.gcg_card_retrieval",
+      "genshin_lore.loading_tips_retrieval",
+      "genshin_lore.mail_archive_retrieval",
+      "genshin_lore.mcp_server",
+      "genshin_lore.npc_dialogue_retrieval",
+      "genshin_lore.npc_dialogue_source",
+      "genshin_lore.phase4a_audit",
+      "genshin_lore.phase4d5_combined_gate",
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.quest_codex_phase4f3_receipt",
+      "genshin_lore.quest_codex_phase4f3_runtime_seal",
+      "genshin_lore.quest_codex_retrieval",
+      "genshin_lore.quest_evidence",
+      "genshin_lore.quest_narrative_retrieval",
+      "genshin_lore.quest_retrieval",
+      "genshin_lore.quest_review_retrieval",
+      "genshin_lore.quest_talk_bounded_retrieval",
+      "genshin_lore.quest_talk_completeness_retrieval",
+      "genshin_lore.quest_talk_immutable_retrieval",
+      "genshin_lore.quest_talk_physical_retrieval",
+      "genshin_lore.r0_retrieval",
+      "genshin_lore.r5_quest_talk_retrieval",
+      "genshin_lore.retrieval",
+      "genshin_lore.static_book1_evidence",
+      "genshin_lore.static_contracts",
+      "genshin_lore.static_phase4b2_evidence",
+      "genshin_lore.static_phase4b3_evidence",
+      "genshin_lore.static_phase4b3_maintenance",
+      "genshin_lore.static_phase4b5_reliquary_evidence",
+      "genshin_lore.static_phase4b5_reliquary_maintenance",
+      "genshin_lore.static_phase4b6_material_evidence",
+      "genshin_lore.static_phase4b6_material_maintenance",
+      "genshin_lore.static_retrieval",
+      "genshin_lore.talk_physical_closure_retrieval",
+      "genshin_lore.tutorial_retrieval",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_schema",
+      "genshin_lore.world_archive_phase4e2_stable_lock",
+      "genshin_lore.world_archive_phase4e3_contract",
+      "genshin_lore.world_archive_phase4e3_receipt",
+      "genshin_lore.world_archive_phase4e3_runtime_seal",
+      "genshin_lore.world_archive_retrieval"
+    ],
+    "D_maintenance_only": [
+      "scripts.check",
+      "scripts.check_dialogue",
+      "scripts.dialogue_daily",
+      "scripts.maintenance.native_book_music_scope",
+      "scripts.maintenance.native_quest_scope",
+      "scripts.validators.character_foundation",
+      "scripts.validators.character_successor",
+      "scripts.validators.core_provider",
+      "scripts.validators.event13_physical",
+      "scripts.validators.event16_18_selection",
+      "scripts.validators.narrative_family",
+      "scripts.validators.research_dataset",
+      "scripts.validators.research_index",
+      "scripts.validators.semantic",
+      "scripts.validators.source_archive"
+    ],
+    "E_proven_unreachable": [],
+    "unclassified_dynamic_review_required": [
+      "genshin_lore.avatar_codex_phase4g2_contract",
+      "genshin_lore.avatar_codex_phase4g2_evidence",
+      "genshin_lore.avatar_codex_phase4g2_maintenance",
+      "genshin_lore.avatar_codex_phase4g2_paths",
+      "genshin_lore.avatar_codex_phase4g2_release_oracle",
+      "genshin_lore.avatar_codex_phase4g2_schema",
+      "genshin_lore.batch_m3_inventory",
+      "genshin_lore.batch_m5c_projection",
+      "genshin_lore.batch_r1_verifier",
+      "genshin_lore.batch_r3_verifier",
+      "genshin_lore.batch_r4_release",
+      "genshin_lore.batch_r4_verifier",
+      "genshin_lore.batch_wave_retrieval",
+      "genshin_lore.character_lore_build",
+      "genshin_lore.character_lore_source",
+      "genshin_lore.character_lore_verify",
+      "genshin_lore.character_phase4c5c_evidence",
+      "genshin_lore.deterministic_merge",
+      "genshin_lore.direct_text_build",
+      "genshin_lore.direct_text_verify",
+      "genshin_lore.event13_7_1_trade_show",
+      "genshin_lore.event_narrative_archive_wave",
+      "genshin_lore.event_narrative_archive_wave_verify",
+      "genshin_lore.event_narrative_authority",
+      "genshin_lore.event_narrative_build",
+      "genshin_lore.event_narrative_filmfest",
+      "genshin_lore.event_narrative_filmfest_verify",
+      "genshin_lore.event_narrative_verify",
+      "genshin_lore.event_native_text_7_1_compat",
+      "genshin_lore.mail_7_1_compat",
+      "genshin_lore.mail_archive_build",
+      "genshin_lore.mail_archive_verify",
+      "genshin_lore.native_archive_successor_build",
+      "genshin_lore.native_archive_successor_verify",
+      "genshin_lore.native_aux_quest_archive_build",
+      "genshin_lore.native_aux_quest_archive_verify",
+      "genshin_lore.native_book_music_archive_build",
+      "genshin_lore.native_book_music_archive_verify",
+      "genshin_lore.native_high_value_archive_build",
+      "genshin_lore.native_high_value_archive_verify",
+      "genshin_lore.native_high_value_open_build",
+      "genshin_lore.native_high_value_open_verify",
+      "genshin_lore.native_message_7_1_compat",
+      "genshin_lore.native_message_archive_build",
+      "genshin_lore.native_message_archive_verify",
+      "genshin_lore.native_text_bulk_archive_build",
+      "genshin_lore.native_text_bulk_archive_verify",
+      "genshin_lore.npc_dialogue_build",
+      "genshin_lore.npc_dialogue_verify",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.phase4f5_combined_gate",
+      "genshin_lore.product_acceptance_chain",
+      "genshin_lore.quest_codex_phase4f2_evidence",
+      "genshin_lore.quest_codex_phase4f2_maintenance",
+      "genshin_lore.quest_codex_phase4f2_release_oracle",
+      "genshin_lore.quest_codex_phase4f3_evidence",
+      "genshin_lore.quest_codex_phase4f3_maintenance",
+      "genshin_lore.quest_codex_phase4f3_release_oracle",
+      "genshin_lore.quest_review_7_1_provider",
+      "genshin_lore.quest_talk_7_1_runtime",
+      "genshin_lore.quest_talk_completeness_build",
+      "genshin_lore.quest_talk_completeness_verify",
+      "genshin_lore.quest_talk_immutable_build",
+      "genshin_lore.quest_talk_immutable_verify",
+      "genshin_lore.research71_candidate_server",
+      "genshin_lore.research_story_7_1",
+      "genshin_lore.research_story_scope",
+      "genshin_lore.schema20_7_1_routed",
+      "genshin_lore.source_context_7_1_verify",
+      "genshin_lore.special_core_7_1_build",
+      "genshin_lore.special_core_7_1_verify",
+      "genshin_lore.special_historical_7_1_build",
+      "genshin_lore.special_historical_7_1_verify",
+      "genshin_lore.talk_comparison_cli",
+      "genshin_lore.talk_comparison_phase31c3b_contract",
+      "genshin_lore.talk_comparison_phase31c3b_evidence",
+      "genshin_lore.talk_comparison_phase31c3b_maintenance",
+      "genshin_lore.talk_comparison_retrieval",
+      "genshin_lore.talk_physical_closure_build",
+      "genshin_lore.talk_physical_closure_source",
+      "genshin_lore.talk_physical_closure_verify",
+      "genshin_lore.world_archive_phase4e2_contract",
+      "genshin_lore.world_archive_phase4e2_evidence",
+      "genshin_lore.world_archive_phase4e2_maintenance",
+      "genshin_lore.world_archive_phase4e2_release_oracle",
+      "genshin_lore.world_archive_phase4e3_evidence",
+      "genshin_lore.world_archive_phase4e3_maintenance",
+      "genshin_lore.world_archive_phase4e3_release_oracle",
+      "scripts.builders",
+      "scripts.builders.character_foundation",
+      "scripts.builders.character_successor",
+      "scripts.builders.core_provider",
+      "scripts.builders.narrative_family",
+      "scripts.builders.research_index",
+      "scripts.builders.research_scoped",
+      "scripts.builders.semantic",
+      "scripts.maintenance",
+      "scripts.validators"
+    ]
+  },
+  "edges": {
+    "genshin_lore.static_phase4b6_material_maintenance": [
+      "genshin_lore.static_phase4b6_material_manifest",
+      "genshin_lore.static_phase4b6_material_verification_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_book_music_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.research71_successor": [
+      "genshin_lore.citation_handoff",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research71_unified",
+      "genshin_lore.research_index",
+      "genshin_lore.research_query",
+      "genshin_lore.research_refs",
+      "genshin_lore.semantic_discovery"
+    ],
+    "genshin_lore.document_build": [
+      "genshin_lore.document_source"
+    ],
+    "genshin_lore.event_successor_7_1_runtime": [
+      "genshin_lore.event_narrative_retrieval"
+    ],
+    "genshin_lore.r0_retrieval": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m3_physical",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.family_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.special_core_7_1_build": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m5c_projection"
+    ],
+    "genshin_lore.quest_codex_phase4f2_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock"
+    ],
+    "genshin_lore.research71_candidate_relations": [
+      "genshin_lore.research71_candidate_adapters"
+    ],
+    "genshin_lore.static_phase4b5_reliquary_evidence": [
+      "genshin_lore.static_phase4b5_reliquary_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.tutorial_phase4d2a_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_contract",
+      "genshin_lore.tutorial_phase4d2a_manifest",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.gcg_card_7_1_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.batch_r1_schema19": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_q2_uplift",
+      "genshin_lore.batch_release",
+      "genshin_lore.batch_space",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.talk_physical_closure_build": [
+      "genshin_lore.talk_physical_closure_source"
+    ],
+    "genshin_lore.npc_dialogue_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.npc_dialogue_source",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.batch_m3_inventory": [
+      "genshin_lore",
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m3_physical",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.batch_space",
+      "genshin_lore.family_projection_protocol"
+    ],
+    "genshin_lore.character_phase4c2_evidence": [
+      "genshin_lore.character_phase4c2_manifest",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_talk_7_1_physical": [
+      "genshin_lore.quest_talk_physical_shapes"
+    ],
+    "genshin_lore.native_book_music_archive_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.avatar_codex_phase4g2_contract": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.avatar_codex_phase4g2_evidence": [
+      "genshin_lore.avatar_codex_phase4g2_contract",
+      "genshin_lore.avatar_codex_phase4g2_schema",
+      "genshin_lore.db",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock"
+    ],
+    "genshin_lore.batch_m5d_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.family_evidence",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.static_book1_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.errors",
+      "genshin_lore.phase4a_audit",
+      "genshin_lore.source",
+      "genshin_lore.static_book1_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.talk_physical_closure_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.research71_candidate_server": [
+      "genshin_lore.mcp_transport",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research_server"
+    ],
+    "genshin_lore.research_story_7_1": [
+      "genshin_lore.quest_talk_7_1_build",
+      "genshin_lore.quest_talk_7_1_runtime"
+    ],
+    "genshin_lore.batch_m1_verifier": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event16_18_7_1_selection": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.native_text_bulk_archive_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.native_aux_quest_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.batch_m4_runtime_oracle": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.db",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.gcg_card_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.codexquest_source": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.quest_narrative_source",
+      "genshin_lore.source_integrity"
+    ],
+    "genshin_lore.quest_talk_completeness_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_talk_physical_retrieval",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.native_bulk_7_1_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.native_book_music_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.event_native_text_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.quest_talk_completeness_verify": [
+      "genshin_lore.quest_talk_physical_verify"
+    ],
+    "genshin_lore.quest_talk_immutable_build": [
+      "genshin_lore.db",
+      "genshin_lore.quest_talk_physical_shapes"
+    ],
+    "genshin_lore.static_phase4b3_evidence": [
+      "genshin_lore.static_phase4b3_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.loading_tips_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.batch_m0_baseline": [
+      "genshin_lore.build_metrics"
+    ],
+    "genshin_lore.event_narrative_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.native_high_value_open_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.batch_q2_uplift": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.family_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.static_phase4b2_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.errors",
+      "genshin_lore.phase4a_audit",
+      "genshin_lore.source",
+      "genshin_lore.static_phase4b2_manifest",
+      "genshin_lore.static_phase4b2_verification_contract",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_codex_phase4f2_maintenance": [
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_release_oracle",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_schema"
+    ],
+    "genshin_lore.batch_m1_textmap": [
+      "genshin_lore.batch_release",
+      "genshin_lore.build_metrics",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.talk_comparison_cli": [
+      "genshin_lore.talk_comparison_retrieval"
+    ],
+    "genshin_lore.quest_codex_phase4f2_schema": [
+      "genshin_lore.db"
+    ],
+    "genshin_lore.talk_comparison_phase31c3b_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.talk_comparison_phase31c3b_contract",
+      "genshin_lore.talk_comparison_phase31c3b_maintenance",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion"
+    ],
+    "genshin_lore.character_7_1_bounded": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.character_7_1_foundation_build": [
+      "genshin_lore.character_7_1_physical",
+      "genshin_lore.character_7_1_voice",
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.native_archive_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.loading_tips_verify": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.mail_archive_retrieval": [
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.character_phase4c5b_manifest": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_talk_physical_verify": [
+      "genshin_lore.db"
+    ],
+    "genshin_lore.research_server": [
+      "genshin_lore.mcp_transport",
+      "genshin_lore.research71_release",
+      "genshin_lore.research71_successor",
+      "genshin_lore.research_query"
+    ],
+    "genshin_lore.phase4d5_combined_gate": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.db",
+      "genshin_lore.static_contracts",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.tutorial_phase4d2b_contract",
+      "genshin_lore.tutorial_phase4d2b_evidence",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.loading_tips_build": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.narrative_7_1_bounded": [
+      "genshin_lore.narrative_7_1_contract",
+      "genshin_lore.narrative_7_1_verify"
+    ],
+    "genshin_lore.batch_m2_replay": [
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.special_core_7_1_verify": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m5c_projection"
+    ],
+    "genshin_lore.character_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.mail_7_1_compat": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.mail_7_1_runtime"
+    ],
+    "genshin_lore.character_phase4c5b_maintenance": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c5b_manifest",
+      "genshin_lore.character_phase4c5b_release_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event_narrative_filmfest": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.quest_talk_7_1_runtime": [
+      "genshin_lore.quest_talk_7_1_verify"
+    ],
+    "genshin_lore.batch_space": [
+      "genshin_lore.storage_policy"
+    ],
+    "genshin_lore.batch_wave_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_release",
+      "genshin_lore.family_evidence",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.parsers": [
+      "genshin_lore.errors",
+      "genshin_lore.mapping",
+      "genshin_lore.source",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event13_7_1_physical_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.discovery": [
+      "genshin_lore.errors",
+      "genshin_lore.mapping",
+      "genshin_lore.source",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_aux_quest_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.batch_r1_repository": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_r1_schema19",
+      "genshin_lore.db",
+      "genshin_lore.family_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.loading_tips_7_1_verify": [
+      "genshin_lore.loading_tips_7_1_source"
+    ],
+    "genshin_lore.codexquest_build": [
+      "genshin_lore.codexquest_source",
+      "genshin_lore.source_integrity"
+    ],
+    "genshin_lore.world_archive_phase4e2_stable_lock": [
+      "genshin_lore.world_archive_phase4e2_promotion"
+    ],
+    "genshin_lore.batch_m4_receipt": [
+      "genshin_lore.batch_m4_release",
+      "genshin_lore.batch_release",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event_narrative_release": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.codexquest_verify": [
+      "genshin_lore.codexquest_source",
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.source_integrity"
+    ],
+    "genshin_lore.batch_m5e_receipt": [
+      "genshin_lore.batch_m4_receipt",
+      "genshin_lore.batch_m4_release",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.batch_release",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.avatar_codex_phase4g2_schema": [
+      "genshin_lore.db"
+    ],
+    "genshin_lore.native26_7_1_physical": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.research71_minor_release": [
+      "genshin_lore.citation_handoff",
+      "genshin_lore.mcp_transport",
+      "genshin_lore.narrative_assistant_7_1",
+      "genshin_lore.research71_preview_server",
+      "genshin_lore.research71_successor",
+      "genshin_lore.research71_unified",
+      "genshin_lore.research_index",
+      "genshin_lore.research_query",
+      "genshin_lore.research_server"
+    ],
+    "genshin_lore.batch_m5e_runtime_oracle": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.batch_m5e_receipt",
+      "genshin_lore.db",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.util"
+    ],
+    "genshin_lore._quest_corpus_release_contract": [
+      "genshin_lore.errors",
+      "genshin_lore.quest_corpus_evidence",
+      "genshin_lore.quest_corpus_manifest",
+      "genshin_lore.source",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event13_7_1_physical": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.talk_comparison_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.talk_comparison_phase31c3b_contract"
+    ],
+    "genshin_lore.quest_narrative_verify": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.quest_narrative_build",
+      "genshin_lore.quest_narrative_source"
+    ],
+    "genshin_lore.event_filmfest_7_1_verify": [
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.world_archive_phase4e2_maintenance": [
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_contract",
+      "genshin_lore.world_archive_phase4e2_release_oracle",
+      "genshin_lore.world_archive_phase4e2_schema"
+    ],
+    "genshin_lore.codexquest_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.tutorial_phase4d2b_manifest": [
+      "genshin_lore.tutorial_phase4d2a_manifest"
+    ],
+    "genshin_lore.native_aux_quest_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.character_lore_build": [
+      "genshin_lore.character_lore_source"
+    ],
+    "genshin_lore.talk_physical_closure_source": [
+      "genshin_lore.quest_talk_physical_shapes"
+    ],
+    "genshin_lore": [
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.pipeline",
+      "genshin_lore.quest_corpus_evidence",
+      "genshin_lore.quest_corpus_maintenance",
+      "genshin_lore.quest_corpus_manifest",
+      "genshin_lore.static_book1_maintenance",
+      "genshin_lore.tutorial_phase4d2a_maintenance",
+      "genshin_lore.tutorial_phase4d2b_evidence",
+      "genshin_lore.tutorial_phase4d2b_maintenance",
+      "genshin_lore.wave1_rebuild_maintenance"
+    ],
+    "genshin_lore.gcg_card_7_1_verify": [
+      "genshin_lore.gcg_card_7_1_source"
+    ],
+    "genshin_lore.schema20_7_1_special": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.tutorial_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_contract",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.tutorial_phase4d2b_contract",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.static_phase4b6_material_evidence": [
+      "genshin_lore.static_phase4b6_material_manifest",
+      "genshin_lore.static_phase4b6_material_verification_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.schema20_7_1_candidate": [
+      "genshin_lore.db",
+      "genshin_lore.m3_7_1_provider_integration",
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_guards",
+      "genshin_lore.schema20_7_1_special"
+    ],
+    "genshin_lore.event_photo_echo_7_1_build": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.event_tps_7_1_runtime": [
+      "genshin_lore.event_narrative_retrieval"
+    ],
+    "genshin_lore.research_story_7_0": [
+      "genshin_lore.research_query"
+    ],
+    "genshin_lore.db": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.shard_builder": [
+      "genshin_lore.batch_release",
+      "genshin_lore.family_projection_protocol"
+    ],
+    "genshin_lore.event_filmfest_7_1_runtime": [
+      "genshin_lore.event_narrative_retrieval"
+    ],
+    "genshin_lore.quest_talk_immutable_retrieval": [
+      "genshin_lore.quest_talk_completeness_retrieval"
+    ],
+    "genshin_lore.mail_7_1_verify": [
+      "genshin_lore.mail_archive_source"
+    ],
+    "genshin_lore.quest_codex_phase4f3_release_oracle": [
+      "genshin_lore.quest_codex_phase4f2_release_oracle"
+    ],
+    "genshin_lore.quest_review_verify": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.quest_narrative_source",
+      "genshin_lore.quest_review_build",
+      "genshin_lore.quest_review_source",
+      "genshin_lore.source_integrity"
+    ],
+    "genshin_lore.schema20_7_1_routed": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.family_evidence",
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_guards"
+    ],
+    "genshin_lore.talk_comparison_phase31c3b_maintenance": [
+      "genshin_lore.db",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.talk_comparison_phase31c3b_contract",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion"
+    ],
+    "genshin_lore.source": [
+      "genshin_lore.errors",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_r4_verifier": [
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.batch_r3_uplift",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_phase4c5c_evidence": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.character_phase4c2_release_contract",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c4b_maintenance",
+      "genshin_lore.character_phase4c4b_release_contract",
+      "genshin_lore.character_phase4c5b_evidence",
+      "genshin_lore.character_phase4c5b_maintenance",
+      "genshin_lore.character_phase4c5b_release_contract",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.canary": [
+      "genshin_lore.discovery",
+      "genshin_lore.parsers",
+      "genshin_lore.source"
+    ],
+    "genshin_lore.static_phase4b2_manifest": [
+      "genshin_lore.errors",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.pipeline": [
+      "genshin_lore.canary",
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.errors",
+      "genshin_lore.mapping",
+      "genshin_lore.parsers",
+      "genshin_lore.source",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.retrieval": [
+      "genshin_lore.db",
+      "genshin_lore.quest_retrieval",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.tutorial_phase4d2b_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_evidence",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.tutorial_phase4d2b_contract",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_phase4c5b_evidence": [
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c5b_maintenance",
+      "genshin_lore.character_phase4c5b_manifest",
+      "genshin_lore.character_phase4c5b_release_contract",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.cli": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.artifact_io",
+      "genshin_lore.character_phase4c2_evidence",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.character_phase4c4b_evidence",
+      "genshin_lore.character_phase4c4b_maintenance",
+      "genshin_lore.character_phase4c5b_evidence",
+      "genshin_lore.character_phase4c5b_maintenance",
+      "genshin_lore.character_retrieval",
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.errors",
+      "genshin_lore.phase4d5_combined_gate",
+      "genshin_lore.pipeline",
+      "genshin_lore.quest_corpus_evidence",
+      "genshin_lore.quest_corpus_maintenance",
+      "genshin_lore.quest_evidence",
+      "genshin_lore.retrieval",
+      "genshin_lore.source",
+      "genshin_lore.static_book1_evidence",
+      "genshin_lore.static_book1_maintenance",
+      "genshin_lore.static_phase4b2_evidence",
+      "genshin_lore.static_phase4b2_maintenance",
+      "genshin_lore.static_phase4b3_evidence",
+      "genshin_lore.static_phase4b3_maintenance",
+      "genshin_lore.static_phase4b5_reliquary_evidence",
+      "genshin_lore.static_phase4b5_reliquary_maintenance",
+      "genshin_lore.static_phase4b6_material_evidence",
+      "genshin_lore.static_phase4b6_material_maintenance",
+      "genshin_lore.tutorial_phase4d2a_evidence",
+      "genshin_lore.tutorial_phase4d2a_maintenance",
+      "genshin_lore.tutorial_phase4d2b_evidence",
+      "genshin_lore.tutorial_phase4d2b_maintenance",
+      "genshin_lore.tutorial_retrieval",
+      "genshin_lore.wave1_rebuild_maintenance"
+    ],
+    "genshin_lore.talk_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.parsers",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_r2_runtime": [
+      "genshin_lore.batch_m5e_runtime_oracle",
+      "genshin_lore.batch_r1_schema19",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.world_archive_phase4e3_maintenance": [
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_schema",
+      "genshin_lore.world_archive_phase4e3_contract",
+      "genshin_lore.world_archive_phase4e3_receipt",
+      "genshin_lore.world_archive_phase4e3_release_oracle"
+    ],
+    "genshin_lore.m3_7_1_provider_verify": [
+      "genshin_lore.batch_m1_verifier"
+    ],
+    "genshin_lore.loading_tips_7_1_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.talk_textmap": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.phase4e5_combined_gate": [
+      "genshin_lore.phase4d5_combined_gate",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock",
+      "genshin_lore.world_archive_phase4e3_contract",
+      "genshin_lore.world_archive_phase4e3_evidence",
+      "genshin_lore.world_archive_phase4e3_maintenance",
+      "genshin_lore.world_archive_phase4e3_receipt"
+    ],
+    "genshin_lore.loading_tips_7_1_build": [
+      "genshin_lore.loading_tips_7_1_source"
+    ],
+    "genshin_lore.document_7_1_verify": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.quest_codex_phase4f3_contract": [
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_narrative_build": [
+      "genshin_lore.quest_narrative_source"
+    ],
+    "genshin_lore.quest_talk_bounded_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_talk_immutable_retrieval",
+      "genshin_lore.quest_talk_physical_retrieval",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore._quest_corpus_db_audit": [
+      "genshin_lore._quest_corpus_release_contract",
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.mapping",
+      "genshin_lore.parsers",
+      "genshin_lore.quest_corpus_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.mail_7_1_build": [
+      "genshin_lore.mail_archive_source"
+    ],
+    "genshin_lore.mcp_server": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_retrieval",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.batch_m5e_retrieval",
+      "genshin_lore.batch_m5e_runtime_oracle",
+      "genshin_lore.batch_q2_uplift",
+      "genshin_lore.batch_r2_retrieval",
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.batch_r3_uplift",
+      "genshin_lore.batch_r4_runtime",
+      "genshin_lore.character_lore_retrieval",
+      "genshin_lore.character_retrieval",
+      "genshin_lore.codexquest_retrieval",
+      "genshin_lore.direct_text_retrieval",
+      "genshin_lore.document_retrieval",
+      "genshin_lore.event_narrative_retrieval",
+      "genshin_lore.family_evidence",
+      "genshin_lore.gcg_card_retrieval",
+      "genshin_lore.loading_tips_retrieval",
+      "genshin_lore.mail_archive_retrieval",
+      "genshin_lore.mcp_transport",
+      "genshin_lore.native_archive_retrieval",
+      "genshin_lore.npc_dialogue_retrieval",
+      "genshin_lore.quest_codex_retrieval",
+      "genshin_lore.quest_narrative_retrieval",
+      "genshin_lore.quest_review_retrieval",
+      "genshin_lore.r0_retrieval",
+      "genshin_lore.r5_quest_talk_retrieval",
+      "genshin_lore.retrieval",
+      "genshin_lore.static_contracts",
+      "genshin_lore.static_retrieval",
+      "genshin_lore.talk_physical_closure_retrieval",
+      "genshin_lore.tutorial_retrieval",
+      "genshin_lore.world_archive_retrieval"
+    ],
+    "genshin_lore.batch_r4_runtime": [
+      "genshin_lore.batch_r1_repository",
+      "genshin_lore.batch_r2_retrieval",
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.batch_r3_uplift",
+      "genshin_lore.db",
+      "genshin_lore.family_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event_legacy_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.event_legacy_7_1_runtime": [
+      "genshin_lore.event_narrative_retrieval",
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.native_bulk_7_1_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.document_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.batch_m2_avatar": [
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.wave1_rebuild_contract": [
+      "genshin_lore._quest_corpus_db_audit",
+      "genshin_lore._quest_corpus_release_contract",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.character_phase4c2_release_contract",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.parsers",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.static_book1_manifest",
+      "genshin_lore.static_book1_verification_contract",
+      "genshin_lore.static_phase4b2_maintenance",
+      "genshin_lore.static_phase4b2_manifest",
+      "genshin_lore.static_phase4b2_verification_contract",
+      "genshin_lore.static_phase4b3_manifest",
+      "genshin_lore.static_phase4b3_verification_contract",
+      "genshin_lore.static_phase4b5_reliquary_manifest",
+      "genshin_lore.static_phase4b5_reliquary_verification_contract",
+      "genshin_lore.static_phase4b6_material_manifest",
+      "genshin_lore.static_phase4b6_material_verification_contract",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.static_phase4b6_material_verification_contract": [
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_message_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.event_photo_echo_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.character_phase4c5b_release_contract": [
+      "genshin_lore.character_phase4c5b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_m5e_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_retrieval",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_retrieval",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.batch_m5e_receipt",
+      "genshin_lore.batch_m5e_runtime_oracle",
+      "genshin_lore.family_evidence",
+      "genshin_lore.runtime_stability"
+    ],
+    "genshin_lore.readable_7_1_build": [
+      "genshin_lore.direct_text_source"
+    ],
+    "genshin_lore.event_tps_7_1_build": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.native_book_music_7_1_compat": [
+      "genshin_lore.native_archive_retrieval"
+    ],
+    "genshin_lore.event_tps_7_1_verify": [
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.event_legacy_7_1_verify": [
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.static_phase4b3_maintenance": [
+      "genshin_lore.static_phase4b3_manifest",
+      "genshin_lore.static_phase4b3_verification_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.world_archive_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.db",
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_schema",
+      "genshin_lore.world_archive_phase4e3_contract",
+      "genshin_lore.world_archive_phase4e3_receipt",
+      "genshin_lore.world_archive_phase4e3_runtime_seal"
+    ],
+    "genshin_lore.native_message_7_1_runtime": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.phase4f5_combined_gate": [
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.quest_codex_phase4f3_evidence",
+      "genshin_lore.quest_codex_phase4f3_maintenance",
+      "genshin_lore.quest_codex_phase4f3_receipt",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock",
+      "genshin_lore.world_archive_phase4e3_contract",
+      "genshin_lore.world_archive_phase4e3_maintenance",
+      "genshin_lore.world_archive_phase4e3_receipt"
+    ],
+    "genshin_lore.batch_r4_release": [
+      "genshin_lore.batch_r1_schema19",
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.batch_r3_uplift",
+      "genshin_lore.batch_r4_verifier",
+      "genshin_lore.batch_release",
+      "genshin_lore.batch_space",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event16_18_7_1_selection_verify": [
+      "genshin_lore.event13_7_1_physical_verify",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.event13_7_1_trade_show": [
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.batch_m5c_projection": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m2_verifier",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.shard_builder"
+    ],
+    "genshin_lore.event_filmfest_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.native26_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.event_narrative_retrieval": [
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.event_successor_7_1_verify": [
+      "genshin_lore.event_7_1_source",
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.event_narrative_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.event_narrative_archive_wave_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.tutorial_phase4d2a_schema": [
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.db"
+    ],
+    "genshin_lore.batch_m3_r1_projection": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m2_verifier",
+      "genshin_lore.batch_space",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.shard_builder"
+    ],
+    "genshin_lore.research71_unified": [
+      "genshin_lore.research71_candidate_adapters",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research71_release",
+      "genshin_lore.research71_successor",
+      "genshin_lore.research_7_1_bounded",
+      "genshin_lore.research_refs",
+      "genshin_lore.research_source_context"
+    ],
+    "genshin_lore.native_message_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.world_archive_phase4e3_contract": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.npc_dialogue_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.event_photo_echo_7_1_runtime": [
+      "genshin_lore.event_narrative_retrieval"
+    ],
+    "genshin_lore.quest_codex_phase4f2_contract": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_m2_verifier": [
+      "genshin_lore.batch_m2_avatar",
+      "genshin_lore.batch_m2_replay",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.shard_builder"
+    ],
+    "genshin_lore.native_text_bulk_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.source_context_7_1_runtime": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.source_context_7_1_build"
+    ],
+    "genshin_lore.quest_codex_phase4f3_runtime_seal": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_archive_successor_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.tutorial_phase4d2a_contract": [
+      "genshin_lore.tutorial_phase4d2a_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_talk_source_verifier": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_lore_verify": [
+      "genshin_lore.character_lore_source",
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.world_archive_phase4e3_receipt": [
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock",
+      "genshin_lore.world_archive_phase4e3_contract"
+    ],
+    "genshin_lore.document_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.research71_candidate_query": [
+      "genshin_lore.research71_candidate_adapters",
+      "genshin_lore.research_adapters",
+      "genshin_lore.research_index",
+      "genshin_lore.research_query",
+      "genshin_lore.research_refs"
+    ],
+    "genshin_lore.special_historical_7_1_verify": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m5c_projection"
+    ],
+    "genshin_lore.static_book1_maintenance": [
+      "genshin_lore.errors",
+      "genshin_lore.static_book1_verification_contract"
+    ],
+    "genshin_lore.gcg_card_build": [
+      "genshin_lore.gcg_card_source"
+    ],
+    "genshin_lore.tutorial_phase4d2a_maintenance": [
+      "genshin_lore.tutorial_phase4d2a_contract",
+      "genshin_lore.tutorial_phase4d2a_manifest",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.static_book1_manifest": [
+      "genshin_lore.errors",
+      "genshin_lore.source",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event_7_1_source": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.static_book1_verification_contract": [
+      "genshin_lore.db",
+      "genshin_lore.source",
+      "genshin_lore.static_book1_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_phase4c4b_release_contract": [
+      "genshin_lore.character_phase4c4b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_talk_7_1_build": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.quest_talk_7_1_physical"
+    ],
+    "genshin_lore.native_high_value_archive_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.character_7_1_successor_build": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.avatar_codex_phase4g2_release_oracle": [
+      "genshin_lore.avatar_codex_phase4g2_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.tutorial_phase4d2b_contract": [
+      "genshin_lore.tutorial_phase4d2a_contract",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.direct_text_build": [
+      "genshin_lore.direct_text_source"
+    ],
+    "genshin_lore.batch_r3_uplift": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.family_evidence",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_message_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.event_native_text_7_1_compat": [
+      "genshin_lore.event_native_text_7_1_runtime",
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.world_archive_phase4e2_release_oracle": [
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_contract"
+    ],
+    "genshin_lore.gcg_card_7_1_build": [
+      "genshin_lore.gcg_card_7_1_source"
+    ],
+    "genshin_lore.character_phase4c2_release_contract": [
+      "genshin_lore.character_phase4c2_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native21_7_1_build": [
+      "genshin_lore.batch_release",
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.narrative_7_1_build": [
+      "genshin_lore.batch_space",
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.narrative_7_1_contract"
+    ],
+    "genshin_lore.static_phase4b3_verification_contract": [
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.static_phase4b3_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_review_source": [
+      "genshin_lore.loading_tips_source",
+      "genshin_lore.quest_narrative_source"
+    ],
+    "genshin_lore.wave1_rebuild_maintenance": [
+      "genshin_lore._quest_corpus_release_contract",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.errors",
+      "genshin_lore.static_book1_verification_contract",
+      "genshin_lore.static_phase4b2_maintenance",
+      "genshin_lore.static_phase4b3_verification_contract",
+      "genshin_lore.static_phase4b5_reliquary_verification_contract",
+      "genshin_lore.static_phase4b6_material_verification_contract",
+      "genshin_lore.wave1_rebuild_contract"
+    ],
+    "genshin_lore.direct_text_verify": [
+      "genshin_lore.direct_text_source"
+    ],
+    "genshin_lore.narrative_7_1_verify": [
+      "genshin_lore.narrative_7_1_contract"
+    ],
+    "genshin_lore.event_native_text_7_1_runtime": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.schema20_7_1_guards": [
+      "genshin_lore.db"
+    ],
+    "genshin_lore.native_high_value_open_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.talk_physical_7_1": [
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_candidate"
+    ],
+    "genshin_lore.quest_talk_physical_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_talk_physical_shapes",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.talk_physical_closure_verify": [
+      "genshin_lore.talk_physical_closure_build",
+      "genshin_lore.talk_physical_closure_source"
+    ],
+    "genshin_lore.static_retrieval": [
+      "genshin_lore.retrieval",
+      "genshin_lore.static_contracts",
+      "genshin_lore.static_phase4b6_material_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_corpus_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.discovery",
+      "genshin_lore.errors",
+      "genshin_lore.parsers",
+      "genshin_lore.quest_corpus_manifest",
+      "genshin_lore.quest_resolution",
+      "genshin_lore.source",
+      "genshin_lore.talk_evidence",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.npc_dialogue_build": [
+      "genshin_lore.npc_dialogue_source"
+    ],
+    "genshin_lore.m3_7_1_provider_build": [
+      "genshin_lore",
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m3_r1_projection"
+    ],
+    "genshin_lore.schema20_7_1_special_oracle": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.research_index"
+    ],
+    "genshin_lore.native_aux_quest_7_1_compat": [
+      "genshin_lore.native_archive_retrieval"
+    ],
+    "genshin_lore.research71_preview_server": [
+      "genshin_lore.mcp_transport",
+      "genshin_lore.narrative_assistant_7_1",
+      "genshin_lore.research71_unified",
+      "genshin_lore.research_7_1_bounded"
+    ],
+    "genshin_lore.runtime_stability": [
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.batch_m4_release": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m1_verifier",
+      "genshin_lore.batch_m2_verifier",
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.batch_release",
+      "genshin_lore.batch_space",
+      "genshin_lore.db",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_lore_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.mail_7_1_runtime": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.mail_archive_source"
+    ],
+    "genshin_lore.schema20_7_1_oracle": [
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_guards",
+      "genshin_lore.schema20_7_1_special_oracle"
+    ],
+    "genshin_lore.avatar_codex_phase4g2_maintenance": [
+      "genshin_lore.avatar_codex_phase4g2_contract",
+      "genshin_lore.avatar_codex_phase4g2_paths",
+      "genshin_lore.avatar_codex_phase4g2_release_oracle",
+      "genshin_lore.avatar_codex_phase4g2_schema",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion"
+    ],
+    "genshin_lore.quest_codex_phase4f3_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.phase4e5_combined_gate",
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_evidence",
+      "genshin_lore.quest_codex_phase4f2_maintenance",
+      "genshin_lore.quest_codex_phase4f2_release_oracle",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_stable_lock"
+    ],
+    "genshin_lore.character_contracts": [
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.character_phase4c2_manifest",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c4b_manifest",
+      "genshin_lore.character_phase4c5b_manifest",
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_schema"
+    ],
+    "genshin_lore.research_7_1_bounded": [
+      "genshin_lore.character_7_1_bounded",
+      "genshin_lore.event_filmfest_7_1_runtime",
+      "genshin_lore.event_legacy_7_1_runtime",
+      "genshin_lore.event_native_text_7_1_runtime",
+      "genshin_lore.event_photo_echo_7_1_runtime",
+      "genshin_lore.event_successor_7_1_runtime",
+      "genshin_lore.event_tps_7_1_runtime",
+      "genshin_lore.mail_7_1_runtime",
+      "genshin_lore.narrative_7_1_bounded",
+      "genshin_lore.native_archive_retrieval",
+      "genshin_lore.native_aux_quest_7_1_compat",
+      "genshin_lore.native_book_music_7_1_compat",
+      "genshin_lore.native_message_7_1_runtime",
+      "genshin_lore.quest_derived_7_1_bounded",
+      "genshin_lore.source_context_7_1_runtime"
+    ],
+    "genshin_lore.world_archive_phase4e2_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_contract",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_schema",
+      "genshin_lore.world_archive_phase4e2_stable_lock"
+    ],
+    "genshin_lore.native_archive_retrieval": [
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.quest_codex_phase4f2_release_oracle": [
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_codex_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.db",
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.quest_codex_phase4f3_receipt",
+      "genshin_lore.quest_codex_phase4f3_runtime_seal",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e3_runtime_seal"
+    ],
+    "genshin_lore.special_historical_7_1_build": [
+      "genshin_lore.batch_m1_textmap",
+      "genshin_lore.batch_m5c_projection"
+    ],
+    "genshin_lore.character_7_1_successor_verify": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.npc_dialogue_verify": [
+      "genshin_lore.npc_dialogue_source"
+    ],
+    "genshin_lore.quest_narrative_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.research71_candidate_adapters": [
+      "genshin_lore.research_index"
+    ],
+    "genshin_lore.tutorial_phase4d2b_maintenance": [
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.tutorial_phase4d2b_contract",
+      "genshin_lore.tutorial_phase4d2b_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.world_archive_phase4e2_schema": [
+      "genshin_lore.db"
+    ],
+    "genshin_lore.quest_retrieval": [
+      "genshin_lore.db",
+      "genshin_lore.retrieval"
+    ],
+    "genshin_lore.mail_archive_build": [
+      "genshin_lore.mail_archive_source"
+    ],
+    "genshin_lore.native_aux_quest_archive_build": [
+      "genshin_lore.event_narrative_source",
+      "genshin_lore.native_text_bulk_archive_build"
+    ],
+    "genshin_lore.character_phase4c4b_maintenance": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c4b_release_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_codex_phase4f3_receipt": [
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.world_archive_phase4e2_promotion"
+    ],
+    "genshin_lore.event_native_text_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.deterministic_merge": [
+      "genshin_lore.batch_m2_replay",
+      "genshin_lore.batch_release",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.shard_builder"
+    ],
+    "genshin_lore.native_message_7_1_compat": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.native_message_7_1_runtime"
+    ],
+    "genshin_lore.static_phase4b5_reliquary_verification_contract": [
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.static_phase4b5_reliquary_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.direct_text_7_1_verify": [
+      "genshin_lore.direct_text_7_1_source"
+    ],
+    "genshin_lore.event_narrative_archive_wave": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.quest_narrative_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.static_phase4b2_verification_contract": [
+      "genshin_lore.static_phase4b2_manifest",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.r5_quest_talk_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_talk_bounded_retrieval",
+      "genshin_lore.quest_talk_completeness_retrieval",
+      "genshin_lore.quest_talk_immutable_retrieval",
+      "genshin_lore.quest_talk_physical_retrieval",
+      "genshin_lore.quest_talk_scope",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_lore_source": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.native_book_music_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.mail_archive_verify": [
+      "genshin_lore.mail_archive_source"
+    ],
+    "genshin_lore.research_index": [
+      "genshin_lore.research_adapters"
+    ],
+    "genshin_lore.narrative_assistant_7_1": [
+      "genshin_lore.research_7_1_bounded"
+    ],
+    "genshin_lore.character_7_1_foundation_verify": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.native_archive_successor_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.quest_codex_phase4f3_maintenance": [
+      "genshin_lore.quest_codex_phase4f2_contract",
+      "genshin_lore.quest_codex_phase4f2_maintenance",
+      "genshin_lore.quest_codex_phase4f2_release_oracle",
+      "genshin_lore.quest_codex_phase4f2_schema",
+      "genshin_lore.quest_codex_phase4f3_contract",
+      "genshin_lore.quest_codex_phase4f3_receipt",
+      "genshin_lore.quest_codex_phase4f3_release_oracle",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_schema"
+    ],
+    "genshin_lore.gcg_card_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.batch_r2_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_retrieval",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.batch_m5d_retrieval",
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.batch_r1_repository",
+      "genshin_lore.batch_r1_schema19",
+      "genshin_lore.batch_r2_runtime",
+      "genshin_lore.family_evidence",
+      "genshin_lore.runtime_stability"
+    ],
+    "genshin_lore.native_high_value_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.static_phase4b2_maintenance": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.source_record_contract",
+      "genshin_lore.static_phase4b2_manifest",
+      "genshin_lore.static_phase4b2_verification_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.direct_text_retrieval": [
+      "genshin_lore.family_evidence"
+    ],
+    "genshin_lore.quest_talk_immutable_verify": [
+      "genshin_lore.db",
+      "genshin_lore.quest_talk_completeness_verify"
+    ],
+    "genshin_lore.batch_m4_retrieval": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m4_receipt",
+      "genshin_lore.batch_m4_release",
+      "genshin_lore.batch_m4_runtime_oracle",
+      "genshin_lore.family_evidence",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.character_phase4c4b_evidence": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_maintenance",
+      "genshin_lore.character_phase4c2_release_contract",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.character_phase4c4b_manifest",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_corpus_maintenance": [
+      "genshin_lore._quest_corpus_db_audit",
+      "genshin_lore._quest_corpus_release_contract",
+      "genshin_lore._readonly_database",
+      "genshin_lore.quest_talk_source_verifier",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_r3_verifier": [
+      "genshin_lore.batch_m3_r1_projection",
+      "genshin_lore.batch_r3_uplift"
+    ],
+    "genshin_lore.quest_resolution": [
+      "genshin_lore.db",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_corpus_manifest": [
+      "genshin_lore.errors",
+      "genshin_lore.quest_talk_scope"
+    ],
+    "genshin_lore.direct_text_7_1_build": [
+      "genshin_lore.direct_text_7_1_source"
+    ],
+    "genshin_lore.character_phase4c2_maintenance": [
+      "genshin_lore.character_contracts",
+      "genshin_lore.character_phase4c2_release_contract",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native21_7_1_verify": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.document_7_1_build": [
+      "genshin_lore.document_7_1_physical",
+      "genshin_lore.loading_tips_source"
+    ],
+    "genshin_lore.quest_talk_completeness_build": [
+      "genshin_lore.quest_talk_physical_build",
+      "genshin_lore.quest_talk_physical_shapes"
+    ],
+    "genshin_lore.world_archive_phase4e2_contract": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.quest_review_retrieval": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.r5_quest_talk_retrieval"
+    ],
+    "genshin_lore.quest_talk_physical_build": [
+      "genshin_lore.db",
+      "genshin_lore.quest_talk_physical_shapes"
+    ],
+    "genshin_lore.event_successor_7_1_build": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "genshin_lore.batch_m5d_runtime": [
+      "genshin_lore._readonly_database",
+      "genshin_lore.batch_m5d_retrieval",
+      "genshin_lore.db",
+      "genshin_lore.family_projection_protocol",
+      "genshin_lore.runtime_stability",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.batch_r1_verifier": [
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_q2_uplift",
+      "genshin_lore.db",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_message_archive_build": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.quest_review_build": [
+      "genshin_lore.quest_review_source"
+    ],
+    "genshin_lore.batch_m3_physical": [
+      "genshin_lore",
+      "genshin_lore.batch_m0_baseline",
+      "genshin_lore.batch_release",
+      "genshin_lore.batch_space"
+    ],
+    "genshin_lore.research71_release": [
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research_index",
+      "genshin_lore.research_query"
+    ],
+    "genshin_lore.document_verify": [
+      "genshin_lore.document_source"
+    ],
+    "genshin_lore.lexical_discovery": [
+      "genshin_lore.research_refs"
+    ],
+    "genshin_lore.quest_review_7_1_provider": [
+      "genshin_lore.family_evidence",
+      "genshin_lore.quest_derived_7_1_bounded"
+    ],
+    "genshin_lore.world_archive_phase4e3_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e2_promotion",
+      "genshin_lore.world_archive_phase4e2_schema",
+      "genshin_lore.world_archive_phase4e2_stable_lock",
+      "genshin_lore.world_archive_phase4e3_contract"
+    ],
+    "genshin_lore.quest_evidence": [
+      "genshin_lore.db",
+      "genshin_lore.parsers",
+      "genshin_lore.quest_resolution",
+      "genshin_lore.source",
+      "genshin_lore.talk_evidence",
+      "genshin_lore.talk_textmap",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.world_archive_phase4e3_runtime_seal": [
+      "genshin_lore.util"
+    ],
+    "genshin_lore.gcg_card_verify": [
+      "genshin_lore.gcg_card_source"
+    ],
+    "genshin_lore.static_contracts": [
+      "genshin_lore.batch_m5d_runtime",
+      "genshin_lore.character_phase4c2_schema",
+      "genshin_lore.db",
+      "genshin_lore.tutorial_phase4d2a_schema",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.native_archive_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.research_query": [
+      "genshin_lore.dialogue",
+      "genshin_lore.lexical_discovery",
+      "genshin_lore.research_index",
+      "genshin_lore.research_navigation",
+      "genshin_lore.research_refs",
+      "genshin_lore.research_source_context",
+      "genshin_lore.research_story_7_0",
+      "genshin_lore.semantic_discovery"
+    ],
+    "genshin_lore.world_archive_phase4e3_release_oracle": [
+      "genshin_lore.util",
+      "genshin_lore.world_archive_phase4e3_contract"
+    ],
+    "genshin_lore.static_phase4b5_reliquary_maintenance": [
+      "genshin_lore.static_phase4b5_reliquary_manifest",
+      "genshin_lore.static_phase4b5_reliquary_verification_contract",
+      "genshin_lore.util"
+    ],
+    "genshin_lore.event_narrative_filmfest_verify": [
+      "genshin_lore.event_narrative_source"
+    ],
+    "genshin_lore.dialogue": [
+      "genshin_lore.dialogue.context"
+    ],
+    "genshin_lore.dialogue.context": [
+      "genshin_lore.research71_candidate_adapters",
+      "genshin_lore.research_refs"
+    ],
+    "scripts.build": [
+      "genshin_lore.batch_m3_physical",
+      "genshin_lore.batch_space",
+      "genshin_lore.character_7_1_foundation_build",
+      "genshin_lore.character_7_1_foundation_verify",
+      "genshin_lore.character_7_1_successor_build",
+      "genshin_lore.character_7_1_successor_verify",
+      "genshin_lore.codexquest_build",
+      "genshin_lore.codexquest_verify",
+      "genshin_lore.direct_text_7_1_build",
+      "genshin_lore.direct_text_7_1_verify",
+      "genshin_lore.document_7_1_build",
+      "genshin_lore.document_7_1_verify",
+      "genshin_lore.document_build",
+      "genshin_lore.document_verify",
+      "genshin_lore.event13_7_1_physical",
+      "genshin_lore.event13_7_1_physical_verify",
+      "genshin_lore.event16_18_7_1_selection",
+      "genshin_lore.event16_18_7_1_selection_verify",
+      "genshin_lore.event_filmfest_7_1_build",
+      "genshin_lore.event_filmfest_7_1_verify",
+      "genshin_lore.event_legacy_7_1_build",
+      "genshin_lore.event_legacy_7_1_verify",
+      "genshin_lore.event_narrative_release",
+      "genshin_lore.event_native_text_7_1_build",
+      "genshin_lore.event_native_text_7_1_verify",
+      "genshin_lore.event_photo_echo_7_1_build",
+      "genshin_lore.event_photo_echo_7_1_verify",
+      "genshin_lore.event_successor_7_1_build",
+      "genshin_lore.event_successor_7_1_verify",
+      "genshin_lore.event_tps_7_1_build",
+      "genshin_lore.event_tps_7_1_verify",
+      "genshin_lore.gcg_card_7_1_build",
+      "genshin_lore.gcg_card_7_1_verify",
+      "genshin_lore.gcg_card_build",
+      "genshin_lore.gcg_card_verify",
+      "genshin_lore.loading_tips_7_1_build",
+      "genshin_lore.loading_tips_7_1_verify",
+      "genshin_lore.loading_tips_build",
+      "genshin_lore.loading_tips_verify",
+      "genshin_lore.m3_7_1_provider_build",
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.mail_7_1_build",
+      "genshin_lore.mail_7_1_verify",
+      "genshin_lore.narrative_7_1_build",
+      "genshin_lore.narrative_7_1_verify",
+      "genshin_lore.native21_7_1_build",
+      "genshin_lore.native21_7_1_verify",
+      "genshin_lore.native26_7_1_physical",
+      "genshin_lore.native26_7_1_verify",
+      "genshin_lore.native_archive_build",
+      "genshin_lore.native_archive_verify",
+      "genshin_lore.native_aux_quest_7_1_build",
+      "genshin_lore.native_aux_quest_7_1_verify",
+      "genshin_lore.native_book_music_7_1_build",
+      "genshin_lore.native_book_music_7_1_verify",
+      "genshin_lore.native_bulk_7_1_build",
+      "genshin_lore.native_bulk_7_1_verify",
+      "genshin_lore.native_message_7_1_build",
+      "genshin_lore.native_message_7_1_verify",
+      "genshin_lore.quest_narrative_build",
+      "genshin_lore.quest_narrative_verify",
+      "genshin_lore.quest_review_build",
+      "genshin_lore.quest_review_verify",
+      "genshin_lore.quest_talk_7_1_build",
+      "genshin_lore.quest_talk_7_1_verify",
+      "genshin_lore.quest_talk_physical_build",
+      "genshin_lore.quest_talk_physical_verify",
+      "genshin_lore.readable_7_1_build",
+      "genshin_lore.readable_7_1_verify",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_candidate",
+      "genshin_lore.schema20_7_1_oracle",
+      "genshin_lore.talk_physical_7_1",
+      "scripts.build_component",
+      "scripts.build_support",
+      "scripts.builders.codexquest",
+      "scripts.builders.quest_narrative",
+      "scripts.builders.quest_review",
+      "scripts.builders.quest_review_binding_v2",
+      "scripts.builders.research_dataset",
+      "scripts.serve",
+      "scripts.validators.codexquest",
+      "scripts.validators.quest_narrative",
+      "scripts.validators.quest_review",
+      "scripts.validators.quest_review_binding_v2",
+      "scripts.validators.talk_physical"
+    ],
+    "scripts.check": [
+      "scripts.runtime_config"
+    ],
+    "scripts.serve": [
+      "genshin_lore.mcp_transport",
+      "genshin_lore.narrative_assistant_7_1",
+      "genshin_lore.research71_preview_server",
+      "genshin_lore.research71_unified",
+      "genshin_lore.research_server",
+      "scripts.runtime_config"
+    ],
+    "scripts.serve_dialogue": [
+      "genshin_lore",
+      "genshin_lore.citation_handoff",
+      "genshin_lore.dialogue",
+      "genshin_lore.mcp_transport",
+      "genshin_lore.research71_candidate_query",
+      "genshin_lore.research71_minor_release",
+      "genshin_lore.research_server",
+      "scripts.runtime_config"
+    ],
+    "scripts.check_dialogue": [
+      "scripts.check",
+      "scripts.runtime_config"
+    ],
+    "scripts.build_component": [
+      "genshin_lore.character_7_1_foundation_build",
+      "genshin_lore.character_7_1_foundation_verify",
+      "genshin_lore.m3_7_1_provider_build",
+      "genshin_lore.m3_7_1_provider_verify",
+      "genshin_lore.narrative_7_1_build",
+      "genshin_lore.narrative_7_1_verify",
+      "scripts.build_support"
+    ],
+    "scripts.maintenance.quest_review_fields": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.maintenance.native_book_music_scope": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "scripts.maintenance.native_quest_scope": [
+      "genshin_lore.event_7_1_source"
+    ],
+    "scripts.builders.quest_review": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.builders.research_scoped": [
+      "genshin_lore.research_index",
+      "genshin_lore.schema20_7_1_candidate",
+      "genshin_lore.schema20_7_1_oracle"
+    ],
+    "scripts.builders.core_provider": [
+      "genshin_lore.m3_7_1_provider_build"
+    ],
+    "scripts.builders.narrative_family": [
+      "genshin_lore.narrative_7_1_build"
+    ],
+    "scripts.builders.codexquest": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.builders.quest_narrative": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.builders.research_dataset": [
+      "genshin_lore",
+      "genshin_lore.research71_candidate_adapters",
+      "genshin_lore.research71_candidate_relations",
+      "genshin_lore.research_index"
+    ],
+    "scripts.builders.semantic": [
+      "genshin_lore.lexical_discovery",
+      "genshin_lore.semantic_discovery"
+    ],
+    "scripts.builders.character_successor": [
+      "genshin_lore.character_7_1_successor_build"
+    ],
+    "scripts.builders.character_foundation": [
+      "genshin_lore.character_7_1_foundation_build"
+    ],
+    "scripts.builders.research_index": [
+      "genshin_lore.batch_space",
+      "genshin_lore.research_index"
+    ],
+    "scripts.validators.quest_review": [
+      "genshin_lore.loading_tips_source",
+      "scripts.maintenance.quest_review_fields"
+    ],
+    "scripts.validators.event13_physical": [
+      "genshin_lore.event13_7_1_physical_verify"
+    ],
+    "scripts.validators.core_provider": [
+      "genshin_lore.m3_7_1_provider_verify"
+    ],
+    "scripts.validators.narrative_family": [
+      "genshin_lore.narrative_7_1_verify"
+    ],
+    "scripts.validators.codexquest": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.validators.talk_physical": [
+      "genshin_lore.research_index"
+    ],
+    "scripts.validators.event16_18_selection": [
+      "genshin_lore.event16_18_7_1_selection_verify"
+    ],
+    "scripts.validators.quest_narrative": [
+      "genshin_lore.loading_tips_source"
+    ],
+    "scripts.validators.research_dataset": [
+      "genshin_lore.research_index"
+    ],
+    "scripts.validators.semantic": [
+      "genshin_lore.research_refs",
+      "genshin_lore.semantic_discovery"
+    ],
+    "scripts.validators.character_successor": [
+      "genshin_lore.character_7_1_successor_verify"
+    ],
+    "scripts.validators.character_foundation": [
+      "genshin_lore.character_7_1_foundation_verify"
+    ],
+    "scripts.validators.research_index": [
+      "genshin_lore.research_adapters",
+      "genshin_lore.research_index"
+    ]
+  },
+  "unresolved_dynamic_calls": [
+    {
+      "module": "scripts.build",
+      "line": 41,
+      "call": "importlib.import_module('genshin_lore.' + name)"
+    },
+    {
+      "module": "scripts.build",
+      "line": 209,
+      "call": "module(kind + '_7_1_build')"
+    },
+    {
+      "module": "scripts.build",
+      "line": 209,
+      "call": "module(kind + '_7_1_verify')"
+    },
+    {
+      "module": "scripts.build",
+      "line": 252,
+      "call": "module(mod + '_build')"
+    },
+    {
+      "module": "scripts.build",
+      "line": 252,
+      "call": "module(mod + '_verify')"
+    },
+    {
+      "module": "scripts.build",
+      "line": 324,
+      "call": "module(mod + '_build')"
+    },
+    {
+      "module": "scripts.build",
+      "line": 324,
+      "call": "module(mod + '_verify')"
+    }
+  ],
+  "largest_modules": [
+    {
+      "module": "genshin_lore.mcp_server",
+      "lines": 2327
+    },
+    {
+      "module": "genshin_lore.phase4a_audit",
+      "lines": 2202
+    },
+    {
+      "module": "genshin_lore.character_phase4c4b_evidence",
+      "lines": 2133
+    },
+    {
+      "module": "genshin_lore.tutorial_retrieval",
+      "lines": 1951
+    },
+    {
+      "module": "genshin_lore.batch_m5c_projection",
+      "lines": 1853
+    },
+    {
+      "module": "genshin_lore.character_phase4c2_evidence",
+      "lines": 1820
+    },
+    {
+      "module": "genshin_lore.cli",
+      "lines": 1758
+    },
+    {
+      "module": "genshin_lore.pipeline",
+      "lines": 1723
+    },
+    {
+      "module": "genshin_lore.static_phase4b6_material_evidence",
+      "lines": 1594
+    },
+    {
+      "module": "genshin_lore.static_phase4b2_evidence",
+      "lines": 1590
+    },
+    {
+      "module": "genshin_lore.batch_m1_verifier",
+      "lines": 1587
+    },
+    {
+      "module": "genshin_lore.static_phase4b5_reliquary_evidence",
+      "lines": 1577
+    }
+  ]
+}

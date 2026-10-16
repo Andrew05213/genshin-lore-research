@@ -73,5 +73,21 @@ class PublicRebuildTests(unittest.TestCase):
             (directory/'build.json').write_text('{}')
             with self.assertRaises(ValueError):rebuild.compare(directory,directory)
 
+    def test_conflicting_verdict_is_not_hidden_by_component_normalization(self):
+        with tempfile.TemporaryDirectory() as temp:
+            fake_builder=SimpleNamespace(build=lambda *a:{'artifact':{'size_bytes':0,'sha256':'synthetic'}})
+            fake_verifier=SimpleNamespace(verify=lambda *a:{'status':'FAIL','verdict':'PASS'})
+            with patch.object(rebuild,'qualify'),patch.object(rebuild.shutil,'disk_usage',return_value=SimpleNamespace(free=4_000_000_000)),patch.dict('sys.modules',{'genshin_lore.narrative_7_1_build':fake_builder,'genshin_lore.narrative_7_1_verify':fake_verifier}):
+                with self.assertRaises(ValueError):rebuild.rebuild(Path(temp),'narrative_npc',Path(temp)/'output')
+            report=json.loads((Path(temp)/'output/narrative_npc/verify.json').read_text())
+            self.assertEqual(report,{'status':'FAIL','verdict':'PASS'})
+
+    def test_comparison_rejects_conflicting_verification_fields(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory=Path(temp)
+            (directory/'verify.json').write_text('{"status":"PASS","verdict":"FAIL"}')
+            (directory/'build.json').write_text('{}')
+            with self.assertRaises(ValueError):rebuild.compare(directory,directory)
+
 
 if __name__=='__main__':unittest.main()

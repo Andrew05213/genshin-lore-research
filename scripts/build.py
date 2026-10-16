@@ -20,6 +20,9 @@ import shutil
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 from scripts.build_component import qualify, sha
+from scripts.build_support import (
+    RECEIPT_CONTRACT, load_object, pipeline_identity, require_success,
+)
 SNAPSHOT='anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
 
 
@@ -73,49 +76,109 @@ class Rebuild:
     def path(self,name):return self.output/name/'artifact.sqlite'
     def report(self,name):return load(self.output/name/'build.json')
 
+    @property
+    def metadata(self):
+        return self.output/'metadata'
+
+    def metadata_path(self, relative):
+        path=Path(relative)
+        if path.is_absolute():
+            path=path.relative_to(ROOT)
+        if '..' in path.parts:
+            raise ValueError('metadata path outside build output')
+        return self.metadata/path
+
+    def dependency_inputs(self,*names):
+        paths=[]
+        for name in names:
+            directory=self.output/name
+            receipt=load_object(directory/'verified.json')
+            if receipt.get('contract')!=RECEIPT_CONTRACT or receipt.get('independent_verifier_completed') is not True:
+                raise ValueError('dependency requires current complete verification: '+name)
+            for record in ('build.json','verify.json','invocation.json'):
+                if receipt.get('records',{}).get(record)!=seal(directory/record):
+                    raise ValueError('dependency report drift: '+name)
+            require_success(load_object(directory/'verify.json'))
+            identity=receipt.get('identity',{})
+            actual=pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
+                inputs=identity.get('stage_inputs',{}),parameters=identity.get('parameters'))
+            if actual!=identity:
+                raise ValueError('dependency implementation/input identity drift: '+name)
+            if seal(self.path(name))!=receipt.get('artifact'):
+                raise ValueError('dependency artifact drift: '+name)
+            if any(Path(str(self.path(name))+suffix).exists() for suffix in ('-wal','-shm','-journal')):
+                raise ValueError('dependency SQLite sidecar: '+name)
+            paths.extend([self.path(name),directory/'verified.json'])
+        return paths
+
     def index_headroom(self):
         remaining=self.available-max(0,allocated((ROOT,self.output))-self.allocated_start)
         if remaining<7_000_000_000:
             raise ValueError('new stage allocations consumed required index peak headroom')
         return remaining
 
-    def task(self,name,builder,verifier):
+    def task(self,name,builder,verifier,*,inputs=(),parameters=None):
         directory=self.output/name;artifact=self.path(name)
-        if (directory/'verified.json').exists():
-            receipt=load(directory/'verified.json')
-            if receipt['artifact']!=seal(artifact) or any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal')):
-                raise ValueError('resume seal/sidecar drift: '+name)
-            print('REUSE_VERIFIED',name,flush=True);return self.report(name)
-        start=time.monotonic()
+        identity=pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
+                                   inputs=inputs,parameters={'stage':name,**(parameters or {})})
         if directory.exists():
-            report=load(directory/'build.json')
-            expected=report.get('artifact') or {k:report[k] for k in ('size_bytes','sha256')}
-            if expected!=seal(artifact):raise ValueError('unverified stage seal drift: '+name)
-            print('REVERIFY_UNQUALIFIED',name,flush=True)
-        else:
-            directory.mkdir();print('BUILD',name,flush=True)
-            write(directory/'invocation.json',{'stage':name,'source_snapshot':SNAPSHOT,
-                'driver_sha256':sha(Path(__file__)),'source_input':str(self.source),
-                'formal_release_accepted':False})
-            try:report=builder(artifact);write(directory/'build.json',report)
-            except BaseException as exc:
+            try:
+                receipt=load_object(directory/'verified.json')
+                if receipt.get('contract')!=RECEIPT_CONTRACT or receipt.get('identity')!=identity:
+                    raise ValueError('resume identity mismatch or incompatible old receipt: '+name)
+                if (receipt.get('source_snapshot')!=SNAPSHOT or
+                        receipt.get('independent_verifier_completed') is not True or
+                        receipt['artifact']!=seal(artifact) or
+                        any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal'))):
+                    raise ValueError('resume seal/sidecar drift: '+name)
+                records={f:load_object(directory/f) for f in ('build.json','verify.json','invocation.json')}
+                if receipt.get('records')!={f:seal(directory/f) for f in records}:
+                    raise ValueError('resume record integrity drift: '+name)
+                if records['invocation.json'].get('identity')!=identity:
+                    raise ValueError('resume invocation identity mismatch: '+name)
+                require_success(records['verify.json'])
+                expected=records['build.json'].get('artifact',records['build.json'])
+                if {k:expected.get(k) for k in ('size_bytes','sha256')}!=receipt['artifact']:
+                    raise ValueError('resume build report artifact mismatch: '+name)
+            except (ValueError,KeyError,OSError,TypeError) as exc:
                 write(directory/('failure-'+str(time.time_ns())+'.json'),
-                    {'phase':'build','error_type':type(exc).__name__,'error':str(exc)})
-                raise
-        try:check=verifier(artifact,report)
+                      {'phase':'resume','error_type':type(exc).__name__,'error':str(exc)})
+                raise ValueError('resume rejected; existing evidence preserved: '+name+': '+str(exc)) from exc
+            print('REUSE_VERIFIED',name,flush=True);return records['build.json']
+        directory.mkdir();print('BUILD',name,flush=True)
+        start=time.monotonic();phase='build'
+        write(directory/'invocation.json',{'stage':name,'source_snapshot':SNAPSHOT,
+              'identity':identity,'formal_release_accepted':False})
+        try:
+            report=builder(artifact)
+            if not isinstance(report,dict) or not report:
+                raise ValueError('builder returned no report')
+            write(directory/'build.json',report)
+            before=seal(artifact)
+            expected=report.get('artifact',report)
+            if {k:expected.get(k) for k in ('size_bytes','sha256')}!=before:
+                raise ValueError('builder report artifact seal mismatch')
+            phase='independent verification'
+            check=verifier(artifact,report)
+            write(directory/'verify.json',check)
+            require_success(check)
+            if seal(artifact)!=before or any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal')):
+                raise ValueError('verification changed artifact or left sidecars')
+            if pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
+                                 inputs=inputs,parameters={'stage':name,**(parameters or {})})!=identity:
+                raise ValueError('stage implementation or inputs changed during execution')
+            write(directory/'verified.json',{'contract':RECEIPT_CONTRACT,'identity':identity,
+                  'artifact':before,'source_snapshot':SNAPSHOT,
+                  'records':{f:seal(directory/f) for f in ('build.json','verify.json','invocation.json')},
+                  'independent_verifier_completed':True,'seconds':time.monotonic()-start,
+                  'formal_release_accepted':False})
         except BaseException as exc:
-            failure=directory/('failure-'+str(time.time_ns())+'.json')
-            write(failure,{'phase':'independent verification','error_type':type(exc).__name__,'error':str(exc)})
+            write(directory/('failure-'+str(time.time_ns())+'.json'),
+                  {'phase':phase,'error_type':type(exc).__name__,'error':str(exc)})
             raise
-        for key in ('status','verdict'):
-            if key in check and any(word in str(check[key]).upper() for word in ('FAIL','BLOCKED','ERROR')):
-                raise ValueError('source verification rejected '+name+': '+str(check[key]))
-        write(directory/'verify.json',check)
-        write(directory/'verified.json',{'artifact':seal(artifact),'source_snapshot':SNAPSHOT,
-              'independent_verifier_completed':True,'seconds':time.monotonic()-start,'formal_release_accepted':False})
         print('VERIFIED',name,seal(artifact)['size_bytes'],flush=True);return report
 
-    def bind(self,relative,value):write(ROOT/relative,value)
+    def bind(self,relative,value):write(self.metadata_path(relative),value)
 
     def bound_scope(self,name,value):
         path=self.output/'bound-scopes'/(name+'.json');write(path,value);return path
@@ -150,8 +213,12 @@ class Rebuild:
             m['candidate_artifact']={**seal(p),'path_machine_local':str(p)}
             m['parser_build_id']=r['parser_build_id'];m['ingest_run_id']=r['ingest_run_id']
         self.bind('manifests/special-core-7.1/accepted-exact-mappings-v1.json',special)
-        self.task('schema20_core',lambda p:module('schema20_7_1_candidate').build(self.source,p,include_special=True),
-                  lambda p,r:module('schema20_7_1_oracle').verify(self.source,p,r))
+        dependencies=sorted({m['family'] for m in recipe['mappings']+special['mappings']})
+        self.task('schema20_core',lambda p:module('schema20_7_1_candidate').build(self.source,p,include_special=True,metadata_root=self.metadata),
+                  lambda p,r:module('schema20_7_1_oracle').verify(self.source,p,r,metadata_root=self.metadata),
+                  inputs=self.dependency_inputs(*dependencies)+[
+                      self.metadata_path('manifests/m3-7.1-provider/accepted-exact-mappings-v1.json'),
+                      self.metadata_path('manifests/special-core-7.1/accepted-exact-mappings-v1.json')])
 
     def character(self):
         scope=ROOT/'manifests/character-7.1-physical-foundation/source-scope.json'
@@ -163,9 +230,12 @@ class Rebuild:
         builder=module('character_7_1_successor_build');verifier=module('character_7_1_successor_verify')
         for role in ('text','lore','voice'):
             def build(p,role=role):
-                if role=='text':return builder.build_text(self.source,self.path('character_foundation'),p)
-                return getattr(builder,'build_'+role)(self.path('character_foundation'),self.path('character_text'),p)
-            self.task('character_'+role,build,lambda p,r,k=role:verifier.verify(k,self.path('character_foundation'),p,source_root=self.source if k=='text' else None,text_path=None if k=='text' else self.path('character_text'),expected_artifact=r['artifact']))
+                manifest=self.metadata_path('manifests/character-7.1-physical-foundation/immutable-runtime.json')
+                if role=='text':return builder.build_text(self.source,self.path('character_foundation'),p,foundation_manifest=manifest)
+                return getattr(builder,'build_'+role)(self.path('character_foundation'),self.path('character_text'),p,foundation_manifest=manifest)
+            self.task('character_'+role,build,lambda p,r,k=role:verifier.verify(k,self.path('character_foundation'),p,source_root=self.source if k=='text' else None,text_path=None if k=='text' else self.path('character_text'),expected_artifact=r['artifact'],foundation_manifest=self.metadata_path('manifests/character-7.1-physical-foundation/immutable-runtime.json')),
+                      inputs=self.dependency_inputs('character_foundation',*(['character_text'] if role!='text' else []))+
+                      [self.metadata_path('manifests/character-7.1-physical-foundation/immutable-runtime.json')])
 
     def narrative(self):
         for family in ('npc','dialog','reminder'):
@@ -192,14 +262,16 @@ class Rebuild:
             'parser_build_id':qt['parser_build_id'],'ingest_run_id':qt['ingest_run_id'],'artifact':seal(self.path('quest_talk')),
             'local_artifact_path':str(self.path('quest_talk')),
             'product_accepted':False,'qualification':'local independently source-verified rebuild, not formal release'}
-        qmp=ROOT/'manifests/quest-talk-7.1/standalone-candidate.json';self.bind(qmp,qm)
+        qmp=self.metadata_path('manifests/quest-talk-7.1/standalone-candidate.json');self.bind('manifests/quest-talk-7.1/standalone-candidate.json',qm)
         bn=importlib.import_module('scripts.builders.quest_narrative');vn=importlib.import_module('scripts.validators.quest_narrative')
         self.task('quest_narrative',lambda p:bn.build(self.source,p,self.path('quest_talk'),str(qmp)),
-                  lambda p,r:vn.verify(self.source,p,self.output/'quest_narrative/build.json',self.path('quest_talk'),qmp))
+                  lambda p,r:vn.verify(self.source,p,self.output/'quest_narrative/build.json',self.path('quest_talk'),qmp),
+                  inputs=self.dependency_inputs('quest_talk')+[qmp])
         if self.history is None:raise ValueError('--historical-source required for the original Review field-continuity oracle')
         br=importlib.import_module('scripts.builders.quest_review');vr=importlib.import_module('scripts.validators.quest_review')
         self.task('quest_review',lambda p:br.build(self.source,p,qmp,self.path('quest_talk')),
-                  lambda p,r:vr.verify(self.source,p,self.output/'quest_review/build.json',qmp,self.path('quest_talk'),self.history))
+                  lambda p,r:vr.verify(self.source,p,self.output/'quest_review/build.json',qmp,self.path('quest_talk'),self.history),
+                  inputs=self.dependency_inputs('quest_talk')+[qmp])
         components={}
         for name in ('quest_narrative','quest_review'):
             p=self.path(name);r=release(p)
@@ -208,16 +280,20 @@ class Rebuild:
                 **{k:r[k] for k in ('contract','parser_build_id','ingest_run_id')}}
         self.bind('manifests/quest-derived-7.1/standalone-candidates-v1.json',{'components':components,'qualification':'local source-oracle passed; not current authority'})
         b=importlib.import_module('scripts.builders.quest_review_binding_v2');v=importlib.import_module('scripts.validators.quest_review_binding_v2')
-        self.task('quest_review_binding',lambda p:b.build(self.source,p),lambda p,r:v.verify(self.source,p,self.output/'quest_review_binding/build.json'))
+        manifest=self.metadata_path('manifests/quest-derived-7.1/standalone-candidates-v1.json')
+        self.task('quest_review_binding',lambda p:b.build(self.source,p,manifest_path=manifest),lambda p,r:v.verify(self.source,p,self.output/'quest_review_binding/build.json',manifest_path=manifest),
+                  inputs=self.dependency_inputs('quest_narrative','quest_review')+[manifest])
         b=module('talk_physical_7_1')
         self.task('talk_physical',lambda p:b.build(self.source,self.path('quest_talk'),seal(self.path('quest_talk')),p),
-                  lambda p,r:importlib.import_module('scripts.validators.talk_physical').verify(self.source,p,self.path('quest_talk'),seal(p)))
+                  lambda p,r:importlib.import_module('scripts.validators.talk_physical').verify(self.source,p,self.path('quest_talk'),seal(p)),
+                  inputs=self.dependency_inputs('quest_talk'))
 
     def codex(self):
         b=importlib.import_module('scripts.builders.codexquest');v=importlib.import_module('scripts.validators.codexquest')
-        mapping=ROOT/'manifests/special-core-7.1/accepted-exact-mappings-v1.json'
+        mapping=self.metadata_path('manifests/special-core-7.1/accepted-exact-mappings-v1.json')
         self.task('codexquest',lambda p:b.build(self.source,p,mapping,self.path('quest_codex_archive')),
-                  lambda p,r:v.verify(self.source,p,self.output/'codexquest/build.json',mapping,self.path('quest_codex_archive')))
+                  lambda p,r:v.verify(self.source,p,self.output/'codexquest/build.json',mapping,self.path('quest_codex_archive')),
+                  inputs=self.dependency_inputs('quest_codex_archive')+[mapping])
 
     def r0(self):
         b=module('batch_m3_physical')
@@ -230,7 +306,8 @@ class Rebuild:
     def readable(self):
         scope=ROOT/'manifests/document-readable-7.1/source-scope.json'
         self.task('readable',lambda p:module('readable_7_1_build').build(self.source,scope,p,self.path('r0'),self.path('document'),self.report('document')),
-                  lambda p,r:module('readable_7_1_verify').verify(self.source,scope,p,self.path('r0'),self.path('document'),self.report('document'),r))
+                  lambda p,r:module('readable_7_1_verify').verify(self.source,scope,p,self.path('r0'),self.path('document'),self.report('document'),r),
+                  inputs=self.dependency_inputs('r0','document'))
         scope=ROOT/'manifests/direct-text-7.1/subtitle-scope.json'
         def verify_subtitle(p,r):
             rel=release(p)
@@ -238,7 +315,7 @@ class Rebuild:
                 'qualification':'proposed local binding; independent verification still required'})
             return module('direct_text_7_1_verify').verify_subtitle(self.source,scope,p,self.path('r0'),runtime_manifest_path=runtime)
         self.task('subtitle',lambda p:module('direct_text_7_1_build').build_subtitle(self.source,scope,p,self.path('r0')),
-                  verify_subtitle)
+                  verify_subtitle,inputs=self.dependency_inputs('r0'))
 
     def events(self):
         if self.history is None:raise ValueError('--historical-source required by the original Event field-continuity oracles')
@@ -247,14 +324,15 @@ class Rebuild:
             sp=ROOT/'manifests/event-narrative-7.1'/filename;b=module(mod+'_build');v=module(mod+'_verify')
             self.task(name,lambda p,b=b,s=sp:b.build(self.source,s,p),
                       lambda p,r,v=v,s=sp,n=number:v.verify(self.source,s,p,r) if n==17 else v.verify(self.source,self.history,s,p,r))
-        qt=load(ROOT/'manifests/quest-talk-7.1/standalone-candidate.json')
+        qt_path=self.metadata_path('manifests/quest-talk-7.1/standalone-candidate.json');qt=load(qt_path)
         scope=load(ROOT/'manifests/event-narrative-7.1/component-12-scope-v1.json')
-        scope['talk_candidate_namespace'].update(accepted_manifest_sha256=sha(ROOT/'manifests/quest-talk-7.1/standalone-candidate.json'),
+        scope['talk_candidate_namespace'].update(accepted_manifest_sha256=sha(qt_path),
             artifact=qt['artifact'],parser=qt['parser_build_id'],run=qt['ingest_run_id'])
         b=module('event_filmfest_7_1_build');scope['talk_candidates']=b._target_candidates(self.source,self.path('quest_talk'),scope)
         sp=self.bound_scope('event12',scope)
         self.task('event_12',lambda p:b.build(self.source,sp,self.path('quest_talk'),p),
-                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p))
+                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p),
+                  inputs=self.dependency_inputs('quest_talk')+[qt_path,sp])
         sp=ROOT/'manifests/event-narrative-7.1/component-15-scope-v1.json'
         self.task('event_15',lambda p:module('event_photo_echo_7_1_build').build(self.source,sp,p),
                   lambda p,r:module('event_photo_echo_7_1_verify').verify(self.source,sp,p,r,{}))
@@ -270,11 +348,12 @@ class Rebuild:
             ('dialog','narrative_dialog','manifests/narrative-7.1/runtime.json'),
             ('reminder','narrative_reminder','manifests/narrative-7.1/runtime.json')):
             scope['accepted_inputs'][key].update(path_machine_local=str(self.path(name)),**seal(self.path(name)),
-                runtime_manifest=manifest,runtime_manifest_sha256=sha(ROOT/manifest),release=release(self.path(name)))
+                runtime_manifest=str(self.metadata_path(manifest)),runtime_manifest_sha256=sha(self.metadata_path(manifest)),release=release(self.path(name)))
         sp=self.bound_scope('event16-18',scope)
         for n in (16,18):
             self.task('event_'+str(n),lambda p,n=n:module('event16_18_7_1_selection').build(self.source,sp,str(n),p),
-                      lambda p,r:module('event16_18_7_1_selection_verify').verify(self.source,sp,p))
+                      lambda p,r:module('event16_18_7_1_selection_verify').verify(self.source,sp,p),
+                      inputs=self.dependency_inputs('event_15','narrative_dialog','narrative_reminder')+[sp])
         self.bind('manifests/event-narrative-7.1/component-16-physical-runtime-v1.json',self.runtime('event_16','event_narrative_archive',True))
 
     def native(self):
@@ -287,16 +366,18 @@ class Rebuild:
         if not sp.exists():
             env={**os.environ,'PYTHONPATH':str(ROOT/'src')}
             subprocess.run([sys.executable,str(ROOT/'scripts/maintenance/native_book_music_scope.py'),'--source',str(self.source),
-                '--message-artifact',str(self.path('native_message')),'--output',str(sp)],env=env,cwd=ROOT,check=True)
+                '--message-artifact',str(self.path('native_message')),'--message-runtime',str(self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')),'--output',str(sp)],env=env,cwd=ROOT,check=True)
         self.task('native_book_music',lambda p:module('native_book_music_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message')))
+                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message')),
+                  inputs=self.dependency_inputs('native_message')+[sp])
         scope=load(ROOT/'manifests/native-archive-7.1/aux-quest-scope-v1.json')
         ext,deps=module('native_aux_quest_7_1_verify').expected_external(self.source,self.path('quest_narrative'),self.path('native_bulk'))
         scope.update(external_candidates=ext,dependencies=deps)
         scope['main_quest_reconciliation'].update(accepted_parser=deps['quest_narrative']['parser'],accepted_run=deps['quest_narrative']['run'])
         sp=self.bound_scope('native-aux-quest',scope)
         self.task('native_aux_quest',lambda p:module('native_aux_quest_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk')))
+                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk')),
+                  inputs=self.dependency_inputs('quest_narrative','native_bulk')+[sp])
         binding=load(ROOT/'recipes/event13-snez-binding.json');r=release(self.path('event_13'))
         with sqlite3.connect(self.path('event_13')) as db:
             binding['occurrences']=[{'ordinal':o,'pointer':p,'raw_sha256':s,'target_occurrence_id':i} for i,o,p,s in
@@ -304,18 +385,21 @@ class Rebuild:
         binding.update(target_artifact={**seal(self.path('event_13')),'path_machine_local':str(self.path('event_13'))},target_parser=r['parser_build_id'],target_run=r['ingest_run_id'])
         self.bind('manifests/event-narrative-7.1/component-13-snez-physical-binding-v1.json',binding)
         scope=load(ROOT/'manifests/native-archive-7.1/successor-scope-v1.json')
-        scope['event13_snez_binding_sha256']=sha(ROOT/scope['event13_snez_binding']);sp=self.bound_scope('native21',scope)
-        self.task('native_successor',lambda p:module('native21_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native21_7_1_verify').verify(self.source,sp,p))
+        scope['event13_snez_binding']=str(self.metadata_path(scope['event13_snez_binding']))
+        scope['event13_snez_binding_sha256']=sha(Path(scope['event13_snez_binding']));sp=self.bound_scope('native21',scope)
+        self.task('native_successor',lambda p:module('native21_7_1_build').build(self.source,sp,p,metadata_root=self.metadata),
+                  lambda p,r:module('native21_7_1_verify').verify(self.source,sp,p,metadata_root=self.metadata),
+                  inputs=self.dependency_inputs('event_13','quest_narrative','narrative_npc','quest_talk')+[sp,*module('native21_7_1_build').dependency_manifests(self.metadata)])
         scope=load(ROOT/'manifests/native-archive-7.1/high-value-scope-v1.json')
-        event=load(ROOT/'manifests/event-narrative-7.1/component-16-physical-runtime-v1.json')
+        event_path=self.metadata_path('manifests/event-narrative-7.1/component-16-physical-runtime-v1.json');event=load(event_path)
         with sqlite3.connect(self.path('event_16')) as db:
             scope['event16_reuse_targets']=[{'source_path':path,'source_pointer':pointer,'ordinal':o,'raw_sha256':s,'target_occurrence_id':rid} for rid,path,pointer,o,s in db.execute("SELECT id,source_path,pointer,ordinal,raw_sha256 FROM selected_occurrence WHERE source_kind='talk_excel_support' ORDER BY ordinal,id")]
         scope.update(event16_artifact=event['artifact'],event16_parser=event['parser_build_id'],event16_run=event['ingest_run_id'],
-            event16_manifest_sha256=sha(ROOT/'manifests/event-narrative-7.1/component-16-physical-runtime-v1.json'))
+            event16_manifest_sha256=sha(event_path))
         sp=self.bound_scope('native26',scope)
-        self.task('native_high_value',lambda p:module('native26_7_1_physical').build(self.source,sp,p),
-                  lambda p,r:module('native26_7_1_verify').verify(self.source,sp,p))
+        self.task('native_high_value',lambda p:module('native26_7_1_physical').build(self.source,sp,p,metadata_root=self.metadata),
+                  lambda p,r:module('native26_7_1_verify').verify(self.source,sp,p,metadata_root=self.metadata),
+                  inputs=self.dependency_inputs('event_16','quest_talk')+[sp,*module('native26_7_1_physical').dependency_manifests(self.metadata)])
 
     def index(self):
         """Rebind the existing full projector/oracle to THIS rebuild only."""
@@ -330,8 +414,7 @@ class Rebuild:
             'native_high_value_physical':'native_high_value'}
         def component(name,key,family,contract,adapter,**extra):
             receipt=self.output/name/'verified.json'
-            if not receipt.is_file() or load(receipt)['artifact']!=seal(self.path(name)):
-                raise ValueError('complete index requires source-qualified input: '+name)
+            self.dependency_inputs(name)
             r=release(self.path(name)) if name!='schema20_core' else {}
             c={'source_key':key,'family':family,'contract':contract,
                 'parser':r.get('parser_build_id',r.get('parser','assembly-only-not-evidence-parser')),
@@ -367,44 +450,45 @@ class Rebuild:
             'product_accepted':False,'corpus_complete':False,'snapshot':SNAPSHOT,
             'core_provider_contracts_materialized':33,'components':components,
             'historical_contract_gaps':8,'historical_component_gap_records':12}
-        bp=ROOT/'manifests/product/candidate-7.1-complete-bundle-v1.json';write(bp,bundle)
+        bp=self.metadata_path('manifests/product/candidate-7.1-complete-bundle-v1.json');write(bp,bundle)
         manifest={'corpus_ref':'candidate-7.1-high-value-v1','status':'candidate',
             'adapter_registry':'research-explicit-adapters-v2','candidate_adapter_revision':builder.VERSION,
             'adapter_implementation_sha256':{p.name:sha(p) for p in sorted((ROOT/'src/genshin_lore').glob('research71_candidate_*.py')) if p.stem!='research71_candidate_query'},
             'snapshot':{'id':SNAPSHOT,'version':'7.1'},
-            'product_bundle':{'path':str(bp.relative_to(ROOT)),'sha256':sha(bp),'product_accepted':False},
+            'product_bundle':{'path':str(bp.relative_to(self.metadata)),'sha256':sha(bp),'product_accepted':False},
             'provenance_dependency':seal(self.path('r0')),'components':components,'outer_corpus_complete':False,
             'terminal_unresolved':['historical semantic gaps retained','snapshot existence is not first release evidence']}
-        cp=ROOT/'manifests/research/candidate-7.1-complete-v1.json';write(cp,manifest)
+        cp=self.metadata_path('manifests/research/candidate-7.1-complete-v1.json');write(cp,manifest)
         write(self.output/'complete-bindings.json',bindings)
-        builder.CORPUS=cp;builder.REPORTS=self.output/'index-oracles';builder.REPORTS.mkdir(exist_ok=True)
+        reports=self.output/'index-oracles';reports.mkdir(exist_ok=True)
         # The independently verified complete source rowsets are checked by
         # the original builder before publishing its deterministic index.
         # The initial whole-project headroom already includes any resume inputs.
         # Deduct only this invocation's new owned bytes, never count them twice.
         remaining=self.index_headroom()
-        self.task('research_index',lambda p:builder.build(manifest,bindings,p,remaining),
-            lambda p,r:load(builder.REPORTS/('index-memory-oracle-'+p.stem+'.json')))
+        self.task('research_index',lambda p:builder.build(manifest,bindings,p,remaining,corpus_path=cp,reports_dir=reports),
+            lambda p,r:load(reports/('index-memory-oracle-'+p.stem+'.json')),
+            inputs=self.dependency_inputs(*[p.parent.name for p in map(Path,bindings['artifacts'].values())])+[cp,self.output/'complete-bindings.json'])
         index=self.path('research_index')
         with sqlite3.connect(index) as db:
             counts={t:db.execute('SELECT COUNT(*) FROM '+t).fetchone()[0] for t in
                 ('source_artifact','adapter_coverage','research_container','research_text','research_relation','research_candidate')}
         profile={'status':'accepted','status_meaning':'legacy prepublication gate, NOT deployed release acceptance',
-            'corpus_ref':manifest['corpus_ref'],'corpus_manifest':str(cp.relative_to(ROOT)),
-            'evidence_product_bundle':str(bp.relative_to(ROOT)),'evidence_product_bundle_sha256':sha(bp),
+            'corpus_ref':manifest['corpus_ref'],'corpus_manifest':str(cp.relative_to(self.metadata)),
+            'evidence_product_bundle':str(bp.relative_to(self.metadata)),'evidence_product_bundle_sha256':sha(bp),
             'product_accepted':False,'full_research_7_1_accepted':False,'qualification_scope':'local_7.1_candidate_only',
             'candidate_runtime_sha256':sha(ROOT/'src/genshin_lore/research71_candidate_query.py'),
             'derived_index':{**seal(index),'counts':counts}}
-        pp=ROOT/'manifests/research/candidate-7.1-complete-profile-v1.json';write(pp,profile)
-        write(ROOT/'manifests/research-7.1/7.1-capability-registry-v1.json',caps)
+        pp=self.metadata_path('manifests/research/candidate-7.1-complete-profile-v1.json');write(pp,profile)
+        self.bind('manifests/research-7.1/7.1-capability-registry-v1.json',caps)
         paths=('src/genshin_lore/narrative_assistant_7_1.py','src/genshin_lore/research71_preview_server.py','src/genshin_lore/research71_unified.py')
-        write(ROOT/'manifests/research/candidate-7.1-agent-runtime-v2.json',{
+        self.bind('manifests/research/candidate-7.1-agent-runtime-v2.json',{
             'contract':'research71-unified-agent-runtime-v1','status':'local_candidate_qualification','snapshot':SNAPSHOT,
             'product_accepted':False,'full_research_7_1_accepted':False,'legacy_fallback':False,
             'implementation_sha256':{p:sha(ROOT/p) for p in paths},
             'corpus_manifest_sha256':sha(cp),'candidate_profile_sha256':sha(pp)})
-        write(self.output/'runtime-config.json',{'corpus':str(cp),'profile':str(pp),
-            'bindings':str(self.output/'complete-bindings.json'),'index':str(index)})
+        write(self.output/'runtime-config.json',{'corpus':str(cp.relative_to(self.output)),'profile':str(pp.relative_to(self.output)),
+            'bindings':'complete-bindings.json','index':str(index.relative_to(self.output))})
         from scripts.serve import smoke
         write(self.output/'runtime-smoke.json',smoke(self.output/'runtime-config.json'))
 

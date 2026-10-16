@@ -8,7 +8,7 @@ from typing import Any
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 from .research_query import ResearchNotFound,ResearchQuery,ResearchUnavailable
-from .mcp_server import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
+from .mcp_transport import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
 
 READONLY=ToolAnnotations(readOnlyHint=True,destructiveHint=False,idempotentHint=True,openWorldHint=False)
 

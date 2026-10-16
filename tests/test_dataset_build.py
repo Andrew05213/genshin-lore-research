@@ -15,6 +15,9 @@ driver=importlib.util.module_from_spec(spec);spec.loader.exec_module(driver)
 def job(tmp_path):
     result=object.__new__(driver.Rebuild)
     result.output=tmp_path;result.source=tmp_path/'source';result.history=None
+    result.identity_root=tmp_path/'implementation'
+    (result.identity_root/'src').mkdir(parents=True)
+    (result.identity_root/'src/parser.py').write_text('parser version 1')
     return result
 
 

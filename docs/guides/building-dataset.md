@@ -2,7 +2,7 @@
 
 `scripts/build.py` 将固定来源重新解析为 35 个独立输入、Schema20 的 33 个 core providers 和统一 Research 索引。它不使用已部署数据库，不复制历史验收凭据，也不生成全游戏覆盖声明。
 
-当前真实执行结果见 [完整重建实验](../history/full-rebuild.md)。原 14 类基础组件入口和失败记录仍保留，不能代替完整链路的结果。
+历史完整执行结果见 [完整重建实验](../history/full-rebuild.md)。工程整改后的实际验证范围见 [工程质量记录](../engineering-quality.md)；历史成功不自动为修改后的构建代码背书。原 14 类基础组件入口和失败记录仍保留，不能代替完整链路的结果。
 
 ## 输入
 
@@ -36,7 +36,23 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 构建顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native 和统一索引。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
 
-每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。失败不会产生成功 receipt；诊断记录保留于该阶段目录。已有成功阶段允许按 seal 恢复，未核验的产物必须先通过原独立 verifier。不要在恢复期间修改源码、scope 或输入绑定；变更后的重建使用新源码目录和输出目录。
+每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
+
+v2 阶段回执绑定 Python/SQLite/直接依赖版本、构建与验证 Python、SQL、静态 manifest/recipe、显式依赖与参数，以及三个报告文件的 size/SHA。恢复逐项检查，并拒绝 SQLite sidecar。未核验、失败、损坏或旧版回执不能自动恢复，必须保留原目录并使用新输出。此保守策略会使任意管线代码变化使旧阶段失效；无关文档、测试和 Git commit 变化不使回执失效。
+
+动态文件不再写入源码树：
+
+```text
+data/rebuilt/
+├── <component>/artifact.sqlite + build/verify/invocation/verified.json
+├── bound-scopes/
+├── metadata/manifests/          # 此次 bundle/profile/registry/资格绑定
+├── complete-bindings.json       # 此次 exact artifacts 的显式本地路径
+├── index-oracles/
+└── runtime-config.json
+```
+
+运行配置的四个文件路径相对于 `runtime-config.json` 解析，不相对于调用者工作目录；既有绝对路径仍兼容。artifact 和来源身份绑定保留显式本地路径，不能只移动配置后猜测新数据位置。输出间不共享动态 manifest，不修改模块全局变量指向其他构建。两套小型输出已做并行隔离测试；大型构建仍须按实际同时峰值逐次安排。
 
 `--stage` 可用于定位阶段，但不是完整通过的替代。原始失败目录须保留；不能覆盖旧 artifact 或删除失败报告后宣称首次通过。
 

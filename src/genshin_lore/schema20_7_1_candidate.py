@@ -49,16 +49,18 @@ def qualify_source(source):
         raise ValueError("source checkout must be clean")
 
 
-def build(source: Path, output: Path, *, include_special=False):
+def build(source: Path, output: Path, *, include_special=False, metadata_root=None):
     qualify_source(source)
     if output.exists() or any(Path(str(output) + s).exists() for s in ("-wal", "-shm", "-journal")):
         raise FileExistsError(output)
-    items = json.loads(MAPPINGS.read_text())["mappings"]
+    mappings = Path(metadata_root) / MAPPINGS.relative_to(ROOT) if metadata_root is not None else MAPPINGS
+    special_mappings = Path(metadata_root) / SPECIAL_MAPPINGS.relative_to(ROOT) if metadata_root is not None else SPECIAL_MAPPINGS
+    items = json.loads(mappings.read_text())["mappings"]
     if len(items) != 20 or len({x["family"] for x in items}) != 10:
         raise ValueError("frozen M3 denominator changed")
     inputs = {}
     files = {}
-    special = json.loads(SPECIAL_MAPPINGS.read_text())["mappings"] if include_special else []
+    special = json.loads(special_mappings.read_text())["mappings"] if include_special else []
     if include_special and len(special) != 13:
         raise ValueError("special core denominator changed")
     for item in items + special:

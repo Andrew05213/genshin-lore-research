@@ -1,0 +1,49 @@
+name: Engineering checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engineering-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+      - name: Install locked development dependencies and editable source
+        run: |
+          python -m pip install --require-hashes -r requirements-dev.lock
+          python -m pip install --no-deps --no-build-isolation -e .
+      - name: Unit tests, negative probes, links and license metadata
+        run: |
+          python -m pytest -q --cov=scripts.build --cov=scripts.build_support --cov=scripts.runtime_config --cov=genshin_lore.mcp_transport --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
+      - name: Compile Python source
+        run: python -m compileall -q src scripts tests
+      - name: Public command help
+        run: |
+          for command in build build_component serve check serve_dialogue check_dialogue; do
+            python "scripts/$command.py" --help
+          done
+      - name: Build and inspect wheel metadata
+        run: |
+          python -m build --wheel --no-isolation
+          python -c "from pathlib import Path; from zipfile import ZipFile; from email.parser import BytesParser; p=next(Path('dist').glob('*.whl')); z=ZipFile(p); m=BytesParser().parsebytes(z.read(next(n for n in z.namelist() if n.endswith('.dist-info/METADATA')))); assert m['Name']=='genshin-lore-research'; assert m['License-Expression']=='Apache-2.0'; assert set(m.get_all('License-File'))=={'LICENSE','NOTICE'}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source-coverage
+          path: coverage.xml
+          if-no-files-found: error

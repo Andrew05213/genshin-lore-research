@@ -13,20 +13,22 @@ sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
 
 def open_query(config, released_runtime_root=None):
+    from scripts.runtime_config import load_runtime_paths
+    paths = load_runtime_paths(config)
     if released_runtime_root is not None:
         # Load the retained release in its own immutable root. Its original
         # qualification runs BEFORE adding this opt-in reading view.
         sys.path.insert(0, str(Path(released_runtime_root).resolve()/'src'))
         from genshin_lore.research71_minor_release import ReleasedSuccessor71
-        values = json.loads(Path(config).read_text())
-        qualified = ReleasedSuccessor71(*(Path(values[k]) for k in ('corpus','bindings','index','profile')))
+        values = paths
+        qualified = ReleasedSuccessor71(*(values[k] for k in ('corpus','bindings','index','profile')))
         import genshin_lore
         genshin_lore.__path__.append(str(ROOT/'src/genshin_lore'))
         from genshin_lore.dialogue import DialogueReadAdapter
         return DialogueReadAdapter(qualified)
     from genshin_lore.research71_candidate_query import CandidateResearch71
-    values = json.loads(Path(config).read_text())
-    return CandidateResearch71(*(Path(values[k]) for k in ('corpus','bindings','index','profile')),
+    values = paths
+    return CandidateResearch71(*(values[k] for k in ('corpus','bindings','index','profile')),
                                allow_prepublication_profile=True)
 
 
@@ -95,7 +97,7 @@ def main():
             create_server = module.create_server
         else:
             from genshin_lore.research_server import create_server
-        from genshin_lore.mcp_server import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+        from genshin_lore.mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
         if a.citation_receipts:
             from genshin_lore.citation_handoff import CitationHandoff
             query.citation_handoff = CitationHandoff(a.citation_receipts)

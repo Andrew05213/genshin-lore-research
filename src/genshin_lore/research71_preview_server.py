@@ -15,7 +15,7 @@ import anyio
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 
-from .mcp_server import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+from .mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
 from .narrative_assistant_7_1 import NarrativeAssistant71
 from .research_7_1_bounded import SNAPSHOT
 

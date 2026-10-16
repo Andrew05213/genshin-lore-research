@@ -79,8 +79,8 @@ def _schema(conn: sqlite3.Connection, kind: str) -> None:
         expected.close()
 
 
-def _foundation(path: Path) -> tuple[sqlite3.Connection, dict]:
-    manifest = json.loads(MANIFEST.read_text())
+def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
+    manifest = json.loads(Path(foundation_manifest or MANIFEST).read_text())
     _eq((manifest["artifact"]["size_bytes"], manifest["artifact"]["sha256"], manifest["source_snapshot"], manifest["parser_build_id"], manifest["ingest_run_id"]),
         (FOUNDATION_SIZE, FOUNDATION_SHA, SNAPSHOT, FOUNDATION_PARSER, FOUNDATION_RUN), "frozen foundation manifest")
     _eq((path.stat().st_size, sha(path)), (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation bytes")
@@ -199,7 +199,7 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
     return {"voice_owner_rows": len(records), "raw_condition_refs": len(fields), "lut_count": len(expected_lut), "item_count": len(expected_item), "audio_variant_count": len(expected_audio), "unattached_lut_slots": unattached, "missing_variant_arrays": missing}
 
 
-def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *, source_root: str | Path | None = None, text_path: str | Path | None = None, expected_artifact: dict | None = None) -> dict:
+def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *, source_root: str | Path | None = None, text_path: str | Path | None = None, expected_artifact: dict | None = None, foundation_manifest=None) -> dict:
     if kind not in SCHEMAS:
         raise ValueError("unknown successor kind")
     artifact = Path(artifact_path)
@@ -209,7 +209,7 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
     seal = {"size_bytes": before.st_size, "sha256": sha(artifact)}
     if expected_artifact is not None:
         _eq(seal, expected_artifact, "candidate artifact seal")
-    foundation, scope = _foundation(Path(foundation_path))
+    foundation, scope = _foundation(Path(foundation_path), foundation_manifest=foundation_manifest)
     conn = _open(artifact)
     text = _open(Path(text_path)) if text_path else None
     try:

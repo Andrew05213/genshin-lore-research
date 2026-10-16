@@ -2,7 +2,9 @@
 
 ## 可执行入口
 
-完整新目录实验已通过 `PASS_COMPLETE_BOUNDED_DATA_REBUILD`：35 个输入、33 个 core contracts、统一索引的完整来源 rowset 核对及 MCP 续读检查通过。此结论不包括 semantic 重建或原部署正式 release 身份复刻。
+历史完整新目录实验通过 `PASS_COMPLETE_BOUNDED_DATA_REBUILD`：35 个输入、33 个 core contracts、统一索引的完整来源 rowset 核对及 MCP 续读检查通过。此结论不包括 semantic 重建或原部署正式 release 身份复刻。
+
+后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。最新代码的合成测试、最小来源 A/B 与本次未执行项独立记录于 [工程质量记录](engineering-quality.md)。**修改后的完整 35-input 构建未重跑**，不得沿用上述历史 verdict 作为新代码的完整来源验收。
 
 `scripts/build.py` 提供 35 个有界数据输入、33 个 core providers、统一 Research 索引及生成配置的完整入口。来源绑定由本次构建产生，原来源 oracle 与证据边界保留，不依赖已部署游戏数据库。实际完整验证结果见 [完整重建实验](history/full-rebuild.md)。
 
@@ -28,7 +30,7 @@
 
 初始最小构建记录见 [构建验证记录](history/component-build-validation.json)，完整组件实验、失败与复验见 [重建实验](history/component-rebuild.md) 及其 [机器可读记录](history/component-rebuild.json)。记录不包含数据库或游戏正文。
 
-上游源码获取命令列在重建指南中。已有固定快照用于上述验证，未重新执行网络下载；上游 commit 的持续可访问性不由本项目保证。
+上游源码获取命令列在重建指南中。上述历史实验使用已有固定快照，未重新执行网络下载。后续工程检查另在新目录联网取得固定 commit 的最小来源并完成 Activity A/B；这不等于完整源码从零重建，也不保证上游永久可访问。
 
 ## 完整入口与剩余范围
 

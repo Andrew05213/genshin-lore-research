@@ -63,10 +63,10 @@ def _readonly(path: Path) -> sqlite3.Connection:
     return conn
 
 
-def qualify_foundation(path: str | Path) -> tuple[sqlite3.Connection, dict]:
+def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
     """No default/latest or historical-runtime fallback is allowed."""
     path = Path(path)
-    manifest = json.loads(FOUNDATION_MANIFEST.read_text())
+    manifest = json.loads(Path(foundation_manifest or FOUNDATION_MANIFEST).read_text())
     if (manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"], manifest["parser_build_id"], manifest["ingest_run_id"]) != (SNAPSHOT, SOURCE_COMMIT, SOURCE_TREE, FOUNDATION_PARSER, FOUNDATION_RUN):
         raise ValueError("immutable foundation manifest identity")
     if manifest["artifact"]["size_bytes"] != FOUNDATION_SIZE or manifest["artifact"]["sha256"] != FOUNDATION_SHA or path.stat().st_size != FOUNDATION_SIZE or sha(path) != FOUNDATION_SHA:
@@ -182,8 +182,8 @@ def _remove_owned_output(path: Path, owner: tuple[int, int] | None) -> None:
             path.unlink()
 
 
-def build_text(source_root: str | Path, foundation_path: str | Path, output_path: str | Path) -> dict:
-    foundation, scope = qualify_foundation(foundation_path)
+def build_text(source_root: str | Path, foundation_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, scope = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     source = qualify_source(source_root, scope)
     output = Path(output_path)
     conn = None
@@ -238,8 +238,8 @@ def _qualify_text(path: Path, foundation_path: Path) -> sqlite3.Connection:
         raise
 
 
-def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path) -> dict:
-    foundation, _ = qualify_foundation(foundation_path)
+def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     text = _qualify_text(Path(text_path), Path(foundation_path))
     output = Path(output_path)
     conn = None
@@ -287,8 +287,8 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
         text.close()
 
 
-def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path) -> dict:
-    foundation, _ = qualify_foundation(foundation_path)
+def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     text = _qualify_text(Path(text_path), Path(foundation_path))
     output = Path(output_path)
     conn = None

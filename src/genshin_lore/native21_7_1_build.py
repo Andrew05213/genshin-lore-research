@@ -23,9 +23,9 @@ DEPENDENCY_MANIFESTS = (
     REPO / 'manifests/narrative-7.1/runtime.json',
     REPO / 'manifests/quest-talk-7.1/standalone-candidate.json',
 )
-QUEST_PATH = Path(json.loads(DEPENDENCY_MANIFESTS[1].read_text())['components']['quest_narrative_archive']['artifact']['path_machine_local'])
-NPC_PATH = Path(json.loads(DEPENDENCY_MANIFESTS[2].read_text())['families']['npc']['artifact']['path_machine_local'])
-TALK_PATH = Path(json.loads(DEPENDENCY_MANIFESTS[3].read_text())['local_artifact_path'])
+def dependency_manifests(metadata_root=None):
+    base = Path(metadata_root) if metadata_root is not None else REPO
+    return tuple(base / p.relative_to(REPO) for p in DEPENDENCY_MANIFESTS)
 
 
 def ident(*parts):
@@ -33,13 +33,14 @@ def ident(*parts):
     return 'native21-71:' + hashlib.sha256(payload).hexdigest()[:40]
 
 
-def _dependencies():
-    event, derived, npc, talk = [json.loads(path.read_text()) for path in DEPENDENCY_MANIFESTS]
+def _dependencies(metadata_root=None):
+    event, derived, npc, talk = [json.loads(path.read_text()) for path in dependency_manifests(metadata_root)]
     quest = derived['components']['quest_narrative_archive'] if 'components' in derived else derived['quest_narrative_archive']
     n = npc['families']['npc']
     expected = ((Path(event['artifact']['path_machine_local']), event['artifact']),
-                (QUEST_PATH, quest['artifact']), (NPC_PATH, n['artifact']),
-                (TALK_PATH, talk['artifact']))
+                (Path(quest['artifact']['path_machine_local']), quest['artifact']),
+                (Path(n['artifact']['path_machine_local']), n['artifact']),
+                (Path(talk['local_artifact_path']), talk['artifact']))
     for path, seal in expected:
         if path.stat().st_size != seal['size_bytes'] or sha(path) != seal['sha256']:
             raise ValueError('Native21 accepted dependency artifact drift: ' + str(path))
@@ -68,7 +69,7 @@ def _target_rows(root, source_rows, quest, npc, talk):
             raise ValueError('Native21 second-hop source coordinate/raw SHA: ' + path + pointer)
 
     qrun = quest['ingest_run_id']
-    with sqlite3.connect(QUEST_PATH) as db:
+    with sqlite3.connect(quest['artifact']['path_machine_local']) as db:
         for kind, rel_kind in (('main_quest', 'source_authored_main_quest_reference'),
                                ('quest_step', 'source_authored_open_quest_reference'),
                                ('main_quest', 'source_authored_open_quest_reference'),
@@ -82,7 +83,7 @@ def _target_rows(root, source_rows, quest, npc, talk):
                     output[(rel_kind, native)].append(('quest_narrative_archive', quest['contract'],
                         quest['parser_build_id'], qrun, rid, path, pointer, raw_sha))
     nrelease = npc['release']
-    with sqlite3.connect(NPC_PATH) as db:
+    with sqlite3.connect(npc['artifact']['path_machine_local']) as db:
         for rid, path, pointer, native, raw_sha in db.execute(
                 'SELECT evidence_ref,source_path,pointer,native_key,raw_sha256 FROM physical_row'):
             if native in wanted['source_authored_npc_reference']:
@@ -90,7 +91,7 @@ def _target_rows(root, source_rows, quest, npc, talk):
                 output[('source_authored_npc_reference', native)].append((
                     'npc', nrelease['contract'], nrelease['parser'], nrelease['run'],
                     rid, path, pointer, raw_sha))
-    with sqlite3.connect(TALK_PATH) as db:
+    with sqlite3.connect(talk['local_artifact_path']) as db:
         for rid, path, pointer, native, raw_sha in db.execute(
                 "SELECT id,source_path,pointer,native_id,raw_sha256 FROM physical_container WHERE kind='talk_root' AND ingest_run_id=?",
                 (talk['ingest_run_id'],)):
@@ -104,12 +105,12 @@ def _target_rows(root, source_rows, quest, npc, talk):
     return output
 
 
-def projection(root: Path, scope_path: Path):
+def projection(root: Path, scope_path: Path, *, metadata_root=None):
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
     if scope['contract'] != 'native21-7.1-versioned-scope-v1' or len(scope['sources']) != 37:
         raise ValueError('Native21 selected source boundary')
-    event, quest, npc, talk = _dependencies()
+    event, quest, npc, talk = _dependencies(metadata_root)
     binding_path = REPO / scope['event13_snez_binding']
     if sha(binding_path) != scope['event13_snez_binding_sha256']:
         raise ValueError('Native21 Snez binding seal')
@@ -120,7 +121,9 @@ def projection(root: Path, scope_path: Path):
     if len(snez) != 9:
         raise ValueError('Native21 Snez denominator')
     implementation = {str(path.relative_to(REPO)): sha(path) for path in
-                      (Path(__file__), SCHEMA, *DEPENDENCY_MANIFESTS)}
+                      (Path(__file__), SCHEMA)}
+    implementation.update({str(original.relative_to(REPO)): sha(actual)
+                           for original, actual in zip(DEPENDENCY_MANIFESTS, dependency_manifests(metadata_root))})
     parser = ident('parser', implementation)
     run = ident('run', parser, sha(scope_path), scope['snapshot_id'])
     source_rows = []
@@ -226,14 +229,14 @@ def projection(root: Path, scope_path: Path):
     return scope, expected, release
 
 
-def build(root: Path, scope_path: Path, output: Path):
+def build(root: Path, scope_path: Path, output: Path, *, metadata_root=None):
     root, scope_path, output = Path(root).resolve(), Path(scope_path).resolve(), Path(output).absolute()
     scope = json.loads(scope_path.read_text())
     inputs = [('source_root', root), ('scope', scope_path), ('schema', SCHEMA)]
     inputs += [(str(i), root / item['path']) for i, item in enumerate(scope['files'])]
-    inputs += [(str(i), path) for i, path in enumerate(DEPENDENCY_MANIFESTS)]
+    inputs += [(str(i), path) for i, path in enumerate(dependency_manifests(metadata_root))]
     assert_output_paths(output, inputs=inputs)
-    _, rows, release = projection(root, scope_path)
+    _, rows, release = projection(root, scope_path, metadata_root=metadata_root)
     fd, stage = create_private_staging(output, prefix='.native21-71-')
     inode = stage.stat().st_dev, stage.stat().st_ino
     connection = None
