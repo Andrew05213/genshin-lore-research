@@ -16,6 +16,38 @@ from genshin_lore.research_index import sha256_file
 KEYS={}
 
 
+def verify_projection_counts(index):
+    """Check actual index rowsets, not the builder's indexed_count claims.
+
+    Every present row is subsequently source-reconstructed by this oracle.
+    Counts plus unique physical locators prevent omission/duplication from
+    being hidden by an unchanged adapter_coverage report.
+    """
+    declarations = {}
+    for row in index.execute('SELECT * FROM adapter_coverage'):
+        key = (row['source_key'], row['projection_kind'], row['source_table'])
+        if key in declarations:
+            raise ValueError('ambiguous duplicate coverage declaration')
+        declarations[key] = row['indexed_count']
+    actual = {}
+    for kind, table in [('container', 'research_container'), ('text', 'research_text'),
+                        ('relation', 'research_relation'), ('candidate', 'research_candidate')]:
+        relation_join = ' JOIN research_relation z ON z.id=r.relation_id' if kind == 'candidate' else ''
+        source = 'z.source_key' if kind == 'candidate' else 'r.source_key'
+        groups = index.execute(f'SELECT {source},r.source_table,COUNT(*) FROM {table} r{relation_join} '
+                               f'GROUP BY {source},r.source_table')
+        for source_key, source_table, count in groups:
+            actual[source_key, kind, source_table] = count
+        duplicates = index.execute(f'SELECT 1 FROM {table} r{relation_join} GROUP BY {source},'
+            'r.source_table,r.pk_column,r.pk_value HAVING COUNT(*)>1 LIMIT 1').fetchone()
+        if duplicates:
+            raise ValueError('duplicate exact source occurrence in '+table)
+    if any(key not in declarations for key in actual):
+        raise ValueError('indexed rowset lacks coverage declaration')
+    if any(actual.get(key, 0) != count for key, count in declarations.items()):
+        raise ValueError('actual indexed rowset differs from coverage count')
+
+
 def canon(value):
     def blob(v):
         if isinstance(v,bytes):return {'bytes_sha256':hashlib.sha256(v).hexdigest(),'size_bytes':len(v)}
@@ -87,6 +119,7 @@ def verify_connection(index,manifest,bindings):
         source_seals.append({'source_key':key,'artifact':seal})
     nc=nt=nr=nk=0;terminal=[];family_sources={};reuse_rows=[];second_hops={'verified_indexed_targets':0,'verified_projection_reuse_targets':0,'not_index_addressable':0,'target_scope_unknown':0,'locator_not_declared_as_target_primary_native_id':0}
     try:
+        verify_projection_counts(index)
         for r in index.execute('SELECT * FROM research_container ORDER BY id'):
             src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
             path=got.get('source_path',got.get('source_file_path'));ptr=got.get('pointer',got.get('source_pointer'))
