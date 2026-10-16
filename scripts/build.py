@@ -342,10 +342,11 @@ class Rebuild:
         scope=load(ROOT/'manifests/event-narrative-7.1/component-12-scope-v1.json')
         scope['talk_candidate_namespace'].update(accepted_manifest_sha256=sha(qt_path),
             artifact=qt['artifact'],parser=qt['parser_build_id'],run=qt['ingest_run_id'])
-        b=module('event_filmfest_7_1_build');scope['talk_candidates']=b._target_candidates(self.source,self.path('quest_talk'),scope)
+        b=module('event_filmfest_7_1_build')
+        scope['talk_candidates']=b.discover_target_candidates(self.source,self.path('quest_talk'),scope,qt_manifest_path=qt_path)
         sp=self.bound_scope('event12',scope)
-        self.task('event_12',lambda p:b.build(self.source,sp,self.path('quest_talk'),p),
-                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p),
+        self.task('event_12',lambda p:b.build(self.source,sp,self.path('quest_talk'),p,qt_manifest_path=qt_path),
+                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p,qt_manifest_path=qt_path),
                   inputs=self.dependency_inputs('quest_talk')+[qt_path,sp])
         sp=ROOT/'manifests/event-narrative-7.1/component-15-scope-v1.json'
         self.task('event_15',lambda p:module('event_photo_echo_7_1_build').build(self.source,sp,p),
