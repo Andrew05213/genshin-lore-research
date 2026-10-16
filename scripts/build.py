@@ -86,7 +86,10 @@ class Rebuild:
             path=path.relative_to(ROOT)
         if '..' in path.parts:
             raise ValueError('metadata path outside build output')
-        return self.metadata/path
+        target=self.metadata/path
+        if not target.resolve().is_relative_to(self.output.resolve()):
+            raise ValueError('metadata path outside build output')
+        return target
 
     def dependency_inputs(self,*names):
         paths=[]
@@ -100,6 +103,11 @@ class Rebuild:
                     raise ValueError('dependency report drift: '+name)
             require_success(load_object(directory/'verify.json'))
             identity=receipt.get('identity',{})
+            invocation=load_object(directory/'invocation.json')
+            if (identity.get('parameters',{}).get('stage')!=name or
+                    invocation.get('stage')!=name or invocation.get('identity')!=identity or
+                    receipt.get('source_snapshot')!=SNAPSHOT or invocation.get('source_snapshot')!=SNAPSHOT):
+                raise ValueError('dependency stage identity mismatch: '+name)
             actual=pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
                 inputs=identity.get('stage_inputs',{}),parameters=identity.get('parameters'))
             if actual!=identity:
