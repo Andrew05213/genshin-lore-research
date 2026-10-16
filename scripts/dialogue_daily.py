@@ -14,11 +14,11 @@ def settings(project, config_path, overrides):
         return list(overrides)
     root = Path(root)
     config = Path(config_path or project/'.codex/research71-release.json')
-    if not root.is_absolute() or not (root/'scripts/dialogue_runtime.py').is_file():
+    if not root.is_absolute() or not (root/'scripts/serve_dialogue.py').is_file():
         raise ValueError('Configured dialogue runtime unavailable; no fallback')
     release = json.loads(config.read_text())
     retained = Path(release['profile']).resolve().parents[2]
-    args = [str(root/'scripts/dialogue_runtime.py'), '--config', str(config.resolve()),
+    args = [str(root/'scripts/serve_dialogue.py'), '--config', str(config.resolve()),
             '--released-runtime-root', str(retained)]
     prefixes = (f'mcp_servers.{SERVER}.args=', f'mcp_servers.{SERVER}.cwd=',
                 f'mcp_servers.{SERVER}.required=')

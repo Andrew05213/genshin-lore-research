@@ -37,7 +37,7 @@
     "tab_text_locator_count": 28,
     "tab_text_main_hits": {"CHS": 8, "EN": 7, "JP": 7}
   },
-  "proof_script": "scripts/prove_quest_review_7_1_fields.py",
+  "proof_script": "scripts/maintenance/quest_review_fields.py",
   "historical_relation_status_preserved": "mapping_unresolved",
   "cross_snapshot_identity_merge_count": 0
 }

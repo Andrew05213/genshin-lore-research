@@ -1,10 +1,12 @@
 # Agent 开发规则
 
-先阅读 [README](README.md)、[当前状态](docs/STATUS.md) 和 [开发指南](docs/DEVELOPMENT.md)。本仓库是源码发行版，不包含已部署的数据、current 指针或发布验收凭据；不得仅凭模块名称推断功能可直接运行。
+先阅读 [README](README.md)、[当前状态](docs/status.md) 和 [开发指南](docs/development.md)。本仓库是源码发行版，不包含已部署的数据、current 指针或发布验收凭据；不得仅凭模块名称推断功能可直接运行。
+
+命名与目录遵循 [规范](docs/naming.md)：项目名称 Genshin Lore Research，源码/文档许可 Apache-2.0；常用命令放 scripts 根目录，各类构建、验证和维护命令分别归类。保留证据合同、迁移和历史记录身份，不按美观改写旧 seal。
 
 ## 构建与维护
 
-- 小型组件验证使用 `scripts/rebuild.py`；完整有界数据使用 `scripts/rebuild_complete.py --stage all`，运行参数见 [完整指南](docs/COMPLETE_REBUILD.md)。实际成功范围以实验记录为准，不凭入口名称推断。
+- 小型组件验证使用 `scripts/build_component.py`；完整有界数据使用 `scripts/build.py --stage all`，运行参数见 [完整指南](docs/guides/building-dataset.md)。实际成功范围以实验记录为准，不凭入口名称推断。
 - 输入绑定固定上游快照，保留解析器、导入批次、来源坐标、语言和观察范围；不通过修改旧数据库生成新版本。
 - 数据库、上游文本、会话记录、个人配置、凭据和向量/模型文件不提交 Git。单元测试使用合成文本。
 - 修改解析器或 SQL 后重新构建和核验受影响组件，不沿用旧字节的校验结果。
@@ -19,4 +21,4 @@
 - 原文引用支持紧邻事实；保留来源限定语，解释和预测与事实分开。
 - 已配置研究服务时，研究 Agent 通过 MCP 读取并检查引用。构建器与独立验证器可以直接读取上游源码。
 - 允许互联网研究、文学解释与预测，分别标明来源、依据和假设。
-- 对白研究先取得必要前后文和来源角色标注，再解释内容；使用声明的 `read_evidence(view="dialogue")` 与续读 cursor，前驱由 `follow_evidence(relation_kind="dialogue_predecessor")` 取得。来源引用解析与唯一剧情人物身份分别判断，不能把遍历顺序写成播放顺序。具体支持范围见 [对白阅读](docs/DIALOGUE_READING.md)。
+- 对白研究先取得必要前后文和来源角色标注，再解释内容；使用声明的 `read_evidence(view="dialogue")` 与续读 cursor，前驱由 `follow_evidence(relation_kind="dialogue_predecessor")` 取得。来源引用解析与唯一剧情人物身份分别判断，不能把遍历顺序写成播放顺序。具体支持范围见 [对白阅读](docs/guides/reading-dialogue.md)。

@@ -483,14 +483,14 @@ class ResearchQuery:
   return {'source_path':str(row['text_source_path']),'pointer':str(row['text_source_pointer']),'child_id':str(row['child_id'] or ''),'id':int(row['id'])}
  def _decorate_read(self,item,row,container):
   result=self._decorate_context(item,row,container)
-  from .research_dialogue_context import DialogueContext
+  from .dialogue import DialogueContext
   dialogue=DialogueContext(self)
   if dialogue.supports(container):result['dialogue_source']=dialogue.card(container,row['locale'] if row is not None and row['locale'] in ('CHS','EN','JP') else 'CHS')
   return result
  def read(self,corpus_ref,evidence_ref,before=0,after=0,limit=50,cursor=None,view='physical',locale='CHS'):
   if view=='dialogue':
    if before or after:raise ValueError('dialogue view uses source connections, not before/after windows')
-   from .research_dialogue_context import DialogueContext
+   from .dialogue import DialogueContext
    return DialogueContext(self).read(corpus_ref,evidence_ref,limit,cursor,locale)
   if view!='physical':raise ValueError('read view must be physical or dialogue')
   self._require(corpus_ref);ref=decode_ref(evidence_ref);limit=max(1,min(int(limit),100));before=max(0,min(int(before),50));after=max(0,min(int(after),50))
@@ -569,7 +569,7 @@ class ResearchQuery:
   if 'npc_id' in cols and str(got['npc_id'])!=str(c['raw_target']):raise ResearchUnavailable('relation candidate raw target drift')
  def follow(self,corpus_ref,evidence_ref,relation_kind=None,limit=50,cursor=None,resolve_targets=True):
   if relation_kind=='dialogue_predecessor':
-   from .research_dialogue_context import DialogueContext
+   from .dialogue import DialogueContext
    result=DialogueContext(self).predecessors(corpus_ref,evidence_ref,limit,cursor)
    if not resolve_targets:
     for item in result['items']:

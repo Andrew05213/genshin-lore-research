@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from genshin_lore.research_dialogue_context import DialogueContext
-from genshin_lore.research_dialogue_context import DialogueReadAdapter
+from genshin_lore.dialogue import DialogueContext
+from genshin_lore.dialogue import DialogueReadAdapter
 from genshin_lore.research_index import SCHEMA
 from genshin_lore.research71_candidate_query import CandidateResearch71
 

@@ -5,7 +5,7 @@ from scripts.dialogue_daily import settings, capture_wrapper
 def fixture(tmp_path):
     (tmp_path/'.codex').mkdir()
     root=tmp_path/'code'; (root/'scripts').mkdir(parents=True)
-    (root/'scripts/dialogue_runtime.py').touch()
+    (root/'scripts/serve_dialogue.py').touch()
     (tmp_path/'.codex/research-daily.json').write_text(json.dumps({'dialogue_runtime_root':str(root)}))
     config=tmp_path/'.codex/research71-release.json'
     config.write_text(json.dumps({'profile':str(tmp_path/'release/manifests/research/profile.json')}))

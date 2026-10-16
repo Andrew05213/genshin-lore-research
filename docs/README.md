@@ -4,18 +4,22 @@
 
 | 文档 | 内容 |
 |---|---|
-| [当前状态](STATUS.md) | 已提供入口、实际验证范围与剩余限制 |
-| [数据重建指南](REBUILDING.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
-| [完整有界重建](COMPLETE_REBUILD.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
-| [完整重建实验](COMPLETE_REBUILD_EXPERIMENT.md) | 完整链路实际执行、失败修复及验证结果 |
-| [完整重建机器记录](COMPLETE_REBUILD_EXPERIMENT.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
-| [架构说明](ARCHITECTURE.md) | 数据流程、代码目录、Research 工具与证据语义 |
-| [对白阅读](DIALOGUE_READING.md) | 来源角色、局部对白图、前驱、续读与任务标题候选 |
-| [对白阅读验证](DIALOGUE_VALIDATION.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
-| [开发指南](DEVELOPMENT.md) | 开发安装、测试、修改范围和文档维护 |
-| [源码分发与数据留存](PUBLICATION.md) | 分发文件、生成数据与许可状态 |
-| [构建验证记录](BUILD_VALIDATION.json) | 固定快照和已执行构建的机器可读结果 |
-| [历史重建实验](REBUILD_EXPERIMENT.md) | 早期基础组件构建、初轮失败及当时的整库缺项 |
+| [当前状态](status.md) | 已提供入口、实际验证范围与剩余限制 |
+| [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
+| [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
+| [完整重建实验](history/full-rebuild.md) | 完整链路实际执行、失败修复及验证结果 |
+| [完整重建机器记录](history/full-rebuild.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
+| [架构说明](architecture.md) | 数据流程、代码目录、Research 工具与证据语义 |
+| [对白阅读](guides/reading-dialogue.md) | 来源角色、局部对白图、前驱、续读与任务标题候选 |
+| [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
+| [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
+| [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |
+| [目录与命名规范](naming.md) | 常用入口、旧命令迁移与保留历史名称的原因 |
+| [源码分发与数据留存](distribution.md) | 分发文件、生成数据与许可状态 |
+| [构建验证记录](history/component-build-validation.json) | 固定快照和已执行构建的机器可读结果 |
+| [历史重建实验](history/component-rebuild.md) | 早期基础组件构建、初轮失败及当时的整库缺项 |
 | [Agent 开发规则](../AGENTS.md) | Coding Agent 接手时遵循的规则 |
 
-操作说明以实际脚本参数为准；验证结果仅适用于记录中明确列出的组件和范围。[初始源码包清单](../PUBLIC_SOURCE_FILES.json) 记录初始发行包字节，后续 Git 改动不沿用其包级 seal。
+操作说明以实际脚本参数为准；验证结果仅适用于记录中明确列出的组件和范围。[初始源码包清单](history/initial-source-files.json) 记录初始发行包字节，后续 Git 改动不沿用其包级 seal。
+
+日常操作文档位于本目录及 `guides/`；`history/` 保留实际实验与失败记录，不作为当前命令或许可配置。历史文件移入该目录不改变其原始验收含义。
