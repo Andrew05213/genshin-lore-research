@@ -6,7 +6,7 @@
 
 源码发行版提供 **完整有界数据构建入口**：35 个独立输入、Schema20 的 33 个 core providers，以及统一 Research 文本、关系和候选索引。原 14 类基础组件入口继续保留，适合小范围验证。
 
-完整链路已在新解压目录从固定源码实际重建通过：35 个输入、33 个 core contracts、统一索引及真实 MCP 调用均完成来源核验，索引包含 3,761,013 条物理文本。详见 [完整重建实验](docs/history/full-rebuild.md)。此前缺配置、绑定和路径适配的失败保留于 [历史重建实验](docs/history/component-rebuild.md)，不改写历史结果。
+历史完整链路曾在新解压目录从固定源码重建通过：35 个输入、33 个 core contracts、统一索引及 MCP 调用完成来源核验，索引包含 3,761,013 条物理文本。详见 [完整重建实验](docs/history/full-rebuild.md)。最新工程修订的测试、最小来源 A/B 和未运行范围见 [工程质量记录](docs/engineering-quality.md)，不以历史成功替代新代码的完整验收。此前失败记录保持不变。
 
 仓库分发代码、SQL 定义和必要的来源校验清单；**不分发游戏数据库、游戏正文、模型权重或向量索引**。数据由上游源码在构建环境中生成。
 
@@ -52,6 +52,7 @@ git -C data/AnimeGameData checkout --detach 9587d1afbd9ab0419cdd00dc05ecd114b9e3
 
 - [文档导航](docs/README.md)
 - [开发指南](docs/development.md)
+- [工程质量与 CI 验证范围](docs/engineering-quality.md)
 - [目录与命名规范及旧命令迁移](docs/naming.md)
 - [源码导航](src/genshin_lore/README.md)
 - [数据分发与许可状态](docs/distribution.md)
