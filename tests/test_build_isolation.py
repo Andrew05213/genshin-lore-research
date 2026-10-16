@@ -68,6 +68,26 @@ def test_metadata_cannot_escape_output(tmp_path):
         job.bind('../outside.json', {})
 
 
+def test_core_index_reads_only_its_own_generated_mappings(tmp_path):
+    from scripts.builders.research_dataset import core_mappings
+    manifests = []
+    for arm in ('a', 'b'):
+        metadata = tmp_path/arm/'metadata'
+        corpus = metadata/'manifests/research/corpus.json'
+        corpus.parent.mkdir(parents=True)
+        corpus.write_text('{}')
+        for name, count in [('m3-7.1-provider', 20), ('special-core-7.1', 13)]:
+            path = metadata/'manifests'/name/'accepted-exact-mappings-v1.json'
+            path.parent.mkdir(parents=True)
+            path.write_text(json.dumps({'mappings': [{'arm': arm}] * count}))
+        manifests.append(corpus)
+    assert all(item['arm'] == 'a' for item in core_mappings(manifests[0]))
+    assert all(item['arm'] == 'b' for item in core_mappings(manifests[1]))
+    (manifests[0].parents[2]/'manifests/m3-7.1-provider/accepted-exact-mappings-v1.json').unlink()
+    with pytest.raises(FileNotFoundError):
+        core_mappings(manifests[0])  # no source-tree/sibling fallback
+
+
 def test_relative_config_has_no_cwd_or_sibling_fallback(tmp_path, monkeypatch):
     outputs = []
     for name in ('a', 'b'):

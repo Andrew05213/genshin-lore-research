@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import hashlib
+from importlib.metadata import PackageNotFoundError, version
 import json
 from pathlib import Path
+import sqlite3
+import sys
 
 RECEIPT_CONTRACT = "local-build-stage-receipt-v2"
 # Actual complete-verification contracts used by build.py. These describe
@@ -47,11 +50,26 @@ def pipeline_identity(root, source, history, *, inputs=(), parameters=None):
                                ("manifests", "*.json")):
         for path in sorted((root / directory).rglob(pattern)):
             files[str(path.relative_to(root))] = file_seal(path)
+    for name in ("pyproject.toml", "requirements-build.txt"):
+        if (root/name).is_file():
+            files[name] = file_seal(root/name)
     declared = {str(Path(path).resolve()): file_seal(path) for path in inputs}
     return {"contract": RECEIPT_CONTRACT, "implementation_and_contracts": files,
+            "environment": environment_identity(),
             "source_root": str(Path(source).resolve()),
             "historical_source_root": str(Path(history).resolve()) if history else None,
             "stage_inputs": declared, "parameters": parameters or {}}
+
+
+def environment_identity():
+    dependencies = {}
+    for name in ("jsonschema", "mcp", "numpy"):
+        try:
+            dependencies[name] = version(name)
+        except PackageNotFoundError:
+            dependencies[name] = None
+    return {"python": list(sys.version_info[:3]), "sqlite": sqlite3.sqlite_version,
+            "dependencies": dependencies}
 
 
 def load_object(path):

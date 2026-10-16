@@ -17,11 +17,9 @@ from genshin_lore.research71_candidate_adapters import SPECS, VERSION, adapt, ch
 from genshin_lore.research71_candidate_relations import project
 
 ROOT = Path(__file__).resolve().parents[2]
-REPORTS = ROOT / "reports/research71-data-product-complete"
 REGISTRY = ROOT / "manifests/research-7.1/7.1-capability-registry-v1.json"
 CORPUS = ROOT / "manifests/research/candidate-7.1-complete-v1.json"
 BUNDLE = ROOT / "manifests/product/candidate-7.1-complete-bundle-v1.json"
-PROFILE = ROOT / "manifests/research/candidate-7.1-complete-profile-v1.json"
 
 
 def write(path, value):
@@ -60,11 +58,17 @@ def select_artifact(cap, parent):
     return matches[0]
 
 
-def metadata(output_root, extra_paths):
-    registry = json.loads(REGISTRY.read_text())
+def metadata(output_root, extra_paths, *, input_metadata_root, provenance_artifact):
+    """Historical qualified-input assembly; never reads another implicit deployment."""
+    inputs = Path(input_metadata_root).resolve()
+    metadata_root = Path(output_root).resolve() / "metadata"
+    registry_path = inputs / REGISTRY.relative_to(ROOT)
+    bundle_path = metadata_root / BUNDLE.relative_to(ROOT)
+    corpus_path = metadata_root / CORPUS.relative_to(ROOT)
+    registry = json.loads(registry_path.read_text())
     core = json.loads((output_root/"core-build-final-b.json").read_text())
-    components = [{"source_key":"schema20-core-7.1", "family":"schema20_core", "contract":"schema20-7.1-core33-materialization-v1", "parser":"assembly-only-not-evidence-parser", "run":"assembly-only-not-evidence-run", "artifact":core["artifact"], "adapter":"core33", "runtime_manifest":"reports/research71-data-product-complete/core-build-final-b.json", "runtime_manifest_sha256":old.sha256_file(REPORTS/"core-build-final-b.json"), "limitations":["outer corpus incomplete", "row-level parser/run identity overrides aggregate assembly identity"]}]
-    bindings = {"provenance_artifact":"/tmp/genshin-lore-7.1-foundation/r0-b.sqlite", "artifacts":{"schema20-core-7.1":str(output_root/"schema20-final-b.sqlite")}}
+    components = [{"source_key":"schema20-core-7.1", "family":"schema20_core", "contract":"schema20-7.1-core33-materialization-v1", "parser":"assembly-only-not-evidence-parser", "run":"assembly-only-not-evidence-run", "artifact":core["artifact"], "adapter":"core33", "runtime_manifest":str((output_root/"core-build-final-b.json").resolve()), "runtime_manifest_sha256":old.sha256_file(output_root/"core-build-final-b.json"), "limitations":["outer corpus incomplete", "row-level parser/run identity overrides aggregate assembly identity"]}]
+    bindings = {"provenance_artifact":str(Path(provenance_artifact).resolve()), "artifacts":{"schema20-core-7.1":str(output_root/"schema20-final-b.sqlite")}}
     parent_specs = {"readable_archive":"readable_file","document_archive":"document_row","loading_tips":"loading_tip_row","mail_narrative":"mail_row","native_bulk":"native_archive_container","native_book_music":"native_archive_container","native_aux_quest":"native_archive_container"}
     for cap in registry["capabilities"]:
         name = cap["capability_id"]
@@ -72,7 +76,7 @@ def metadata(output_root, extra_paths):
             continue
         parent = SPECS[name][0] if name in SPECS else parent_specs.get(name,"event_narrative_row")
         a = select_artifact(cap,parent);key="7.1-"+name
-        c = {"source_key":key, "family":cap["family"],"contract":cap["contract"],"parser":cap["parser"],"run":cap["run"],"artifact":{k:a[k] for k in ("size_bytes","sha256")}, "adapter":name if name in SPECS else "formal_compatible", "runtime_manifest":str(REGISTRY.relative_to(ROOT)),"runtime_manifest_sha256":old.sha256_file(REGISTRY),"limitations":cap["limitations"],"registered_capability_id":name,"source_qualification":cap["status"]}
+        c = {"source_key":key, "family":cap["family"],"contract":cap["contract"],"parser":cap["parser"],"run":cap["run"],"artifact":{k:a[k] for k in ("size_bytes","sha256")}, "adapter":name if name in SPECS else "formal_compatible", "runtime_manifest":str(registry_path),"runtime_manifest_sha256":old.sha256_file(registry_path),"limitations":cap["limitations"],"registered_capability_id":name,"source_qualification":cap["status"]}
         if name in {'event_physical_13','event_physical_16','event_physical_18'}:
             with source(Path(a['path'])) as db:
                 physical=json.loads(db.execute('SELECT manifest_json FROM release').fetchone()[0])
@@ -84,7 +88,7 @@ def metadata(output_root, extra_paths):
             c["registered_capability_family"] = c["family"]
             c["family"] = "quest_talk_pilot"  # explicit historical routed alias
         components.append(c);bindings["artifacts"][key]=a["path"]
-    charpath = ROOT/"manifests/character-7.1-successor/runtime.json"
+    charpath = inputs/"manifests/character-7.1-successor/runtime.json"
     ch = json.loads(charpath.read_text())
     for role,a in ch["artifacts"].items():
         with source(Path(a["machine_local_path"])) as db:
@@ -93,36 +97,50 @@ def metadata(output_root, extra_paths):
         if not contract:
             raise ValueError("Character source release contract missing")
         key="7.1-character-"+role
-        components.append({"source_key":key,"family":"character_archive","contract":contract,"parser":a["parser_build_id"],"run":a["ingest_run_id"],"artifact":{k:a[k] for k in ("size_bytes","sha256")},"adapter":"character_"+role if role in {"foundation","text"} else "dependency_only", "runtime_manifest":str(charpath.relative_to(ROOT)),"runtime_manifest_sha256":old.sha256_file(charpath),"limitations":[ch["coverage"],"physical owner candidates are not logical identity"],"derived_role":role})
+        components.append({"source_key":key,"family":"character_archive","contract":contract,"parser":a["parser_build_id"],"run":a["ingest_run_id"],"artifact":{k:a[k] for k in ("size_bytes","sha256")},"adapter":"character_"+role if role in {"foundation","text"} else "dependency_only", "runtime_manifest":str(charpath),"runtime_manifest_sha256":old.sha256_file(charpath),"limitations":[ch["coverage"],"physical owner candidates are not logical identity"],"derived_role":role})
         bindings["artifacts"][key]=a["machine_local_path"]
-    qr = json.loads((ROOT/"manifests/quest-derived-7.1/quest-review-binding-v2.json").read_text())
+    qr = json.loads((inputs/"manifests/quest-derived-7.1/quest-review-binding-v2.json").read_text())
     # Binding overlay is an independently sealed source, not a copied Review.
     cap = next(c for c in registry["capabilities"] if c["capability_id"]=="quest_review_archive")
     a = select_artifact(cap,"bound_locator")
     with source(Path(a["path"])) as db:
         rel = json.loads(db.execute("SELECT manifest_json FROM release").fetchone()[0])
     key="7.1-quest-review-binding"
-    components.append({"source_key":key,"family":"quest_review_archive","contract":rel["contract"],"parser":rel["parser_build_id"],"run":rel["ingest_run_id"],"artifact":{k:a[k] for k in ("size_bytes","sha256")},"adapter":"quest_review_binding","runtime_manifest":"manifests/quest-derived-7.1/quest-review-binding-v2.json","runtime_manifest_sha256":old.sha256_file(ROOT/"manifests/quest-derived-7.1/quest-review-binding-v2.json"),"limitations":["mapping_unresolved retained despite exact physical target binding"]});bindings["artifacts"][key]=a["path"]
+    components.append({"source_key":key,"family":"quest_review_archive","contract":rel["contract"],"parser":rel["parser_build_id"],"run":rel["ingest_run_id"],"artifact":{k:a[k] for k in ("size_bytes","sha256")},"adapter":"quest_review_binding","runtime_manifest":str(inputs/"manifests/quest-derived-7.1/quest-review-binding-v2.json"),"runtime_manifest_sha256":old.sha256_file(inputs/"manifests/quest-derived-7.1/quest-review-binding-v2.json"),"limitations":["mapping_unresolved retained despite exact physical target binding"]});bindings["artifacts"][key]=a["path"]
     for role,relpath,parent in (("gcg-card","manifests/gcg-card-7.1/runtime.json","gcg_card_row"),("subtitle","manifests/direct-text-7.1/subtitle-runtime.json","subtitle_file")):
-        m=json.loads((ROOT/relpath).read_text())
+        m=json.loads((inputs/relpath).read_text())
         a=extra_paths[role].resolve()
         if a.stat().st_size!=m['artifact']['size_bytes'] or old.sha256_file(a)!=m['artifact']['sha256']:
             raise ValueError("explicit qualified "+role+" seal mismatch")
         key="7.1-"+role
-        components.append({"source_key":key,"family":m["family"],"contract":m["family_contract_version"],"parser":m["parser_build_id"],"run":m["ingest_run_id"],"artifact":m["artifact"],"adapter":"formal_compatible","runtime_manifest":relpath,"runtime_manifest_sha256":old.sha256_file(ROOT/relpath),"limitations":["declared source scope only"]});bindings["artifacts"][key]=str(a)
+        components.append({"source_key":key,"family":m["family"],"contract":m["family_contract_version"],"parser":m["parser_build_id"],"run":m["ingest_run_id"],"artifact":m["artifact"],"adapter":"formal_compatible","runtime_manifest":str(inputs/relpath),"runtime_manifest_sha256":old.sha256_file(inputs/relpath),"limitations":["declared source scope only"]});bindings["artifacts"][key]=str(a)
     talk=json.loads((output_root/"talk-build-b.json").read_text());key="7.1-talk-physical"
-    components.append({"source_key":key,"family":talk["family"],"contract":talk["family_contract_version"],"parser":talk["parser_build_id"],"run":talk["run_id"],"artifact":talk["artifact"],"adapter":"talk_physical","runtime_manifest":"reports/research71-data-product-complete/talk-build-b.json","runtime_manifest_sha256":old.sha256_file(REPORTS/"talk-build-b.json"),"limitations":["wrapper equality candidates; terminal structures unresolved; no logical Talk identity"]});bindings["artifacts"][key]=str(output_root/"talk-physical-b.sqlite")
+    components.append({"source_key":key,"family":talk["family"],"contract":talk["family_contract_version"],"parser":talk["parser_build_id"],"run":talk["run_id"],"artifact":talk["artifact"],"adapter":"talk_physical","runtime_manifest":str((output_root/"talk-build-b.json").resolve()),"runtime_manifest_sha256":old.sha256_file(output_root/"talk-build-b.json"),"limitations":["wrapper equality candidates; terminal structures unresolved; no logical Talk identity"]});bindings["artifacts"][key]=str(output_root/"talk-physical-b.sqlite")
     bundle={"contract":"candidate-7.1-complete-product-bundle-v1","status":"candidate_pending_qualification","product_accepted":False,"corpus_complete":False,"snapshot":registry["snapshot"],"core_provider_contracts_materialized":33,"components":components,"registered_capabilities_reused":30,"coverage_counting":"source qualification, assembly, runtime and Research qualification are separate; partial is not exact replacement"}
-    write(BUNDLE,bundle)
+    write(bundle_path,bundle)
     dep=json.loads((ROOT/"manifests/document-readable-7.1/source-scope.json").read_text())["r0_dependency"]
-    manifest={"corpus_ref":"candidate-7.1-high-value-v1","status":"candidate","adapter_registry":"research-explicit-adapters-v2","candidate_adapter_revision":VERSION,"adapter_implementation_sha256":{p.name:old.sha256_file(p) for p in sorted((ROOT/"src/genshin_lore").glob("research71_candidate_*.py")) if p.stem!='research71_candidate_query'},"snapshot":{"id":registry["snapshot"],"version":"7.1"},"product_bundle":{"path":str(BUNDLE.relative_to(ROOT)),"sha256":old.sha256_file(BUNDLE),"product_accepted":False},"provenance_dependency":{k:dep[k] for k in ("size_bytes","sha256")},"components":components,"outer_corpus_complete":False,"terminal_unresolved":["source-qualified partial capabilities retain historical semantic gaps", "unsupported relationship scopes are inventoried with complete rowset seals", "snapshot existence is not first release evidence"]}
-    write(CORPUS,manifest);write(output_root/"complete-bindings.json",bindings)
+    provenance = Path(provenance_artifact)
+    if (provenance.stat().st_size, old.sha256_file(provenance)) != (dep['size_bytes'], dep['sha256']):
+        raise ValueError('explicit historical provenance artifact drift')
+    manifest={"corpus_ref":"candidate-7.1-high-value-v1","status":"candidate","adapter_registry":"research-explicit-adapters-v2","candidate_adapter_revision":VERSION,"adapter_implementation_sha256":{p.name:old.sha256_file(p) for p in sorted((ROOT/"src/genshin_lore").glob("research71_candidate_*.py")) if p.stem!='research71_candidate_query'},"snapshot":{"id":registry["snapshot"],"version":"7.1"},"product_bundle":{"path":str(bundle_path.relative_to(metadata_root)),"sha256":old.sha256_file(bundle_path),"product_accepted":False},"provenance_dependency":{k:dep[k] for k in ("size_bytes","sha256")},"components":components,"outer_corpus_complete":False,"terminal_unresolved":["source-qualified partial capabilities retain historical semantic gaps", "unsupported relationship scopes are inventoried with complete rowset seals", "snapshot existence is not first release evidence"]}
+    write(corpus_path,manifest);write(output_root/"complete-bindings.json",bindings)
     return manifest,bindings
 
 
-def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path=None, reports_dir=None):
-    corpus_path = Path(corpus_path) if corpus_path is not None else CORPUS
-    reports_dir = Path(reports_dir) if reports_dir is not None else REPORTS
+def core_mappings(corpus_path):
+    metadata_root = Path(corpus_path).resolve().parents[2]
+    result = []
+    for name in ('m3-7.1-provider', 'special-core-7.1'):
+        path = metadata_root/'manifests'/name/'accepted-exact-mappings-v1.json'
+        result.extend(json.loads(path.read_text())['mappings'])
+    if len(result) != 33:
+        raise ValueError('core contract mapping denominator changed')
+    return result
+
+
+def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, reports_dir):
+    corpus_path = Path(corpus_path)
+    reports_dir = Path(reports_dir)
     reports_dir.mkdir(parents=True, exist_ok=True)
     started=time.perf_counter()
     if output.exists() or any(Path(str(output)+s).exists() for s in ("-wal","-shm","-journal")):
@@ -142,10 +160,9 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path=Non
                 cs,ts=old._core(src,out,key,c,r0,cs,ts)
                 # Legacy table identity is explicit in the qualified run scope;
                 # the old helper's parser_version is not an aggregate contract.
-                for mpath in (ROOT/"manifests/m3-7.1-provider/accepted-exact-mappings-v1.json",ROOT/"manifests/special-core-7.1/accepted-exact-mappings-v1.json"):
-                    for m in json.loads(mpath.read_text())["mappings"]:
-                        for table in ("research_container","research_text"):
-                            out.execute(f'UPDATE {table} SET evidence_contract=? WHERE source_key=? AND evidence_parser=? AND evidence_run=?',(m['provider_contract'],key,m['parser_build_id'],m['ingest_run_id']))
+                for m in core_mappings(corpus_path):
+                    for table in ("research_container","research_text"):
+                        out.execute(f'UPDATE {table} SET evidence_contract=? WHERE source_key=? AND evidence_parser=? AND evidence_run=?',(m['provider_contract'],key,m['parser_build_id'],m['ingest_run_id']))
             elif mode=="formal_compatible" or mode=="talk_physical":
                 cs,ts,mapping=old._component(src,out,key,c,r0,cs,ts)
                 if mode=="formal_compatible":rs,ks=old._relations(src,out,key,c,mapping,rs,ks)
@@ -198,11 +215,13 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path=Non
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument("--output-root",type=Path,required=True);ap.add_argument("--arm",choices=("a","b"),required=True);ap.add_argument("--metadata-only",action="store_true");ap.add_argument('--gcg-artifact',type=Path,required=True);ap.add_argument('--subtitle-artifact',type=Path,required=True);ap.add_argument('--available-allocated-bytes',type=int,default=0,help='Fresh inode-deduplicated audit hard headroom, not host free space');args=ap.parse_args()
-    m,b=metadata(args.output_root,{'gcg-card':args.gcg_artifact,'subtitle':args.subtitle_artifact})
+    ap=argparse.ArgumentParser();ap.add_argument("--input-metadata-root",type=Path,required=True);ap.add_argument("--provenance-artifact",type=Path,required=True);ap.add_argument("--output-root",type=Path,required=True);ap.add_argument("--arm",choices=("a","b"),required=True);ap.add_argument("--metadata-only",action="store_true");ap.add_argument('--gcg-artifact',type=Path,required=True);ap.add_argument('--subtitle-artifact',type=Path,required=True);ap.add_argument('--available-allocated-bytes',type=int,default=0,help='Fresh inode-deduplicated audit hard headroom, not host free space');args=ap.parse_args()
+    m,b=metadata(args.output_root,{'gcg-card':args.gcg_artifact,'subtitle':args.subtitle_artifact},input_metadata_root=args.input_metadata_root,provenance_artifact=args.provenance_artifact)
     if not args.metadata_only:
         if args.available_allocated_bytes<=0:raise ValueError('fresh project storage audit required')
-        write(REPORTS/f"index-build-{args.arm}.json",build(m,b,args.output_root/f"research-final-{args.arm}.sqlite",args.available_allocated_bytes))
+        reports = args.output_root / "index-oracles"
+        corpus = args.output_root / "metadata" / CORPUS.relative_to(ROOT)
+        write(reports/f"index-build-{args.arm}.json",build(m,b,args.output_root/f"research-final-{args.arm}.sqlite",args.available_allocated_bytes,corpus_path=corpus,reports_dir=reports))
 
 
 if __name__=="__main__":main()

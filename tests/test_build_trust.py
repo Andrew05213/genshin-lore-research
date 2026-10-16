@@ -79,6 +79,25 @@ def test_documentation_does_not_invalidate_stage(tmp_path):
     build.task('fixture', lambda *_: pytest.fail('rebuilt for docs'), lambda *_: None)
 
 
+def test_environment_change_rejects_resume(tmp_path, monkeypatch):
+    from scripts import build_support
+    build = job(tmp_path)
+    build.task('fixture', builder, lambda *_: {'status': 'PASS'})
+    monkeypatch.setattr(build_support, 'environment_identity', lambda: {'sqlite': 'changed'})
+    with pytest.raises(ValueError, match='identity mismatch'):
+        build.task('fixture', builder, lambda *_: {'status': 'PASS'})
+
+
+def test_runtime_dependency_contract_change_rejects_resume(tmp_path):
+    build = job(tmp_path)
+    requirements = build.identity_root/'requirements-build.txt'
+    requirements.write_text('synthetic==1')
+    build.task('fixture', builder, lambda *_: {'status': 'PASS'})
+    requirements.write_text('synthetic==2')
+    with pytest.raises(ValueError, match='identity mismatch'):
+        build.task('fixture', builder, lambda *_: {'status': 'PASS'})
+
+
 @pytest.mark.parametrize('record', ['build.json', 'verify.json', 'invocation.json', 'verified.json'])
 @pytest.mark.parametrize('action', ['missing', 'corrupt', 'changed'])
 def test_incomplete_or_modified_record_rejects_resume(tmp_path, record, action):
