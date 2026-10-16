@@ -94,7 +94,10 @@ def mutation_cases(artifact):
     return count
 
 
-def verify(root: Path, scope_path: Path, artifact: Path):
+def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
+    metadata = Path(metadata_root) if metadata_root is not None else ROOT
+    event_manifest = metadata / EVENT.relative_to(ROOT)
+    talk_manifest = metadata / TALK.relative_to(ROOT)
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
@@ -123,17 +126,18 @@ def verify(root: Path, scope_path: Path, artifact: Path):
             raise ValueError('Native26 independent declaration mismatch: ' + declaration['path'])
     if any(Path(str(artifact) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
         raise ValueError('Native26 SQLite sidecar')
-    event = json.loads(EVENT.read_text())
-    talk = json.loads(TALK.read_text())
+    event = json.loads(event_manifest.read_text())
+    talk = json.loads(talk_manifest.read_text())
     event_path = Path(event['artifact']['path_machine_local'])
     talk_path = Path(talk['local_artifact_path'])
     for path, seal in ((event_path, event['artifact']), (talk_path, talk['artifact'])):
         if (path.stat().st_size, sha(path)) != (seal['size_bytes'], seal['sha256']):
             raise ValueError('Native26 oracle accepted input artifact drift')
-    if sha(EVENT) != scope['event16_manifest_sha256']:
+    if sha(event_manifest) != scope['event16_manifest_sha256']:
         raise ValueError('Native26 oracle Event16 binding seal')
     code_hashes = {str(path.relative_to(ROOT)): sha(path) for path in (
-        ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY, EVENT, TALK)}
+        ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY)}
+    code_hashes.update({str(path.relative_to(ROOT)): sha(metadata / path.relative_to(ROOT)) for path in (EVENT, TALK)})
     parser = key('parser', code_hashes)
     run = key('run', parser, sha(scope_path), scope['snapshot_id'])
     source = []

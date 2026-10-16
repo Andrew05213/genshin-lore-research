@@ -11,8 +11,8 @@ sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 
 def open_runtime(config):
     from genshin_lore.research71_unified import Research71Unified
-    values=json.loads(Path(config).read_text())
-    return Research71Unified(**{k:Path(values[k]) for k in ('corpus','bindings','index','profile')},released=False)
+    from genshin_lore.runtime_config import load_runtime_paths
+    return Research71Unified(**load_runtime_paths(config),released=False)
 
 
 def smoke(config):

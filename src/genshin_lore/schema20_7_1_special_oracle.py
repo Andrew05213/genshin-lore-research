@@ -15,8 +15,9 @@ from .research_index import sha256_file
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def verify(source, db):
-    mappings = json.loads((ROOT / "manifests/special-core-7.1/accepted-exact-mappings-v1.json").read_text())["mappings"]
+def verify(source, db, *, metadata_root=None):
+    metadata = Path(metadata_root) if metadata_root is not None else ROOT
+    mappings = json.loads((metadata / "manifests/special-core-7.1/accepted-exact-mappings-v1.json").read_text())["mappings"]
     summary = []
     for m in mappings:
         path = Path(m["candidate_artifact"]["path_machine_local"])

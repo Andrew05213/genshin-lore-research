@@ -59,7 +59,8 @@ class Research71Unified:
             from .research71_successor import SuccessorResearch71
             self.query=SuccessorResearch71(corpus,bindings,index,profile)
             return
-        qualification=json.loads((ROOT/'manifests/research/candidate-7.1-agent-runtime-v2.json').read_text())
+        metadata = Path(corpus).resolve().parents[2]
+        qualification=json.loads((metadata/'manifests/research/candidate-7.1-agent-runtime-v2.json').read_text())
         if (qualification.get('contract')!='research71-unified-agent-runtime-v1' or
                 qualification.get('status')!='local_candidate_qualification' or qualification.get('snapshot')!=SNAPSHOT or
                 qualification.get('product_accepted') is not False or qualification.get('full_research_7_1_accepted') is not False or
@@ -79,7 +80,8 @@ class Research71Unified:
         self.entries = {}
         # Old registry supplies capability naming/limitations only, never paths,
         # seals, parser/run identities or provider constructors.
-        names = json.loads((ROOT / 'manifests/research-7.1/7.1-capability-registry-v1.json').read_text())
+        metadata = self.query.manifest_path.resolve().parents[2]
+        names = json.loads((metadata / 'manifests/research-7.1/7.1-capability-registry-v1.json').read_text())
         components = self.query.components
         by_cap = {v.get('registered_capability_id'): k for k,v in components.items() if v.get('registered_capability_id')}
         for old in names['capabilities']:

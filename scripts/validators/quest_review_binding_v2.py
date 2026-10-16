@@ -69,19 +69,20 @@ def schema(db: sqlite3.Connection) -> None:
     expected.close()
 
 
-def verify(source: Path, artifact: Path, report: Path) -> dict:
+def verify(source: Path, artifact: Path, report: Path, *, manifest_path=None) -> dict:
+    manifest = Path(manifest_path or MANIFEST)
     source, artifact, report = Path(source), Path(artifact), Path(report)
     check(subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines() == [COMMIT, TREE], 'source pin')
     manifest = json.loads(report.read_text())
     release = manifest['release']
     check(release['contract'] == 'quest-review-7.1-exact-target-binding-v2' and release['status'] == 'candidate' and release['snapshot'] == SNAPSHOT and release['product_accepted'] is False, 'release authority')
     check(artifact.stat().st_size == manifest['artifact']['size_bytes'] and sha(artifact) == manifest['artifact']['sha256'], 'artifact seal')
-    accepted = json.loads(MANIFEST.read_text())['components']
+    accepted = json.loads(manifest.read_text())['components']
     qr_entry, qn_entry = accepted['quest_review_archive'], accepted['quest_narrative_archive']
     for entry in (qr_entry, qn_entry):
         path = Path(entry['artifact']['path_machine_local'])
         check(entry['acceptance_status'] == 'PHYSICAL_FOUNDATION_ACCEPTED' and entry['source_snapshot'] == SNAPSHOT and path.stat().st_size == entry['artifact']['size_bytes'] and sha(path) == entry['artifact']['sha256'], 'accepted input seal')
-    dependencies = {'manifest_sha256': sha(MANIFEST), 'review': {k: qr_entry[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}, 'narrative': {k: qn_entry[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}}
+    dependencies = {'manifest_sha256': sha(manifest), 'review': {k: qr_entry[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}, 'narrative': {k: qn_entry[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}}
     check(release['dependencies'] == dependencies, 'dependency binding')
     implementations = {str(path.relative_to(ROOT)): sha(path) for path in (ROOT/'scripts/builders/quest_review_binding_v2.py', SCHEMA)}
     check(release['implementation'] == implementations and release['parser_build_id'] == key('parser', implementations), 'implementation/parser identity')

@@ -120,7 +120,10 @@ def metadata(output_root, extra_paths):
     return manifest,bindings
 
 
-def build(manifest,bindings,output,available_allocated_bytes):
+def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path=None, reports_dir=None):
+    corpus_path = Path(corpus_path) if corpus_path is not None else CORPUS
+    reports_dir = Path(reports_dir) if reports_dir is not None else REPORTS
+    reports_dir.mkdir(parents=True, exist_ok=True)
     started=time.perf_counter()
     if output.exists() or any(Path(str(output)+s).exists() for s in ("-wal","-shm","-journal")):
         raise FileExistsError(output)
@@ -164,7 +167,7 @@ def build(manifest,bindings,output,available_allocated_bytes):
             src.close();out.commit();print(key,cs,ts,rs,ks,flush=True)
         out.execute("INSERT INTO research_text_fts(rowid,raw_text) SELECT id,raw_text FROM research_text")
         out.execute("INSERT INTO research_text_fts(research_text_fts,rank) VALUES('integrity-check',1)")
-        out.execute("INSERT INTO corpus_release VALUES(1,?,?,?,?,?,?,?,?,?)",(old.sha256_file(CORPUS),manifest["corpus_ref"],"research-explicit-adapters-v2","deterministic-no-wall-clock",len(manifest["components"]),cs,ts,rs,ks));out.commit()
+        out.execute("INSERT INTO corpus_release VALUES(1,?,?,?,?,?,?,?,?,?)",(old.sha256_file(corpus_path),manifest["corpus_ref"],"research-explicit-adapters-v2","deterministic-no-wall-clock",len(manifest["components"]),cs,ts,rs,ks));out.commit()
         # The independent oracle consumes the complete rowset even when disk
         # retention is blocked. It imports no projection functions from here.
         import runpy
@@ -176,9 +179,9 @@ def build(manifest,bindings,output,available_allocated_bytes):
         # The temporary image stays in RAM, not in a second on-disk index.
         out.execute('VACUUM')
         exact_bytes=out.execute('PRAGMA page_count').fetchone()[0]*out.execute('PRAGMA page_size').fetchone()[0]
-        write(REPORTS/f"index-memory-oracle-{output.stem}.json",oracle_result)
+        write(reports_dir/f"index-memory-oracle-{output.stem}.json",oracle_result)
         capacity={'index_before_compaction_bytes':before_compaction,'index_after_compaction_bytes':exact_bytes,'available_allocated_bytes':available_allocated_bytes,'publication_reserve_bytes':16*1024**2,'fits':exact_bytes+16*1024**2<=available_allocated_bytes,'memory_only_before_gate':True}
-        write(REPORTS/f"index-capacity-{output.stem}.json",capacity)
+        write(reports_dir/f"index-capacity-{output.stem}.json",capacity)
         if exact_bytes+16*1024**2>available_allocated_bytes:
             raise RuntimeError(f'hard storage gate: index {exact_bytes} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
         import os
