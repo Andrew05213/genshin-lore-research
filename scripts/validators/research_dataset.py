@@ -23,6 +23,8 @@ def verify_projection_counts(index):
     Counts plus unique physical locators prevent omission/duplication from
     being hidden by an unchanged adapter_coverage report.
     """
+    if index.execute('PRAGMA foreign_key_check').fetchone() is not None:
+        raise ValueError('Research index contains dangling physical references')
     declarations = {}
     for row in index.execute('SELECT * FROM adapter_coverage'):
         key = (row['source_key'], row['projection_kind'], row['source_table'])

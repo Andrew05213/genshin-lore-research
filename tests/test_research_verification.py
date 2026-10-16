@@ -47,6 +47,16 @@ def test_duplicate_source_row_is_not_completeness():
     db.close()
 
 
+def test_dangling_reference_cannot_disappear_in_relation_join():
+    db = fixture()
+    db.execute('CREATE TABLE declared_parent(id INTEGER PRIMARY KEY)')
+    db.execute('CREATE TABLE declared_child(parent_id REFERENCES declared_parent(id))')
+    db.execute('INSERT INTO declared_child VALUES(999)')
+    with pytest.raises(ValueError, match='dangling physical references'):
+        verify_projection_counts(db)
+    db.close()
+
+
 def test_unreported_projection_rejected():
     db = fixture()
     db.execute("DELETE FROM adapter_coverage WHERE projection_kind='text'")
