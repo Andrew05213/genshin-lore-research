@@ -20,6 +20,9 @@ import shutil
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 from scripts.build_component import qualify, sha
+from scripts.build_support import (
+    RECEIPT_CONTRACT, load_object, pipeline_identity, require_success,
+)
 SNAPSHOT='anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
 
 
@@ -79,40 +82,65 @@ class Rebuild:
             raise ValueError('new stage allocations consumed required index peak headroom')
         return remaining
 
-    def task(self,name,builder,verifier):
+    def task(self,name,builder,verifier,*,inputs=(),parameters=None):
         directory=self.output/name;artifact=self.path(name)
-        if (directory/'verified.json').exists():
-            receipt=load(directory/'verified.json')
-            if receipt['artifact']!=seal(artifact) or any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal')):
-                raise ValueError('resume seal/sidecar drift: '+name)
-            print('REUSE_VERIFIED',name,flush=True);return self.report(name)
-        start=time.monotonic()
+        identity=pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
+                                   inputs=inputs,parameters={'stage':name,**(parameters or {})})
         if directory.exists():
-            report=load(directory/'build.json')
-            expected=report.get('artifact') or {k:report[k] for k in ('size_bytes','sha256')}
-            if expected!=seal(artifact):raise ValueError('unverified stage seal drift: '+name)
-            print('REVERIFY_UNQUALIFIED',name,flush=True)
-        else:
-            directory.mkdir();print('BUILD',name,flush=True)
-            write(directory/'invocation.json',{'stage':name,'source_snapshot':SNAPSHOT,
-                'driver_sha256':sha(Path(__file__)),'source_input':str(self.source),
-                'formal_release_accepted':False})
-            try:report=builder(artifact);write(directory/'build.json',report)
-            except BaseException as exc:
+            try:
+                receipt=load_object(directory/'verified.json')
+                if receipt.get('contract')!=RECEIPT_CONTRACT or receipt.get('identity')!=identity:
+                    raise ValueError('resume identity mismatch or incompatible old receipt: '+name)
+                if (receipt.get('source_snapshot')!=SNAPSHOT or
+                        receipt.get('independent_verifier_completed') is not True or
+                        receipt['artifact']!=seal(artifact) or
+                        any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal'))):
+                    raise ValueError('resume seal/sidecar drift: '+name)
+                records={f:load_object(directory/f) for f in ('build.json','verify.json','invocation.json')}
+                if receipt.get('records')!={f:seal(directory/f) for f in records}:
+                    raise ValueError('resume record integrity drift: '+name)
+                if records['invocation.json'].get('identity')!=identity:
+                    raise ValueError('resume invocation identity mismatch: '+name)
+                require_success(records['verify.json'])
+                expected=records['build.json'].get('artifact',records['build.json'])
+                if {k:expected.get(k) for k in ('size_bytes','sha256')}!=receipt['artifact']:
+                    raise ValueError('resume build report artifact mismatch: '+name)
+            except (ValueError,KeyError,OSError,TypeError) as exc:
                 write(directory/('failure-'+str(time.time_ns())+'.json'),
-                    {'phase':'build','error_type':type(exc).__name__,'error':str(exc)})
-                raise
-        try:check=verifier(artifact,report)
+                      {'phase':'resume','error_type':type(exc).__name__,'error':str(exc)})
+                raise ValueError('resume rejected; existing evidence preserved: '+name+': '+str(exc)) from exc
+            print('REUSE_VERIFIED',name,flush=True);return records['build.json']
+        directory.mkdir();print('BUILD',name,flush=True)
+        start=time.monotonic();phase='build'
+        write(directory/'invocation.json',{'stage':name,'source_snapshot':SNAPSHOT,
+              'identity':identity,'formal_release_accepted':False})
+        try:
+            report=builder(artifact)
+            if not isinstance(report,dict) or not report:
+                raise ValueError('builder returned no report')
+            write(directory/'build.json',report)
+            before=seal(artifact)
+            expected=report.get('artifact',report)
+            if {k:expected.get(k) for k in ('size_bytes','sha256')}!=before:
+                raise ValueError('builder report artifact seal mismatch')
+            phase='independent verification'
+            check=verifier(artifact,report)
+            require_success(check)
+            if seal(artifact)!=before or any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal')):
+                raise ValueError('verification changed artifact or left sidecars')
+            if pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
+                                 inputs=inputs,parameters={'stage':name,**(parameters or {})})!=identity:
+                raise ValueError('stage implementation or inputs changed during execution')
+            write(directory/'verify.json',check)
+            write(directory/'verified.json',{'contract':RECEIPT_CONTRACT,'identity':identity,
+                  'artifact':before,'source_snapshot':SNAPSHOT,
+                  'records':{f:seal(directory/f) for f in ('build.json','verify.json','invocation.json')},
+                  'independent_verifier_completed':True,'seconds':time.monotonic()-start,
+                  'formal_release_accepted':False})
         except BaseException as exc:
-            failure=directory/('failure-'+str(time.time_ns())+'.json')
-            write(failure,{'phase':'independent verification','error_type':type(exc).__name__,'error':str(exc)})
+            write(directory/('failure-'+str(time.time_ns())+'.json'),
+                  {'phase':phase,'error_type':type(exc).__name__,'error':str(exc)})
             raise
-        for key in ('status','verdict'):
-            if key in check and any(word in str(check[key]).upper() for word in ('FAIL','BLOCKED','ERROR')):
-                raise ValueError('source verification rejected '+name+': '+str(check[key]))
-        write(directory/'verify.json',check)
-        write(directory/'verified.json',{'artifact':seal(artifact),'source_snapshot':SNAPSHOT,
-              'independent_verifier_completed':True,'seconds':time.monotonic()-start,'formal_release_accepted':False})
         print('VERIFIED',name,seal(artifact)['size_bytes'],flush=True);return report
 
     def bind(self,relative,value):write(ROOT/relative,value)

@@ -9,6 +9,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
+sys.path.insert(0, str(ROOT))
+from scripts.build_support import require_success
 COMMIT = '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
 TREE = 'aa578c08c402af39b41f1ffc95124d10f5410272'
 
@@ -92,8 +94,7 @@ def rebuild(source,component,output_root):
         write(directory/'build.json',report)
         verification=verify(source,component,artifact,directory/'build.json')
     write(directory/'verify.json',verification)
-    if verification.get('status') != 'PASS':
-        raise ValueError('independent verification did not PASS')
+    require_success(verification)
     return {'status':'PASS','component':component,'artifact':report['artifact'],
             'verification':'independent source/artifact check','formal_release_accepted':False}
 
