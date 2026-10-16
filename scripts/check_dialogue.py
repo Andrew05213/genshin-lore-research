@@ -15,7 +15,7 @@ from scripts.check import payload
 
 
 async def check(config, released_runtime_root=None):
-    from genshin_lore.runtime_config import load_runtime_paths
+    from scripts.runtime_config import load_runtime_paths
     config = Path(config).resolve()
     profile = json.loads(load_runtime_paths(config)['profile'].read_text())
     corpus = profile['corpus_ref']

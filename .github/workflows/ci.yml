@@ -26,11 +26,11 @@ jobs:
           cache-dependency-path: requirements-dev.lock
       - name: Install locked development dependencies and editable source
         run: |
-          python -m pip install -r requirements-dev.lock
+          python -m pip install --require-hashes -r requirements-dev.lock
           python -m pip install --no-deps --no-build-isolation -e .
       - name: Unit tests, negative probes, links and license metadata
         run: |
-          python -m pytest -q --cov=scripts.build --cov=scripts.build_support --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
+          python -m pytest -q --cov=scripts.build --cov=scripts.build_support --cov=scripts.runtime_config --cov=genshin_lore.mcp_transport --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
       - name: Compile Python source
         run: python -m compileall -q src scripts tests
       - name: Public command help

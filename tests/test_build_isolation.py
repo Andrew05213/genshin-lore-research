@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts.build import Rebuild, seal
-from genshin_lore.runtime_config import load_runtime_paths
+from scripts.runtime_config import load_runtime_paths
 
 
 def make_job(output, code):

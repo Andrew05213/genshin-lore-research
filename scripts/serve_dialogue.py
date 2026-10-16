@@ -13,7 +13,7 @@ sys.path[:0] = [str(ROOT/'src'), str(ROOT)]
 
 
 def open_query(config, released_runtime_root=None):
-    from genshin_lore.runtime_config import load_runtime_paths
+    from scripts.runtime_config import load_runtime_paths
     paths = load_runtime_paths(config)
     if released_runtime_root is not None:
         # Load the retained release in its own immutable root. Its original
@@ -97,7 +97,7 @@ def main():
             create_server = module.create_server
         else:
             from genshin_lore.research_server import create_server
-        from genshin_lore.mcp_server import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+        from genshin_lore.mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
         if a.citation_receipts:
             from genshin_lore.citation_handoff import CitationHandoff
             query.citation_handoff = CitationHandoff(a.citation_receipts)

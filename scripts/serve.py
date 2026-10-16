@@ -11,7 +11,7 @@ sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 
 def open_runtime(config):
     from genshin_lore.research71_unified import Research71Unified
-    from genshin_lore.runtime_config import load_runtime_paths
+    from scripts.runtime_config import load_runtime_paths
     return Research71Unified(**load_runtime_paths(config),released=False)
 
 
@@ -51,7 +51,7 @@ def main():
     if a.check:
         print(json.dumps(smoke(a.config),ensure_ascii=False));return
     import anyio
-    from genshin_lore.mcp_server import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
+    from genshin_lore.mcp_transport import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
     runtime=open_runtime(a.config)
     try:
         if a.surface=='research':
