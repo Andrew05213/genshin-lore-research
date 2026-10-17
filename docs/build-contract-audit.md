@@ -62,3 +62,28 @@
 - Book/MusicGame 与 Aux/Quest 的显式 manifest、缺文件拒绝、无源码树/sibling fallback、错配 artifact 拒绝；实际编排测试要求传入这两处新增参数。
 
 合成编排测试不能证明游戏数据投影正确；真实来源定向复验与全新完整构建必须分别记录。未完成后者之前，不得把本修复标记为完整 35-input 重建通过。
+
+## 本次实际复验
+
+修复实现提交 `ed3f15afe22ec7a1678e47d36f235d166c575983`：全部 169 项合成测试、Python 编译和六个公开命令 help 通过，文档链接与许可检查包含在测试中。未运行远端 CI，不将本地结果写成 GitHub Actions 已通过。
+
+固定真实来源的尾部诊断结果：
+
+| 新建并独立验证的组件 | 结果 |
+|---|---|
+| Event13 | PASS：361 个物理记录、1,350 个 TextMap candidates；54 项写保护负测 |
+| Event16 | PASS：完整选择集及原有候选限制；24 项写保护负测 |
+| Event18 | PASS：完整选择集及原有候选限制；24 项写保护负测 |
+| Native Bulk | PASS：3,868 个来源行，完整行集核对 |
+| Native Book/MusicGame | PASS：显式 Message manifest、第二跳来源及全部业务列核对 |
+| Native Aux/Quest | PASS：显式 Quest/Native Bulk manifests、完整外部候选与业务列核对 |
+| Native21 | PASS：完整行集/schema、第二跳候选及 70 项写保护负测 |
+| Native26 | PASS：完整 source-to-SQL 行集/schema 及 70 项写保护负测 |
+
+该轮退出码 0、耗时 3:35.19，进程最大 RSS 为 1,661,944 KiB。新建输出属于独立诊断目录；七个未变化的输入复用第三次构建的真实来源核验结果，并重新核对其字节 seal、原回执和依赖。没有复制数据库，也没有改写旧回执使它获得新实现身份。
+
+诊断首轮因准备脚本试图复用尚未生成的 NPC/Dialog manifest 而停止；第二轮通过四个组件后，在 Book/MusicGame 的固定路径读取处失败。两轮日志及失败产物保留，第三轮成功不替换这些失败。它们均不是新的完整构建尝试。
+
+**仍未完成：修复后的全新 35-input 构建、完整统一 Research index 来源核对，以及由它生成的 runtime/MCP 检查。** 当前 8 个组件定向通过不能替代这些门槛。正式部署、历史失败、accepted artifacts、来源 parser/run 合同及候选语义未改变。
+
+诊断后按原 device/inode 去重范围实测项目 allocated 为 77,200,429,056 B，hard 仍为 90,000,000,000 B，余量 12,799,570,944 B；主机空闲 133,392,941,056 B，无 unknown 项。主机空闲不能替代项目预算。下一次全新完整构建所需 25 GB 余量还差 12,200,429,056 B；本轮未继续删除产物或提高上限。
