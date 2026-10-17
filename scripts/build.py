@@ -383,16 +383,16 @@ class Rebuild:
             subprocess.run([sys.executable,str(ROOT/'scripts/maintenance/native_book_music_scope.py'),'--source',str(self.source),
                 '--message-artifact',str(self.path('native_message')),'--message-runtime',str(self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')),'--output',str(sp)],env=env,cwd=ROOT,check=True)
         self.task('native_book_music',lambda p:module('native_book_music_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message')),
-                  inputs=self.dependency_inputs('native_message')+[sp])
+                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message'),message_runtime_path=self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')),
+                  inputs=self.dependency_inputs('native_message')+[sp,self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')])
         scope=load(ROOT/'manifests/native-archive-7.1/aux-quest-scope-v1.json')
-        ext,deps=module('native_aux_quest_7_1_verify').expected_external(self.source,self.path('quest_narrative'),self.path('native_bulk'))
+        ext,deps=module('native_aux_quest_7_1_verify').expected_external(self.source,self.path('quest_narrative'),self.path('native_bulk'),metadata_root=self.metadata)
         scope.update(external_candidates=ext,dependencies=deps)
         scope['main_quest_reconciliation'].update(accepted_parser=deps['quest_narrative']['parser'],accepted_run=deps['quest_narrative']['run'])
         sp=self.bound_scope('native-aux-quest',scope)
         self.task('native_aux_quest',lambda p:module('native_aux_quest_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk')),
-                  inputs=self.dependency_inputs('quest_narrative','native_bulk')+[sp])
+                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk'),metadata_root=self.metadata),
+                  inputs=self.dependency_inputs('quest_narrative','native_bulk')+[sp,*module('native_aux_quest_7_1_verify').dependency_manifests(self.metadata)])
         binding=load(ROOT/'recipes/event13-snez-binding.json');r=release(self.path('event_13'))
         with sqlite3.connect(self.path('event_13')) as db:
             binding['occurrences']=[{'ordinal':o,'pointer':p,'raw_sha256':s,'target_occurrence_id':i} for i,o,p,s in

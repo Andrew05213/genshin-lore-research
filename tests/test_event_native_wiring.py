@@ -72,8 +72,11 @@ def test_event_native_stages_use_own_metadata_and_real_completion_contracts(tmp_
                     if name in ('event_filmfest_7_1_build','event_filmfest_7_1_verify'):
                         assert bound.arguments['qt_manifest_path'] == job.metadata_path(
                             'manifests/quest-talk-7.1/standalone-candidate.json')
-                    if name.startswith(('native21_','native26_')):
+                    if name.startswith(('native21_','native26_')) or name == 'native_aux_quest_7_1_verify':
                         assert bound.arguments['metadata_root'] == job.metadata
+                    if name == 'native_book_music_7_1_verify':
+                        assert bound.arguments['message_runtime_path'] == job.metadata_path(
+                            'manifests/native-archive-7.1/message-runtime-v1.json')
                     if name.startswith('native21_'):
                         scope = json.loads(Path(bound.arguments['scope_path']).read_text())
                         binding = Path(scope['event13_snez_binding'])
@@ -104,7 +107,10 @@ def test_event_native_stages_use_own_metadata_and_real_completion_contracts(tmp_
                     return []
                 fake.discover_target_candidates = discover
             if name == 'native_aux_quest_7_1_verify':
-                fake.expected_external = lambda *_:([],{'quest_narrative':{'parser':'synthetic','run':'synthetic'}})
+                def external(*args,metadata_root):
+                    assert metadata_root == job.metadata
+                    return [],{'quest_narrative':{'parser':'synthetic','run':'synthetic'}}
+                fake.expected_external = external
             return fake
 
         def scope_command(argv,**kwargs):
