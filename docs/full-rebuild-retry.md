@@ -47,3 +47,40 @@ Filmfest 使用实现 fingerprint；本次模块修复会生成新的 parser/run
 上述四个 verifier 的完成状态已补齐；随后真实尾部诊断发现并修复了 Native Book/MusicGame、Aux/Quest 独立验证器的固定运行 manifest 读取。实际编排测试、动态输入身份绑定、169 项合成测试和 8 个尾部组件的真实来源验证均通过，详见 [构建链合同核对](build-contract-audit.md)。
 
 这是明确范围的修复与定向复验，七个未变化的来源输入显式复用第三次构建的合格字节及原核验，不是第四次全新完整构建。当前仍不宣称修改后的完整 35-input 重建通过；统一索引与最终运行配置的整链检查待执行。
+
+## 第四次执行与投影合同整理
+
+随后从空目录运行提交 `c215e13b01ca6a47ca249b37ee160a7338c16254` 的完整链路。
+结果仍为 **FAIL**，耗时 38:23.74。59 个前置阶段核验通过，35 输入 bundle 已装配，
+Core 33 范围、R0、Filmfest、Event 和 Native 均已越过旧失败点。
+统一索引投影了 3,761,013 条文本，但独立 oracle 在必需范围声明检查处拒绝：
+`required source projection declaration missing: schema20-core-7.1`。
+这是 builder 的输出计数，不是完整独立行集验证通过。
+
+原因是实际 core 含 `comparison_scope_proof` 空表，静态合同要求声明其范围；
+builder 却另用表名关键词猜范围，没有涵盖 `scope_proof`。
+此表没有游戏正文，失败不代表来源缺失；合法空表也不能免除声明。
+本次未生成最终索引/profile/runtime-config，后续新配置 MCP 检查 **NOT_RUN**。
+最大 RSS 7,838,132 KiB（约 8.03 GB），没有新增 OOM，未耗尽空间。
+原始失败、59 个完成阶段和当时的资格记录保留，不补造成功回执。
+
+本次整改删除索引 builder 内的重复表名猜测：正式兼容/core 复用已有静态关系合同，
+7.1 特定未投影范围在同一静态合同模块中明确列出。未知表拒绝，不自动创建 adapter；
+空表和非空 unsupported 范围都明确交付，Talk 已有的物理投影保留。
+共享的是表范围元数据，不是投影函数；独立 oracle 仍自行回读所有行和来源坐标。
+缺声明的错误消息现包含具体 kind/table，而不只报整个 artifact 的名字。
+
+低成本验证新增了真实索引/oracle/MCP 小链路，补上此前只用单个 LoadingTips
+投影验证发布的不足。对保留的 35 个实际输入还进行了只读 seal 和 schema 排练：
+将表定义放入空内存库，经实际 adapter 路径与独立必需范围检查，35/35 通过。
+排练没有复制游戏行、生成新大型 artifact 或续签旧阶段资格；它只验证 schema 接线，
+不能代替修复后的全量正文、关系、FTS 和新运行配置验收。
+
+当前修改使保守实现 fingerprint 变化；不能篡改第四次旧回执后恢复新代码。
+本次没有进行第五次完整重建，没有改变正式部署、数据身份或证据语义。
+
+本次全部 179 项合成测试通过（26.52s），编译、六入口 help、本地文档链接、
+Apache-2.0 元数据及 wheel 构建检查通过。选定模块的父进程覆盖率为 64%，
+不是全仓库或全部 MCP 子进程覆盖率；远端 CI **NOT_RUN**。
+实际输入 schema 的 seal 集合摘要、已执行/未执行范围见
+[机器可读修复记录](history/projection-contract-repair.json)。

@@ -1,0 +1,92 @@
+{
+  "scope": "Projection contract cleanup and low-cost pipeline regression; not full source reconstruction",
+  "implementation_baseline": "c215e13b01ca6a47ca249b37ee160a7338c16254",
+  "implementation_seals": {
+    "scripts/builders/research_dataset.py": {
+      "size_bytes": 18291,
+      "sha256": "6f6af283de73965c16f1d72cdbb7f073de2d7633db393e89a714bd20a04c56cd"
+    },
+    "scripts/validators/research_dataset.py": {
+      "size_bytes": 28209,
+      "sha256": "053a5596ca11104ee6b443ff4474aabc879e442f51e244c020ff24ad01df8d4d"
+    },
+    "src/genshin_lore/research_adapters.py": {
+      "size_bytes": 11901,
+      "sha256": "206c41f3997e8eefd5390ef9a5891e0ad86af1df3bdf2f7936eec9335e9c13e0"
+    },
+    "src/genshin_lore/research71_candidate_relations.py": {
+      "size_bytes": 6550,
+      "sha256": "97988684ff49dd400f55f8ca07de2c02c94f8572934dd8c74bc83b5c0fc0ec07"
+    }
+  },
+  "previous_full_attempt": {
+    "status": "FAIL",
+    "tested_commit": "c215e13b01ca6a47ca249b37ee160a7338c16254",
+    "wall": "38:23.74",
+    "verified_stages": 59,
+    "assembled_inputs": 35,
+    "core_scope": 33,
+    "failure": "required source projection declaration missing: schema20-core-7.1",
+    "failed_table": "comparison_scope_proof",
+    "failed_table_source_rows": 0,
+    "new_OOM": 0
+  },
+  "repair": {
+    "removed": "duplicate keyword-based unsupported adapter discovery",
+    "retained": "explicit static scope contracts, independent full source oracle and physical evidence semantics",
+    "unknown_scopes": "reject, never infer an adapter",
+    "empty_scopes": "declared, not silently omitted",
+    "unsupported_scopes": "remain unsupported, including nonempty rows",
+    "talk_physical_projection": "retained, not double-declared as unsupported",
+    "receipt_contract": "local-build-stage-receipt-v2 unchanged; new implementation invalidates old resume qualification"
+  },
+  "executed": {
+    "synthetic_tests": {
+      "status": "PASS",
+      "count": 179,
+      "wall_seconds": 26.52
+    },
+    "new_regression_cases": 10,
+    "real_synthetic_pipeline": {
+      "status": "PASS",
+      "outputs": 2,
+      "actual_index_builder": true,
+      "independent_complete_oracle": true,
+      "real_five_tool_MCP_process": true,
+      "search_pagination_and_exact_read_inspect": true
+    },
+    "compile": "PASS",
+    "six_help": "PASS via full test suite",
+    "local_markdown_links": "PASS via full test suite",
+    "Apache_2_0_metadata": "PASS",
+    "wheel_build_and_metadata": "PASS",
+    "coverage": {
+      "selected_modules_percent": 64,
+      "not_whole_repository_or_subprocess_coverage": true
+    }
+  },
+  "actual_input_schema_probe": {
+    "status": "PASS_ACTUAL_35_INPUT_SCHEMA_WIRING_ONLY",
+    "input_count": 35,
+    "game_rows_copied": false,
+    "full_source_rowset_oracle": "NOT_RUN",
+    "old_receipts_renewed": false,
+    "input_seals_and_schema_sha256": "72d1a1860eea9ea61a59e60bbe9f41106b54c6169eb17a1ab45e5d8f258d5201",
+    "detailed_record_retention": "full local schema probe preserved; digest is an audit record, not artifact qualification"
+  },
+  "not_run": [
+    "fresh full 35-input rebuild after this repair",
+    "full real-data text/relation oracle after this repair",
+    "new real-data runtime qualification",
+    "remote GitHub Actions"
+  ],
+  "unchanged": [
+    "Apache-2.0",
+    "historical failure records and receipts",
+    "published release and deployed artifacts",
+    "source snapshots",
+    "SQL and parser/run IDs",
+    "evidence ref and five-tool semantics"
+  ],
+  "limitations": "Schema-only checks cannot prove real body/owner/navigation correctness. Synthetic end-to-end checks do not qualify the full corpus."
+}

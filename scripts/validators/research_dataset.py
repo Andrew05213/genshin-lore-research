@@ -15,6 +15,7 @@ from pathlib import Path
 # Also support the documented source-checkout script invocation from any cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from genshin_lore.research_index import sha256_file
+from genshin_lore.research_adapters import CANDIDATE_UNSUPPORTED_RELATIONS
 from scripts.validators.research_index import expected_adapter_tables, explicit_text_tables
 
 KEYS={}
@@ -60,23 +61,29 @@ def verify_required_source_projections(index, manifest, sources):
     for component in manifest['components']:
         key, mode = component['source_key'], component['adapter']
         if mode == 'dependency_only':
-            continue
+            if key not in sources:
+                continue
+            required = set()
+            full = set()
         src = sources[key]
         if mode in ('core33', 'formal_compatible', 'talk_physical'):
             required = expected_adapter_tables(src, component['family'])
             full = {(kind, table) for kind, table in required if kind == 'container' or
                     (kind == 'text' and table in explicit_text_tables(src, component['family']))}
-        else:
+        elif mode != 'dependency_only':
             if mode not in SOURCE_PROJECTIONS:
                 raise ValueError('unknown required source projection contract: '+mode)
             required = {(kind, table) for kind, table in
                         zip(('container', 'text'), SOURCE_PROJECTIONS[mode]) if table is not None}
             required.update(zip(('relation', 'candidate'), SOURCE_RELATIONS.get(mode, ())))
             full = required
+        required = required | {(kind, table) for kind, table in CANDIDATE_UNSUPPORTED_RELATIONS.get(mode, ())
+                               if src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()}
         declarations = {(r['projection_kind'], r['source_table']): r for r in index.execute(
             'SELECT * FROM adapter_coverage WHERE source_key=?', (key,))}
         if not required <= declarations.keys():
-            raise ValueError('required source projection declaration missing: '+key)
+            missing = ', '.join(kind+':'+table for kind, table in sorted(required-declarations.keys()))
+            raise ValueError('required source projection declaration missing: '+key+': '+missing)
         for projection in full:
             row = declarations[projection]
             if row['status'] != 'complete' or row['indexed_count'] != row['denominator']:

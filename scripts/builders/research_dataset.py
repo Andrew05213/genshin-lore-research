@@ -14,7 +14,7 @@ from pathlib import Path
 
 from genshin_lore import research_index as old
 from genshin_lore.research71_candidate_adapters import SPECS, VERSION, adapt, character
-from genshin_lore.research71_candidate_relations import project
+from genshin_lore.research71_candidate_relations import project, record_unsupported
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "manifests/research-7.1/7.1-capability-registry-v1.json"
@@ -138,6 +138,38 @@ def core_mappings(corpus_path):
     return result
 
 
+def project_component(src, out, component, r0, counts, *, corpus_path):
+    """One adapter's real projection path, also usable with schema-only fixtures.
+
+    Qualification and publication stay in build(); this does not grant source
+    acceptance or let callers skip the independent complete oracle.
+    """
+    cs, ts, rs, ks = counts
+    key, mode = component['source_key'], component['adapter']
+    mapping = {}
+    record_unsupported(src,out,key,component)
+    if mode == 'core33':
+        cs,ts = old._core(src,out,key,component,r0,cs,ts)
+        for m in core_mappings(corpus_path):
+            for table in ('research_container','research_text'):
+                out.execute(f'UPDATE {table} SET evidence_contract=? WHERE source_key=? AND evidence_parser=? AND evidence_run=?',
+                    (m['provider_contract'],key,m['parser_build_id'],m['ingest_run_id']))
+    elif mode in ('formal_compatible','talk_physical'):
+        cs,ts,mapping = old._component(src,out,key,component,r0,cs,ts)
+        if mode == 'formal_compatible':
+            rs,ks = old._relations(src,out,key,component,mapping,rs,ks)
+    elif mode.startswith('character_'):
+        cs,ts,mapping = character(src,out,key,component,r0,cs,ts)
+    elif mode == 'quest_review_binding':
+        mapping = {r['occurrence_id']:r['id'] for r in out.execute(
+            "SELECT * FROM research_container WHERE source_key='7.1-quest_review_archive'")}
+    elif mode != 'dependency_only':
+        cs,ts,mapping = adapt(src,out,key,component,r0,cs,ts)
+    if mode not in {'formal_compatible','core33','dependency_only','character_text'}:
+        rs,ks = project(src,out,key,component,mapping,rs,ks)
+    return cs,ts,rs,ks
+
+
 def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, reports_dir):
     corpus_path = Path(corpus_path)
     reports_dir = Path(reports_dir)
@@ -155,33 +187,12 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
             if path.stat().st_size!=seal["size_bytes"] or old.sha256_file(path)!=seal["sha256"] or any(Path(str(path)+s).exists() for s in ("-wal","-shm","-journal")):
                 raise ValueError("candidate source seal/sidecar drift: "+key)
             out.execute("INSERT INTO source_artifact VALUES(?,?,?,?,?,?,?,?)",(key,c["family"],c["contract"],c["parser"],c["run"],str(path),seal["size_bytes"],seal["sha256"]))
-            src=source(path);mode=c["adapter"];mapping={}
-            if mode=="core33":
-                cs,ts=old._core(src,out,key,c,r0,cs,ts)
-                # Legacy table identity is explicit in the qualified run scope;
-                # the old helper's parser_version is not an aggregate contract.
-                for m in core_mappings(corpus_path):
-                    for table in ("research_container","research_text"):
-                        out.execute(f'UPDATE {table} SET evidence_contract=? WHERE source_key=? AND evidence_parser=? AND evidence_run=?',(m['provider_contract'],key,m['parser_build_id'],m['ingest_run_id']))
-            elif mode=="formal_compatible" or mode=="talk_physical":
-                cs,ts,mapping=old._component(src,out,key,c,r0,cs,ts)
-                if mode=="formal_compatible":rs,ks=old._relations(src,out,key,c,mapping,rs,ks)
-            elif mode.startswith("character_"):
-                cs,ts,mapping=character(src,out,key,c,r0,cs,ts)
-            elif mode=="quest_review_binding":
-                mapping={r['occurrence_id']:r['id'] for r in out.execute("SELECT * FROM research_container WHERE source_key='7.1-quest_review_archive'")}
-            elif mode=="dependency_only":
-                pass
-            else:cs,ts,mapping=adapt(src,out,key,c,r0,cs,ts)
-            if mode not in {"formal_compatible","core33","dependency_only","character_text"}:
-                rs,ks=project(src,out,key,c,mapping,rs,ks)
-            adapted={r[0] for r in out.execute("SELECT source_table FROM adapter_coverage WHERE source_key=?",(key,))}
-            for table in sorted(old._tables(src)-adapted):
-                if any(marker in table for marker in ("relation","candidate","edge","reference","navigation","locator")) and not ("text" in table or table=="candidate"):
-                    n=src.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
-                    kind="candidate" if "candidate" in table else "relation"
-                    out.execute("INSERT INTO adapter_coverage VALUES(?,?,?,?,?,?,?,?)",(key,"candidate:unsupported:"+table,kind,table,n,0,"unsupported","explicit terminal physical scope; complete source rowset oracle required; follow remains partial"))
-            src.close();out.commit();print(key,cs,ts,rs,ks,flush=True)
+            src=source(path)
+            try:
+                cs,ts,rs,ks=project_component(src,out,c,r0,(cs,ts,rs,ks),corpus_path=corpus_path)
+            finally:
+                src.close()
+            out.commit();print(key,cs,ts,rs,ks,flush=True)
         out.execute("INSERT INTO research_text_fts(rowid,raw_text) SELECT id,raw_text FROM research_text")
         out.execute("INSERT INTO research_text_fts(research_text_fts,rank) VALUES('integrity-check',1)")
         out.execute("INSERT INTO corpus_release VALUES(1,?,?,?,?,?,?,?,?,?)",(old.sha256_file(corpus_path),manifest["corpus_ref"],"research-explicit-adapters-v2","deterministic-no-wall-clock",len(manifest["components"]),cs,ts,rs,ks));out.commit()
