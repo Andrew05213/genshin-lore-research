@@ -268,7 +268,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
         if got_release != release:
             raise ValueError('Native21 release contract mismatch')
         mutation_cases = mutation_matrix(db)
-    return {'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
+    return {'status': 'PASS', 'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
             'counts': release['counts'], 'text_states': release['text_states'],
             'relation_states': release['relation_states'], 'second_hop_candidate_rows': len(expected['relation_candidate']),
             'snez_exact_reuse_count': 9, 'schema_exact': True, 'mutation_cases': mutation_cases,

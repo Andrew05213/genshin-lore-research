@@ -38,7 +38,9 @@ def builder(path):
     {'status': 'SKIPPED'}, {'status': 'PARTIAL'}, {'status': 'UNKNOWN'},
     {'status': ''}, {'status': True}, {'status': 'PASS', 'verdict': 'FAIL'},
     {'status': 'PASS', 'verdict': 'PASS_PHYSICAL_PROJECTION'},
-    {'status': 'PASS', 'partial': True}])
+    {'status': 'PASS', 'partial': True}, {'verified': True},
+    {'status': 'PASS', 'verified': False}, {'status': 'PASS', 'verified': 1},
+    {'status': 'PASS', 'verified': 'true'}])
 def test_non_success_never_creates_receipt(tmp_path, result):
     build = job(tmp_path)
     with pytest.raises(ValueError, match='rejected'):
@@ -50,7 +52,8 @@ def test_non_success_never_creates_receipt(tmp_path, result):
 
 @pytest.mark.parametrize('result', [{'status': 'PASS'}, {'verdict': 'pass'},
     {'status': 'PASS', 'verdict': 'PASS'}, {'status': 'PASS_COMPLETE_SOURCE_ROWSETS'},
-    {'verdict': 'PASS_PHYSICAL_PROJECTION', 'logical_relation_closure': False}])
+    {'verdict': 'PASS_PHYSICAL_PROJECTION', 'logical_relation_closure': False},
+    {'status': 'PASS', 'verified': True, 'historical_exact_replacement': False}])
 def test_actual_complete_verification_contracts_are_accepted(result):
     assert require_success(result)
 

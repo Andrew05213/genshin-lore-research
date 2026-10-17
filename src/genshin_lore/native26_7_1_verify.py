@@ -332,7 +332,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
             raise ValueError('Native26 no-extra/no-omission rowset: ' + table)
     oracle.close()
     negatives = mutation_cases(artifact)
-    return {'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
+    return {'status': 'PASS', 'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
             'counts': release['counts'], 'text_states': release['text_states'],
             'relation_states': release['relation_states'], 'event16_exact_reuse': 44,
             'unprojectable_historical_owner_row_slots': missing_owner_rows,

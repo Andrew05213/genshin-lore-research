@@ -205,7 +205,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
                 or release['historical_exact_replacement'] is not False):
             raise ValueError('Event selector release counts/semantic boundary')
         mutations = immutable_matrix(db)
-        return {'verified': True, 'component': component, 'counts': dict(sorted(counts.items())),
+        return {'status': 'PASS', 'verified': True, 'component': component, 'counts': dict(sorted(counts.items())),
                 'selected_rows': len(expected), 'accepted_target_rows_rechecked': len(dialog) + len(reminder),
                 'mutation_cases': mutations, 'artifact': {
                     'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)}}

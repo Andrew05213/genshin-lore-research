@@ -25,6 +25,8 @@ def require_success(result):
         raise ValueError("verification rejected: unknown, incomplete or conflicting status/verdict")
     if result.get("partial") is True or result.get("verification_completed") is False:
         raise ValueError("verification rejected: execution incomplete")
+    if "verified" in result and result["verified"] is not True:
+        raise ValueError("verification rejected: contradictory verified flag")
     return states[0]
 
 
