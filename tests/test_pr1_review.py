@@ -160,8 +160,12 @@ def test_explicit_nonprojected_dependencies_and_unsupported_relations_stay_legal
     index.row_factory = sqlite3.Row
     index.executescript(research_index.SCHEMA)
     source = sqlite3.connect(':memory:')
-    source.execute('CREATE TABLE document_relation(id)')
-    source.execute('CREATE TABLE document_candidate(id)')
+    # A legal partial projection has actual source rows outside the indexed
+    # parent namespace, not invented denominators or missing FK columns.
+    source.execute('CREATE TABLE document_relation(id PRIMARY KEY,row_id)')
+    source.execute('CREATE TABLE document_candidate(id PRIMARY KEY,relation_id)')
+    source.execute("INSERT INTO document_relation VALUES('relation','outside-index-namespace')")
+    source.execute("INSERT INTO document_candidate VALUES('candidate','relation')")
     component = {'source_key': 'fixture', 'family': 'document_archive', 'adapter': 'formal_compatible'}
     for kind, table in [('relation', 'document_relation'), ('candidate', 'document_candidate')]:
         index.execute('INSERT INTO adapter_coverage VALUES(?,?,?,?,?,?,?,?)',

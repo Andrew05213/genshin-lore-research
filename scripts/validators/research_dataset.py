@@ -15,7 +15,7 @@ from pathlib import Path
 # Also support the documented source-checkout script invocation from any cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from genshin_lore.research_index import sha256_file
-from genshin_lore.research_adapters import CANDIDATE_UNSUPPORTED_RELATIONS
+from genshin_lore.research_adapters import CANDIDATE_UNSUPPORTED_RELATIONS, RELATIONS
 from scripts.validators.research_index import expected_adapter_tables, explicit_text_tables
 
 KEYS={}
@@ -56,6 +56,54 @@ SOURCE_RELATIONS = {
 }
 
 
+def verify_formal_relation_projections(index, src, key, family, declarations):
+    """Derive supported relation/candidate counts from source, not coverage.
+
+    Formal adapters may exclude relations whose physical parent namespace is
+    not indexed. Such partial scopes remain legal, but their projected subset
+    cannot be reduced to zero by editing a derived status/count. Candidate
+    expectations use SOURCE relation IDs, never surviving index relations.
+    Only the static table/FK contract is shared with the builder.
+    """
+    specs = RELATIONS.get(family, ())
+    if not specs:
+        return
+    tables = {r[0] for r in src.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    parents = {r[0] for r in index.execute(
+        'SELECT occurrence_id FROM research_container WHERE source_key=?', (key,))}
+    for spec in specs:
+        relation, candidate = spec['table'], spec['candidate']
+        if relation not in tables:
+            continue
+        wanted = set()
+        relation_total = 0
+        for identity, parent in src.execute(f'SELECT id,"{spec["parent"]}" FROM "{relation}"'):
+            relation_total += 1
+            if str(parent) in parents:
+                wanted.add(str(identity))
+        candidate_total = candidate_expected = 0
+        if candidate in tables:
+            for (parent,) in src.execute(f'SELECT relation_id FROM "{candidate}"'):
+                candidate_total += 1
+                candidate_expected += str(parent) in wanted
+        for kind, table, denominator, expected in (
+            ('relation', relation, relation_total, len(wanted)),
+            ('candidate', candidate, candidate_total, candidate_expected),
+        ):
+            declaration = declarations.get((kind, table))
+            status = 'complete' if expected == denominator else 'unsupported'
+            if kind == 'relation':
+                actual = index.execute('SELECT COUNT(*) FROM research_relation WHERE source_key=? AND source_table=?',
+                                       (key, table)).fetchone()[0]
+            else:
+                actual = index.execute('SELECT COUNT(*) FROM research_candidate c JOIN research_relation r ON r.id=c.relation_id '
+                                       'WHERE r.source_key=? AND c.source_table=?', (key, table)).fetchone()[0]
+            if (declaration is None or actual != expected or
+                (declaration['denominator'], declaration['indexed_count'], declaration['status']) !=
+                    (denominator, expected, status)):
+                raise ValueError('formal relation projection differs from source parent scope: '+key+': '+table)
+
+
 def verify_required_source_projections(index, manifest, sources):
     """Coverage cannot choose its own denominator or downgrade required work."""
     for component in manifest['components']:
@@ -88,6 +136,8 @@ def verify_required_source_projections(index, manifest, sources):
             row = declarations[projection]
             if row['status'] != 'complete' or row['indexed_count'] != row['denominator']:
                 raise ValueError('required source projection incomplete: '+key+': '+projection[1])
+        if mode in ('core33', 'formal_compatible', 'talk_physical'):
+            verify_formal_relation_projections(index, src, key, component['family'], declarations)
 
 
 def verify_source_declarations(index, manifest):
