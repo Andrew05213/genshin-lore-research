@@ -135,9 +135,9 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
             raise ValueError('Native26 oracle accepted input artifact drift')
     if sha(event_manifest) != scope['event16_manifest_sha256']:
         raise ValueError('Native26 oracle Event16 binding seal')
-    code_hashes = {str(path.relative_to(ROOT)): sha(path) for path in (
+    code_hashes = {path.relative_to(ROOT).as_posix(): sha(path) for path in (
         ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY)}
-    code_hashes.update({str(path.relative_to(ROOT)): sha(metadata / path.relative_to(ROOT)) for path in (EVENT, TALK)})
+    code_hashes.update({path.relative_to(ROOT).as_posix(): sha(metadata / path.relative_to(ROOT)) for path in (EVENT, TALK)})
     parser = key('parser', code_hashes)
     run = key('run', parser, sha(scope_path), scope['snapshot_id'])
     source = []
