@@ -41,6 +41,7 @@ STAGES = (
     "events",
     "native",
     "index",
+    "semantic",
 )
 FULL_BUILD_PEAK_BYTES = 25_000_000_000
 INDEX_BUILD_PEAK_BYTES = 7_000_000_000
@@ -338,7 +339,8 @@ class Rebuild:
                     "timings_seconds": {
                         "builder": built_at - start,
                         "seal_and_verifier": verified_at - built_at,
-                        "post_verification_qualification": time.monotonic() - verified_at,
+                        "post_verification_qualification": time.monotonic()
+                        - verified_at,
                     },
                     "formal_release_accepted": False,
                 },
@@ -1292,8 +1294,13 @@ class Rebuild:
                 "candidate_profile_sha256": sha(pp),
             },
         )
+        config_name = (
+            "runtime-config.literal.json"
+            if getattr(self, "with_semantic", False)
+            else "runtime-config.json"
+        )
         write(
-            self.output / "runtime-config.json",
+            self.output / config_name,
             {
                 "corpus": str(cp.relative_to(self.output)),
                 "profile": str(pp.relative_to(self.output)),
@@ -1305,6 +1312,160 @@ class Rebuild:
 
         write(
             self.output / "runtime-smoke.json",
+            smoke(self.output / config_name),
+        )
+
+    def semantic(self):
+        """Build and qualify a derived overlay; leave literal evidence untouched."""
+        from importlib.metadata import version
+        from scripts.builders import semantic as builder
+        from scripts.validators.semantic import verify
+
+        directory = self.output / "semantic"
+        index = self.path("research_index")
+        literal_profile = self.metadata_path(
+            "manifests/research/candidate-7.1-complete-profile-v1.json"
+        )
+        corpus = self.metadata_path("manifests/research/candidate-7.1-complete-v1.json")
+        recipe = ROOT / "recipes/semantic-input.json"
+        builder.check_model(self.model_cache)
+        scope = builder.make_scope(index, load(literal_profile)["corpus_ref"], recipe)
+        scope_path = self.output / "semantic-input.json"
+        write(scope_path, scope)
+        inputs = self.dependency_inputs("research_index") + [
+            literal_profile,
+            scope_path,
+            recipe,
+        ]
+        inputs += sorted(p for p in self.model_cache.rglob("*") if p.is_file())
+        identity = pipeline_identity(
+            ROOT,
+            self.source,
+            self.history,
+            inputs=inputs,
+            parameters={
+                "stage": "semantic",
+                "dependencies": {
+                    n: version(n)
+                    for n in ("fastembed", "onnxruntime", "hnswlib", "numpy")
+                },
+            },
+        )
+        names = (
+            "metadata.sqlite",
+            "index.hnsw",
+            "vectors.npy",
+            "lexicon.sqlite",
+            "scope.json",
+            "build.json",
+            "verify.json",
+            "invocation.json",
+        )
+        if directory.exists():
+            receipt = load_object(directory / "verified.json")
+            if (
+                receipt.get("identity") != identity
+                or receipt.get("contract") != "local-semantic-stage-v1"
+                or receipt.get("independent_verifier_completed") is not True
+            ):
+                raise ValueError(
+                    "semantic resume identity mismatch; prior records preserved"
+                )
+            if receipt.get("files") != {n: seal(directory / n) for n in names}:
+                raise ValueError("semantic resume artifact/report drift")
+            require_success(load_object(directory / "verify.json"))
+            require_success(verify(index, directory))
+            report = load(directory / "build.json")
+        else:
+            try:
+                remaining = self.available - max(
+                    0, allocated((ROOT, self.output)) - self.allocated_start
+                )
+                report = builder.build(
+                    index,
+                    directory,
+                    self.model_cache,
+                    scope_path=scope_path,
+                    available_allocated_bytes=remaining,
+                )
+                write(
+                    directory / "invocation.json",
+                    {"identity": identity, "formal_release_accepted": False},
+                )
+                checked = verify(index, directory)
+                write(directory / "verify.json", checked)
+                require_success(checked)
+                if (
+                    pipeline_identity(
+                        ROOT,
+                        self.source,
+                        self.history,
+                        inputs=inputs,
+                        parameters=identity["parameters"],
+                    )
+                    != identity
+                ):
+                    raise ValueError(
+                        "semantic inputs or implementation changed during build"
+                    )
+                write(
+                    directory / "verified.json",
+                    {
+                        "contract": "local-semantic-stage-v1",
+                        "identity": identity,
+                        "files": {n: seal(directory / n) for n in names},
+                        "independent_verifier_completed": True,
+                        "formal_release_accepted": False,
+                    },
+                )
+            except BaseException as exc:
+                if directory.exists():
+                    write(
+                        directory / ("failure-" + str(time.time_ns()) + ".json"),
+                        {"error": str(exc), "error_type": type(exc).__name__},
+                    )
+                raise
+        # New files, not an in-place rewrite of the qualified literal profile.
+        profile = load(literal_profile)
+        profile["semantic_discovery"] = report["config"]
+        profile["runtime_qualification"] = (
+            "manifests/research/candidate-7.1-semantic-agent-runtime-v1.json"
+        )
+        profile_path = self.metadata_path(
+            "manifests/research/candidate-7.1-semantic-profile-v1.json"
+        )
+        write(profile_path, profile)
+        qualification = load(
+            self.metadata_path("manifests/research/candidate-7.1-agent-runtime-v2.json")
+        )
+        qualification["candidate_profile_sha256"] = sha(profile_path)
+        write(self.metadata_path(profile["runtime_qualification"]), qualification)
+        bindings = load(self.output / "complete-bindings.json")
+        bindings["semantic_discovery"] = {
+            **{
+                k: str(directory / n)
+                for k, n in (
+                    ("metadata", "metadata.sqlite"),
+                    ("hnsw", "index.hnsw"),
+                    ("lexicon", "lexicon.sqlite"),
+                )
+            },
+            "model_cache": str(self.model_cache),
+        }
+        write(self.output / "semantic-bindings.json", bindings)
+        write(
+            self.output / "runtime-config.json",
+            {
+                "corpus": str(corpus.relative_to(self.output)),
+                "profile": str(profile_path.relative_to(self.output)),
+                "bindings": "semantic-bindings.json",
+                "index": str(index.relative_to(self.output)),
+            },
+        )
+        from scripts.serve import smoke
+
+        write(
+            self.output / "runtime-smoke.semantic.json",
             smoke(self.output / "runtime-config.json"),
         )
 
@@ -1319,6 +1480,16 @@ def main():
     )
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--stage", choices=(*STAGES, "all"), required=True)
+    parser.add_argument(
+        "--without-semantic",
+        action="store_true",
+        help="Explicit literal-only full build; not a complete vector build",
+    )
+    parser.add_argument(
+        "--model-cache",
+        type=Path,
+        help="Existing pinned local model cache; never downloaded implicitly",
+    )
     parser.add_argument(
         "--available-allocated-bytes",
         type=int,
@@ -1352,8 +1523,19 @@ def main():
             raise ValueError(
                 "clean pinned historical source required; no database substitution"
             )
-    if args.stage in ("all", "index"):
+    with_semantic = args.stage == "semantic" or (
+        args.stage == "all" and not args.without_semantic
+    )
+    if args.stage == "semantic" and args.without_semantic:
+        parser.error("--stage semantic cannot be combined with --without-semantic")
+    if args.stage in ("all", "index", "semantic"):
         peak = FULL_BUILD_PEAK_BYTES if args.stage == "all" else INDEX_BUILD_PEAK_BYTES
+        if with_semantic:
+            peak = (
+                FULL_BUILD_PEAK_BYTES + 2_000_000_000
+                if args.stage == "all"
+                else 2_000_000_000
+            )
         parent = args.output_root.resolve()
         while not parent.exists():
             parent = parent.parent
@@ -1362,11 +1544,28 @@ def main():
             or shutil.disk_usage(parent).free < peak + 1_000_000_000
         ):
             raise ValueError("insufficient freshly measured project/host peak headroom")
+    if with_semantic:
+        if args.model_cache is None:
+            parser.error(
+                "--model-cache required for default full/vector build; use --without-semantic only for an explicit literal-only build"
+            )
+        from scripts.builders.semantic import check_model
+        import hnswlib
+        import fastembed
+
+        check_model(args.model_cache)
     allocated_start = allocated((ROOT, args.output_root))
     job = Rebuild(args.source, args.output_root, args.historical_source)
     job.available = args.available_allocated_bytes
     job.allocated_start = allocated_start
-    for stage in STAGES if args.stage == "all" else (args.stage,):
+    job.with_semantic = with_semantic
+    job.model_cache = args.model_cache.resolve() if args.model_cache else None
+    selected = (
+        tuple(s for s in STAGES if s != "semantic" or with_semantic)
+        if args.stage == "all"
+        else (args.stage,)
+    )
+    for stage in selected:
         getattr(job, stage)()
 
 

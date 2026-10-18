@@ -60,7 +60,11 @@ class Research71Unified:
             self.query=SuccessorResearch71(corpus,bindings,index,profile)
             return
         metadata = Path(corpus).resolve().parents[2]
-        qualification=json.loads((metadata/'manifests/research/candidate-7.1-agent-runtime-v2.json').read_text())
+        qualification_path=(metadata/json.loads(Path(profile).read_text()).get(
+            'runtime_qualification','manifests/research/candidate-7.1-agent-runtime-v2.json')).resolve()
+        if not qualification_path.is_relative_to(metadata):
+            raise ValueError('candidate runtime qualification outside explicit metadata root')
+        qualification=json.loads(qualification_path.read_text())
         if (qualification.get('contract')!='research71-unified-agent-runtime-v1' or
                 qualification.get('status')!='local_candidate_qualification' or qualification.get('snapshot')!=SNAPSHOT or
                 qualification.get('product_accepted') is not False or qualification.get('full_research_7_1_accepted') is not False or

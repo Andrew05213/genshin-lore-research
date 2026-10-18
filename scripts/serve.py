@@ -38,7 +38,7 @@ def smoke(config):
                 runtime.read(ref);runtime.inspect(ref)
                 if capability=='character_avatar':runtime.follow(ref,limit=3)
         return {'status':'PASS_LOCAL_REBUILT_RUNTIME','checks':result,'formal_release_accepted':False,
-            'semantic_overlay_built':False,'legacy_fallback':False}
+            'semantic_overlay_built':getattr(q,'semantic',None) is not None,'legacy_fallback':False}
     finally:runtime.close()
 
 

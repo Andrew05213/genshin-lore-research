@@ -25,7 +25,7 @@ def sha256_file(path: Path) -> str:
 def tree_sha256(path: Path) -> str:
     digest = hashlib.sha256()
     for child in sorted(item for item in path.rglob("*") if item.is_file()):
-        digest.update(str(child.relative_to(path)).encode() + b"\0")
+        digest.update(child.relative_to(path).as_posix().encode() + b"\0")
         digest.update(bytes.fromhex(sha256_file(child)))
     return digest.hexdigest()
 
@@ -104,7 +104,7 @@ class SemanticDiscovery:
             raise SemanticUnavailable("semantic metadata sidecar present")
 
         self.db = sqlite3.connect(
-            f"file:{self.meta_path}?mode=ro&immutable=1",
+            self.meta_path.resolve().as_uri()+"?mode=ro&immutable=1",
             uri=True,
             check_same_thread=False,
         )

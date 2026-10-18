@@ -38,7 +38,7 @@
 
 完整链路补齐静态构建 scope、动态来源绑定、全部独立输入、统一文本/关系核对和 MCP 启动。操作见 [完整重建指南](guides/building-dataset.md)。安装源码不会自动配置 Codex；客户端连接须使用本次生成的 runtime 配置。
 
-semantic overlay、外部模型权重和原部署正式 release 的 acceptance 不由基础数据入口自动生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
+当前 `--stage all` 增加独立 semantic 构建及完整来源窗口核验，模型必须事先显式取得；`--without-semantic` 保留基础数据模式。默认搜索仍为 literal。向量合成测试和固定模型小型 A/B 不能替代全游戏来源的向量重建，原部署正式 release 的 acceptance 不由此入口生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
 
 ## 研究能力的固有限制
 

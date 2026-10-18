@@ -19,7 +19,7 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
 
-全链路要求至少 25 GB 新增峰值预算，另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
+默认含向量的全链路要求至少 27 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建仍为 25 GB。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
 
 ## 构建
 
@@ -38,16 +38,19 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 
 以下 `HEADROOM_BYTES` 应填入刚完成的项目容量实测余量：
 
+先完成 [固定模型与 semantic 依赖准备](building-semantic.md)。构建过程不自动下载模型：
+
 ```sh
 .venv/bin/python scripts/build.py \
   --source data/AnimeGameData \
   --historical-source data/AnimeGameData-history \
   --output-root data/rebuilt \
+  --model-cache data/model-cache \
   --available-allocated-bytes HEADROOM_BYTES \
   --stage all
 ```
 
-构建顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native 和统一索引。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
+构建顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native、统一索引和向量 overlay。仅需基础数据时显式加 `--without-semantic`，不需要模型参数。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
 
 每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
 
@@ -62,6 +65,8 @@ data/rebuilt/
 ├── metadata/manifests/          # 此次 bundle/profile/registry/资格绑定
 ├── complete-bindings.json       # 此次 exact artifacts 的显式本地路径
 ├── index-oracles/
+├── semantic/                    # 向量、映射、独立 oracle 与专用成功回执
+├── runtime-config.literal.json  # 默认完整构建中的基础数据显式入口
 └── runtime-config.json
 ```
 
@@ -100,6 +105,6 @@ data/rebuilt/
 
 - 重建的是固定 7.1 的有界数据产品及 literal Research 服务，不是全部游戏数据。
 - 8 项 historical contract gaps 和 12 条 component gap records 不因重建消失；候选、未判明关系及有限 Event 范围保留。
-- semantic/embedding overlay 不包含在该完整数据入口中，不能将 literal 启动成功写成 semantic 已验证。
+- 默认完整入口包括独立 semantic overlay。`--without-semantic` 或单独 `--stage index` 仅构建基础数据；不能将 literal 启动成功写成 semantic 已验证。向量失败时保留基础数据配置，但不交付一个冒充完整向量构建的默认配置。
 - 新来源绑定和代码会产生新的 parser/run 与 seal。完整来源正文和坐标核验，比复写旧数据库 SHA 更重要；不声称跨目录、跨 Python/SQLite 版本的数据库字节完全相同。
 - 生成数据库、来源正文和包含路径的绑定均不提交 Git。静态 scope 与重建 recipe 保持 tracked；本次运行配置为 ignored 本地产物。
