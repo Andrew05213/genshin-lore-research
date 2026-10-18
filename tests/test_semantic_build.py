@@ -316,7 +316,6 @@ def test_vector_stage_qualifies_and_generates_usable_isolated_config(
         str(Path(__file__).with_name("test_research_pipeline.py"))
     )["pipeline"]
     job, manifest, bindings, config = pipeline(tmp_path / "stage")
-    config.rename(job.output / "runtime-config.literal.json")
     metadata = job.output / "metadata/manifests/research"
     profile = json.loads((metadata / "profile.json").read_text())
     profile["corpus_manifest"] = "manifests/research/candidate-7.1-complete-v1.json"
@@ -347,6 +346,16 @@ def test_vector_stage_qualifies_and_generates_usable_isolated_config(
     (job.output / "complete-bindings.json").write_bytes(
         (job.output / "bindings.json").read_bytes()
     )
+    # Use the production base-stage names but KEEP its existing default file.
+    # Additional vector construction must upgrade this actual starting state,
+    # not require manually removing/renaming the prior default configuration.
+    literal_config = {
+        "corpus": str((metadata/'candidate-7.1-complete-v1.json').relative_to(job.output)),
+        "profile": str((metadata/'candidate-7.1-complete-profile-v1.json').relative_to(job.output)),
+        "bindings": "complete-bindings.json",
+        "index": str(job.path('research_index').relative_to(job.output)),
+    }
+    config.write_text(json.dumps(literal_config), encoding="utf-8")
     _, job.model_cache, _ = inputs(tmp_path)
     job.available = 3_000_000_000
     job.allocated_start = driver.allocated((driver.ROOT, job.output))
@@ -385,11 +394,23 @@ def test_vector_stage_qualifies_and_generates_usable_isolated_config(
         finally:
             query.close()
 
+    def failed_smoke(config):
+        raise RuntimeError("synthetic runtime rejection")
+
+    monkeypatch.setattr(serve, "smoke", failed_smoke)
+    with pytest.raises(RuntimeError, match="runtime rejection"):
+        job.semantic()
+    assert json.loads(config.read_text()) == literal_config
     monkeypatch.setattr(serve, "smoke", small_smoke)
     job.semantic()
     receipt = job.output / "semantic/verified.json"
     assert json.loads(receipt.read_text())["independent_verifier_completed"] is True
     assert (job.output / "runtime-config.json").exists()
+    assert (
+        json.loads((job.output / "runtime-config.literal.json").read_text())
+        == literal_config
+    )
+    assert json.loads(config.read_text())["bindings"] == "semantic-bindings.json"
     job.semantic()
     value = json.loads(receipt.read_text())
     value["independent_verifier_completed"] = False

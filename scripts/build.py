@@ -1453,20 +1453,30 @@ class Rebuild:
             "model_cache": str(self.model_cache),
         }
         write(self.output / "semantic-bindings.json", bindings)
-        write(
-            self.output / "runtime-config.json",
-            {
-                "corpus": str(corpus.relative_to(self.output)),
-                "profile": str(profile_path.relative_to(self.output)),
-                "bindings": "semantic-bindings.json",
-                "index": str(index.relative_to(self.output)),
-            },
-        )
+        config = {
+            "corpus": str(corpus.relative_to(self.output)),
+            "profile": str(profile_path.relative_to(self.output)),
+            "bindings": "semantic-bindings.json",
+            "index": str(index.relative_to(self.output)),
+        }
+        semantic_config = self.output / "runtime-config.semantic.json"
+        write(semantic_config, config)
         from scripts.serve import smoke
 
         write(
             self.output / "runtime-smoke.semantic.json",
-            smoke(self.output / "runtime-config.json"),
+            smoke(semantic_config),
+        )
+        from scripts.runtime_config import activate_generated_config
+
+        activate_generated_config(
+            self.output,
+            config,
+            expected_previous={
+                **config,
+                "profile": str(literal_profile.relative_to(self.output)),
+                "bindings": "complete-bindings.json",
+            },
         )
 
 
