@@ -58,6 +58,8 @@ v2 阶段回执绑定 Python/SQLite/直接依赖版本、构建与验证 Python�
 
 Character 后续组件通过本次 metadata 中显式的 `local-character-foundation-v1` 合同消费新 foundation：检查本次 artifact、完整 v2 回执、报告 seal、实现/环境和来源 scope，并重跑原独立 foundation 来源 oracle，要求结果与已封存报告一致。text/lore/voice 的 release 和 run 身份绑定本次 foundation 的实际 size/SHA，lore/voice 的 text 依赖也须精确匹配该 foundation。没有本地合同的历史路径继续要求原固定 artifact seal；不将新数据库写成历史 artifact，也不修改历史凭据。
 
+Native Message 属于 `--stage quest`：先完成本次 Quest/Talk、QuestNarrative 和独立 oracle，再在 metadata 中生成 `local-native-message-quest-narrative-v1` 绑定。消费时核对这两个阶段的当前 v2 回执、完整显式输入、实现/环境和 artifact/report seal，重跑 QuestNarrative 独立来源 oracle；MainQuest 候选集从本次目标 occurrence 与消息原始 locator 完整重建。历史 message scope 的路径、parser/run 与 seal 原样保留，不作为新构建的依赖。
+
 动态文件不再写入源码树：
 
 ```text

@@ -497,11 +497,6 @@ class Rebuild:
             ("gcg_card", "gcg_card_7_1", "gcg-card-7.1/scope.json"),
             ("loading_tips", "loading_tips_7_1", "loading-tips-7.1/scope.json"),
             ("mail", "mail_7_1", "mail-archive-7.1/source-scope-v1.json"),
-            (
-                "native_message",
-                "native_message_7_1",
-                "native-archive-7.1/message-scope-v1.json",
-            ),
         ):
             sp = ROOT / "manifests" / scope
             builder = module(mod + "_build")
@@ -513,6 +508,19 @@ class Rebuild:
                 if n == "loading_tips"
                 else v.verify(self.source, s, p, r),
             )
+
+    def native_message(self):
+        from genshin_lore.native_message_7_1_binding import prepare_scope, SCOPE
+
+        inputs = self.dependency_inputs("quest_narrative", "quest_talk")
+        self.bind(SCOPE, prepare_scope(self.source, self.output))
+        scope = self.metadata_path(SCOPE)
+        self.task(
+            "native_message",
+            lambda p: module("native_message_7_1_build").build(self.source, scope, p),
+            lambda p, r: module("native_message_7_1_verify").verify(self.source, scope, p, r),
+            inputs=inputs + [scope],
+        )
 
     def quest(self):
         scope = ROOT / "manifests/quest-talk-7.1/source-scope.json"
@@ -552,6 +560,7 @@ class Rebuild:
             ),
             inputs=self.dependency_inputs("quest_talk") + [qmp],
         )
+        self.native_message()
         if self.history is None:
             raise ValueError(
                 "--historical-source required for the original Review field-continuity oracle"

@@ -22,6 +22,11 @@ def ident(*parts: object) -> str:
 
 def project(source: Path, scope_path: Path) -> tuple[dict, dict[str, list[tuple]], dict]:
     scope = json.loads(scope_path.read_text())
+    if 'local_rebuild' in scope:
+        from .native_message_7_1_binding import qualify_scope
+        qualify_scope(source, scope_path, scope)
+    elif scope != json.loads((ROOT / 'manifests/native-archive-7.1/message-scope-v1.json').read_text()):
+        raise ValueError('Native Message historical scope must retain its exact seal')
     check_files(source, scope)
     historical_path = ROOT / scope['historical_selection']
     historical = json.loads(historical_path.read_text())
@@ -47,7 +52,7 @@ def project(source: Path, scope_path: Path) -> tuple[dict, dict[str, list[tuple]
     dependency_path = Path(dependency['target_artifact_machine_local'])
     if dependency_path.stat().st_size != dependency['artifact']['size_bytes'] or sha(dependency_path) != dependency['artifact']['sha256']:
         raise ValueError('Native Message 7.1 MainQuest target artifact seal')
-    target = sqlite3.connect(dependency_path)
+    target = sqlite3.connect(dependency_path.resolve().as_uri() + '?mode=ro&immutable=1', uri=True)
     try:
         target.row_factory = sqlite3.Row
         if target.execute("SELECT count(*) FROM excel_row WHERE kind='main_quest'").fetchone()[0] != dependency['physical_target_denominator']:
@@ -58,7 +63,7 @@ def project(source: Path, scope_path: Path) -> tuple[dict, dict[str, list[tuple]
                 raise ValueError('Native Message 7.1 target wrong run')
             by_native[item['native_id']].append(dict(item))
         external = []
-        for raw in sorted({str(row[spec['relations'][0]['field']]) for spec in scope['sources'] if spec.get('relations')
+        for raw in sorted({str(row[relation['field']]) for spec in scope['sources'] for relation in spec.get('relations', [])
                            for _, row, _ in array_records(source / spec['path'])}):
             for item in by_native[raw]:
                 external.append({'raw_locator': raw, 'target_occurrence_id': item['id'],
