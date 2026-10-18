@@ -15,8 +15,11 @@ def relation_values(row,spec):
  if shape=='array' and isinstance(value,list):return [(f"{spec['field']}/{i}",x) for i,x in enumerate(value) if x is not None]
  if value is not None:raise ValueError('declared relation shape mismatch')
  return []
-def expected_external(source_root,quest_artifact,bulk_artifact):
- qn_manifest=ROOT/'manifests/quest-derived-7.1/standalone-candidates-v1.json';bulk_manifest=ROOT/'manifests/native-archive-7.1/bulk-runtime.json'
+def dependency_manifests(metadata_root=None):
+ base=Path(metadata_root) if metadata_root is not None else ROOT
+ return base/'manifests/quest-derived-7.1/standalone-candidates-v1.json',base/'manifests/native-archive-7.1/bulk-runtime.json'
+def expected_external(source_root,quest_artifact,bulk_artifact,*,metadata_root=None):
+ qn_manifest,bulk_manifest=dependency_manifests(metadata_root)
  qn=json.loads(qn_manifest.read_text())['components']['quest_narrative_archive'];bulk=json.loads(bulk_manifest.read_text())
  if qn['source_snapshot']!=SNAPSHOT or bulk['source_snapshot']!=SNAPSHOT:raise ValueError('cross-snapshot target dependency')
  check_artifact(quest_artifact,qn['artifact']);check_artifact(bulk_artifact,bulk['artifact']);out=[];cache={}
@@ -39,13 +42,13 @@ def expected_external(source_root,quest_artifact,bulk_artifact):
  if len(out)!=4417+17814+85:raise ValueError('external target denominator')
  out.sort(key=lambda x:(x['namespace'],str(x['raw_locator']),x['target_source_path'],x['target_source_pointer'],x['target_occurrence_id']))
  return out,{'quest_narrative':{'manifest':'manifests/quest-derived-7.1/standalone-candidates-v1.json','manifest_sha256':sha(qn_manifest),'artifact':{'path':str(Path(quest_artifact).resolve()),'size_bytes':qn['artifact']['size_bytes'],'sha256':qn['artifact']['sha256']},'contract':qn['contract'],'parser':qn['parser_build_id'],'run':qn['ingest_run_id'],'required_capabilities':['mainquest_exact_rows','quest_excel_exact_rows']},'native_bulk':{'manifest':'manifests/native-archive-7.1/bulk-runtime.json','manifest_sha256':sha(bulk_manifest),'artifact':{'path':str(Path(bulk_artifact).resolve()),'size_bytes':bulk['artifact']['size_bytes'],'sha256':bulk['artifact']['sha256']},'contract':bulk['family_contract_version'],'parser':bulk['parser_build_id'],'run':bulk['ingest_run_id']}}
-def verify(source_root,scope_path,artifact,quest_artifact,bulk_artifact,runtime_manifest_path=None):
+def verify(source_root,scope_path,artifact,quest_artifact,bulk_artifact,runtime_manifest_path=None,*,metadata_root=None):
  start=time.perf_counter();scope=json.loads(Path(scope_path).read_text());selection_path=ROOT/scope.get('selection_manifest','');selection=json.loads(selection_path.read_text())
  if scope.get('selection_manifest')!=SELECTION or sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('selection mismatch')
  selected={x['path'] for x in selection['sources']}|{x for locale in selection['textmaps'].values() for x in locale.values()}
  if {x['path'] for x in scope['files']}!=selected:raise ValueError('scope file denominator mismatch')
  check_files(source_root,scope)
- external_rows,dependencies=expected_external(source_root,quest_artifact,bulk_artifact)
+ external_rows,dependencies=expected_external(source_root,quest_artifact,bulk_artifact,metadata_root=metadata_root)
  main_quest_proof={'status':'same_snapshot_exact_physical_capability_reuse','source_path':'ExcelBinOutput/MainQuestExcelConfigData.json','physical_rows':sum(x['namespace']=='quest_main' for x in external_rows),'accepted_parser':dependencies['quest_narrative']['parser'],'accepted_run':dependencies['quest_narrative']['run']}
  if scope.get('main_quest_reconciliation')!=main_quest_proof:raise ValueError('MainQuest capability declaration mismatch')
  if scope['external_candidates']!=external_rows:raise ValueError('external candidate namespace mismatch')

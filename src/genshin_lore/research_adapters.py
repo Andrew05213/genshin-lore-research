@@ -80,6 +80,19 @@ UNSUPPORTED_RELATION_TABLES: dict[str, tuple[str, ...]] = {
     ),
 }
 
+# Explicit unprojected scopes of the 7.1 storage adapters. These are schema
+# contracts, not discovered relationships or an instruction to resolve them.
+# Builder and oracle share table scope only; row projection and verification
+# remain independent implementations.
+CANDIDATE_UNSUPPORTED_RELATIONS = {
+    "quest_narrative_archive": (("candidate", "child_candidate"),
+        ("candidate", "excel_candidate"), ("candidate", "main_root_candidate")),
+    "quest_review_archive": (("candidate", "locator_candidate"),),
+    "quest_talk_physical": (("relation", "physical_reference"),),
+    "dependency_only": (("candidate", "lore_avatar_candidate"),
+        ("candidate", "voice_avatar_candidate"), ("candidate", "voice_lut_candidate")),
+}
+
 RELATION_NAME_MARKERS = ("relation", "candidate", "edge", "reference", "scope_proof")
 
 

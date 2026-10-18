@@ -23,6 +23,19 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 ## 构建
 
+先运行无游戏数据测试，再执行高成本完整构建：
+
+```sh
+.venv/bin/python -m pytest -q
+```
+
+其中 `tests/test_research_pipeline.py` 使用微型合成 SQLite 输入，实际贯通阶段回执、
+索引 builder、独立完整 oracle、新配置及五工具 MCP 子进程；还检查空 scope、
+unsupported 保留、声明遗漏、虚报 complete、搜索分页和两输出隔离。
+Event/Native 的实际调度签名与动态路径另由编排测试检查。
+这些检查适合修改后的第一轮反馈，不代替真实来源的全量正文/关系验证。
+完整重建是最后的来源验收，不应当用来逐个发现参数、状态和声明接线错误。
+
 以下 `HEADROOM_BYTES` 应填入刚完成的项目容量实测余量：
 
 ```sh

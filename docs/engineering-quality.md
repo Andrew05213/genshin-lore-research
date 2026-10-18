@@ -85,3 +85,7 @@ python scripts/check_dialogue.py --config data/engineering-a/runtime-config.json
 ```
 
 第二次独立构建使用新输出目录，并先重新计算同时保留与临时峰值；不得复制 A 充当 B。旧失败目录和历史资格保持，不强删以满足预算。新数据构建成功与正式 release 接受仍分别判断。
+
+后续已实际执行两次完整来源尝试，分别因 R0 报告适配和 Filmfest 动态路径接线失败；最小修复及定向复验见 [完整重建重试记录](full-rebuild-retry.md)。这不追溯修改上文原检查范围，也不将局部成功写成全链通过。
+
+第三次因 Event13 完成返回缺少状态停止后，对实际构建链做了集中 [返回合同与动态绑定核对](build-contract-audit.md)，并补充实际 Event/Native 阶段编排合成测试。全量资格仍以重试记录中的真实执行结果为准。

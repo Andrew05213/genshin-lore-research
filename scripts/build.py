@@ -86,7 +86,10 @@ class Rebuild:
             path=path.relative_to(ROOT)
         if '..' in path.parts:
             raise ValueError('metadata path outside build output')
-        return self.metadata/path
+        target=self.metadata/path
+        if not target.resolve().is_relative_to(self.output.resolve()):
+            raise ValueError('metadata path outside build output')
+        return target
 
     def dependency_inputs(self,*names):
         paths=[]
@@ -100,6 +103,11 @@ class Rebuild:
                     raise ValueError('dependency report drift: '+name)
             require_success(load_object(directory/'verify.json'))
             identity=receipt.get('identity',{})
+            invocation=load_object(directory/'invocation.json')
+            if (identity.get('parameters',{}).get('stage')!=name or
+                    invocation.get('stage')!=name or invocation.get('identity')!=identity or
+                    receipt.get('source_snapshot')!=SNAPSHOT or invocation.get('source_snapshot')!=SNAPSHOT):
+                raise ValueError('dependency stage identity mismatch: '+name)
             actual=pipeline_identity(getattr(self,'identity_root',ROOT),self.source,self.history,
                 inputs=identity.get('stage_inputs',{}),parameters=identity.get('parameters'))
             if actual!=identity:
@@ -299,8 +307,14 @@ class Rebuild:
         b=module('batch_m3_physical')
         parser='pb-batch-m3-r0-physical-7.1:23e78b08f997ab610cd55a11f91f2f4c252260af'
         run='ir-batch-m3-r0-physical-7.1:9fc2c32cc6bb81dd6091e504d43e40bdcf930ea2'
-        self.task('r0',lambda p:b.build_r0_artifact(self.source,p,repo_root=ROOT,snapshot_id=SNAPSHOT,
-                  parser_build_id=parser,ingest_run_id=run,artifact_limit_bytes=6*1024**3),
+        def build(path):
+            report=b.build_r0_artifact(self.source,path,repo_root=ROOT,snapshot_id=SNAPSHOT,
+                  parser_build_id=parser,ingest_run_id=run,artifact_limit_bytes=6*1024**3)
+            # Adapt R0's native report; task still compares this declared seal
+            # to actual bytes and requires the independent source verifier.
+            return {**report,'artifact':{'size_bytes':report['artifact_size_bytes'],
+                                        'sha256':report['artifact_sha256']}}
+        self.task('r0',build,
                   lambda p,r:script_verify('validators/source_archive.py',('--source',self.source,'--artifact',p,'--output',p.parent/'source-oracle.json'),p.parent/'source-oracle.json'))
 
     def readable(self):
@@ -328,10 +342,11 @@ class Rebuild:
         scope=load(ROOT/'manifests/event-narrative-7.1/component-12-scope-v1.json')
         scope['talk_candidate_namespace'].update(accepted_manifest_sha256=sha(qt_path),
             artifact=qt['artifact'],parser=qt['parser_build_id'],run=qt['ingest_run_id'])
-        b=module('event_filmfest_7_1_build');scope['talk_candidates']=b._target_candidates(self.source,self.path('quest_talk'),scope)
+        b=module('event_filmfest_7_1_build')
+        scope['talk_candidates']=b.discover_target_candidates(self.source,self.path('quest_talk'),scope,qt_manifest_path=qt_path)
         sp=self.bound_scope('event12',scope)
-        self.task('event_12',lambda p:b.build(self.source,sp,self.path('quest_talk'),p),
-                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p),
+        self.task('event_12',lambda p:b.build(self.source,sp,self.path('quest_talk'),p,qt_manifest_path=qt_path),
+                  lambda p,r:module('event_filmfest_7_1_verify').verify(self.source,self.history,sp,self.path('quest_talk'),p,qt_manifest_path=qt_path),
                   inputs=self.dependency_inputs('quest_talk')+[qt_path,sp])
         sp=ROOT/'manifests/event-narrative-7.1/component-15-scope-v1.json'
         self.task('event_15',lambda p:module('event_photo_echo_7_1_build').build(self.source,sp,p),
@@ -368,16 +383,16 @@ class Rebuild:
             subprocess.run([sys.executable,str(ROOT/'scripts/maintenance/native_book_music_scope.py'),'--source',str(self.source),
                 '--message-artifact',str(self.path('native_message')),'--message-runtime',str(self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')),'--output',str(sp)],env=env,cwd=ROOT,check=True)
         self.task('native_book_music',lambda p:module('native_book_music_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message')),
-                  inputs=self.dependency_inputs('native_message')+[sp])
+                  lambda p,r:module('native_book_music_7_1_verify').verify(self.source,sp,p,self.path('native_message'),message_runtime_path=self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')),
+                  inputs=self.dependency_inputs('native_message')+[sp,self.metadata_path('manifests/native-archive-7.1/message-runtime-v1.json')])
         scope=load(ROOT/'manifests/native-archive-7.1/aux-quest-scope-v1.json')
-        ext,deps=module('native_aux_quest_7_1_verify').expected_external(self.source,self.path('quest_narrative'),self.path('native_bulk'))
+        ext,deps=module('native_aux_quest_7_1_verify').expected_external(self.source,self.path('quest_narrative'),self.path('native_bulk'),metadata_root=self.metadata)
         scope.update(external_candidates=ext,dependencies=deps)
         scope['main_quest_reconciliation'].update(accepted_parser=deps['quest_narrative']['parser'],accepted_run=deps['quest_narrative']['run'])
         sp=self.bound_scope('native-aux-quest',scope)
         self.task('native_aux_quest',lambda p:module('native_aux_quest_7_1_build').build(self.source,sp,p),
-                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk')),
-                  inputs=self.dependency_inputs('quest_narrative','native_bulk')+[sp])
+                  lambda p,r:module('native_aux_quest_7_1_verify').verify(self.source,sp,p,self.path('quest_narrative'),self.path('native_bulk'),metadata_root=self.metadata),
+                  inputs=self.dependency_inputs('quest_narrative','native_bulk')+[sp,*module('native_aux_quest_7_1_verify').dependency_manifests(self.metadata)])
         binding=load(ROOT/'recipes/event13-snez-binding.json');r=release(self.path('event_13'))
         with sqlite3.connect(self.path('event_13')) as db:
             binding['occurrences']=[{'ordinal':o,'pointer':p,'raw_sha256':s,'target_occurrence_id':i} for i,o,p,s in
