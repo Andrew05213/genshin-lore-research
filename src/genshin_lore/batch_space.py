@@ -194,9 +194,16 @@ def _within(path: Path, parent: Path) -> bool:
     return True
 
 
+def _temporary_discovery_root(value: str | Path) -> Path:
+    """Resolve the legacy default before Windows absolutizes it to a drive root."""
+    if os.name == 'nt' and str(value).replace('\\', '/') == '/tmp':
+        value = tempfile.gettempdir()
+    return Path(value).absolute()
+
+
 def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> bool:
     return (
-        root.parent == Path(convention_root).absolute()
+        root.parent == _temporary_discovery_root(convention_root)
         and root.name.startswith(PROJECT_TMP_PREFIXES)
     )
 
@@ -204,7 +211,7 @@ def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> boo
 def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...]:
     """Discover only convention-named project roots, never the whole /tmp tree."""
 
-    root = Path(tempfile.gettempdir() if os.name == 'nt' and str(tmp_root) == '/tmp' else tmp_root).absolute()
+    root = _temporary_discovery_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -234,7 +241,7 @@ def discover_project_tmp_paths(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
     Discovery grants accounting scope only; it never grants cleanup authority.
     """
 
-    root = Path(tempfile.gettempdir() if os.name == 'nt' and str(tmp_root) == '/tmp' else tmp_root).absolute()
+    root = _temporary_discovery_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -494,7 +501,7 @@ class ProjectSpaceGate:
         discovery_root: str | Path = "/tmp",
     ) -> None:
         self.repo_root = Path(repo_root).absolute()
-        self.discovery_root = Path(discovery_root).absolute()
+        self.discovery_root = _temporary_discovery_root(discovery_root)
         discovered = discover_project_tmp_paths(self.discovery_root)
         explicit_cleanup = tuple(
             Path(item).absolute()
