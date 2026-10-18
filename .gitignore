@@ -10,6 +10,8 @@ __pycache__/
 *.hnsw
 *.npy
 *.npz
+*.onnx
+*.onnx_data
 *.jsonl
 .env
 .env.*

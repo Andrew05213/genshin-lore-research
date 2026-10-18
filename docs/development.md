@@ -10,7 +10,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install --no-deps --no-build-isolation -e .
 ```
 
-不承诺独立 wheel 包含外部 SQL、来源 scope、recipe 或公开脚本；不要将 wheel 安装成功当作独立部署成功。六个公开命令从源码根目录执行，不另注册一套同名 console scripts。Python 3.12/Linux 已验证；其他环境需单独核对。
+不承诺独立 wheel 包含外部 SQL、来源 scope、recipe 或公开脚本；不要将 wheel 安装成功当作独立部署成功。六个公开命令从源码根目录执行，不另注册一套同名 console scripts。Python 3.12 的 Linux/Windows 合成检查分别由 CI 执行；平台完整来源构建需单独记录，见 [Windows 指南](guides/windows.md)。
 
 打包使用 setuptools 77+，以支持 `pyproject.toml` 中的 SPDX 许可表达式及许可证文件声明。
 
@@ -28,7 +28,7 @@ python3 -m venv .venv
 
 `.github/workflows/ci.yml` 在 PR、main push 和手动触发时执行这些检查及六个公开命令的 `--help`、wheel 元数据核对。CI 不下载游戏来源，不读取个人数据库或凭据。源码测试、来源 oracle、正式 release 验收是三种不同资格。
 
-`requirements-build.txt` 与包的直接依赖一致；`requirements-dev.lock` 固定 Python 3.12 开发/CI 的传递依赖及下载 SHA。更新依赖后在干净环境重测；可用 `uv pip compile requirements-dev.txt --generate-hashes --python-version 3.12 --default-index https://pypi.org/simple --output-file requirements-dev.lock` 更新锁文件。semantic 的 `fastembed` / `hnswlib` 留在可选 extra，不进入基础 CI。
+`requirements-build.txt` 与包的直接依赖一致；`requirements-dev.lock` 固定 Python 3.12 开发/CI 的传递依赖、平台条件及下载 SHA。更新依赖后在干净环境重测；可用 `uv pip compile requirements-dev.txt --universal --generate-hashes --python-version 3.12 --default-index https://pypi.org/simple --output-file requirements-dev.lock` 更新锁文件。semantic 的 `fastembed` / `hnswlib` 留在可选 extra；默认完整构建需安装，基础 CI 用合成向量 fixture 而不下载权重，见 [向量构建](guides/building-semantic.md)。
 
 MCP 兼容层只支持已验证的 `mcp==2.1.1`；升级必须重跑 stdio 注册、请求、分页和引用测试。私有接口集中在 `mcp_transport.py`，不是业务模块的可用扩展接口。公开 SDK stdio 在本次执行环境的最小 initialize 探针超时，因此没有未经验证地替换现行传输。
 

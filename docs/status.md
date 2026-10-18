@@ -2,6 +2,8 @@
 
 ## 可执行入口
 
+最新工程交付、原生 Windows/Linux CI 与本次执行范围见 [整改记录](engineering-finalization.md)。默认完整构建已包含向量阶段，但修改后完整 35 输入及全游戏范围向量尚未重新通过验收。
+
 历史完整新目录实验通过 `PASS_COMPLETE_BOUNDED_DATA_REBUILD`：35 个输入、33 个 core contracts、统一索引的完整来源 rowset 核对及 MCP 续读检查通过。此结论不包括 semantic 重建或原部署正式 release 身份复刻。
 
 后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。合成测试与最小来源 A/B 见 [工程质量记录](engineering-quality.md)。**修改后的完整 35-input 构建已重试四次，尚未通过**：第四次的 59 个前置阶段通过，统一索引因 core 缺少空 scope 声明被独立 oracle 拒绝。已消除 builder 的重复命名规则，并新增真实索引/oracle/MCP 小链路与 35 输入只读 schema 排练；这些不是修复后完整来源重建通过。详见 [重试记录](full-rebuild-retry.md) 和 [合同核对](build-contract-audit.md)，不得沿用历史 verdict、空 schema 排练或定向成功作为新代码的完整来源验收。
@@ -38,7 +40,7 @@
 
 完整链路补齐静态构建 scope、动态来源绑定、全部独立输入、统一文本/关系核对和 MCP 启动。操作见 [完整重建指南](guides/building-dataset.md)。安装源码不会自动配置 Codex；客户端连接须使用本次生成的 runtime 配置。
 
-semantic overlay、外部模型权重和原部署正式 release 的 acceptance 不由基础数据入口自动生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
+当前 `--stage all` 增加独立 semantic 构建及完整来源窗口核验，模型必须事先显式取得；`--without-semantic` 保留基础数据模式。默认搜索仍为 literal。向量合成测试和固定模型小型 A/B 不能替代全游戏来源的向量重建，原部署正式 release 的 acceptance 不由此入口生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
 
 ## 研究能力的固有限制
 
