@@ -181,7 +181,9 @@ def create_private_staging(target: str | Path, *, prefix: str) -> tuple[int, Pat
 
 def fsync_file(path: str | Path) -> None:
     path_value = _absolute(path)
-    descriptor = os.open(path_value, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+    # Windows _commit/FlushFileBuffers requires a write-capable descriptor.
+    flags = os.O_RDWR if os.name == 'nt' else os.O_RDONLY
+    descriptor = os.open(path_value, flags | getattr(os, "O_NOFOLLOW", 0))
     try:
         info = os.fstat(descriptor)
         if stat.S_ISLNK(info.st_mode) or not stat.S_ISREG(info.st_mode):
