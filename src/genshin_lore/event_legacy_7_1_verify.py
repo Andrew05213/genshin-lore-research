@@ -88,7 +88,7 @@ def verify(source_root, old_source, scope_path, artifact, build_report=None, run
     check_old_files(old_source, old)
     if (scope['contract'] != 'event-legacy-7.1-versioned-scope-v1'
             or scope['family_contract_version'] != 'event-narrative-evidence-v1'
-            or scope['historical_scope'] != str(OLD.relative_to(ROOT))
+            or scope['historical_scope'] != OLD.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(OLD)
             or scope['languages'] != old['languages']
             or len(old['sources']) != 14 or len(scope['sources']) != 14

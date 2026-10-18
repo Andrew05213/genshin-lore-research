@@ -112,7 +112,7 @@ def verify(source_root, old_root, scope_path, artifact, build_report=None, runti
     check_files(source_root, scope)
     check_old_files(old_root, historical)
     if (scope['contract'] != 'event-tps-7.1-versioned-scope-v1'
-            or scope['historical_scope'] != str(OLD.relative_to(ROOT))
+            or scope['historical_scope'] != OLD.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(OLD)
             or scope['family_contract_version'] != historical['family_contract_version']
             or scope['languages'] != historical['languages']
