@@ -69,8 +69,15 @@ def verify_formal_relation_projections(index, src, key, family, declarations):
     if not specs:
         return
     tables = {r[0] for r in src.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-    parents = {r[0] for r in index.execute(
-        'SELECT occurrence_id FROM research_container WHERE source_key=?', (key,))}
+    parents = set()
+    for identity, column, value in index.execute(
+        'SELECT occurrence_id,pk_column,pk_value FROM research_container WHERE source_key=?', (key,)):
+        # These formal adapters map the source id PK directly. Do not let an
+        # edited derived occurrence_id redefine which source parents qualify;
+        # fetch() subsequently verifies every physical source key and row.
+        if column != 'id' or identity != value:
+            raise ValueError('formal relation projection parent identity differs from source key: '+key)
+        parents.add(value)
     for spec in specs:
         relation, candidate = spec['table'], spec['candidate']
         if relation not in tables:
