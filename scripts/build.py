@@ -292,6 +292,7 @@ class Rebuild:
         )
         try:
             report = builder(artifact)
+            built_at = time.monotonic()
             if not isinstance(report, dict) or not report:
                 raise ValueError("builder returned no report")
             write(directory / "build.json", report)
@@ -301,6 +302,7 @@ class Rebuild:
                 raise ValueError("builder report artifact seal mismatch")
             phase = "independent verification"
             check = verifier(artifact, report)
+            verified_at = time.monotonic()
             write(directory / "verify.json", check)
             require_success(check)
             if seal(artifact) != before or any(
@@ -333,6 +335,11 @@ class Rebuild:
                     },
                     "independent_verifier_completed": True,
                     "seconds": time.monotonic() - start,
+                    "timings_seconds": {
+                        "builder": built_at - start,
+                        "seal_and_verifier": verified_at - built_at,
+                        "post_verification_qualification": time.monotonic() - verified_at,
+                    },
                     "formal_release_accepted": False,
                 },
             )
