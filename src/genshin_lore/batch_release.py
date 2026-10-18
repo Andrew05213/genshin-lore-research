@@ -8,7 +8,7 @@ helpers do not decide family identity or projection semantics.
 
 from __future__ import annotations
 
-import fcntl
+from .platform_io import lock_exclusive, unlock, sync_directory
 import os
 import stat
 import tempfile
@@ -23,14 +23,6 @@ class BatchReleaseError(RuntimeError):
 
 def sidecars(path: Path) -> tuple[Path, Path, Path]:
     return tuple(Path(f"{path}{suffix}") for suffix in ("-journal", "-wal", "-shm"))
-
-
-def sync_directory(directory: Path) -> None:
-    descriptor = os.open(os.fspath(directory), os.O_RDONLY)
-    try:
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
 
 
 def _absolute(value: str | Path) -> Path:
@@ -143,7 +135,7 @@ def stable_sibling_lock(
     descriptor = os.open(lock_path, flags, 0o600)
     locked = False
     try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        lock_exclusive(descriptor)
         locked = True
         assert_output_paths(
             target_path, inputs=semantic_inputs, target_must_be_absent=False
@@ -161,7 +153,7 @@ def stable_sibling_lock(
         yield lock_path
     finally:
         if locked:
-            fcntl.flock(descriptor, fcntl.LOCK_UN)
+            unlock(descriptor)
         os.close(descriptor)
 
 
@@ -175,7 +167,8 @@ def create_private_staging(target: str | Path, *, prefix: str) -> tuple[int, Pat
         prefix=prefix, suffix=".sqlite", dir=target_path.parent
     )
     try:
-        os.fchmod(descriptor, stat.S_IRUSR | stat.S_IWUSR)
+        if hasattr(os, "fchmod"):
+            os.fchmod(descriptor, stat.S_IRUSR | stat.S_IWUSR)
     except BaseException:
         os.close(descriptor)
         try:

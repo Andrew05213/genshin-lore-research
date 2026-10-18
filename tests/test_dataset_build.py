@@ -119,7 +119,7 @@ def test_capacity_deduplicates_nested_roots_hardlinks_without_following_symlinks
     file=child/'artifact';file.write_bytes(b'synthetic' * 1000)
     os.link(file,child/'same-inode');link=child/'symlink';link.symlink_to(file)
     stat=link.lstat()
-    expected=file.stat().st_blocks*512+(stat.st_blocks*512 or stat.st_size)
+    expected=(getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)+(getattr(stat,'st_blocks',0)*512 or stat.st_size)
     assert driver.allocated((tmp_path,child))==expected
 
 

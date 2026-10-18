@@ -4,6 +4,7 @@ import os
 import tempfile
 from pathlib import Path
 from genshin_lore.narrative_7_1_build import build
+from genshin_lore.platform_io import sync_directory
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
@@ -28,11 +29,7 @@ if __name__ == "__main__":
         report_inode = (stat.st_dev, stat.st_ino)
         os.link(stage_report, a.report)
         stage_report.unlink()
-        directory = os.open(Path(a.report).absolute().parent, os.O_RDONLY | os.O_DIRECTORY)
-        try:
-            os.fsync(directory)
-        finally:
-            os.close(directory)
+        sync_directory(Path(a.report).absolute().parent)
     except BaseException:
         report = Path(a.report)
         if report_inode is not None and report.exists() and (report.stat().st_dev, report.stat().st_ino) == report_inode:

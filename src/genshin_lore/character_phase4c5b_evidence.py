@@ -9,7 +9,7 @@ migration 0010.  It does not create logical Character identity.
 from __future__ import annotations
 
 import hashlib
-import fcntl
+from .platform_io import lock_exclusive, unlock
 import json
 import os
 import sqlite3
@@ -842,7 +842,7 @@ def _replace(path: Path, temporary: Path, expected: _DatabaseIdentity) -> None:
     try:
         # The lock covers the final identity check and the rename.  In
         # particular, no hash->replace TOCTOU window remains in this process.
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        lock_exclusive(descriptor)
         stat_before = os.fstat(descriptor)
         path_stat = path.stat()
         if (stat_before.st_dev, stat_before.st_ino, stat_before.st_mode, stat_before.st_size, stat_before.st_mtime_ns) != (expected.device, expected.inode, expected.mode, expected.size_bytes, expected.mtime_ns):
@@ -862,7 +862,7 @@ def _replace(path: Path, temporary: Path, expected: _DatabaseIdentity) -> None:
         os.replace(temporary, path)
         _sync_promoted(path, descriptor)
     finally:
-        fcntl.flock(descriptor, fcntl.LOCK_UN)
+        unlock(descriptor)
         os.close(descriptor)
 
 

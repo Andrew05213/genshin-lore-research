@@ -1,5 +1,5 @@
 """Fresh physical successors for three explicitly frozen narrative families."""
-import fcntl
+from .platform_io import lock_exclusive
 import hashlib
 import json
 import os
@@ -42,7 +42,7 @@ def build(family, source, output, accounting_root):
         raise ValueError("inclusive source/model project-space preflight")
     output.parent.mkdir(parents=True, exist_ok=True)
     with Path(str(output) + ".lock").open("a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        lock_exclusive(lock, blocking=False)
         if output.exists():
             raise FileExistsError(output)
         start = time.monotonic()

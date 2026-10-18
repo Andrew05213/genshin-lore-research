@@ -6,7 +6,6 @@ column to tuples recomputed from source coordinates.
 """
 from __future__ import annotations
 
-import fcntl
 import hashlib
 import os
 import sqlite3

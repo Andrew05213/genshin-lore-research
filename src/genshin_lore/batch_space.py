@@ -15,6 +15,7 @@ import os
 import stat
 import shutil
 import uuid
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -177,7 +178,8 @@ def ensure_owned_tmp_root(
         return path
     try:
         os.write(descriptor, payload)
-        os.fchmod(descriptor, 0o600)
+        if hasattr(os, "fchmod"):
+            os.fchmod(descriptor, 0o600)
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
@@ -202,7 +204,7 @@ def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> boo
 def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...]:
     """Discover only convention-named project roots, never the whole /tmp tree."""
 
-    root = Path(tmp_root).absolute()
+    root = Path(tempfile.gettempdir() if os.name == 'nt' and str(tmp_root) == '/tmp' else tmp_root).absolute()
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -232,7 +234,7 @@ def discover_project_tmp_paths(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
     Discovery grants accounting scope only; it never grants cleanup authority.
     """
 
-    root = Path(tmp_root).absolute()
+    root = Path(tempfile.gettempdir() if os.name == 'nt' and str(tmp_root) == '/tmp' else tmp_root).absolute()
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:

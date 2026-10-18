@@ -6,7 +6,7 @@ module adds the combined-artifact preservation and publication contract.
 """
 from __future__ import annotations
 
-import fcntl
+from .platform_io import lock_exclusive, unlock
 import json
 import os
 import sqlite3
@@ -144,7 +144,8 @@ def _copy_database(baseline: Path, staging: Path, staging_fd: int | None = None)
         before_destination = os.fstat(destination)
         if not stat.S_ISREG(before_source.st_mode) or not stat.S_ISREG(before_destination.st_mode):
             _fail("baseline or private staging database is not regular")
-        os.fchmod(destination, 0o600)
+        if hasattr(os, "fchmod"):
+            os.fchmod(destination, 0o600)
         os.ftruncate(destination, 0)
         os.lseek(destination, 0, os.SEEK_SET)
         while True:
@@ -219,7 +220,7 @@ def _stable_release_lock(anchor: Path):
     )
     locked = False
     try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        lock_exclusive(descriptor)
         locked = True
         lock_info, path_info = os.fstat(descriptor), os.lstat(lock_path)
         if (
@@ -231,7 +232,7 @@ def _stable_release_lock(anchor: Path):
         yield
     finally:
         if locked:
-            fcntl.flock(descriptor, fcntl.LOCK_UN)
+            unlock(descriptor)
         os.close(descriptor)
 
 

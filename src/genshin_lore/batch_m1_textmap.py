@@ -4,7 +4,7 @@ import concurrent.futures
 import hashlib
 import json
 import os
-import resource
+from .platform_io import peak_rss_bytes
 import shutil
 import sqlite3
 import subprocess
@@ -327,8 +327,10 @@ def storage_reservation(
 
 
 def _peak_rss_bytes() -> int:
-    value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    return int(value * 1024 if os.uname().sysname == "Linux" else value)
+    value = peak_rss_bytes()
+    if value is None:
+        raise BatchM1Error("process peak memory metric unavailable on this platform")
+    return value
 
 
 def _benchmark_file(arguments: tuple[str, dict[str, Any]]) -> dict[str, Any]:
