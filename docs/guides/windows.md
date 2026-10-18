@@ -21,4 +21,6 @@ M3 与 NPC/Dialog/Reminder 构建的发布路径使用同一可写文件刷盘�
 
 MCP 在 Windows 使用固定 SDK 的公开 stdio，在 POSIX 保留已有已验证兼容实现。五工具、对白 cursor 和引用映射不变。不得使用 WSL 成功代替原生 Windows 的验证。
 
+R0 扫描器、旧 inventory 兼容入口和容量发现共用 `batch_space.temporary_root`：Windows 默认使用系统临时目录，显式自定义工作目录保留。R0 的合成入口测试实际执行 `Rebuild.r0()`、扫描、SQLite 发布和独立来源行集 oracle；仅模拟合成来源无法具备的固定 Git 身份，不替换 builder 或行集检查。R0 核验失败时保留本次 staging、已发布数据库和 sidecar，不生成成功回执；已有产物拒绝覆盖。
+
 历史原地数据库晋级工具不是公开的从源码新建路径；本次不承诺其 Windows 文件替换语义。semantic 依赖单独安装；若 `hnswlib` 缺少适用 wheel，构建其扩展需要 MSVC C++ Build Tools，不能把缺依赖静默当作向量构建成功。

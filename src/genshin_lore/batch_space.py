@@ -194,8 +194,8 @@ def _within(path: Path, parent: Path) -> bool:
     return True
 
 
-def _temporary_discovery_root(value: str | Path) -> Path:
-    """Resolve the legacy default before Windows absolutizes it to a drive root."""
+def temporary_root(value: str | Path = "/tmp") -> Path:
+    """Shared creation/discovery root; resolve the legacy default before abspath."""
     if os.name == 'nt' and str(value).replace('\\', '/') == '/tmp':
         value = tempfile.gettempdir()
     return Path(value).absolute()
@@ -203,7 +203,7 @@ def _temporary_discovery_root(value: str | Path) -> Path:
 
 def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> bool:
     return (
-        root.parent == _temporary_discovery_root(convention_root)
+        root.parent == temporary_root(convention_root)
         and root.name.startswith(PROJECT_TMP_PREFIXES)
     )
 
@@ -211,7 +211,7 @@ def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> boo
 def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...]:
     """Discover only convention-named project roots, never the whole /tmp tree."""
 
-    root = _temporary_discovery_root(tmp_root)
+    root = temporary_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -241,7 +241,7 @@ def discover_project_tmp_paths(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
     Discovery grants accounting scope only; it never grants cleanup authority.
     """
 
-    root = _temporary_discovery_root(tmp_root)
+    root = temporary_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -501,7 +501,7 @@ class ProjectSpaceGate:
         discovery_root: str | Path = "/tmp",
     ) -> None:
         self.repo_root = Path(repo_root).absolute()
-        self.discovery_root = _temporary_discovery_root(discovery_root)
+        self.discovery_root = temporary_root(discovery_root)
         discovered = discover_project_tmp_paths(self.discovery_root)
         explicit_cleanup = tuple(
             Path(item).absolute()
@@ -615,5 +615,5 @@ __all__ = [
     "MARKER_VERSION", "OWNERSHIP_KIND", "OWNERSHIP_MARKER", "PROJECT_SPACE_LIMIT_BYTES",
     "PROJECT_SPACE_WARNING_BYTES", "PROJECT_TMP_PREFIXES", "ProjectSpaceGate", "SpaceGateError", "SpaceInventory",
     "SpaceRoot", "broad_inventory", "discover_project_tmp_paths", "discover_project_tmp_roots", "ensure_owned_tmp_root", "inventory",
-    "new_invocation_id", "register_disposable_path", "safe_cleanup",
+    "new_invocation_id", "register_disposable_path", "safe_cleanup", "temporary_root",
 ]
