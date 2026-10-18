@@ -120,7 +120,8 @@ class ResearchQuery:
         if (
             profile.get("status") != "accepted"
             or profile.get("corpus_ref") != self.corpus_ref
-            or profile.get("corpus_manifest") != expected_manifest
+            or not isinstance(profile.get("corpus_manifest"),str)
+            or (root/profile['corpus_manifest']).resolve()!=manifest_path.resolve()
         ):
             raise ResearchUnavailable(
                 "accepted research profile/corpus binding mismatch"

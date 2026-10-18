@@ -7,6 +7,7 @@ import sys
 from genshin_lore.platform_io import lock_exclusive, unlock, peak_rss_bytes, sync_directory
 from genshin_lore.artifact_io import write_json_exclusive
 from genshin_lore.build_metrics import start_measurement, finish_measurement
+from genshin_lore.batch_release import fsync_file
 import pytest
 
 
@@ -42,6 +43,7 @@ def test_publication_still_rejects_overwrite_and_syncs(tmp_path):
         write_json_exclusive(path,{'status':'changed'})
     assert path.read_bytes()==original
     sync_directory(tmp_path)
+    fsync_file(path)
 
 
 def test_metrics_are_real_or_explicitly_unavailable():

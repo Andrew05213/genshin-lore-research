@@ -59,7 +59,7 @@ def project(root: Path, scope_path: Path, component: str):
                 'event18_scope': sha(REPO / 'manifests/event-narrative/generic-dialog-reminder-scope.json')}
             or scope['event15_scope_sha256'] != sha(REPO / scope['event15_scope'])):
         raise ValueError('Event selection exact historical/source contract')
-    implementation = {str(path.relative_to(REPO)): sha(path) for path in (
+    implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in (
         Path(__file__), SCHEMA, REPO / 'src/genshin_lore/event_7_1_source.py',
         REPO / 'src/genshin_lore/event_narrative_source.py')}
     parser = occurrence_id('parser', implementation)

@@ -98,9 +98,9 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
                 or current['historical_field_classification'] != old['field_classification']):
             raise ValueError('Native26 per-source historical declaration drift: ' + current['path'])
     event, event_path, talk = _accepted(scope, metadata_root)
-    implementation = {str(path.relative_to(REPO)): sha(path) for path in
+    implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
                       (Path(__file__), SCHEMA, HISTORY)}
-    implementation.update({str(original.relative_to(REPO)): sha(actual)
+    implementation.update({original.relative_to(REPO).as_posix(): sha(actual)
                            for original, actual in zip((EVENT16, QUEST_TALK), dependency_manifests(metadata_root))})
     parser = oid('parser', implementation)
     run = oid('run', parser, sha(scope_path), scope['snapshot_id'])
