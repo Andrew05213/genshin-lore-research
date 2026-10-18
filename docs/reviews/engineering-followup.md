@@ -13,8 +13,8 @@
 ## 实际验证
 
 - 新增四项平台测试，执行实际的小型 M3/NPC 构建与容量门禁，不只 import helper；包括 writable flush、目录 helper、默认 string/Path 临时根、显式根保留和不覆盖产物。
-- 新增七项独立 oracle 测试，包含完整/空表、全关系遗漏、候选遗漏、状态降级、零/部分父项范围。修复前实际复现两个错误放行；候选单独遗漏原先已被逐行 cardinality 拒绝，不误称原先也会通过。见 [关系补丁记录](pr-1-relation-closure.md)。
-- 合并全部补丁后的本地 **211 项通过**（Python 3.12）；原生 Windows/Ubuntu 最终状态见 PR checks。[首个 Windows 修复提交的两平台 CI](https://github.com/Andrew05213/genshin-lore-research/actions/runs/39095040182) 已通过，后续父分支同步另行触发检查。
+- 新增八项独立 oracle 测试，包含完整/空表、全关系遗漏、候选遗漏、状态降级、父项身份缩减来源范围、零/部分父项范围。状态降级、全遗漏及父项身份绕过均实际复现并拒绝；候选单独遗漏原先已被逐行 cardinality 拒绝，不误称原先也会通过。见 [关系补丁记录](pr-1-relation-closure.md)。
+- 本地 PR #2 全部 **187 项通过**，最终堆叠版本 **212 项通过**（Python 3.12）。原生 Windows/Ubuntu 最终结果见 PR checks。[首个 Windows 修复提交的两平台 CI](https://github.com/Andrew05213/genshin-lore-research/actions/runs/39095040182) 已通过，后续父分支同步另行触发检查。
 - 独立遗漏负测在 `python -O` 下同样明确拒绝，不依赖 Python assert。
 - 从已有干净固定 7.1 source 重新执行真实 Activity 和 NPC 定向构建及独立来源 oracle，均 PASS；在 Linux 执行，不冒充 Windows 全量来源验收。Activity 为 94,208 B，SHA `40c7275eaa018959ce3da97e3736a675021814cb5f85dc0765100c3c2d73598e`；NPC 为 24,797,184 B，SHA `538cb73d037fbf2a23d8b6d1ce019bb2320106406d50f125a92e604b104620e8`。
 - 对保留正式 index 的 Document 执行新来源范围检查：9,937 relations、9,905 candidates 与实际来源一致；只读连接，index stat 不变。这不是整库重新资格验证。
