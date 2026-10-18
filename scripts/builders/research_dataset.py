@@ -138,6 +138,33 @@ def core_mappings(corpus_path):
     return result
 
 
+def apply_core_contracts(out, source_key, mappings):
+    """Reconcile exact parser/run contracts in two scans, not 33 per table.
+
+    The temporary lookup is build-local infrastructure, never evidence or a
+    persistent schema change. Rows without an explicit binding stay unchanged.
+    """
+    bindings = {}
+    for m in mappings:
+        key = (m['parser_build_id'], m['ingest_run_id'])
+        if key in bindings and bindings[key] != m['provider_contract']:
+            raise ValueError('conflicting exact core parser/run contract')
+        bindings[key] = m['provider_contract']
+    out.execute('CREATE TEMP TABLE core_contract_binding(parser TEXT,run TEXT,contract TEXT,PRIMARY KEY(parser,run)) WITHOUT ROWID')
+    try:
+        out.executemany('INSERT INTO core_contract_binding VALUES(?,?,?)', [
+            (parser, run, contract) for (parser, run), contract in bindings.items()])
+        for table in ('research_container','research_text'):
+            out.execute(f'''UPDATE {table} SET evidence_contract=(
+                SELECT contract FROM core_contract_binding b
+                WHERE b.parser={table}.evidence_parser AND b.run={table}.evidence_run)
+                WHERE source_key=? AND EXISTS(
+                SELECT 1 FROM core_contract_binding b
+                WHERE b.parser={table}.evidence_parser AND b.run={table}.evidence_run)''', (source_key,))
+    finally:
+        out.execute('DROP TABLE core_contract_binding')
+
+
 def project_component(src, out, component, r0, counts, *, corpus_path):
     """One adapter's real projection path, also usable with schema-only fixtures.
 
@@ -150,10 +177,7 @@ def project_component(src, out, component, r0, counts, *, corpus_path):
     record_unsupported(src,out,key,component)
     if mode == 'core33':
         cs,ts = old._core(src,out,key,component,r0,cs,ts)
-        for m in core_mappings(corpus_path):
-            for table in ('research_container','research_text'):
-                out.execute(f'UPDATE {table} SET evidence_contract=? WHERE source_key=? AND evidence_parser=? AND evidence_run=?',
-                    (m['provider_contract'],key,m['parser_build_id'],m['ingest_run_id']))
+        apply_core_contracts(out,key,core_mappings(corpus_path))
     elif mode in ('formal_compatible','talk_physical'):
         cs,ts,mapping = old._component(src,out,key,component,r0,cs,ts)
         if mode == 'formal_compatible':
