@@ -50,7 +50,7 @@ def projection(root: Path, scope_path: Path):
             or [item['path'] for item in scope['files']] != expected_paths
             or len(scope['sources']) != 30):
         raise ValueError('Event13 historical source selection drift')
-    implementation = {str(path.relative_to(REPO)): sha(path) for path in
+    implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
                       (Path(__file__), SCHEMA, REPO / 'src/genshin_lore/event_7_1_source.py',
                        REPO / 'src/genshin_lore/event_narrative_source.py')}
     parser = identity('parser', implementation)

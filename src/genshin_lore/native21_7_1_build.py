@@ -120,9 +120,9 @@ def projection(root: Path, scope_path: Path, *, metadata_root=None):
     snez = {item['pointer']: item for item in binding['occurrences']}
     if len(snez) != 9:
         raise ValueError('Native21 Snez denominator')
-    implementation = {str(path.relative_to(REPO)): sha(path) for path in
+    implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
                       (Path(__file__), SCHEMA)}
-    implementation.update({str(original.relative_to(REPO)): sha(actual)
+    implementation.update({original.relative_to(REPO).as_posix(): sha(actual)
                            for original, actual in zip(DEPENDENCY_MANIFESTS, dependency_manifests(metadata_root))})
     parser = ident('parser', implementation)
     run = ident('run', parser, sha(scope_path), scope['snapshot_id'])

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import functools
+import os
 from importlib.metadata import version
 import sys
 from typing import Any
@@ -27,6 +28,11 @@ def _check_sdk():
 async def _run_pipe_stdio(server: MCPServer) -> None:
     """Use asyncio pipe I/O while retaining MCP's fd claim/diversion rules."""
     _check_sdk()
+    if os.name == "nt":
+        # The POSIX asyncio pipe compatibility path is not portable to the
+        # Windows Proactor loop. Use the SDK's public transport there.
+        await server.run_stdio_async()
+        return
     stdin_buffer, restore_stdin = _claim_fd(0, sys.stdin, "rb", _open_stdin_diversion)
     stdout_buffer, restore_stdout = _claim_fd(1, sys.stdout, "wb", _open_stdout_diversion)
     try:

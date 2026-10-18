@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import fcntl
+from .platform_io import lock_exclusive, unlock
 import hashlib
 import json
 import os
@@ -405,7 +405,7 @@ def _promote_absent_pair(database: Path, report: Path, database_stage: Path, rep
     db_identity: tuple[int, int] | None = None
     report_identity: tuple[int, int] | None = None
     try:
-        fcntl.flock(descriptor, fcntl.LOCK_EX)
+        lock_exclusive(descriptor)
         locked = True
         lock_info = os.fstat(descriptor)
         lock_path_info = os.lstat(lock_path)
@@ -458,7 +458,7 @@ def _promote_absent_pair(database: Path, report: Path, database_stage: Path, rep
         raise
     finally:
         if locked:
-            fcntl.flock(descriptor, fcntl.LOCK_UN)
+            unlock(descriptor)
         os.close(descriptor)
 
 
