@@ -11,6 +11,7 @@
 | [Windows 源码使用](guides/windows.md) | PowerShell、平台边界和原生 CI |
 | [工程维护范围](engineering-maintenance.md) | 当前重构边界、复杂度控制与验证层次 |
 | [工程整改交付](engineering-finalization.md) | 六个待审 PR、本次 200 项测试、原生 CI、实际 A/B、review 与未执行的完整构建 |
+| [后续审查修复](reviews/engineering-followup.md) | 两项 Windows 实际路径缺口、正式关系 oracle 完整性及新增 11 项测试 |
 | [完整重建实验](history/full-rebuild.md) | 完整链路实际执行、失败修复及验证结果 |
 | [完整重建机器记录](history/full-rebuild.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
 | [架构说明](architecture.md) | 数据流程、代码目录、Research 工具与证据语义 |

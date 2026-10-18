@@ -1,5 +1,7 @@
 # 工程整改交付记录
 
+后续针对该提交的三项审查 finding、修复与新增测试见 [补丁记录](reviews/engineering-followup.md)。下文保留原执行范围，不用后来的修复改写当时结果。
+
 本记录汇总公开源码的分层整改，不是数据库或正式 release 验收。基线为 main `e75aef63acbc3a516d45a124e66dc70bf20c263b`；实现核验至 `ecf31c96f3b29c646b16d94dbbf09092aad00c63`。Apache-2.0、NOTICE、既有原文、证据资格及部署 current 均未改变。
 
 ## 待审核的 PR
