@@ -18,6 +18,7 @@ from . import batch_m3_r1_projection as physical_array_reader
 from . import batch_m1_textmap as lexical_textmap_reader
 from .batch_m3_r1_projection import _iter_array_records
 from .batch_m1_textmap import iter_textmap_pairs
+from .batch_release import fsync_file
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -284,8 +285,7 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
         if any(Path(str(output) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
             raise ValueError("M3 candidate sidecar present")
         qualify_source(source, family, frozen)
-        with output.open("rb") as stream:
-            os.fsync(stream.fileno())
+        fsync_file(output)
         return {**release, "artifact": {"size_bytes": output.stat().st_size,
                                          "sha256": file_sha(output)}}
     except Exception:
