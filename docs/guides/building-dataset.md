@@ -56,6 +56,8 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 
 v2 阶段回执绑定 Python/SQLite/直接依赖版本、构建与验证 Python、SQL、静态 manifest/recipe、显式依赖与参数，以及三个报告文件的 size/SHA。恢复逐项检查，并拒绝 SQLite sidecar。未核验、失败、损坏或旧版回执不能自动恢复，必须保留原目录并使用新输出。此保守策略会使任意管线代码变化使旧阶段失效；无关文档、测试和 Git commit 变化不使回执失效。
 
+Character 后续组件通过本次 metadata 中显式的 `local-character-foundation-v1` 合同消费新 foundation：检查本次 artifact、完整 v2 回执、报告 seal、实现/环境和来源 scope，并重跑原独立 foundation 来源 oracle，要求结果与已封存报告一致。text/lore/voice 的 release 和 run 身份绑定本次 foundation 的实际 size/SHA，lore/voice 的 text 依赖也须精确匹配该 foundation。没有本地合同的历史路径继续要求原固定 artifact seal；不将新数据库写成历史 artifact，也不修改历史凭据。
+
 动态文件不再写入源码树：
 
 ```text

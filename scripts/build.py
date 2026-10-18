@@ -26,6 +26,7 @@ from scripts.build_support import (
     load_object,
     pipeline_identity,
     require_success,
+    qualify_stage_dependency,
 )
 
 SNAPSHOT = "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
@@ -163,48 +164,10 @@ class Rebuild:
     def dependency_inputs(self, *names):
         paths = []
         for name in names:
-            directory = self.output / name
-            receipt = load_object(directory / "verified.json")
-            if (
-                receipt.get("contract") != RECEIPT_CONTRACT
-                or receipt.get("independent_verifier_completed") is not True
-            ):
-                raise ValueError(
-                    "dependency requires current complete verification: " + name
-                )
-            for record in ("build.json", "verify.json", "invocation.json"):
-                if receipt.get("records", {}).get(record) != seal(directory / record):
-                    raise ValueError("dependency report drift: " + name)
-            require_success(load_object(directory / "verify.json"))
-            identity = receipt.get("identity", {})
-            invocation = load_object(directory / "invocation.json")
-            if (
-                identity.get("parameters", {}).get("stage") != name
-                or invocation.get("stage") != name
-                or invocation.get("identity") != identity
-                or receipt.get("source_snapshot") != SNAPSHOT
-                or invocation.get("source_snapshot") != SNAPSHOT
-            ):
-                raise ValueError("dependency stage identity mismatch: " + name)
-            actual = pipeline_identity(
-                getattr(self, "identity_root", ROOT),
-                self.source,
-                self.history,
-                inputs=identity.get("stage_inputs", {}),
-                parameters=identity.get("parameters"),
-            )
-            if actual != identity:
-                raise ValueError(
-                    "dependency implementation/input identity drift: " + name
-                )
-            if seal(self.path(name)) != receipt.get("artifact"):
-                raise ValueError("dependency artifact drift: " + name)
-            if any(
-                Path(str(self.path(name)) + suffix).exists()
-                for suffix in ("-wal", "-shm", "-journal")
-            ):
-                raise ValueError("dependency SQLite sidecar: " + name)
-            paths.extend([self.path(name), directory / "verified.json"])
+            paths.extend(qualify_stage_dependency(
+                getattr(self, "identity_root", ROOT), self.source, self.history,
+                self.output / name, name, SNAPSHOT,
+            ))
         return paths
 
     def index_headroom(self):
@@ -462,6 +425,10 @@ class Rebuild:
         manifest["artifact"] = {
             **seal(self.path("character_foundation")),
             "machine_local_path": str(self.path("character_foundation")),
+        }
+        manifest["local_rebuild"] = {
+            "contract": "local-character-foundation-v1",
+            "receipt": seal(self.output / "character_foundation" / "verified.json"),
         }
         self.bind(
             "manifests/character-7.1-physical-foundation/immutable-runtime.json",

@@ -69,7 +69,10 @@ def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[s
     manifest = json.loads(Path(foundation_manifest or FOUNDATION_MANIFEST).read_text())
     if (manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"], manifest["parser_build_id"], manifest["ingest_run_id"]) != (SNAPSHOT, SOURCE_COMMIT, SOURCE_TREE, FOUNDATION_PARSER, FOUNDATION_RUN):
         raise ValueError("immutable foundation manifest identity")
-    if manifest["artifact"]["size_bytes"] != FOUNDATION_SIZE or manifest["artifact"]["sha256"] != FOUNDATION_SHA or path.stat().st_size != FOUNDATION_SIZE or sha(path) != FOUNDATION_SHA:
+    if "local_rebuild" in manifest:
+        from .character_7_1_foundation_binding import qualify_local_foundation
+        qualify_local_foundation(path, foundation_manifest, manifest)
+    elif manifest["artifact"]["size_bytes"] != FOUNDATION_SIZE or manifest["artifact"]["sha256"] != FOUNDATION_SHA or path.stat().st_size != FOUNDATION_SIZE or sha(path) != FOUNDATION_SHA:
         raise ValueError("immutable foundation artifact identity")
     if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("immutable foundation sidecar")
@@ -139,13 +142,15 @@ def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Pat
         SCHEMAS[kind]: sha(ROOT / SCHEMAS[kind]),
     }
     parser_id = _identity(kind, "parser", implementation)
-    run_id = _identity(kind, "run", parser_id, FOUNDATION_RUN, sha(text) if text else None)
+    foundation_sha = sha(foundation)
+    foundation_size = foundation.stat().st_size
+    run_id = _identity(kind, "run", parser_id, FOUNDATION_RUN, foundation_sha, sha(text) if text else None)
     release = {
         "contract": f"character-7.1-{kind}-successor-v1",
         "snapshot_id": SNAPSHOT,
         "foundation_run_id": FOUNDATION_RUN,
-        "foundation_size_bytes": FOUNDATION_SIZE,
-        "foundation_sha256": FOUNDATION_SHA,
+        "foundation_size_bytes": foundation_size,
+        "foundation_sha256": foundation_sha,
         "parser_build_id": parser_id,
         "ingest_run_id": run_id,
         "implementation": implementation,
@@ -184,11 +189,11 @@ def _remove_owned_output(path: Path, owner: tuple[int, int] | None) -> None:
 
 def build_text(source_root: str | Path, foundation_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
     foundation, scope = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
-    source = qualify_source(source_root, scope)
     output = Path(output_path)
     conn = None
     owned = None
     try:
+        source = qualify_source(source_root, scope)
         owner_rows = foundation.execute("SELECT id,row_id,pointer,field_name,textmap_hash FROM foundation_text_owner ORDER BY id").fetchall()
         hashes = {row[4] for row in owner_rows}
         matches: dict[tuple[str, str], list[tuple[str, str, int, str]]] = defaultdict(list)
@@ -225,13 +230,18 @@ def build_text(source_root: str | Path, foundation_path: str | Path, output_path
 
 
 def _qualify_text(path: Path, foundation_path: Path) -> sqlite3.Connection:
+    if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+        raise ValueError("text projection sidecar")
     conn = _readonly(path)
     try:
         release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
-        if release["contract"] != "character-7.1-text-successor-v1" or release["foundation_sha256"] != FOUNDATION_SHA or release["foundation_run_id"] != FOUNDATION_RUN or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3:
+        if (release["contract"] != "character-7.1-text-successor-v1"
+                or release["snapshot_id"] != SNAPSHOT
+                or release["foundation_sha256"] != sha(foundation_path)
+                or release["foundation_size_bytes"] != foundation_path.stat().st_size
+                or release["foundation_run_id"] != FOUNDATION_RUN
+                or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3):
             raise ValueError("text projection identity")
-        if Path(foundation_path).stat().st_size != FOUNDATION_SIZE:
-            raise ValueError("foundation drift")
         return conn
     except Exception:
         conn.close()
@@ -240,7 +250,11 @@ def _qualify_text(path: Path, foundation_path: Path) -> sqlite3.Connection:
 
 def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
     foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
-    text = _qualify_text(Path(text_path), Path(foundation_path))
+    try:
+        text = _qualify_text(Path(text_path), Path(foundation_path))
+    except Exception:
+        foundation.close()
+        raise
     output = Path(output_path)
     conn = None
     owned = None
@@ -289,7 +303,11 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
 
 def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
     foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
-    text = _qualify_text(Path(text_path), Path(foundation_path))
+    try:
+        text = _qualify_text(Path(text_path), Path(foundation_path))
+    except Exception:
+        foundation.close()
+        raise
     output = Path(output_path)
     conn = None
     owned = None
