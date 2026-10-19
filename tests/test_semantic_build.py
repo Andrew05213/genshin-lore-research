@@ -189,6 +189,43 @@ def test_complete_mapping_preserves_duplicate_physical_occurrences(
         )
 
 
+def test_sorted_inference_keeps_ann_insertion_and_vector_ids(tmp_path, synthetic_model, monkeypatch):
+    calls = []
+
+    class RecordingIndex(FixtureIndex):
+        def add_items(self, values, ids):
+            calls.extend(map(int, ids))
+            super().add_items(values, ids)
+
+    monkeypatch.setattr(sys.modules['hnswlib'], 'Index', RecordingIndex)
+    index, output, report = build_fixture(tmp_path)
+    with sqlite3.connect(output/'metadata.sqlite') as meta, sqlite3.connect(index) as source:
+        rows = meta.execute('SELECT vector_id,research_text_id,window_start,window_end FROM semantic_occurrence ORDER BY vector_id').fetchall()
+        values = np.load(output/'vectors.npy')
+        for vector_id, text_id, start, end in rows:
+            raw = source.execute('SELECT raw_text FROM research_text WHERE id=?',(text_id,)).fetchone()[0]
+            expected = next(FixtureEmbedding().embed([raw[start:end]]))
+            np.testing.assert_array_equal(values[vector_id], expected)
+    assert calls == list(range(len(rows)))
+    assert verify(index, output)['status'] == 'PASS'
+
+
+def test_build_threads_are_explicit_and_do_not_change_query_budget(tmp_path, synthetic_model, monkeypatch):
+    used = []
+
+    def embedding(**kwargs):
+        used.append(kwargs['threads'])
+        return FixtureEmbedding()
+
+    monkeypatch.setattr(sys.modules['fastembed'], 'TextEmbedding', embedding)
+    index, cache, scope = inputs(tmp_path)
+    report = builder.build(index, tmp_path/'overlay', cache, scope_path=scope,
+                           available_allocated_bytes=3_000_000_000, embedding_threads=3)
+    assert used == [3]
+    assert report['build_parameters']['embedding_threads'] == 3
+    assert report['config']['model']['threads'] == 2
+
+
 def test_independent_oracle_rejects_resealed_missing_source_window(
     tmp_path, synthetic_model
 ):
