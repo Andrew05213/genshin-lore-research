@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from scripts.builders import semantic
-from scripts.builders.research_dataset import publish_compacted_index
+from scripts.builders.research_dataset import publish_index
 
 
 def vector(text):
@@ -65,8 +65,8 @@ def test_bad_thread_count_rejected_before_output(tmp_path, threads):
 
 class TrackedConnection(sqlite3.Connection):
     def execute(self, sql, *args, **kwargs):
-        if sql.strip().upper() == 'VACUUM':
-            raise AssertionError('a second full in-memory image must not be created')
+        if sql.strip().upper().startswith('VACUUM'):
+            raise AssertionError('a full compaction pass must not be performed')
         return super().execute(sql, *args, **kwargs)
 
 
@@ -80,22 +80,23 @@ def memory_database():
     return db
 
 
-def test_direct_compaction_preserves_rows_and_fts_without_second_ram_image(tmp_path):
+def test_publication_preserves_rows_and_fts_without_second_ram_image(tmp_path):
     db = memory_database()
     output = tmp_path/'index #1.sqlite'
     try:
         before = db.execute('SELECT * FROM evidence ORDER BY id').fetchall()
-        capacity = publish_compacted_index(db, output, 1_000_000_000, tmp_path)
+        capacity = publish_index(db, output, 1_000_000_000, tmp_path)
         with closing(sqlite3.connect(output)) as actual:
             assert actual.execute('SELECT * FROM evidence ORDER BY id').fetchall() == before
             assert actual.execute("SELECT count(*) FROM text_fts WHERE text_fts MATCH '合成正文'").fetchone()[0] == 500
             assert actual.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
         assert db.execute('SELECT * FROM evidence ORDER BY id').fetchall() == before
-        assert capacity['publication_method'] == 'vacuum_into'
+        assert capacity['publication_method'] == 'backup_without_compaction'
+        assert capacity['compaction_applied'] is False
         assert capacity['index_after_compaction_bytes'] == output.stat().st_size
         sealed = output.read_bytes()
         with pytest.raises(FileExistsError):
-            publish_compacted_index(db, output, 1_000_000_000, tmp_path)
+            publish_index(db, output, 1_000_000_000, tmp_path)
         assert output.read_bytes() == sealed
     finally:
         db.close()
@@ -106,7 +107,7 @@ def test_publication_budget_rejection_does_not_create_output(tmp_path):
     output = tmp_path/'absent.sqlite'
     try:
         with pytest.raises(RuntimeError, match='hard storage gate'):
-            publish_compacted_index(db, output, 1, tmp_path)
+            publish_index(db, output, 1, tmp_path)
         assert not output.exists()
         assert json.loads((tmp_path/'index-capacity-absent.json').read_text())['fits'] is False
     finally:
@@ -124,7 +125,7 @@ def test_failed_publication_removes_only_owned_output(monkeypatch, tmp_path):
     monkeypatch.setattr(builder.os, 'fsync', failed_sync)
     try:
         with pytest.raises(OSError, match='synthetic durability'):
-            publish_compacted_index(db, output, 1_000_000_000, tmp_path)
+            publish_index(db, output, 1_000_000_000, tmp_path)
         assert not output.exists() and other.read_text() == 'preserve'
         assert db.execute('SELECT count(*) FROM evidence').fetchone()[0] == 500
     finally:

@@ -198,18 +198,19 @@ def project_component(src, out, component, r0, counts, *, corpus_path):
     return cs,ts,rs,ks
 
 
-def publish_compacted_index(out, output, available_allocated_bytes, reports_dir):
-    """Compact directly to the exclusive output, not a second full RAM image.
+def publish_index(out, output, available_allocated_bytes, reports_dir):
+    """Publish the verified image directly, without a full-index VACUUM pass.
 
-    Gate on the uncompacted page image first: no speculative shrinkage or
-    temporary on-disk database is needed to fit the project budget.
+    Preserve the small amount of spare space left by FTS construction instead
+    of doubling the RAM image or spending another full pass on compaction.
     """
     before = out.execute('PRAGMA page_count').fetchone()[0] * out.execute('PRAGMA page_size').fetchone()[0]
     reserve = 16 * 1024**2
     capacity = {'index_before_compaction_bytes': before, 'index_after_compaction_bytes': None,
                 'available_allocated_bytes': available_allocated_bytes,
                 'publication_reserve_bytes': reserve, 'fits': before + reserve <= available_allocated_bytes,
-                'memory_only_before_gate': True, 'publication_method': 'vacuum_into',
+                'memory_only_before_gate': True, 'publication_method': 'backup_without_compaction',
+                'compaction_applied': False,
                 'capacity_upper_bound_bytes': before}
     report = reports_dir / f'index-capacity-{output.stem}.json'
     if not capacity['fits']:
@@ -218,13 +219,14 @@ def publish_compacted_index(out, output, available_allocated_bytes, reports_dir)
     fd = os.open(output, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
     os.close(fd)
     try:
-        out.execute('VACUUM INTO ?', (str(output),))
-        exact = output.stat().st_size
-        if exact + reserve > available_allocated_bytes:
-            raise RuntimeError('compacted index exceeds publication budget')
-        with closing(sqlite3.connect(output.resolve().as_uri() + '?mode=ro&immutable=1', uri=True)) as target:
+        with closing(sqlite3.connect(output)) as target:
+            target.execute('PRAGMA journal_mode=OFF')
+            out.backup(target)
             if target.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
                 raise ValueError('published index quick_check failed')
+        exact = output.stat().st_size
+        if exact + reserve > available_allocated_bytes:
+            raise RuntimeError('published index exceeds publication budget')
         # Keep durability explicit across SQLite settings/versions. A writable
         # file handle is also required for native Windows flushing.
         with output.open('r+b') as stream:
@@ -271,7 +273,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         print('independent complete source oracle starting',flush=True)
         oracle_result = oracle(out,manifest,bindings)
         write(reports_dir/f"index-memory-oracle-{output.stem}.json",oracle_result)
-        publish_compacted_index(out, output, available_allocated_bytes, reports_dir)
+        publish_index(out, output, available_allocated_bytes, reports_dir)
     except Exception:
         out.close();raise
     out.close()
