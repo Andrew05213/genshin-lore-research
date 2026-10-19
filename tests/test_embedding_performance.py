@@ -1,5 +1,6 @@
 """Inference scheduling equivalence; synthetic text only, no speed assertions."""
 import hashlib
+import sys
 from types import SimpleNamespace
 
 import numpy as np
@@ -51,7 +52,11 @@ def test_build_threads_leave_windows_default_unchanged(monkeypatch, platform, cp
 
 
 @pytest.mark.parametrize('threads', [0, -1, True, '4'])
-def test_bad_thread_count_rejected_before_output(tmp_path, threads):
+def test_bad_thread_count_rejected_before_output(tmp_path, monkeypatch, threads):
+    # Base CI intentionally has no model/ANN dependencies. Invalid arguments
+    # must fail without constructing either optional implementation.
+    monkeypatch.setitem(sys.modules, 'hnswlib', SimpleNamespace())
+    monkeypatch.setitem(sys.modules, 'fastembed', SimpleNamespace(TextEmbedding=object))
     output = tmp_path/'absent'
     with pytest.raises(ValueError, match='positive integer'):
         semantic.build(tmp_path/'index', output, tmp_path/'cache', scope_path=tmp_path/'scope',

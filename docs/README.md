@@ -8,9 +8,10 @@
 | [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
+| [Linux 构建性能](linux-build-performance.md) | 实际耗时、embedding 调度优化、等价验证及未采用的索引实验 |
 | [Windows 源码使用](guides/windows.md) | PowerShell、平台边界和原生 CI |
 | [工程维护范围](engineering-maintenance.md) | 当前重构边界、复杂度控制与验证层次 |
-| [工程整改交付](engineering-finalization.md) | 六个待审 PR、本次 200 项测试、原生 CI、实际 A/B、review 与未执行的完整构建 |
+| [工程整改交付（历史）](engineering-finalization.md) | 当时六个待审 PR、200 项测试、原生 CI、A/B、review 与执行范围 |
 | [后续审查修复](reviews/engineering-followup.md) | 两项 Windows 实际路径缺口、正式关系 oracle 完整性及新增 12 项测试 |
 | [完整重建实验](history/full-rebuild.md) | 完整链路实际执行、失败修复及验证结果 |
 | [完整重建机器记录](history/full-rebuild.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
