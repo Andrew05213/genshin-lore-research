@@ -8,9 +8,13 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
 import time
 from pathlib import Path
+from contextlib import closing
+
+from genshin_lore.platform_io import sync_directory
 
 from genshin_lore import research_index as old
 from genshin_lore.research71_candidate_adapters import SPECS, VERSION, adapt, character
@@ -194,6 +198,46 @@ def project_component(src, out, component, r0, counts, *, corpus_path):
     return cs,ts,rs,ks
 
 
+def publish_compacted_index(out, output, available_allocated_bytes, reports_dir):
+    """Compact directly to the exclusive output, not a second full RAM image.
+
+    Gate on the uncompressed page image first: no speculative shrinkage or
+    temporary on-disk database is needed to fit the project budget.
+    """
+    before = out.execute('PRAGMA page_count').fetchone()[0] * out.execute('PRAGMA page_size').fetchone()[0]
+    reserve = 16 * 1024**2
+    capacity = {'index_before_compaction_bytes': before, 'index_after_compaction_bytes': None,
+                'available_allocated_bytes': available_allocated_bytes,
+                'publication_reserve_bytes': reserve, 'fits': before + reserve <= available_allocated_bytes,
+                'memory_only_before_gate': True, 'publication_method': 'vacuum_into',
+                'capacity_upper_bound_bytes': before}
+    report = reports_dir / f'index-capacity-{output.stem}.json'
+    if not capacity['fits']:
+        write(report, capacity)
+        raise RuntimeError(f'hard storage gate: index upper bound {before} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
+    fd = os.open(output, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
+    os.close(fd)
+    try:
+        out.execute('VACUUM INTO ?', (str(output),))
+        exact = output.stat().st_size
+        if exact + reserve > available_allocated_bytes:
+            raise RuntimeError('compacted index exceeds publication budget')
+        with closing(sqlite3.connect(output.resolve().as_uri() + '?mode=ro&immutable=1', uri=True)) as target:
+            if target.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
+                raise ValueError('published index quick_check failed')
+        # VACUUM INTO does not promise fsync; flush a writable handle before
+        # returning a sealed artifact (also valid on native Windows).
+        with output.open('r+b') as stream:
+            os.fsync(stream.fileno())
+        sync_directory(output.parent)
+    except BaseException:
+        output.unlink()
+        raise
+    capacity['index_after_compaction_bytes'] = exact
+    write(report, capacity)
+    return capacity
+
+
 def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, reports_dir):
     corpus_path = Path(corpus_path)
     reports_dir = Path(reports_dir)
@@ -226,23 +270,8 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         oracle = runpy.run_path(str(ROOT/'scripts/validators/research_dataset.py'))['verify_connection']
         print('independent complete source oracle starting',flush=True)
         oracle_result = oracle(out,manifest,bindings)
-        before_compaction=out.execute('PRAGMA page_count').fetchone()[0]*out.execute('PRAGMA page_size').fetchone()[0]
-        # Standard SQLite compaction changes neither schema nor row identity.
-        # The temporary image stays in RAM, not in a second on-disk index.
-        out.execute('VACUUM')
-        exact_bytes=out.execute('PRAGMA page_count').fetchone()[0]*out.execute('PRAGMA page_size').fetchone()[0]
         write(reports_dir/f"index-memory-oracle-{output.stem}.json",oracle_result)
-        capacity={'index_before_compaction_bytes':before_compaction,'index_after_compaction_bytes':exact_bytes,'available_allocated_bytes':available_allocated_bytes,'publication_reserve_bytes':16*1024**2,'fits':exact_bytes+16*1024**2<=available_allocated_bytes,'memory_only_before_gate':True}
-        write(reports_dir/f"index-capacity-{output.stem}.json",capacity)
-        if exact_bytes+16*1024**2>available_allocated_bytes:
-            raise RuntimeError(f'hard storage gate: index {exact_bytes} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
-        import os
-        fd=os.open(output,os.O_CREAT|os.O_EXCL|os.O_RDWR,0o600);os.close(fd)
-        try:
-            target=sqlite3.connect(output);target.execute('PRAGMA journal_mode=OFF')
-            out.backup(target);target.close()
-        except Exception:
-            output.unlink();raise
+        publish_compacted_index(out, output, available_allocated_bytes, reports_dir)
     except Exception:
         out.close();raise
     out.close()

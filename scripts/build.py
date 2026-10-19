@@ -1328,6 +1328,9 @@ class Rebuild:
         )
         corpus = self.metadata_path("manifests/research/candidate-7.1-complete-v1.json")
         recipe = ROOT / "recipes/semantic-input.json"
+        embedding_threads = getattr(self, "embedding_threads", None)
+        if embedding_threads is None:
+            embedding_threads = builder.default_embedding_threads()
         builder.check_model(self.model_cache)
         scope = builder.make_scope(index, load(literal_profile)["corpus_ref"], recipe)
         scope_path = self.output / "semantic-input.json"
@@ -1345,6 +1348,7 @@ class Rebuild:
             inputs=inputs,
             parameters={
                 "stage": "semantic",
+                "embedding_threads": embedding_threads,
                 "dependencies": {
                     n: version(n)
                     for n in ("fastembed", "onnxruntime", "hnswlib", "numpy")
@@ -1387,6 +1391,7 @@ class Rebuild:
                     self.model_cache,
                     scope_path=scope_path,
                     available_allocated_bytes=remaining,
+                    embedding_threads=embedding_threads,
                 )
                 write(
                     directory / "invocation.json",
@@ -1500,6 +1505,8 @@ def main():
         type=Path,
         help="Existing pinned local model cache; never downloaded implicitly",
     )
+    parser.add_argument("--embedding-threads", type=int,
+                        help="Positive ONNX build thread count; default Linux <=4 affinity-visible CPUs, other platforms 2")
     parser.add_argument(
         "--available-allocated-bytes",
         type=int,
@@ -1507,6 +1514,8 @@ def main():
         help="Fresh project hard-limit headroom, NOT host free space; required for all/index",
     )
     args = parser.parse_args()
+    if args.embedding_threads is not None and args.embedding_threads <= 0:
+        parser.error("--embedding-threads must be positive")
     if args.stage in ("all", "quest", "events"):
         if args.historical_source is None:
             parser.error(
@@ -1570,6 +1579,7 @@ def main():
     job.allocated_start = allocated_start
     job.with_semantic = with_semantic
     job.model_cache = args.model_cache.resolve() if args.model_cache else None
+    job.embedding_threads = args.embedding_threads
     selected = (
         tuple(s for s in STAGES if s != "semantic" or with_semantic)
         if args.stage == "all"

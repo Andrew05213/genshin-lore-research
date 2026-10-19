@@ -7,7 +7,9 @@ Never mutates/rebuilds the Research index or deduplicates physical occurrences.
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
+import sys
 import time
 from importlib.metadata import version
 from pathlib import Path
@@ -19,6 +21,34 @@ from genshin_lore.semantic_discovery import sha256_file, tree_sha256
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 REVISION = "faf4aa4225822f3bc6376869cb1164e8e3feedd0"
+
+
+def default_embedding_threads():
+    """Use up to four affinity-visible Linux CPUs; keep other platforms at two."""
+    if sys.platform != "linux":
+        return 2
+    cpus = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else (os.cpu_count() or 1)
+    return min(4, max(1, cpus))
+
+
+def embed_windows(model, inputs, vectors, *, batch_size=64, progress=None):
+    """Group similar lengths for less padding; restore exact physical vector IDs.
+
+    This changes only inference scheduling, not text, windows or ANN insertion
+    order. Repeated strings remain separate occurrences.
+    """
+    order = sorted(range(len(inputs)), key=lambda i: (len(inputs[i]), i))
+    for start in range(0, len(order), batch_size):
+        ids = order[start:start + batch_size]
+        batch = np.asarray(list(model.embed([inputs[i] for i in ids], batch_size=batch_size)), dtype=np.float32)
+        if batch.shape != (len(ids), 384) or not np.all(np.isfinite(batch)):
+            raise ValueError("embedding shape/finite violation")
+        norms = np.linalg.norm(batch, axis=1)
+        if np.any(norms <= 0):
+            raise ValueError("zero vector")
+        vectors[ids] = batch / norms[:, None]
+        if progress is not None:
+            progress(start + len(ids))
 
 
 def windows(text, size=400, stride=360):
@@ -66,12 +96,15 @@ def check_model(cache):
         )
 
 
-def build(index, output, cache, *, scope_path, available_allocated_bytes):
+def build(index, output, cache, *, scope_path, available_allocated_bytes, embedding_threads=None):
     import hnswlib
     from fastembed import TextEmbedding
     import shutil
 
     index, output, cache = map(Path, (index, output, cache))
+    embedding_threads = default_embedding_threads() if embedding_threads is None else embedding_threads
+    if type(embedding_threads) is not int or embedding_threads <= 0:
+        raise ValueError("embedding_threads must be a positive integer")
     if output.exists():
         raise FileExistsError("no-clobber: " + str(output))
     # Caller supplies current inclusive project headroom, not host free space.
@@ -173,39 +206,29 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
         cache_dir=str(cache),
         specific_model_path=str(cache / "model"),
         local_files_only=True,
-        threads=2,
+        threads=embedding_threads,
     )
+    embedding_started = time.perf_counter()
+
+    def progress(done):
+        if (done - 1) // 64 % 32 == 0 or done == n:
+            print(json.dumps({"stage": "embedding", "done": done, "total": n,
+                              "seconds": time.perf_counter() - started}), flush=True)
+
+    embed_windows(model, inputs, vectors, progress=progress)
+    vectors.flush()
+    embedding_seconds = time.perf_counter() - embedding_started
+    ann_started = time.perf_counter()
     ann = hnswlib.Index(space="cosine", dim=384)
     ann.init_index(max_elements=n, ef_construction=80, M=12, random_seed=100)
     ann.set_num_threads(1)
     for start in range(0, n, 64):
-        batch = np.asarray(
-            list(model.embed(inputs[start : start + 64], batch_size=64)),
-            dtype=np.float32,
-        )
-        if batch.shape != (min(64, n - start), 384) or not np.all(np.isfinite(batch)):
-            raise ValueError("embedding shape/finite violation")
-        norms = np.linalg.norm(batch, axis=1)
-        if np.any(norms <= 0):
-            raise ValueError("zero vector")
-        batch = batch / norms[:, None]
-        vectors[start : start + len(batch)] = batch
+        batch = vectors[start:start + 64]
         ann.add_items(batch, np.arange(start, start + len(batch)))
-        if start % 2048 == 0:
-            print(
-                json.dumps(
-                    {
-                        "stage": "embedding",
-                        "done": start + len(batch),
-                        "total": n,
-                        "seconds": time.perf_counter() - started,
-                    }
-                ),
-                flush=True,
-            )
-    vectors.flush()
+    del batch
     del vectors
     ann.save_index(str(output / "index.hnsw"))
+    ann_seconds = time.perf_counter() - ann_started
     selection = hashlib.sha256(scope_path.read_bytes()).hexdigest()
     meta.execute(
         "INSERT INTO semantic_release VALUES(1,?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -274,6 +297,11 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
         "vectors_sha256": sha256_file(output / "vectors.npy"),
         "source_counts": counts,
         "seconds": time.perf_counter() - started,
+        "build_parameters": {"embedding_threads": embedding_threads, "batch_size": 64,
+                             "inference_order": "stable-character-length-v1",
+                             "vector_id_order": "original-physical-source-order",
+                             "ann_insertion_order": "original-physical-source-order"},
+        "timings_seconds": {"embedding": embedding_seconds, "ann": ann_seconds},
         "dependencies": {
             x: version(x) for x in ["fastembed", "onnxruntime", "numpy", "hnswlib"]
         },
@@ -294,6 +322,7 @@ if __name__ == "__main__":
     p.add_argument("--model-cache", type=Path, required=True)
     p.add_argument("--scope", type=Path, required=True)
     p.add_argument("--available-allocated-bytes", type=int, required=True)
+    p.add_argument("--embedding-threads", type=int, help="Positive ONNX build thread count; default Linux <=4 affinity-visible CPUs, other platforms 2")
     a = p.parse_args()
     build(
         a.index,
@@ -301,4 +330,5 @@ if __name__ == "__main__":
         a.model_cache,
         scope_path=a.scope,
         available_allocated_bytes=a.available_allocated_bytes,
+        embedding_threads=a.embedding_threads,
     )

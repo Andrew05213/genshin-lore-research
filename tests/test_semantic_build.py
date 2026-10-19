@@ -412,6 +412,10 @@ def test_vector_stage_qualifies_and_generates_usable_isolated_config(
     )
     assert json.loads(config.read_text())["bindings"] == "semantic-bindings.json"
     job.semantic()
+    job.embedding_threads = 7
+    with pytest.raises(ValueError, match="resume identity"):
+        job.semantic()
+    del job.embedding_threads
     value = json.loads(receipt.read_text())
     value["independent_verifier_completed"] = False
     receipt.write_text(json.dumps(value), encoding="utf-8")
