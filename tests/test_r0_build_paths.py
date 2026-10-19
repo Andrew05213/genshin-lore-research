@@ -158,3 +158,54 @@ def test_actual_independent_r0_oracle_rejects_tampered_rows(real_job,monkeypatch
         oracle.main()
     assert not report.exists()
     with pytest.raises(ValueError,match='artifact drift'):real_job.job.dependency_inputs('r0')
+
+
+@pytest.mark.parametrize('empty', [False, True])
+def test_independent_r0_oracle_rejects_entire_source_file_omission(real_job, monkeypatch, empty):
+    if empty:
+        (real_job.job.source/'TextMap/zzz-empty.json').write_bytes(b'[]')
+    real_job.job.r0()
+    artifact = real_job.job.path('r0')
+    with sqlite3.connect(artifact) as db:
+        last = db.execute('SELECT max(source_file_id) FROM source_file').fetchone()[0]
+        db.execute('DELETE FROM physical_occurrence WHERE source_file_id=?', (last,))
+        db.execute('DELETE FROM source_file WHERE source_file_id=?', (last,))
+        # Forged self-reported counts cannot define the source denominator.
+        files = db.execute('SELECT count(*) FROM source_file').fetchone()[0]
+        records = db.execute('SELECT count(*) FROM physical_occurrence').fetchone()[0]
+        for key, count in [('file_denominator', files), ('record_denominator', records),
+                           ('record_numerator', records)]:
+            db.execute('UPDATE metadata SET value=? WHERE key=?', (json.dumps(count), key))
+    output = real_job.job.output/'omission-oracle.json'
+    monkeypatch.setattr('sys.argv', ['source_archive', '--source', str(real_job.job.source),
+        '--artifact', str(artifact), '--output', str(output)])
+    with pytest.raises(SystemExit, match='source file (set|closure) mismatch'):
+        oracle.main()
+    assert not output.exists()
+
+
+@pytest.mark.parametrize('mutation', ['artifact', 'sidecar'])
+def test_standalone_r0_oracle_rejects_changes_during_verification(real_job, monkeypatch, mutation):
+    real_job.job.r0()
+    artifact = real_job.job.path('r0')
+    original = oracle.scan
+    changed = []
+
+    def drift(path, relative):
+        expected = original(path, relative)
+        if not changed:
+            if mutation == 'artifact':
+                with artifact.open('ab') as stream:
+                    stream.write(b'synthetic drift')
+            else:
+                Path(str(artifact)+'-journal').write_bytes(b'synthetic journal')
+            changed.append(True)
+        return expected
+
+    monkeypatch.setattr(oracle, 'scan', drift)
+    output = real_job.job.output/'drift-oracle.json'
+    monkeypatch.setattr('sys.argv', ['source_archive', '--source', str(real_job.job.source),
+        '--artifact', str(artifact), '--output', str(output)])
+    with pytest.raises(SystemExit, match='artifact changed|sidecars'):
+        oracle.main()
+    assert not output.exists()

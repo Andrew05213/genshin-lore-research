@@ -220,6 +220,8 @@ def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
         ) from exc
     selected: list[Path] = []
     for item in candidates:
+        if not item.name.startswith(PROJECT_TMP_PREFIXES):
+            continue
         try:
             info = item.lstat()
         except OSError as exc:
@@ -229,7 +231,6 @@ def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
         if (
             stat.S_ISDIR(info.st_mode)
             and not stat.S_ISLNK(info.st_mode)
-            and item.name.startswith(PROJECT_TMP_PREFIXES)
         ):
             selected.append(item)
     return tuple(sorted(selected))
@@ -248,11 +249,13 @@ def discover_project_tmp_paths(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
         raise SpaceGateError(f"project temporary-path discovery cannot inspect: {root}") from exc
     selected: list[Path] = []
     for item in candidates:
+        if not item.name.startswith(PROJECT_TMP_PREFIXES):
+            continue
         try:
             info = item.lstat()
         except OSError as exc:
             raise SpaceGateError(f"project temporary-path discovery cannot lstat: {item}") from exc
-        if stat.S_ISLNK(info.st_mode) or not item.name.startswith(PROJECT_TMP_PREFIXES):
+        if stat.S_ISLNK(info.st_mode):
             continue
         if stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode):
             selected.append(item)
