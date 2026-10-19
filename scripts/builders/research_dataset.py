@@ -201,7 +201,7 @@ def project_component(src, out, component, r0, counts, *, corpus_path):
 def publish_compacted_index(out, output, available_allocated_bytes, reports_dir):
     """Compact directly to the exclusive output, not a second full RAM image.
 
-    Gate on the uncompressed page image first: no speculative shrinkage or
+    Gate on the uncompacted page image first: no speculative shrinkage or
     temporary on-disk database is needed to fit the project budget.
     """
     before = out.execute('PRAGMA page_count').fetchone()[0] * out.execute('PRAGMA page_size').fetchone()[0]
@@ -225,8 +225,8 @@ def publish_compacted_index(out, output, available_allocated_bytes, reports_dir)
         with closing(sqlite3.connect(output.resolve().as_uri() + '?mode=ro&immutable=1', uri=True)) as target:
             if target.execute('PRAGMA quick_check').fetchone()[0] != 'ok':
                 raise ValueError('published index quick_check failed')
-        # VACUUM INTO does not promise fsync; flush a writable handle before
-        # returning a sealed artifact (also valid on native Windows).
+        # Keep durability explicit across SQLite settings/versions. A writable
+        # file handle is also required for native Windows flushing.
         with output.open('r+b') as stream:
             os.fsync(stream.fileno())
         sync_directory(output.parent)
