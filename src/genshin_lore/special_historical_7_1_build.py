@@ -345,10 +345,6 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
     except BaseException:
         if conn is not None:
             conn.close()
-        if output.exists():
-            after = output.stat()
-            if (after.st_dev, after.st_ino) == owner:
-                output.unlink()
         raise
 
 

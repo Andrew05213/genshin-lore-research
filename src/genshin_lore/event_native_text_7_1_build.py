@@ -169,10 +169,4 @@ def build(source: Path, scope_path: Path, output: Path) -> dict:
     except Exception:
         if db is not None:
             db.close()
-        current = output.stat() if output.exists() else None
-        if current and (current.st_dev, current.st_ino) == (owned.st_dev, owned.st_ino):
-            output.unlink()
-        for sidecar in sidecars:
-            if sidecar.exists():
-                sidecar.unlink()
         raise

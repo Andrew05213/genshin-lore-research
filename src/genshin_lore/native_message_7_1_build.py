@@ -200,10 +200,4 @@ def build(source: Path, scope_path: Path, output: Path) -> dict:
     except Exception:
         if db is not None:
             db.close()
-        existing = output.stat() if output.exists() else None
-        if existing and (existing.st_dev, existing.st_ino) == (owned.st_dev, owned.st_ino):
-            output.unlink()
-        for item in sidecars:
-            if item.exists():
-                item.unlink()
         raise

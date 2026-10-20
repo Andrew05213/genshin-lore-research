@@ -114,13 +114,6 @@ def _write_guards(conn: sqlite3.Connection) -> None:
                 BEGIN SELECT RAISE(ABORT,'immutable special-core evidence'); END""")
 
 
-def _remove_owned(output: Path, owner: tuple[int, int] | None) -> None:
-    if owner and output.exists():
-        stat = output.stat()
-        if (stat.st_dev, stat.st_ino) == owner:
-            output.unlink()
-
-
 def build(source_root: str | Path, family: str, output_path: str | Path) -> dict:
     source = Path(source_root).resolve()
     output = Path(output_path).resolve()
@@ -315,7 +308,6 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
     except BaseException:
         if conn is not None:
             conn.close()
-        _remove_owned(output, owner)
         raise
 
 

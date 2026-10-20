@@ -23,7 +23,8 @@ def qualify_local_foundation(path, manifest_path, manifest):
             or qualification["contract"] != "local-character-foundation-v1"):
         raise ValueError("unknown local foundation qualification contract")
     recipe = load_object(ROOT / "recipes/character-foundation.json")
-    if {k: v for k, v in manifest.items() if k not in ("artifact", "local_rebuild")} != recipe:
+    dynamic = {"artifact", "local_rebuild", "parser_build_id", "ingest_run_id"}
+    if {k: v for k, v in manifest.items() if k not in dynamic} != {k: v for k, v in recipe.items() if k not in dynamic}:
         raise ValueError("local foundation source/recipe identity")
     receipt_path = artifact.parent / "verified.json"
     if file_seal(receipt_path) != qualification["receipt"]:
@@ -40,10 +41,12 @@ def qualify_local_foundation(path, manifest_path, manifest):
         raise ValueError("local foundation artifact binding")
     build = load_object(artifact.parent / "build.json")
     if (build.get("artifact") != actual or build.get("contract") != recipe["contract"]
-            or build.get("parser_build_id") != recipe["parser_build_id"]
-            or build.get("ingest_run_id") != recipe["ingest_run_id"]):
+            or any(not isinstance(manifest.get(key), str) or not manifest[key]
+                   or build.get(key) != manifest[key] for key in ("parser_build_id", "ingest_run_id"))):
         raise ValueError("local foundation build identity")
     checked = oracle.verify(source, ROOT / recipe["source_scope"], artifact, expected_artifact=actual)
+    if any(checked.get(key) != manifest[key] for key in ("parser_build_id", "ingest_run_id")):
+        raise ValueError("local foundation independent oracle identity")
     if checked != load_object(artifact.parent / "verify.json"):
         raise ValueError("local foundation independent oracle/report mismatch")
     # The replay must not change the evidence or its successful stage proof.

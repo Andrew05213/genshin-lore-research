@@ -37,13 +37,6 @@ def _open_owned(output:Path):
  if any(Path(str(output)+s).exists() for s in ('','-wal','-shm','-journal')):raise FileExistsError('output or sidecar exists')
  with output.open('xb'):pass
  st=output.stat();return (st.st_dev,st.st_ino)
-def _cleanup(output,owned):
- try:st=output.stat()
- except FileNotFoundError:return
- if (st.st_dev,st.st_ino)!=owned:return
- for p in (Path(str(output)+'-wal'),Path(str(output)+'-shm'),Path(str(output)+'-journal'),output):
-  try:p.unlink()
-  except FileNotFoundError:pass
 def _schema_structure(c):return [list(x) for x in c.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name")]
 def _artifact(path):return {'size_bytes':path.stat().st_size,'sha256':sha_file(path)}
 def _logical(c,tables):
@@ -98,7 +91,7 @@ def build_readable(source_root,scope_path,output,r0_artifact,document_artifact):
   return {**release,'artifact':_artifact(output),'schema_structure':_schema_structure(sqlite3.connect(f'file:{output.resolve().as_posix()}?mode=ro&immutable=1',uri=True))}
  except Exception:
   if c is not None:c.close()
-  _cleanup(output,owned);raise
+  raise
 
 def build_subtitle(source_root,scope_path,output,r0_artifact):
  source_root=Path(source_root);scope_path=Path(scope_path);output=Path(output);scope=json.loads(scope_path.read_text());repo=ROOT
@@ -132,4 +125,4 @@ def build_subtitle(source_root,scope_path,output,r0_artifact):
   return {**release,'artifact':_artifact(output),'schema_structure':_schema_structure(sqlite3.connect(f'file:{output.resolve().as_posix()}?mode=ro&immutable=1',uri=True))}
  except Exception:
   if c is not None:c.close()
-  _cleanup(output,owned);raise
+  raise

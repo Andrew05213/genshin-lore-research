@@ -157,5 +157,5 @@ def build(source: Path, output: Path, *, include_special=False, metadata_root=No
             db.close()
         return {"status": "CORE33_MATERIALIZED_AWAITING_QUALIFICATION" if include_special else "PARTIAL_CORE_MATERIALIZED", "snapshot": SNAPSHOT, "schema_version": 20, "candidate_ddl_contract": GUARD_CONTRACT, "assembly_implementation_sha256": sha256_file(Path(__file__)), "special_adapter_sha256": sha256_file(ROOT / "src/genshin_lore/schema20_7_1_special.py"), "provider_contracts": counts, "qualified_provider_count": len(counts), "required_provider_count": 33, "artifact": {"size_bytes": output.stat().st_size, "sha256": sha256_file(output)}, "source_files": files, "inputs": list(inputs.values()), "schema21_required_for_this_projection": False, "product_accepted": False}
     except Exception:
-        output.unlink(missing_ok=True)
+        # Keep the unqualified database for diagnosis; never reuse it as PASS.
         raise

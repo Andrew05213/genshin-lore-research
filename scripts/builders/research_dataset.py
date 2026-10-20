@@ -238,11 +238,13 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
             raise RuntimeError(f'hard storage gate: index {exact_bytes} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
         import os
         fd=os.open(output,os.O_CREAT|os.O_EXCL|os.O_RDWR,0o600);os.close(fd)
+        target = None
         try:
             target=sqlite3.connect(output);target.execute('PRAGMA journal_mode=OFF')
-            out.backup(target);target.close()
-        except Exception:
-            output.unlink();raise
+            out.backup(target)
+        finally:
+            if target is not None:
+                target.close()
     except Exception:
         out.close();raise
     out.close()

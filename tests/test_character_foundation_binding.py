@@ -39,7 +39,7 @@ def test_successor_release_binds_actual_foundation_and_changes_run(tmp_path):
 
 
 @pytest.fixture
-def fresh(tmp_path, monkeypatch):
+def fresh(tmp_path, monkeypatch, request):
     from genshin_lore import character_7_1_foundation_binding as binding
     from genshin_lore import character_7_1_foundation_verify as foundation_oracle
 
@@ -51,6 +51,9 @@ def fresh(tmp_path, monkeypatch):
     job.history = None
     expected = b"synthetic independently checked physical foundation"
     recipe = json.loads((ROOT / "recipes/character-foundation.json").read_text())
+    if getattr(request, "param", None) == "current":
+        recipe.update(parser_build_id="character71:synthetic-current-parser",
+                      ingest_run_id="character71:synthetic-current-run")
     calls = []
 
     def oracle(source, scope, artifact, *, expected_artifact):
@@ -105,6 +108,72 @@ def test_fresh_foundation_requires_and_replays_complete_independent_proof(fresh)
     count = len(fresh.calls)
     assert qualify(fresh) == seal(fresh.artifact)
     assert len(fresh.calls) == count + 1
+
+
+@pytest.mark.parametrize("fresh", ["current"], indirect=True)
+def test_current_foundation_namespace_requires_replayed_proof(fresh):
+    assert qualify(fresh) == seal(fresh.artifact)
+
+
+@pytest.mark.parametrize("fresh", ["current"], indirect=True)
+@pytest.mark.parametrize("field", ["parser_build_id", "ingest_run_id"])
+def test_current_namespace_cannot_be_rebound_by_resealing_reports(fresh, field):
+    fresh.manifest[field] = "synthetic-forged-identity"
+    for name in ("build.json", "verify.json"):
+        path = fresh.artifact.parent / name
+        report = json.loads(path.read_text())
+        report[field] = fresh.manifest[field]
+        write(path, report)
+    reseal(fresh)
+    with pytest.raises(ValueError):
+        qualify(fresh)
+
+
+@pytest.mark.parametrize("fresh", ["current"], indirect=True)
+@pytest.mark.parametrize("consumer", [builder.qualify_foundation, verifier._foundation])
+def test_current_namespace_without_proof_cannot_enter_historical_mode(fresh, consumer):
+    del fresh.manifest["local_rebuild"]
+    write(fresh.manifest_path, fresh.manifest)
+    with pytest.raises(ValueError):
+        consumer(fresh.artifact, foundation_manifest=fresh.manifest_path)
+
+
+def test_successor_release_uses_qualified_current_foundation_run(tmp_path):
+    foundation = tmp_path / "foundation"
+    foundation.write_bytes(b"synthetic current foundation")
+    conn = text_output(tmp_path / "text.sqlite")
+    try:
+        release = builder._release("text", conn, foundation, foundation_run_id="synthetic-current-run")
+        assert release["foundation_run_id"] == "synthetic-current-run"
+        assert release["ingest_run_id"] == builder._identity(
+            "text", "run", release["parser_build_id"], "synthetic-current-run",
+            seal(foundation)["sha256"], None)
+    finally:
+        conn.close()
+
+
+@pytest.mark.parametrize("consumer", [builder._qualify_text, verifier._text])
+def test_current_text_dependency_requires_exact_current_run(tmp_path, consumer):
+    foundation = tmp_path / "foundation"
+    foundation.write_bytes(b"synthetic current foundation")
+    text = tmp_path / "text.sqlite"
+    conn = text_output(text)
+    try:
+        conn.executemany("INSERT INTO resolution VALUES(?,?,?,?,?,?,?,?)",
+                         ((str(i), "row", "/field", "field", "1", locale, "missing", 0)
+                          for i in range(34817) for locale in ("CHS", "EN", "JP")))
+        release = {"contract": "character-7.1-text-successor-v1", "snapshot_id": builder.SNAPSHOT,
+                   "foundation_run_id": "synthetic-current-run",
+                   "foundation_sha256": seal(foundation)["sha256"],
+                   "foundation_size_bytes": foundation.stat().st_size}
+        conn.execute("INSERT INTO release VALUES(1,?)", (json.dumps(release),))
+        conn.commit()
+    finally:
+        conn.close()
+    accepted = consumer(text, foundation, foundation_run_id="synthetic-current-run")
+    accepted.close()
+    with pytest.raises(ValueError):
+        consumer(text, foundation, foundation_run_id=builder.FOUNDATION_RUN)
 
 
 @pytest.mark.parametrize("consumer", [builder.qualify_foundation, verifier._foundation])

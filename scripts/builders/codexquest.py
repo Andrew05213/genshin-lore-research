@@ -147,7 +147,7 @@ def build(source,output,core_manifest,core_artifact):
    if rows:db.executemany(f"INSERT INTO {table} VALUES ({','.join('?'*len(rows[0]))})",rows)
   db.execute('INSERT INTO codex_release VALUES(1,?)',(canonical(release),));immutable(db);db.commit();db.execute('VACUUM');db.close()
  except BaseException:
-  db.close();output.unlink(missing_ok=True);raise
+  db.close();raise
  return {'release':release,'artifact':{'size_bytes':output.stat().st_size,'sha256':sha(output)}}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--output',required=True);p.add_argument('--core-manifest',default=CORE);p.add_argument('--core-artifact',default=CORE_ARTIFACT);p.add_argument('--report');a=p.parse_args();result=build(a.source,a.output,a.core_manifest,a.core_artifact)

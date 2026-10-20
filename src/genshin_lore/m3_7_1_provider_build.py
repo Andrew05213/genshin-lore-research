@@ -117,15 +117,7 @@ def _owned_output(path: Path) -> tuple[sqlite3.Connection, tuple[int, int]]:
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_if_owned(path, owner)
         raise
-
-
-def _remove_if_owned(path: Path, owner: tuple[int, int] | None) -> None:
-    if owner is not None and path.exists():
-        stat = path.stat()
-        if (stat.st_dev, stat.st_ino) == owner:
-            path.unlink()
 
 
 def build(source_root: str | Path, family_name: str, output_path: str | Path,
@@ -291,5 +283,4 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_if_owned(output, owner)
         raise

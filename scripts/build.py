@@ -422,6 +422,9 @@ class Rebuild:
             ),
         )
         manifest = load(ROOT / "recipes/character-foundation.json")
+        foundation_report = load(self.output / "character_foundation" / "build.json")
+        for key in ("parser_build_id", "ingest_run_id"):
+            manifest[key] = foundation_report[key]
         manifest["artifact"] = {
             **seal(self.path("character_foundation")),
             "machine_local_path": str(self.path("character_foundation")),

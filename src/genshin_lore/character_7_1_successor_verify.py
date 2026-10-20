@@ -81,12 +81,14 @@ def _schema(conn: sqlite3.Connection, kind: str) -> None:
 
 def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
     manifest = json.loads(Path(foundation_manifest or MANIFEST).read_text())
-    _eq((manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"], manifest["parser_build_id"], manifest["ingest_run_id"]),
-        (SNAPSHOT, COMMIT, TREE, FOUNDATION_PARSER, FOUNDATION_RUN), "foundation source identity")
+    _eq((manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"]),
+        (SNAPSHOT, COMMIT, TREE), "foundation source identity")
     if "local_rebuild" in manifest:
         from .character_7_1_foundation_binding import qualify_local_foundation
         qualify_local_foundation(path, foundation_manifest, manifest)
     else:
+        _eq((manifest["parser_build_id"], manifest["ingest_run_id"]),
+            (FOUNDATION_PARSER, FOUNDATION_RUN), "historical foundation namespace")
         _eq((manifest["artifact"]["size_bytes"], manifest["artifact"]["sha256"]),
             (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation manifest")
         _eq((path.stat().st_size, sha(path)), (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation bytes")
@@ -95,12 +97,18 @@ def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connec
     scope = json.loads((ROOT / manifest["source_scope"]).read_text())
     _eq((scope["source_commit"], scope["source_tree"], scope["snapshot_id"], len(scope["files"])), (COMMIT, TREE, SNAPSHOT, 18), "frozen source scope")
     conn = _open(path)
-    _eq(json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"], FOUNDATION_RUN, "foundation release")
-    _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], 34817, "text owner count")
-    return conn, scope
+    try:
+        release = json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])
+        _eq((release["snapshot_id"], release["parser_build_id"], release["ingest_run_id"]),
+            (SNAPSHOT, manifest["parser_build_id"], manifest["ingest_run_id"]), "foundation release")
+        _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], 34817, "text owner count")
+        return conn, scope
+    except Exception:
+        conn.close()
+        raise
 
 
-def _text(path: Path, foundation: Path) -> sqlite3.Connection:
+def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_RUN) -> sqlite3.Connection:
     """Bind a text dependency to this exact foundation, including byte identity."""
     if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("text projection sidecar")
@@ -109,7 +117,7 @@ def _text(path: Path, foundation: Path) -> sqlite3.Connection:
         release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
         _eq((release["contract"], release["snapshot_id"], release["foundation_run_id"],
              release["foundation_size_bytes"], release["foundation_sha256"]),
-            ("character-7.1-text-successor-v1", SNAPSHOT, FOUNDATION_RUN,
+            ("character-7.1-text-successor-v1", SNAPSHOT, foundation_run_id,
              foundation.stat().st_size, sha(foundation)), "text foundation identity")
         _eq(conn.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text denominator")
         return conn
@@ -238,8 +246,9 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
     foundation, scope = _foundation(Path(foundation_path), foundation_manifest=foundation_manifest)
     conn = text = None
     try:
+        foundation_run = json.loads(foundation.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"]
         conn = _open(artifact)
-        text = _text(Path(text_path), Path(foundation_path)) if text_path else None
+        text = _text(Path(text_path), Path(foundation_path), foundation_run_id=foundation_run) if text_path else None
         _eq(conn.execute("PRAGMA integrity_check").fetchone()[0], "ok", "integrity")
         _eq(conn.execute("PRAGMA foreign_key_check").fetchall(), [], "foreign keys")
         _schema(conn, kind)
@@ -255,11 +264,11 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
         parser_id = _id(kind, "parser", implementation)
         foundation_sha = sha(Path(foundation_path))
         foundation_size = Path(foundation_path).stat().st_size
-        run_id = _id(kind, "run", parser_id, FOUNDATION_RUN, foundation_sha, sha(Path(text_path)) if text_path else None)
+        run_id = _id(kind, "run", parser_id, foundation_run, foundation_sha, sha(Path(text_path)) if text_path else None)
         expected_release = {
             "contract": f"character-7.1-{kind}-successor-v1",
             "snapshot_id": SNAPSHOT,
-            "foundation_run_id": FOUNDATION_RUN,
+            "foundation_run_id": foundation_run,
             "foundation_size_bytes": foundation_size,
             "foundation_sha256": foundation_sha,
             "parser_build_id": parser_id,
