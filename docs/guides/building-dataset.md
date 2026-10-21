@@ -60,6 +60,8 @@ Character 后续组件通过本次 metadata 中显式的 `local-character-founda
 
 Native Message 属于 `--stage quest`：先完成本次 Quest/Talk、QuestNarrative 和独立 oracle，再在 metadata 中生成 `local-native-message-quest-narrative-v1` 绑定。消费时核对这两个阶段的当前 v2 回执、完整显式输入、实现/环境和 artifact/report seal，重跑 QuestNarrative 独立来源 oracle；MainQuest 候选集从本次目标 occurrence 与消息原始 locator 完整重建。历史 message scope 的路径、parser/run 与 seal 原样保留，不作为新构建的依赖。
 
+Readable 与 Subtitle 在消费 R0 前先核对本次完整 v2 依赖回执，再将精确 R0 size/SHA 写入本次 `metadata/` 下的作用域。其来源范围和 run 约束保留，builder 与独立 verifier 使用同一份作用域并继续精确核验；该动态文件也纳入阶段输入 seal。源码中的历史作用域及字节 seal 不改写，未核验、漂移或其他输出的依赖回执不能用来生成当前绑定。
+
 动态文件不再写入源码树：
 
 ```text

@@ -694,7 +694,12 @@ class Rebuild:
         )
 
     def readable(self):
-        scope = ROOT / "manifests/document-readable-7.1/source-scope.json"
+        inputs = self.dependency_inputs("r0", "document")
+        relative = "manifests/document-readable-7.1/source-scope.json"
+        value = load(ROOT / relative)
+        value["r0_dependency"].update(seal(self.path("r0")))
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
         self.task(
             "readable",
             lambda p: module("readable_7_1_build").build(
@@ -714,9 +719,17 @@ class Rebuild:
                 self.report("document"),
                 r,
             ),
-            inputs=self.dependency_inputs("r0", "document"),
+            inputs=inputs + [scope],
         )
-        scope = ROOT / "manifests/direct-text-7.1/subtitle-scope.json"
+        inputs = self.dependency_inputs("r0")
+        relative = "manifests/direct-text-7.1/subtitle-scope.json"
+        value = load(ROOT / relative)
+        actual = seal(self.path("r0"))
+        value["r0_dependency"].update(
+            artifact_size_bytes=actual["size_bytes"], artifact_sha256=actual["sha256"]
+        )
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
 
         def verify_subtitle(p, r):
             rel = release(p)
@@ -739,7 +752,7 @@ class Rebuild:
                 self.source, scope, p, self.path("r0")
             ),
             verify_subtitle,
-            inputs=self.dependency_inputs("r0"),
+            inputs=inputs + [scope],
         )
 
     def events(self):
