@@ -16,6 +16,10 @@
 
 Windows 使用 `.venv\Scripts\python.exe`；缺少适用 `hnswlib` wheel 时需 MSVC C++ Build Tools。离线环境可提前取得相同模型文件，但必须通过同一逐文件/目录核验。
 
+hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使用 ASCII 临时路径，Python 负责中文路径的文件读写；不改变二进制格式或向量核验。系统临时路径含非 ASCII 字符时尝试 Windows 短路径；没有可用 ASCII 别名则明确失败，不修改代码页或进程工作目录。保存先核对原生预期字节数，再刷盘并排他发布；失败的私有文件保留，计入项目临时空间。临时卷还须容纳一个 ANN 文件副本。
+
+安装 semantic extra 后，可运行不下载模型的真实 hnswlib 路径回归：`.venv/bin/python -m pytest -q tests/semantic_native.py`（Windows 替换 Python 路径）。此显式模块使用真实 builder、独立 oracle、运行时和 ANN，仅 embedding 使用合成向量；基础无 semantic 安装的源码测试仍用合成 ANN。两类测试都不能代替完整固定来源验收。
+
 ## 构建与运行
 
 完整命令见 [数据构建指南](building-dataset.md)，默认 `--stage all --model-cache data/model-cache` 包括向量阶段。明确不需要向量时使用 `--without-semantic`；缺模型或依赖会在大型构建前拒绝，而不是静默跳过。

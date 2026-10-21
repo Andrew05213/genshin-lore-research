@@ -1,6 +1,7 @@
 """Synthetic vectors exercise delivery/oracles, not multilingual model quality."""
 
 import hashlib
+import io
 import json
 from pathlib import Path
 import sqlite3
@@ -52,6 +53,11 @@ class FixtureIndex:
     def save_index(self, path):
         with open(path, "wb") as stream:
             np.save(stream, self.get_items(range(len(self.values))))
+
+    def index_file_size(self):
+        stream = io.BytesIO()
+        np.save(stream, self.get_items(range(len(self.values))))
+        return len(stream.getvalue())
 
     def load_index(self, path, **kwargs):
         with open(path, "rb") as stream:

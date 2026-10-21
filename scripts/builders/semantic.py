@@ -13,6 +13,7 @@ from importlib.metadata import version
 from pathlib import Path
 
 import numpy as np
+from genshin_lore.hnsw_io import save_index
 from genshin_lore.lexical_discovery import build_lexicon, text_ref
 from genshin_lore.semantic_discovery import sha256_file, tree_sha256
 
@@ -205,7 +206,7 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
             )
     vectors.flush()
     del vectors
-    ann.save_index(str(output / "index.hnsw"))
+    save_index(ann, output / "index.hnsw")
     selection = hashlib.sha256(scope_path.read_bytes()).hexdigest()
     meta.execute(
         "INSERT INTO semantic_release VALUES(1,?,?,?,?,?,?,?,?,?,?,?,?)",

@@ -8,6 +8,7 @@ import numpy as np
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
+from .hnsw_io import load_index
 
 
 class SemanticUnavailable(RuntimeError):
@@ -160,8 +161,8 @@ class SemanticDiscovery:
             raise SemanticUnavailable("semantic runtime dependencies unavailable") from exc
         try:
             self.index = hnswlib.Index(space=config["metric"], dim=config["dimension"])
-            self.index.load_index(
-                str(self.hnsw_path), max_elements=config["unique_candidate_count"]
+            load_index(
+                self.index, self.hnsw_path, max_elements=config["unique_candidate_count"]
             )
         except Exception as exc:
             self.db.close()
