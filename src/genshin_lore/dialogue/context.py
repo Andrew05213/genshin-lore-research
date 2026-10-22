@@ -31,7 +31,10 @@ class DialogueReadAdapter:
         result['dialogue_reading_extension'] = {
             'contract': 'dialogue-reading-maintenance-v1', 'status': 'opt_in_not_release_promoted',
             'views': ['physical', 'dialogue'], 'source_authority': 'unchanged qualified runtime',
-            'legacy_fallback': False, 'new_evidence_identity': False}
+            'legacy_fallback': False, 'new_evidence_identity': False,
+            'npc_reading': 'read_evidence NPC/name ref with view=dialogue for exact source-labelled Codex speech candidates',
+            'codex_reading': 'speaker/body refs with view=dialogue; physical node, same-section neighbours and source titles',
+            'speaker_name_match_is_logical_identity': False}
         return result
 
     def read(self, corpus_ref, evidence_ref, before=0, after=0, limit=50, cursor=None,
@@ -349,6 +352,9 @@ class DialogueContext:
         if locale not in {'CHS', 'EN', 'JP'}:
             raise ValueError('dialogue view locale must be CHS/EN/JP')
         parent, text = self._container(evidence_ref)
+        if self._mode(parent) == 'codexquest_archive' or parent['evidence_family'] == 'npc_archive':
+            from .codex import CodexDialogue
+            return CodexDialogue(self).read(corpus, evidence_ref, parent, text, limit, cursor, locale)
         if not self.supports(parent):
             raise ValueError('dialogue view requires a declared Dialog or Quest/Talk projection')
         scope = {'op': 'dialogue-view-v1', 'anchor': evidence_ref, 'limit': limit, 'locale': locale}
