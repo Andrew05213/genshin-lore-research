@@ -119,6 +119,8 @@ class CodexDialogue:
                    'basis': 'source-labelled slots in the same sealed node-like physical record; not logical NPC ownership'}
         return {'node': child['id'], 'container_ref': self.q._container_ref(parent),
                 'source_pointer': child['source_pointer'], 'texts': texts, 'speaker': speaker,
+                'source_item_type': json.loads(child['raw_json']).get('itemType'),
+                'text_grouping': 'separate source text entries; multiple entries are not proven sequential utterances',
                 'observed_source_labels': sorted(set(labels)),
                 'body_status': 'available' if texts else 'no_resolved_body_in_locale',
                 'logical_identity_proven': False}
@@ -175,10 +177,14 @@ class CodexDialogue:
         state = self.q._after(cursor, scope)
         if type(state) is not int or state < 0:
             raise ValueError('Codex dialogue cursor mismatch')
-        nodes, position = [], state
+        nodes, position, unresolved = [], state, None
         if npc:
             keys = self.context._keys('codexquest_archive')
             values = list(dict.fromkeys(n['raw_text'] for n in names))  # search strings only; records stay separate
+            if not values:
+                unresolved = 'no source name in the requested locale'
+            elif not keys:
+                unresolved = 'no qualified CodexQuest component'
             if keys and values:
                 rows = self.q.db.execute('SELECT * FROM research_text WHERE evidence_family=\'codexquest_archive\' '
                     'AND source_key IN (' + ','.join('?' for _ in keys) + ') AND raw_text IN (' +
@@ -217,7 +223,8 @@ class CodexDialogue:
                 'name_candidates': names, 'match_basis': 'exact source speaker label/name candidate' if npc else 'exact physical node',
                 'delivered_count': len(nodes),
                 'next_cursor': self.q._cursor(scope, position) if more else None,
-                'continuation_available': more, 'scope_complete': not more,
+                'continuation_available': more, 'scope_complete': not more and unresolved is None,
+                'unresolved_reason': unresolved,
                 'partial': True, 'corpus_complete': False, 'logical_identity_proven': False,
                 'coverage': {'locale': locale, 'scope': 'qualified CodexQuest source-labelled nodes only; not all NPC speech',
                              'eof_scope': 'matching source-name occurrences' if npc else 'same physical section from this anchor',

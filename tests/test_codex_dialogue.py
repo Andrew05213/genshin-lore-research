@@ -13,7 +13,7 @@ def digest(value):
     return hashlib.sha256(value).hexdigest()
 
 
-def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False):
+def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False, item_type=None):
     q, _, _ = fixture()
     src = sqlite3.connect(':memory:'); src.row_factory = sqlite3.Row
     src.executescript((ROOT/'schemas/codexquest-7.1-v1.sql').read_text())
@@ -33,6 +33,7 @@ def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=Fal
     for i in range(13):
         pointer = '/sections/0/nodes/'+str(i)
         raw['sections'][0]['nodes'].append({
+            'itemType': item_type,
             'speaker': atom(pointer+'/speaker', 'SpeakerKnown', '合成角色甲' if i%2 == 0 else '合成角色乙'),
             'body': atom(pointer+'/body', 'DialogNormal', '合成角色甲' if body_mentions_name and i == 1
                          else '相同合成发言' if equal_bodies else '合成发言'+str(i))})
@@ -142,6 +143,7 @@ def test_missing_locale_is_empty_not_relabelled_chinese():
     q, _, ref=populated_fixture()
     page=q.read(q.corpus_ref,ref,view='dialogue',locale='EN',limit=2)
     assert page['nodes']==[] and page['partial']
+    assert not page['scope_complete'] and page['unresolved_reason']=='no source name in the requested locale'
 
 
 def test_mentioning_the_name_is_not_a_speaker_match():
@@ -180,3 +182,12 @@ def test_existing_legacy_locator_mapping_is_reused_without_role_promotion():
     page=q.read(q.corpus_ref,ref,view='dialogue',limit=1)
     assert page['nodes'][0]['texts'][0]['raw_text']=='合成发言0'
     assert page['nodes'][0]['texts'][0]['text_proof']['owner_role_status']=='new_wrapper_role_unproven'
+
+
+def test_source_item_type_is_visible_without_inventing_playback_order():
+    q, _, ref=populated_fixture(item_type='MultiDialog')
+    page=q.read(q.corpus_ref,ref,view='dialogue',limit=1)
+    node=page['nodes'][0]
+    assert node['source_item_type']=='MultiDialog'
+    assert 'not proven sequential' in node['text_grouping']
+    assert node['logical_identity_proven'] is False

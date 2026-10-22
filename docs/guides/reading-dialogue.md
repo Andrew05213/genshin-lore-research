@@ -60,6 +60,8 @@ tool_timeout_sec = 60
 
 正文位于 `nodes[].texts`，来源姓名位于 `speaker.names`，可读标题与前后文位于 `source_context`。前后文是同一物理 section 数组的顺序，不证明播放顺序、分支顺序或剧情时间。标题、姓名、正文均可分别 read/inspect，不用路径或节点编号代替引用。
 
+`view="dialogue"` 的 `before/after` 保持 0，前后文已在返回结构内；分页复用 cursor。`source_item_type` 保留可见的来源类型（如 `MultiDialog`），多个文本条目不应自动拼成连续发言。引用标签采用回读的来源标题，内部编号留在来源详情。
+
 ## 从搜索到阅读
 
 1. 以主体或线索关键词搜索；按 discovery 声明的类型缩小范围。名称、家具说明和任务描述命中不自动成为对白。
