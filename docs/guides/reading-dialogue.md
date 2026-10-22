@@ -93,3 +93,5 @@ tool_timeout_sec = 60
 `--citation-receipts <private-directory>` 可复用现有 scoped handle transport。模型仍选择引用并 inspect，程序只做 exact ref 映射；原生 Codex TUI/Desktop 不自动获得项目 renderer。未选择或未检查的引用不能由程序补齐。
 
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
+
+人物到任务档案发言的修复、真实 MCP/Sol 检查与保留失败见 [案例验证](../reviews/npc-dialogue-discovery.md)。
