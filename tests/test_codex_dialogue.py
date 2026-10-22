@@ -85,6 +85,8 @@ def test_npc_to_source_labelled_speeches_with_titles_and_neighbours():
     assert node['speaker']['logical_identity_proven'] is False
     assert node['texts'][0]['text_proof']['owner_role_status'] == 'new_wrapper_role_unproven'
     assert [t['raw_text'] for t in node['source_context']['titles']] == ['合成任务标题', '合成片段标题']
+    assert node['texts'][0]['citation_label'] == '合成任务标题 / 合成片段标题'
+    assert node['source_context']['display_title'] == '合成任务标题'
     assert node['source_context']['after'][0]['texts'][0]['raw_text'] == '合成发言1'
     assert result['partial'] and not result['corpus_complete']
 

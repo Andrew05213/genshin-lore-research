@@ -148,12 +148,23 @@ class CodexDialogue:
         value = self.node(parent, child, locale)
         sequence = self.sequence(parent, child)
         pos = next(i for i, r in enumerate(sequence) if r['id'] == child['id'])
+        titles = self.titles(parent, child, locale)
+        main = [t['raw_text'] for t in titles if t['owner_field'] == 'MainQuestTitle']
+        sections = [t['raw_text'] for t in titles if t['owner_field'] == 'SubQuestTitle']
+        display = main[0] if len(main) == 1 else None
+        section = sections[0] if len(sections) == 1 else None
         value['source_context'] = {
-            'source_path': parent['source_path'], 'titles': self.titles(parent, child, locale),
+            'source_path': parent['source_path'], 'titles': titles,
+            'display_title': display, 'section_title': section,
+            'title_basis': 'source-labelled fields in this exact root/section; not cross-source quest identity',
             'before': [self.node(parent, sequence[pos-1], locale)] if pos else [],
             'after': [self.node(parent, sequence[pos+1], locale)] if pos+1 < len(sequence) else [],
             'ordering_basis': 'neighbours in the same physical section array; not playback, branch or narrative chronology',
             'section_start': pos == 0, 'section_end': pos+1 == len(sequence)}
+        label = ' / '.join(t for t in (display, section) if t) or parent['source_path']+' '+child['source_pointer']
+        for node in [value, *value['source_context']['before'], *value['source_context']['after']]:
+            for item in node['texts'] + node['speaker']['names']:
+                item['citation_label'] = label
         return value
 
     def read(self, corpus, anchor, parent, text, limit, cursor, locale):
