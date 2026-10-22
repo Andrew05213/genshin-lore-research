@@ -2,11 +2,11 @@
 
 ## 可执行入口
 
-最新工程交付、原生 Windows/Linux CI 与本次执行范围见 [整改记录](engineering-finalization.md)。默认完整构建已包含向量阶段，但修改后完整 35 输入及全游戏范围向量尚未重新通过验收。
+默认完整构建已包含向量阶段。Linux 在 `cf1788f` 完成了新的 35 输入、33 个 core providers、统一索引完整来源核对及 106,589 个有界向量窗口重建。后续 embedding 优化及独立验证见 [Linux 性能记录](linux-build-performance.md)；这不是全游戏覆盖声明，也不代表 Windows 完整构建已通过。[工程整改记录](engineering-finalization.md) 保留当时的执行范围。
 
 历史完整新目录实验通过 `PASS_COMPLETE_BOUNDED_DATA_REBUILD`：35 个输入、33 个 core contracts、统一索引的完整来源 rowset 核对及 MCP 续读检查通过。此结论不包括 semantic 重建或原部署正式 release 身份复刻。
 
-后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。合成测试与最小来源 A/B 见 [工程质量记录](engineering-quality.md)。**修改后的完整 35-input 构建已重试四次，尚未通过**：第四次的 59 个前置阶段通过，统一索引因 core 缺少空 scope 声明被独立 oracle 拒绝。已消除 builder 的重复命名规则，并新增真实索引/oracle/MCP 小链路与 35 输入只读 schema 排练；这些不是修复后完整来源重建通过。详见 [重试记录](full-rebuild-retry.md) 和 [合同核对](build-contract-audit.md)，不得沿用历史 verdict、空 schema 排练或定向成功作为新代码的完整来源验收。
+后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。四次完整重建失败、修复与定向检查保留在 [重试记录](full-rebuild-retry.md)、[合同核对](build-contract-audit.md) 和 [工程质量记录](engineering-quality.md)。第五次 Linux 完整重建在修复后通过，原始失败记录仍保留；当前性能分支只重建和验证受影响的完整 semantic 组件，没有再次重装 35 个数据库输入，不将两次执行混为一次全链路验收。
 
 `scripts/build.py` 提供 35 个有界数据输入、33 个 core providers、统一 Research 索引及生成配置的完整入口。来源绑定由本次构建产生，原来源 oracle 与证据边界保留，不依赖已部署游戏数据库。实际完整验证结果见 [完整重建实验](history/full-rebuild.md)。
 

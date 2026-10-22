@@ -2,7 +2,7 @@
 
 `scripts/build.py` 将固定来源重新解析为 35 个独立输入、Schema20 的 33 个 core providers 和统一 Research 索引。它不使用已部署数据库，不复制历史验收凭据，也不生成全游戏覆盖声明。
 
-历史完整执行结果见 [完整重建实验](../history/full-rebuild.md)。工程整改后的实际验证范围见 [工程质量记录](../engineering-quality.md)；历史成功不自动为修改后的构建代码背书。原 14 类基础组件入口和失败记录仍保留，不能代替完整链路的结果。
+历史完整执行结果见 [完整重建实验](../history/full-rebuild.md)。工程整改后的 Linux 完整重建与后续受影响组件验证见 [当前性能记录](../linux-build-performance.md)，此前的整改与未通过范围见 [工程质量记录](../engineering-quality.md)；不同实现和运行的结果分别记录，不沿用历史成功。原 14 类基础组件入口和失败记录仍保留，不能代替完整链路的结果。
 
 ## 输入
 

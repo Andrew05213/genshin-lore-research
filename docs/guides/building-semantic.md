@@ -20,6 +20,17 @@ Windows 使用 `.venv\Scripts\python.exe`；缺少适用 `hnswlib` wheel 时需 
 
 完整命令见 [数据构建指南](building-dataset.md)，默认 `--stage all --model-cache data/model-cache` 包括向量阶段。明确不需要向量时使用 `--without-semantic`；缺模型或依赖会在大型构建前拒绝，而不是静默跳过。
 
+构建按文本字符长度稳定组批，减少无效 padding；写回时恢复原物理 vector ID，HNSW 仍按原顺序、单线程插入。相同文本不合并，来源窗口、模型和证据资格不改变。Linux 默认使用进程 CPU affinity 可见范围内最多 4 个 ONNX 线程，其他平台保持 2 个；CPU quota 较紧或需减少占用时可显式设置，例如：
+
+```sh
+.venv/bin/python scripts/build.py --source data/AnimeGameData \
+  --historical-source data/AnimeGameData-history --output-root data/rebuilt \
+  --model-cache data/model-cache --available-allocated-bytes HEADROOM_BYTES \
+  --stage all --embedding-threads 2
+```
+
+该参数只控制构建，必须为正整数；不改变日常查询的线程预算。实际线程、组批策略和 embedding/ANN 耗时记录在 `semantic/build.json` 的 `build_parameters` / `timings_seconds`。构建线程进入恢复身份，不能更改参数后复用旧成功回执。实际测量与完整等价验证见 [Linux 性能记录](../linux-build-performance.md)。
+
 基础数据配置为 `runtime-config.literal.json`，向量配置为 `runtime-config.semantic.json`。两份 profile 与绑定独立，不原地修改基础 profile。向量来源 oracle 和新运行配置 smoke 均通过后，才交付默认 `runtime-config.json`。对已经由**同一实现与输入**验证的基础输出，可显式执行 `--stage semantic`，仍须完整回执与模型参数；保留原 literal 配置，仅在默认指针精确匹配本次基础配置时切换。未知或被修改的默认配置拒绝覆盖；旧代码或损坏/失败回执不能借此恢复。
 
 每个窗口保留原 evidence ref、完整正文 SHA、窗口范围和窗口 SHA。重复字符串不合并物理 occurrence。独立 oracle 从来源索引重新枚举完整选择范围，核对遗漏、顺序、正文坐标、ref、向量及 lexical 行集，不只信任构建报告自己的计数。
