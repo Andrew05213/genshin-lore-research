@@ -38,8 +38,8 @@ class CodexDialogue:
                 raise ValueError('Codex source bytes SHA drift')
             if raw['raw_sha256'] != parent['source_file_sha256']:
                 raise ValueError('Codex source identity differs from qualified index')
-            self.roots[identity] = json.loads(data)
-        return self.roots[identity]
+            self.roots[identity] = (json.loads(data), raw['shape'])
+        return self.roots[identity][0]
 
     def child(self, parent, child):
         raw = child['raw_json']
@@ -57,7 +57,7 @@ class CodexDialogue:
         if slot is None or slot['root_id'] != parent['occurrence_id']:
             raise ValueError('Codex text slot escaped its physical root')
         atom = at_pointer(self.root(parent), slot['source_pointer'])
-        shape = SHAPES.get(self.context._physical(parent)['shape'])
+        shape = SHAPES.get(self.roots[(parent['source_key'], parent['occurrence_id'])][1])
         hash_key = shape['locator_hash'] if shape else 'textId'
         label_key = shape['locator_label'] if shape else 'DFKLAEHPOBE'
         if (not isinstance(atom, dict) or str(atom.get(hash_key)) != slot['raw_hash']
