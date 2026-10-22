@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .loading_tips_source import pairs, sha
+from .sealed_sqlite import open_immutable_readonly
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,9 +55,15 @@ def _rows(conn: sqlite3.Connection, table: str) -> list[tuple]:
 
 
 def _open(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True)
-    conn.execute("PRAGMA query_only=ON")
-    return conn
+    return open_immutable_readonly(path)
+
+
+def _candidate_rows_by_relation(conn):
+    """Independently load actual rows, never builder-produced expectations."""
+    grouped = defaultdict(list)
+    for row in conn.execute("SELECT * FROM foundation_candidate ORDER BY id"):
+        grouped[row[1]].append(tuple(row))
+    return grouped
 
 
 def _schema(conn: sqlite3.Connection, kind: str) -> None:
@@ -171,6 +178,7 @@ def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text:
     kinds = {"AvatarExcelConfigData.json": "avatar", "FetterInfoExcelConfigData.json": "fetter_info", "FetterStoryExcelConfigData.json": "story"}
     records, refs, fields, candidates = [], [], [], []
     counts = Counter()
+    candidate_rows = _candidate_rows_by_relation(foundation)
     for basename, kind in kinds.items():
         path = "ExcelBinOutput/" + basename
         for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
@@ -187,7 +195,7 @@ def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text:
                     observed_parents.add(name)
             _eq(observed_parents, set(required_raw), "Lore/Story required raw condition parents")
             if relation:
-                targets = foundation.execute("SELECT target_primary_id FROM foundation_candidate WHERE relation_id=?", (relation[0],)).fetchall()
+                targets = [(row[2],) for row in candidate_rows.get(relation[0], ())]
                 _eq(len(targets), count, "Story owner candidates")
                 candidates.extend((row_id, relation[0], target) for (target,) in targets)
             counts[kind] += 1
@@ -203,6 +211,7 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
     _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text binding")
     path = "ExcelBinOutput/FettersExcelConfigData.json"
     records, refs, fields, avatar_candidates, lut_candidates = [], [], [], [], []
+    candidate_rows = _candidate_rows_by_relation(foundation)
     for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
         avatar = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='source_avatar_id_candidate'", (row_id,)).fetchone()
         lut = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='fetter_voice_slot_candidate'", (row_id,)).fetchone()
@@ -217,7 +226,8 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
                 observed_parents.add(name)
         _eq(observed_parents, {"openConds"}, "Voice required raw open condition parent")
         for relation, destination, column in ((avatar, avatar_candidates, "target_primary_id"), (lut, lut_candidates, "target_lut_id")):
-            targets = foundation.execute(f"SELECT {column} FROM foundation_candidate WHERE relation_id=?", (relation[0],)).fetchall()
+            position = 2 if column == "target_primary_id" else 3
+            targets = [(row[position],) for row in candidate_rows.get(relation[0], ())]
             _eq(len(targets), relation[2], "Voice owner/LUT candidate count")
             destination.extend((row_id, relation[0], target) for (target,) in targets)
     expected_lut = foundation.execute("SELECT l.id,l.source_path,l.object_key,l.object_ordinal,l.pointer,l.voice_slot,k.item_id FROM foundation_voice_lut l JOIN foundation_voice_link k ON k.lut_id=l.id").fetchall()

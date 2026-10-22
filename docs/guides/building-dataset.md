@@ -21,6 +21,10 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 默认含向量的全链路要求至少 27 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建仍为 25 GB。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
 
+Character 构建器与独立 oracle 各自按关系一次读取候选行，保留空集合、多候选及所有物理身份核对；foundation 的独立来源核验仍在每次资格检查时重放。M3/special 的 TextMap 查找可以仅为所需 key 生成 lexical hash，但仍完整解析所有词条，检查类型、重复 key、分隔符与尾随内容；完整物理 TextMap 扫描保持原行为。
+
+部分独立 oracle 和 Character 已封存输入使用有界 SQLite mmap，只作用于 `mode=ro&immutable=1` 的只读连接，上限为每库 2 GiB，并继续执行完整性、外键、来源行集和字节 seal 核验。存在 WAL、SHM 或 journal 时拒绝读取并保留现场。SQLite 可以按平台限制缩小或禁用映射，普通读取仍执行相同核验。写入、VACUUM 和发布使用原有连接；Windows 下不对仍需截断或替换的数据库启用此读取方式。
+
 ## 构建
 
 先运行无游戏数据测试，再执行高成本完整构建：

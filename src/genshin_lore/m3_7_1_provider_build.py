@@ -86,7 +86,7 @@ def _candidate_map(raw_files: dict[str, bytes], family: dict, hashes: set[str]) 
         locale = next((value for value in LOCALES if suffix.endswith(value + ".json")), None)
         if locale is None:
             raise ValueError("unknown TextMap locale: " + relative)
-        for item in iter_textmap_pairs(raw_files[relative]):
+        for item in iter_textmap_pairs(raw_files[relative], wanted_keys=hashes):
             if item.key_text in hashes:
                 matched[(locale, item.key_text)].append((
                     tier, relative, item.pair_ordinal, "/", item.pointer,

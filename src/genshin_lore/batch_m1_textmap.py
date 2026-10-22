@@ -95,8 +95,12 @@ def _pointer(ordinal: int, key: str) -> str:
     return f"/@{ordinal}:{escaped}"
 
 
-def iter_textmap_pairs(raw: bytes) -> Iterator[PairOccurrence]:
-    """Yield top-level object pairs while retaining exact JSON token spelling."""
+def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | None = None) -> Iterator[PairOccurrence]:
+    """Validate every pair; optionally materialize only selected lexical rows.
+
+    Selection never short-circuits parsing, type/duplicate checks or EOF.
+    With no selection the complete physical rowset is unchanged.
+    """
 
     try:
         text = raw.decode("utf-8-sig")
@@ -136,18 +140,19 @@ def iter_textmap_pairs(raw: bytes) -> Iterator[PairOccurrence]:
         if not isinstance(value, str):
             raise BatchM1Error(f"TextMap value {ordinal} is not a string")
         raw_text_json = text[value_start:value_end]
-        raw_record = f'{{"key":{raw_key_json},"text":{raw_text_json}}}'
-        yield PairOccurrence(
-            pair_ordinal=ordinal,
-            pointer=_pointer(ordinal, key),
-            raw_key_json=raw_key_json,
-            key_text=key,
-            raw_text_json=raw_text_json,
-            raw_text=value,
-            raw_key_sha256=sha256_text(raw_key_json),
-            raw_text_sha256=sha256_text(raw_text_json),
-            raw_record_sha256=sha256_text(raw_record),
-        )
+        if wanted_keys is None or key in wanted_keys:
+            raw_record = f'{{"key":{raw_key_json},"text":{raw_text_json}}}'
+            yield PairOccurrence(
+                pair_ordinal=ordinal,
+                pointer=_pointer(ordinal, key),
+                raw_key_json=raw_key_json,
+                key_text=key,
+                raw_text_json=raw_text_json,
+                raw_text=value,
+                raw_key_sha256=sha256_text(raw_key_json),
+                raw_text_sha256=sha256_text(raw_text_json),
+                raw_record_sha256=sha256_text(raw_record),
+            )
         if key in seen:
             raise BatchM1Error(f"duplicate TextMap key observed at pair {ordinal}: {key!r}")
         seen.add(key)

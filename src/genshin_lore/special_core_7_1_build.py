@@ -81,7 +81,7 @@ def _textmap(files: dict[str, bytes], paths: list[str], wanted: set[str]) -> dic
         locale = next((item for item in LOCALES if path.endswith(item + ".json")), None)
         if locale is None:
             raise ValueError("unrecognized TextMap shard " + path)
-        for pair in iter_textmap_pairs(files[path]):
+        for pair in iter_textmap_pairs(files[path], wanted_keys=wanted):
             if pair.key_text in wanted:
                 found[(locale, pair.key_text)].append((
                     path, tier, pair.pair_ordinal, pair.pointer, pair.raw_key_json,

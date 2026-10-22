@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .loading_tips_source import pairs, sha
+from .sealed_sqlite import open_immutable_readonly
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,9 +59,15 @@ def _seal(conn: sqlite3.Connection, kind: str) -> None:
 
 
 def _readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True)
-    conn.execute("PRAGMA query_only=ON")
-    return conn
+    return open_immutable_readonly(path)
+
+
+def _candidate_rows_by_relation(conn):
+    """Retain every physical candidate and its original ID ordering."""
+    grouped = defaultdict(list)
+    for row in conn.execute("SELECT * FROM foundation_candidate ORDER BY id"):
+        grouped[row[1]].append(tuple(row))
+    return grouped
 
 
 def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
@@ -258,6 +265,7 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
         conn = _output("lore", output)
         owned = (output.stat().st_dev, output.stat().st_ino)
         counts = Counter()
+        candidate_rows = _candidate_rows_by_relation(foundation)
         for basename, kind in LORE.items():
             path = "ExcelBinOutput/" + basename
             for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
@@ -276,7 +284,7 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
                         raise ValueError("Lore/Story raw condition parent missing")
                     conn.executemany("INSERT INTO lore_raw_field_ref VALUES(?,?,?,?,?,?,?)", ((row_id, *field) for field in fields))
                 if rel:
-                    candidates = foundation.execute("SELECT target_primary_id FROM foundation_candidate WHERE relation_id=? ORDER BY id", (rel[0],)).fetchall()
+                    candidates = [(row[2],) for row in candidate_rows.get(rel[0], ())]
                     if len(candidates) != candidate_count:
                         raise ValueError("lore ownership candidate count")
                     conn.executemany("INSERT INTO lore_avatar_candidate VALUES(?,?,?)", ((row_id, rel[0], target) for (target,) in candidates))
@@ -309,6 +317,7 @@ def build_voice(foundation_path: str | Path, text_path: str | Path, output_path:
     try:
         conn = _output("voice", output)
         owned = (output.stat().st_dev, output.stat().st_ino)
+        candidate_rows = _candidate_rows_by_relation(foundation)
         for row_id, path, ordinal, pointer in foundation.execute("SELECT id,source_path,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (VOICE,)):
             avatar_rel = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='source_avatar_id_candidate'", (row_id,)).fetchone()
             lut_rel = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='fetter_voice_slot_candidate'", (row_id,)).fetchone()
@@ -324,7 +333,8 @@ def build_voice(foundation_path: str | Path, text_path: str | Path, output_path:
                 raise ValueError("Voice raw open condition parent missing")
             conn.executemany("INSERT INTO voice_raw_field_ref VALUES(?,?,?,?,?,?,?)", ((row_id, *field) for field in fields))
             for relation, table, target in ((avatar_rel, "voice_avatar_candidate", "target_primary_id"), (lut_rel, "voice_lut_candidate", "target_lut_id")):
-                candidates = foundation.execute(f"SELECT {target} FROM foundation_candidate WHERE relation_id=? ORDER BY id", (relation[0],)).fetchall()
+                column = 2 if target == "target_primary_id" else 3
+                candidates = [(row[column],) for row in candidate_rows.get(relation[0], ())]
                 if len(candidates) != relation[2]:
                     raise ValueError("Voice candidate count")
                 conn.executemany(f"INSERT INTO {table} VALUES(?,?,?)", ((row_id, relation[0], target_id) for (target_id,) in candidates))
