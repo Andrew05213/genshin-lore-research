@@ -50,6 +50,16 @@ tool_timeout_sec = 60
 
 已存在的 `scripts/serve.py`、query/inspect 便利接口及 Book/Story 续读保持兼容。此扩展没有更换 semantic 模型、重建索引或扩大数据覆盖。
 
+## 按人物查任务档案中的发言
+
+以姓名关键词搜索，选返回的 NPC 或其姓名 ref，调用 `read_evidence(view="dialogue", locale="CHS", limit=...)`。该读取视图使用已有 CodexQuest 的 `SpeakerKnown` 来源标注，分页返回同物理节点中的正文、姓名、任务/片段标题及前后各一个来源节点。每条材料保留原 exact ref、proof 和 provenance；选择正文 ref 再以同一 view 读取，可继续该物理片段。
+
+这里不是对全文中“提到姓名”的简单搜索，也不是按相同 ID 推断说话者。跨 NPC 与档案的相同姓名仅用来发现候选；每条结果显示同节点来源标注，以及新 wrapper 的未证明角色状态。不同 NPC 物理记录、同文的不同档案版本均不自动合并。
+
+此路径只枚举已索引 CodexQuest 中该 locale 的明确姓名标注，不承诺全部 NPC 发言。DialogExcel 的明确 `talkRole` 路径继续通过既有 follow/read 使用；匿名、别名及未映射来源不由此补齐。`scope_complete` 仅指本次来源姓名匹配范围分页结束，不是角色全台词或游戏 corpus 完整。
+
+正文位于 `nodes[].texts`，来源姓名位于 `speaker.names`，可读标题与前后文位于 `source_context`。前后文是同一物理 section 数组的顺序，不证明播放顺序、分支顺序或剧情时间。标题、姓名、正文均可分别 read/inspect，不用路径或节点编号代替引用。
+
 ## 从搜索到阅读
 
 1. 以主体或线索关键词搜索；按 discovery 声明的类型缩小范围。名称、家具说明和任务描述命中不自动成为对白。
