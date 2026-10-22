@@ -37,7 +37,7 @@ tool_timeout_sec = 60
 
 保留 release 模式通过独立脚本进程启动；不支持在已经导入另一版本 `genshin_lore` 的 Python 进程中混载。这样避免 Python 模块缓存把指定代码根换成另一份实现。
 
-项目日常启动器可复用 `scripts/dialogue_daily.py` 的命令 handoff。在本地 `research-daily.json` 设置绝对路径 `dialogue_runtime_root` 后，调用 `settings(project, config_path, overrides)`，或以 `capture_wrapper` 包装已有 capture。它只替换五工具服务器的启动命令，保留原问题、resume 参数、引用回执目录和原 renderer，不替换 task 便利服务器。`dialogue_runtime.py` 同时接受既有 `GENSHIN_CITATION_HANDOFF_DIR` 环境配置。配置与备份留在部署环境，不提交个人路径。
+项目日常启动器可复用 `scripts/dialogue_daily.py` 的命令 handoff。在本地 `research-daily.json` 设置绝对路径 `dialogue_runtime_root` 后，调用 `settings(project, config_path, overrides)`，或以 `capture_wrapper` 包装已有 capture。它只替换五工具服务器的启动命令，保留原问题、resume 参数、引用回执目录和原 renderer，不替换 task 便利服务器。`scripts/serve_dialogue.py` 同时接受既有 `GENSHIN_CITATION_HANDOFF_DIR` 环境配置。配置与备份留在部署环境，不提交个人路径。
 
 当前日常集成不组合旧 compact-context 传输实验；请求两者时明确拒绝，不悄悄改用旧阅读路径。恢复原入口时还原项目 MCP 参数，并移除本地 `dialogue_runtime_root`；不要改数据库或发布 receipt。
 
@@ -80,8 +80,8 @@ tool_timeout_sec = 60
 - DialogExcel 与 BinOutput/Talk 是不同来源命名空间。没有明确跨源链接时，任务归属保持未解析，不按相同 ID 或台词拼接。
 - Quest/Talk 当前投影没有正式的 speaker decoder；扩展不猜说话者。阅读卡目前不解析场景名，`scene_display_name` 为空；这不表示来源完全没有标题字段，Dialog 的 `talkTitleTextMapHash` 尚未在本扩展展示。
 - Dialog 展开明确的 `nextDialogs`；Talk 仅沿已投影、同物理容器的 local successors 展开。外部候选和 dangling 保留在边信息，不自动跨容器追踪。
-- 读取视图采用广度优先遍历，保留各边的位置与分支，遇到循环不重复节点。该展示顺序不是游戏播放顺序或叙事时间顺序。
-- 每页限制 80,000 序列化字节，连续视图最多访问 128 个节点。达到限制时明确 partial；仍可选择已返回的分支 ref 单独读取。超大单节点明确拒绝，不偷偷截断原文。
+- Dialog/Talk 图读取采用广度优先遍历，保留各边的位置与分支，遇到循环不重复节点。Codex 读取则沿已声明的姓名 occurrence 或同物理 section 分页；这些展示顺序均不是游戏播放顺序或叙事时间顺序。
+- 每页限制 80,000 序列化字节，Dialog/Talk 连续图视图最多访问 128 个节点。达到限制时明确 partial；仍可选择已返回的分支 ref 单独读取。超大单节点明确拒绝，不偷偷截断原文。
 - `reachable_local_graph_exhausted` 只表示当前可达局部图已遍历；不表示整个任务、其他分支来源或全 corpus 完整。
 
 ## 回答与引用
