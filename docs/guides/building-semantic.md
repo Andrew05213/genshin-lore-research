@@ -14,6 +14,8 @@
 
 使用 multilingual MiniLM、384 维 float32、cosine HNSW，沿用 400 字符窗口、360 字符步长及既有高价值 CHS 字段选择。名称/标题另建 lexical 索引。范围见 [静态选择配方](../../recipes/semantic-input.json)，不为 ID、hash、纯玩法配置构建全文语义。
 
+推理按窗口长度稳定组批，减少同批短文本的 padding，batch size 保持 64、模型线程保持 2。向量写回原 vector ID，ANN 仍按原 ID 顺序构建，物理 occurrence 不去重；来源选区、模型及 ANN 参数不变。`build.json` 的 `timings_seconds` 分别记录 selection、embedding、ANN 和 lexical 构建耗时。优化后的向量 SHA 和 ANN seal 仍须实测，不根据组批策略推断逐字节相同。
+
 Windows 使用 `.venv\Scripts\python.exe`；缺少适用 `hnswlib` wheel 时需 MSVC C++ Build Tools。离线环境可提前取得相同模型文件，但必须通过同一逐文件/目录核验。
 
 hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使用 ASCII 临时路径，Python 负责中文路径的文件读写；不改变二进制格式或向量核验。系统临时路径含非 ASCII 字符时尝试 Windows 短路径；没有可用 ASCII 别名则明确失败，不修改代码页或进程工作目录。保存先核对原生预期字节数，再刷盘并排他发布；失败的私有文件保留，计入项目临时空间。临时卷还须容纳一个 ANN 文件副本。

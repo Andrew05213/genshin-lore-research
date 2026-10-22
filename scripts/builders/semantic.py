@@ -31,6 +31,15 @@ def windows(text, size=400, stride=360):
             break
 
 
+def embedding_batches(texts, batch_size=64):
+    """Reduce padding while retaining each window's original vector ID."""
+    if batch_size <= 0:
+        raise ValueError("embedding batch size must be positive")
+    order = sorted(range(len(texts)), key=lambda i: (len(texts[i]), i))
+    for start in range(0, len(order), batch_size):
+        yield order[start : start + batch_size]
+
+
 def selected_rows(db, scope):
     for key, fields in sorted(scope["source_fields"].items()):
         sql = "SELECT * FROM research_text WHERE source_key=? AND locale=? AND length(raw_text)>=?"
@@ -160,6 +169,7 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
     n = len(inputs)
     if not n:
         raise ValueError("empty narrative input")
+    selected_at = time.perf_counter()
     print(
         json.dumps(
             {"stage": "selection", "physical": physical, "vectors": n, "counts": counts}
@@ -176,28 +186,26 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
         local_files_only=True,
         threads=2,
     )
-    ann = hnswlib.Index(space="cosine", dim=384)
-    ann.init_index(max_elements=n, ef_construction=80, M=12, random_seed=100)
-    ann.set_num_threads(1)
-    for start in range(0, n, 64):
+    done = 0
+    for batch_number, ids in enumerate(embedding_batches(inputs)):
         batch = np.asarray(
-            list(model.embed(inputs[start : start + 64], batch_size=64)),
+            list(model.embed([inputs[i] for i in ids], batch_size=64)),
             dtype=np.float32,
         )
-        if batch.shape != (min(64, n - start), 384) or not np.all(np.isfinite(batch)):
+        if batch.shape != (len(ids), 384) or not np.all(np.isfinite(batch)):
             raise ValueError("embedding shape/finite violation")
         norms = np.linalg.norm(batch, axis=1)
         if np.any(norms <= 0):
             raise ValueError("zero vector")
         batch = batch / norms[:, None]
-        vectors[start : start + len(batch)] = batch
-        ann.add_items(batch, np.arange(start, start + len(batch)))
-        if start % 2048 == 0:
+        vectors[ids] = batch
+        done += len(batch)
+        if batch_number % 32 == 0:
             print(
                 json.dumps(
                     {
                         "stage": "embedding",
-                        "done": start + len(batch),
+                        "done": done,
                         "total": n,
                         "seconds": time.perf_counter() - started,
                     }
@@ -205,8 +213,19 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
                 flush=True,
             )
     vectors.flush()
+    embedded_at = time.perf_counter()
+    del model
+    # HNSW construction depends on insertion order. Only inference is sorted;
+    # source mapping and ANN insertion both keep the original vector ID order.
+    ann = hnswlib.Index(space="cosine", dim=384)
+    ann.init_index(max_elements=n, ef_construction=80, M=12, random_seed=100)
+    ann.set_num_threads(1)
+    for start in range(0, n, 64):
+        end = min(start + 64, n)
+        ann.add_items(vectors[start:end], np.arange(start, end))
     del vectors
     save_index(ann, output / "index.hnsw")
+    indexed_at = time.perf_counter()
     selection = hashlib.sha256(scope_path.read_bytes()).hexdigest()
     meta.execute(
         "INSERT INTO semantic_release VALUES(1,?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -230,9 +249,11 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
         raise ValueError("metadata integrity")
     meta.close()
     db.close()
+    lexicon_started = time.perf_counter()
     lex = build_lexicon(
         index, output / "lexicon.sqlite", scope["corpus_ref"], scope["index_sha256"]
     )
+    lexicon_finished = time.perf_counter()
     lex["anchor_extraction_version"] = lex.pop("extraction_version")
     lex["sha256"] = sha256_file(output / "lexicon.sqlite")
     config = {
@@ -279,6 +300,13 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
             x: version(x) for x in ["fastembed", "onnxruntime", "numpy", "hnswlib"]
         },
         "hnsw_parameters": {"M": 12, "ef_construction": 80, "seed": 100, "threads": 1},
+        "embedding_batching": {"order": "length_then_vector_id", "batch_size": 64},
+        "timings_seconds": {
+            "selection": selected_at - started,
+            "embedding": embedded_at - selected_at,
+            "ann": indexed_at - embedded_at,
+            "lexicon": lexicon_finished - lexicon_started,
+        },
         "scope_sha256": selection,
     }
     (output / "build.json").write_text(
