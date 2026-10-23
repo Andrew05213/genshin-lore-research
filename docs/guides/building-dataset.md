@@ -27,6 +27,10 @@ Character 构建器与独立 oracle 各自按关系一次读取候选行，保�
 
 Research 的适用父项和正文投影使用流式 `executemany`，按原顺序逐行消费来源，不累积整表待写列表；父项查询按最多 512 个来源行分批。每次批量写入完成后才检查 coverage 或运行后续投影，全部物理身份、候选、SQLite 约束和完整独立 oracle 保留。512 行限制不是进程总内存上限，单行正文大小仍影响内存。构建报告的 `phase_seconds` 分别记录投影、FTS、独立 oracle、压缩和发布耗时，`component_seconds` 记录各输入的投影及 seal 检查耗时。
 
+Research 在目标目录创建独占的 `.research-*.sqlite` 私有磁盘库；SQLite 主缓存为 16 MiB、临时库缓存为 8 MiB，关闭写库 mmap，临时工作使用文件。主库 `max_page_count` 根据本阶段剩余额度限制，为两个数据库镜像和 16 MiB reserve 留出压缩空间；压缩前再次核对页数及输出/系统临时卷空闲。保留原 `journal_mode=OFF` 与 `synchronous=FULL`，不引入未计入预算的全库回滚镜像。这些是 SQLite 缓存和页数限制，不是整个 Python 进程或独立 oracle 的 RAM 上限，仍需监测实际资源。
+
+投影边界、FTS、oracle、VACUUM 和发布事件逐条刷盘到 `index-oracles/index-staging-*.jsonl`。完整 oracle 首次返回后立即持久化；旧 `index-memory-oracle-*.json` 文件名保留兼容，但现在核验的是磁盘 staging。必需 VACUUM 完成后，再执行同一完整独立 oracle，将结果刷盘到 `index-post-vacuum-oracle-*.json`，关闭连接并刷盘后才以禁止覆盖的重命名发布。失败时保留已创建的私有/已发布数据库、现存 sidecar 和诊断，不以删除现场回滚；SQLite 关闭连接仍可能回滚未提交事务，失败字节不自动具备恢复或查询资格。
+
 ## 构建
 
 先运行无游戏数据测试，再执行高成本完整构建：

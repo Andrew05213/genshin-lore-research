@@ -1228,7 +1228,7 @@ class Rebuild:
             lambda p: builder.build(
                 manifest, bindings, p, remaining, corpus_path=cp, reports_dir=reports
             ),
-            lambda p, r: load(reports / ("index-memory-oracle-" + p.stem + ".json")),
+            lambda p, r: load(reports / ("index-post-vacuum-oracle-" + p.stem + ".json")),
             inputs=self.dependency_inputs(
                 *[p.parent.name for p in map(Path, bindings["artifacts"].values())]
             )
