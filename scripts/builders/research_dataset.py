@@ -199,6 +199,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
     reports_dir = Path(reports_dir)
     reports_dir.mkdir(parents=True, exist_ok=True)
     started=time.perf_counter()
+    phase_seconds={};component_seconds={}
     if output.exists() or any(Path(str(output)+s).exists() for s in ("-wal","-shm","-journal")):
         raise FileExistsError(output)
     prov=source(Path(bindings["provenance_artifact"]));r0={str(p):(str(s),None) for p,s in prov.execute("SELECT relative_path,source_sha256 FROM source_file")};prov.close()
@@ -206,7 +207,9 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
     # staging peak. Exact page size is known before exclusive publication.
     out=sqlite3.connect(':memory:');out.row_factory=sqlite3.Row;out.executescript(old.SCHEMA);out.execute('PRAGMA temp_store=MEMORY');cs=ts=rs=ks=0
     try:
+        phase_started=time.perf_counter()
         for c in manifest["components"]:
+            component_started=time.perf_counter()
             key=c["source_key"];path=Path(bindings["artifacts"][key]);seal=c["artifact"]
             if path.stat().st_size!=seal["size_bytes"] or old.sha256_file(path)!=seal["sha256"] or any(Path(str(path)+s).exists() for s in ("-wal","-shm","-journal")):
                 raise ValueError("candidate source seal/sidecar drift: "+key)
@@ -217,19 +220,27 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
             finally:
                 src.close()
             out.commit();print(key,cs,ts,rs,ks,flush=True)
+            component_seconds[key]=time.perf_counter()-component_started
+        phase_seconds['projection_with_input_seal_checks']=time.perf_counter()-phase_started
+        phase_started=time.perf_counter()
         out.execute("INSERT INTO research_text_fts(rowid,raw_text) SELECT id,raw_text FROM research_text")
         out.execute("INSERT INTO research_text_fts(research_text_fts,rank) VALUES('integrity-check',1)")
         out.execute("INSERT INTO corpus_release VALUES(1,?,?,?,?,?,?,?,?,?)",(old.sha256_file(corpus_path),manifest["corpus_ref"],"research-explicit-adapters-v2","deterministic-no-wall-clock",len(manifest["components"]),cs,ts,rs,ks));out.commit()
+        phase_seconds['fts_integrity_and_release']=time.perf_counter()-phase_started
         # The independent oracle consumes the complete rowset even when disk
         # retention is blocked. It imports no projection functions from here.
         import runpy
         oracle = runpy.run_path(str(ROOT/'scripts/validators/research_dataset.py'))['verify_connection']
         print('independent complete source oracle starting',flush=True)
+        phase_started=time.perf_counter()
         oracle_result = oracle(out,manifest,bindings)
+        phase_seconds['independent_source_oracle']=time.perf_counter()-phase_started
         before_compaction=out.execute('PRAGMA page_count').fetchone()[0]*out.execute('PRAGMA page_size').fetchone()[0]
         # Standard SQLite compaction changes neither schema nor row identity.
         # The temporary image stays in RAM, not in a second on-disk index.
+        phase_started=time.perf_counter()
         out.execute('VACUUM')
+        phase_seconds['vacuum']=time.perf_counter()-phase_started
         exact_bytes=out.execute('PRAGMA page_count').fetchone()[0]*out.execute('PRAGMA page_size').fetchone()[0]
         write(reports_dir/f"index-memory-oracle-{output.stem}.json",oracle_result)
         capacity={'index_before_compaction_bytes':before_compaction,'index_after_compaction_bytes':exact_bytes,'available_allocated_bytes':available_allocated_bytes,'publication_reserve_bytes':16*1024**2,'fits':exact_bytes+16*1024**2<=available_allocated_bytes,'memory_only_before_gate':True}
@@ -237,6 +248,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         if exact_bytes+16*1024**2>available_allocated_bytes:
             raise RuntimeError(f'hard storage gate: index {exact_bytes} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
         import os
+        phase_started=time.perf_counter()
         fd=os.open(output,os.O_CREAT|os.O_EXCL|os.O_RDWR,0o600);os.close(fd)
         target = None
         try:
@@ -245,10 +257,11 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         finally:
             if target is not None:
                 target.close()
+        phase_seconds['exclusive_publication']=time.perf_counter()-phase_started
     except Exception:
         out.close();raise
     out.close()
-    return {"status":"BUILT_AWAITING_INDEPENDENT_ORACLE","corpus_ref":manifest["corpus_ref"],"size_bytes":output.stat().st_size,"sha256":old.sha256_file(output),"container_rows":cs,"text_rows":ts,"relation_rows":rs,"candidate_rows":ks,"seconds":time.perf_counter()-started}
+    return {"status":"BUILT_AWAITING_INDEPENDENT_ORACLE","corpus_ref":manifest["corpus_ref"],"size_bytes":output.stat().st_size,"sha256":old.sha256_file(output),"container_rows":cs,"text_rows":ts,"relation_rows":rs,"candidate_rows":ks,"phase_seconds":phase_seconds,"component_seconds":component_seconds,"seconds":time.perf_counter()-started}
 
 
 def main():

@@ -25,6 +25,8 @@ Character 构建器与独立 oracle 各自按关系一次读取候选行，保�
 
 部分独立 oracle 和 Character 已封存输入使用有界 SQLite mmap，只作用于 `mode=ro&immutable=1` 的只读连接，上限为每库 2 GiB，并继续执行完整性、外键、来源行集和字节 seal 核验。存在 WAL、SHM 或 journal 时拒绝读取并保留现场。SQLite 可以按平台限制缩小或禁用映射，普通读取仍执行相同核验。写入、VACUUM 和发布使用原有连接；Windows 下不对仍需截断或替换的数据库启用此读取方式。
 
+Research 的适用父项和正文投影使用流式 `executemany`，按原顺序逐行消费来源，不累积整表待写列表；父项查询按最多 512 个来源行分批。每次批量写入完成后才检查 coverage 或运行后续投影，全部物理身份、候选、SQLite 约束和完整独立 oracle 保留。512 行限制不是进程总内存上限，单行正文大小仍影响内存。构建报告的 `phase_seconds` 分别记录投影、FTS、独立 oracle、压缩和发布耗时，`component_seconds` 记录各输入的投影及 seal 检查耗时。
+
 ## 构建
 
 先运行无游戏数据测试，再执行高成本完整构建：

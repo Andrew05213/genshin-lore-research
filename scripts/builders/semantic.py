@@ -40,6 +40,43 @@ def embedding_batches(texts, batch_size=64):
         yield order[start : start + batch_size]
 
 
+def embed_windows(model, texts, vectors, *, batch_size=64, progress=None):
+    """Infer exact text once in this call; retain every physical vector row.
+
+    Groups store only text references and original IDs. Normalized vectors are
+    scattered directly into the output, so no additional full vector cache is
+    needed. String equality, rather than a digest or source identity, decides
+    reuse. Nothing is retained across builds.
+    """
+    occurrences = {}
+    for vector_id, text in enumerate(texts):
+        occurrences.setdefault(text, []).append(vector_id)
+    unique_texts = list(occurrences)
+    done = inferred = 0
+    for batch_number, ids in enumerate(embedding_batches(unique_texts, batch_size)):
+        batch = np.asarray(
+            list(model.embed([unique_texts[i] for i in ids], batch_size=batch_size)),
+            dtype=np.float32,
+        )
+        if batch.shape != (len(ids), 384) or not np.all(np.isfinite(batch)):
+            raise ValueError("embedding shape/finite violation")
+        norms = np.linalg.norm(batch, axis=1)
+        if np.any(norms <= 0):
+            raise ValueError("zero vector")
+        batch = batch / norms[:, None]
+        for unique_id, vector in zip(ids, batch):
+            original_ids = occurrences[unique_texts[unique_id]]
+            vectors[original_ids] = vector
+            done += len(original_ids)
+        inferred += len(batch)
+        if progress is not None:
+            progress(batch_number, done, inferred, len(unique_texts))
+    return {
+        "unique_inference_windows": len(unique_texts),
+        "reused_occurrence_windows": len(texts) - len(unique_texts),
+    }
+
+
 def selected_rows(db, scope):
     for key, fields in sorted(scope["source_fields"].items()):
         sql = "SELECT * FROM research_text WHERE source_key=? AND locale=? AND length(raw_text)>=?"
@@ -186,20 +223,7 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
         local_files_only=True,
         threads=2,
     )
-    done = 0
-    for batch_number, ids in enumerate(embedding_batches(inputs)):
-        batch = np.asarray(
-            list(model.embed([inputs[i] for i in ids], batch_size=64)),
-            dtype=np.float32,
-        )
-        if batch.shape != (len(ids), 384) or not np.all(np.isfinite(batch)):
-            raise ValueError("embedding shape/finite violation")
-        norms = np.linalg.norm(batch, axis=1)
-        if np.any(norms <= 0):
-            raise ValueError("zero vector")
-        batch = batch / norms[:, None]
-        vectors[ids] = batch
-        done += len(batch)
+    def progress(batch_number, done, inferred, unique):
         if batch_number % 32 == 0:
             print(
                 json.dumps(
@@ -207,11 +231,14 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
                         "stage": "embedding",
                         "done": done,
                         "total": n,
+                        "inferred": inferred,
+                        "unique_inference_windows": unique,
                         "seconds": time.perf_counter() - started,
                     }
                 ),
                 flush=True,
             )
+    inference = embed_windows(model, inputs, vectors, progress=progress)
     vectors.flush()
     embedded_at = time.perf_counter()
     del model
@@ -300,7 +327,12 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes):
             x: version(x) for x in ["fastembed", "onnxruntime", "numpy", "hnswlib"]
         },
         "hnsw_parameters": {"M": 12, "ef_construction": 80, "seed": 100, "threads": 1},
-        "embedding_batching": {"order": "length_then_vector_id", "batch_size": 64},
+        "embedding_batching": {
+            "order": "length_then_first_vector_id",
+            "batch_size": 64,
+            "reuse": "exact_text_within_current_build",
+            **inference,
+        },
         "timings_seconds": {
             "selection": selected_at - started,
             "embedding": embedded_at - selected_at,

@@ -16,6 +16,8 @@
 
 推理按窗口长度稳定组批，减少同批短文本的 padding，batch size 保持 64、模型线程保持 2。向量写回原 vector ID，ANN 仍按原 ID 顺序构建，物理 occurrence 不去重；来源选区、模型及 ANN 参数不变。`build.json` 的 `timings_seconds` 分别记录 selection、embedding、ANN 和 lexical 构建耗时。优化后的向量 SHA 和 ANN seal 仍须实测，不根据组批策略推断逐字节相同。
 
+同一次构建中，逐字相同的窗口只推理一次，归一化后分别写入每个原始 vector ID；匹配使用完整字符串相等，不仅比较 hash。所有来源身份、物理窗口和 metadata 行分别保留，复用集合不跨构建保存。`embedding_batching` 记录 `unique_inference_windows` 和 `reused_occurrence_windows`；这些计数描述计算复用，不表示物理证据被合并。独立 oracle 仍枚举并核对全部窗口。
+
 Windows 使用 `.venv\Scripts\python.exe`；缺少适用 `hnswlib` wheel 时需 MSVC C++ Build Tools。离线环境可提前取得相同模型文件，但必须通过同一逐文件/目录核验。
 
 hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使用 ASCII 临时路径，Python 负责中文路径的文件读写；不改变二进制格式或向量核验。系统临时路径含非 ASCII 字符时尝试 Windows 短路径；没有可用 ASCII 别名则明确失败，不修改代码页或进程工作目录。保存先核对原生预期字节数，再刷盘并排他发布；失败的私有文件保留，计入项目临时空间。临时卷还须容纳一个 ANN 文件副本。

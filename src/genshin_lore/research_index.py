@@ -1,6 +1,7 @@
 """Deterministic explicit-adapter research projection over accepted evidence."""
 from __future__ import annotations
 import hashlib,json,sqlite3,time
+from itertools import islice
 from pathlib import Path
 from typing import Any
 from .research_adapters import CONTAINER_ONLY,DIRECT_TEXT,RELATIONS,ROW_FAMILIES,CORE_PROJECTED_PREFIXES,CORE_SPECIAL,QUEST_TALK,UNSUPPORTED_RELATION_TABLES,declared_relation_tables,relation_like_tables
@@ -21,6 +22,23 @@ CREATE TABLE research_candidate(id INTEGER PRIMARY KEY,relation_id INTEGER NOT N
 CREATE INDEX research_candidate_target ON research_candidate(target_family,target_contract,target_run,target_occurrence_id,id);
 '''
 
+
+_CONTAINER_INSERT='insert into research_container values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+_TEXT_INSERT='insert into research_text values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+
+def _with_containers(out,rows,container_id,*,row_limit=512):
+ """Attach exact output parents in bounded reads, preserving source order."""
+ if not 1<=row_limit<=512:raise ValueError('Research parent batch limit must be 1..512')
+ rows=iter(rows)
+ while batch:=list(islice(rows,row_limit)):
+  ids=[container_id(row) for row in batch]
+  unique=tuple(dict.fromkeys(ids))
+  parents={row['id']:row for row in out.execute(
+   'SELECT * FROM research_container WHERE id IN ('+','.join('?' for _ in unique)+')',unique)}
+  missing=set(unique)-parents.keys()
+  if missing:raise ValueError('Research text parent container missing: '+','.join(map(str,sorted(missing))))
+  for row,cid in zip(batch,ids):yield row,parents[cid]
+
 def sha256_file(path:Path)->str:
  h=hashlib.sha256()
  with path.open('rb') as f:
@@ -36,10 +54,18 @@ def _prov(db,r0,path,sha=None,blob=None):
 def _identity(c,row=None):
  if row is not None and all(k in row.keys() for k in ('family','family_contract_version','parser_build_id','ingest_run_id')):return tuple(str(row[k]) for k in ('family','family_contract_version','parser_build_id','ingest_run_id'))
  return c['family'],c['contract'],c['parser'],c['run']
-def _container(out,n,key,adapter,ident,occ,kind,table,pk,path,ptr,sha,blob,ordinal=None,basis=None,pkcol='id'):
- out.execute('insert into research_container values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(n,key,adapter,*ident,str(occ),str(kind),table,pkcol,str(pk),str(path or ''),str(ptr or '/'),sha,blob,ordinal,basis));return n
-def _text(out,n,cid,key,adapter,ident,occ,ckind,child,table,pk,locale,owner,ordinal,ptr,path,tptr,sha,blob,pair,raw,pkcol='id'):
- raw=str(raw);out.execute('insert into research_text values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(n,cid,key,adapter,*ident,str(occ),ckind,str(child),table,pkcol,str(pk),'raw_text',locale,owner,ordinal,str(ptr or tptr or ''),str(path or ''),str(tptr or ''),sha,blob,pair,raw,hashlib.sha256(raw.encode()).hexdigest()));return n
+def _container_values(n,key,adapter,ident,occ,kind,table,pk,path,ptr,sha,blob,ordinal=None,basis=None,pkcol='id'):
+ return (n,key,adapter,*ident,str(occ),str(kind),table,pkcol,str(pk),str(path or ''),str(ptr or '/'),sha,blob,ordinal,basis)
+
+def _container(out,n,*args,**kwargs):
+ out.execute(_CONTAINER_INSERT,_container_values(n,*args,**kwargs));return n
+
+def _text_values(n,cid,key,adapter,ident,occ,ckind,child,table,pk,locale,owner,ordinal,ptr,path,tptr,sha,blob,pair,raw,pkcol='id'):
+ raw=str(raw)
+ return (n,cid,key,adapter,*ident,str(occ),ckind,str(child),table,pkcol,str(pk),'raw_text',locale,owner,ordinal,str(ptr or tptr or ''),str(path or ''),str(tptr or ''),sha,blob,pair,raw,hashlib.sha256(raw.encode()).hexdigest())
+
+def _text(out,n,*args,**kwargs):
+ out.execute(_TEXT_INSERT,_text_values(n,*args,**kwargs));return n
 
 def _component(src,out,key,c,r0,cseq,tseq):
  fam=c['family'];mapping={};tables=_tables(src)
@@ -94,12 +120,16 @@ def _core(src,out,key,c,r0,cseq,tseq):
  def add(table,fixed=None):
   nonlocal cseq
   cols=_cols(src,table);count=0
-  for row in src.execute(f"select * from {table} order by {'occurrence_id' if 'occurrence_id' in cols else 'id'}"):
-   pk=row['occurrence_id'] if 'occurrence_id' in cols else row['id'];ident=fixed or _identity(c,row);path=row['source_file_path'] if 'source_file_path' in cols else None;ptr=row['source_pointer'] if 'source_pointer' in cols else row['source_record_pointer'] if 'source_record_pointer' in cols else '/';sha=blob=None
-   if path is None and 'source_record_id' in cols:
-    q=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone()
-    if q:ptr,path,sha,blob=q
-   sha,blob=_prov(src,r0,path,sha,blob);cseq+=1;count+=1;containers[(table,str(pk))]=_container(out,cseq,key,f'schema20:{table}',ident,pk,table,table,pk,path,ptr,sha,blob,row['source_ordinal'] if 'source_ordinal' in cols else row['row_index'] if 'row_index' in cols else None,'source_ordinal' if 'source_ordinal' in cols else None,'occurrence_id' if 'occurrence_id' in cols else 'id')
+  def parents():
+   nonlocal cseq,count
+   for row in src.execute(f"select * from {table} order by {'occurrence_id' if 'occurrence_id' in cols else 'id'}"):
+    pk=row['occurrence_id'] if 'occurrence_id' in cols else row['id'];ident=fixed or _identity(c,row);path=row['source_file_path'] if 'source_file_path' in cols else None;ptr=row['source_pointer'] if 'source_pointer' in cols else row['source_record_pointer'] if 'source_record_pointer' in cols else '/';sha=blob=None
+    if path is None and 'source_record_id' in cols:
+     q=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone()
+     if q:ptr,path,sha,blob=q
+    sha,blob=_prov(src,r0,path,sha,blob);cseq+=1;count+=1;containers[(table,str(pk))]=cseq
+    yield _container_values(cseq,key,f'schema20:{table}',ident,pk,table,table,pk,path,ptr,sha,blob,row['source_ordinal'] if 'source_ordinal' in cols else row['row_index'] if 'row_index' in cols else None,'source_ordinal' if 'source_ordinal' in cols else None,'occurrence_id' if 'occurrence_id' in cols else 'id')
+  out.executemany(_CONTAINER_INSERT,parents())
   out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,f'schema20:{table}','container',table,count,count,'complete','identity from authoritative row/run metadata'))
  for prefix in CORE_PROJECTED_PREFIXES:
   if prefix+'_row_occurrence' in tables:add(prefix+'_row_occurrence')
@@ -111,20 +141,32 @@ def _core(src,out,key,c,r0,cseq,tseq):
   else:
    # multi-run character rows are inserted independently to preserve exact run identity
    cols=_cols(src,rt);count=0
-   for row in src.execute(f'select * from {rt} order by id'):
-    ident=_run_identity(src,row['ingest_run_id'],fam);ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();cseq+=1;count+=1;containers[(rt,str(row['id']))]=_container(out,cseq,key,f'schema20:{rt}',ident,row['id'],rt,rt,row['id'],path,ptr,sha,blob,row['row_index'] if 'row_index' in cols else None,'source_row_index')
+   def parents():
+    nonlocal cseq,count
+    for row in src.execute(f'select * from {rt} order by id'):
+     ident=_run_identity(src,row['ingest_run_id'],fam);ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();cseq+=1;count+=1;containers[(rt,str(row['id']))]=cseq
+     yield _container_values(cseq,key,f'schema20:{rt}',ident,row['id'],rt,rt,row['id'],path,ptr,sha,blob,row['row_index'] if 'row_index' in cols else None,'source_row_index')
+   out.executemany(_CONTAINER_INSERT,parents())
    out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,f'schema20:{rt}','container',rt,count,count,'complete','multi-run identity from ingest_run/parser_build'))
  # These legacy accepted tables predate row-level family columns. Their exact
  # family/contract/parser/run is recovered from each sealed ingest_run.
  if 'passage_occurrence' in tables:
   rt='passage_occurrence';count=0
-  for row in src.execute('select * from passage_occurrence order by passage_occurrence_id'):
-   ident=_run_identity(src,row['ingest_run_id'],'quest_corpus_evidence');_record_ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();ptr=row['source_pointer'];cseq+=1;count+=1;containers[(rt,str(row['passage_occurrence_id']))]=_container(out,cseq,key,'schema20:passage_occurrence',ident,row['passage_occurrence_id'],'passage',rt,row['passage_occurrence_id'],path,ptr,sha,blob,None,'passage occurrence','passage_occurrence_id')
+  def parents():
+   nonlocal cseq,count
+   for row in src.execute('select * from passage_occurrence order by passage_occurrence_id'):
+    ident=_run_identity(src,row['ingest_run_id'],'quest_corpus_evidence');_record_ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();ptr=row['source_pointer'];cseq+=1;count+=1;containers[(rt,str(row['passage_occurrence_id']))]=cseq
+    yield _container_values(cseq,key,'schema20:passage_occurrence',ident,row['passage_occurrence_id'],'passage',rt,row['passage_occurrence_id'],path,ptr,sha,blob,None,'passage occurrence','passage_occurrence_id')
+  out.executemany(_CONTAINER_INSERT,parents())
   out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,'schema20:passage_occurrence','container',rt,count,count,'complete','exact quest passage run identity'))
  if 'static_evidence_container' in tables:
   rt='static_evidence_container';count=0
-  for row in src.execute('select * from static_evidence_container order by id'):
-   ident=_run_identity(src,row['ingest_run_id'],row['source_family']);ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();cseq+=1;count+=1;containers[(rt,str(row['id']))]=_container(out,cseq,key,'schema20:static_evidence_container',ident,row['id'],row['container_kind'],rt,row['id'],path,ptr,sha,blob,None,'file_local_ordinal for readable segments')
+  def parents():
+   nonlocal cseq,count
+   for row in src.execute('select * from static_evidence_container order by id'):
+    ident=_run_identity(src,row['ingest_run_id'],row['source_family']);ptr,path,sha,blob=src.execute('select r.pointer,f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();cseq+=1;count+=1;containers[(rt,str(row['id']))]=cseq
+    yield _container_values(cseq,key,'schema20:static_evidence_container',ident,row['id'],row['container_kind'],rt,row['id'],path,ptr,sha,blob,None,'file_local_ordinal for readable segments')
+  out.executemany(_CONTAINER_INSERT,parents())
   out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,'schema20:static_evidence_container','container',rt,count,count,'complete','exact static run identity'))
  # modern exact-family candidates
  for prefix in CORE_PROJECTED_PREFIXES:
@@ -134,9 +176,12 @@ def _core(src,out,key,c,r0,cseq,tseq):
   if 'owner_id' in cc:sql=f"select c.*,o.row_occurrence_id,o.{'field_name' if 'field_name' in oc else 'field_path'} owner_field from {ct} c join {ot} o on o.{'owner_id' if 'owner_id' in oc else 'occurrence_id'}=c.owner_id and o.ingest_run_id=c.ingest_run_id order by c.{pk}"
   else:
    res=prefix+'_text_resolution_occurrence';sql=f"select c.*,o.row_occurrence_id,o.{'field_name' if 'field_name' in oc else 'field_path'} owner_field from {ct} c join {res} z on z.occurrence_id=c.resolution_occurrence_id join {ot} o on o.occurrence_id=z.owner_occurrence_id order by c.{pk}"
-  for row in src.execute(sql):
-   cid=containers[(rt,str(row['row_occurrence_id']))];cr=out.execute('select * from research_container where id=?',(cid,)).fetchone();path=row['relative_path'];sha,blob=_prov(src,r0,path);tseq+=1
-   _text(out,tseq,cid,key,f'schema20:{ct}',tuple(cr[3:7]),row['row_occurrence_id'],'text_candidate',row[pk],ct,row[pk],row['locale'],row['owner_field'],row['pair_ordinal'],row['pointer'],path,row['pointer'],sha,blob,row['pair_ordinal'],row['raw_text'],pk)
+  def texts():
+   nonlocal tseq
+   for row,cr in _with_containers(out,src.execute(sql),lambda r:containers[(rt,str(r['row_occurrence_id']))]):
+    cid=cr['id'];path=row['relative_path'];sha,blob=_prov(src,r0,path);tseq+=1
+    yield _text_values(tseq,cid,key,f'schema20:{ct}',tuple(cr[3:7]),row['row_occurrence_id'],'text_candidate',row[pk],ct,row[pk],row['locale'],row['owner_field'],row['pair_ordinal'],row['pointer'],path,row['pointer'],sha,blob,row['pair_ordinal'],row['raw_text'],pk)
+  out.executemany(_TEXT_INSERT,texts())
   n=src.execute(f'select count(*) from {ct}').fetchone()[0];out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,f'schema20:{ct}','text',ct,n,tseq-before,'complete','explicit owner-to-row join'))
  # legacy special candidates
  for fam,s in CORE_SPECIAL.items():
@@ -146,28 +191,43 @@ def _core(src,out,key,c,r0,cseq,tseq):
    p=ct.rsplit('_text_candidate_occurrence',1)[0];sql=f'select c.*,o.source_row_occurrence_id row_occurrence_id,o.field_name owner_field from {ct} c join {p}_text_resolution_occurrence z on z.id=c.resolution_occurrence_id join {p}_text_owner_occurrence o on o.id=z.owner_occurrence_id order by c.id'
   else:sql='select c.*,z.source_row_occurrence_id row_occurrence_id,z.source_pointer owner_field from character_text_candidate_occurrence c join character_text_resolution_occurrence z on z.id=c.resolution_occurrence_id order by c.id'
   before=tseq
-  for row in src.execute(sql):
-   cid=containers[(rt,str(row['row_occurrence_id']))];cr=out.execute('select * from research_container where id=?',(cid,)).fetchone();path,sha,blob=src.execute('select relative_path,sha256,upstream_blob_oid from source_file where id=?',(row['source_file_id'],)).fetchone();tseq+=1
-   _text(out,tseq,cid,key,f'schema20:{ct}',tuple(cr[3:7]),row['row_occurrence_id'],'text_candidate',row['id'],ct,row['id'],row['locale'],row['owner_field'],None,row['source_pointer'],path,row['source_pointer'],sha,blob,None,row['raw_text'])
+  def texts():
+   nonlocal tseq
+   for row,cr in _with_containers(out,src.execute(sql),lambda r:containers[(rt,str(r['row_occurrence_id']))]):
+    cid=cr['id'];path,sha,blob=src.execute('select relative_path,sha256,upstream_blob_oid from source_file where id=?',(row['source_file_id'],)).fetchone();tseq+=1
+    yield _text_values(tseq,cid,key,f'schema20:{ct}',tuple(cr[3:7]),row['row_occurrence_id'],'text_candidate',row['id'],ct,row['id'],row['locale'],row['owner_field'],None,row['source_pointer'],path,row['source_pointer'],sha,blob,None,row['raw_text'])
+  out.executemany(_TEXT_INSERT,texts())
   n=src.execute(f'select count(*) from {ct}').fetchone()[0];out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,f'schema20:{ct}','text',ct,n,tseq-before,'complete','explicit legacy owner-to-row join'))
  # Quest passage text is held directly by the passage occurrence.
  if 'passage_occurrence_text' in tables:
   ct='passage_occurrence_text';before=tseq
-  for row in src.execute('select * from passage_occurrence_text order by id'):
-   cid=containers[('passage_occurrence',str(row['passage_occurrence_id']))];cr=out.execute('select * from research_container where id=?',(cid,)).fetchone();path,sha,blob=src.execute('select f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();tseq+=1;_text(out,tseq,cid,key,'schema20:passage_occurrence_text',tuple(cr[3:7]),row['passage_occurrence_id'],'passage_text',row['id'],ct,row['id'],row['language'],'passage_text',None,cr['source_pointer'],path,cr['source_pointer'],sha,blob,None,row['raw_text'])
+  def texts():
+   nonlocal tseq
+   for row,cr in _with_containers(out,src.execute('select * from passage_occurrence_text order by id'),lambda r:containers[('passage_occurrence',str(r['passage_occurrence_id']))]):
+    cid=cr['id'];path,sha,blob=src.execute('select f.relative_path,f.sha256,f.upstream_blob_oid from source_record r join source_file f on f.id=r.source_file_id where r.id=?',(row['source_record_id'],)).fetchone();tseq+=1
+    yield _text_values(tseq,cid,key,'schema20:passage_occurrence_text',tuple(cr[3:7]),row['passage_occurrence_id'],'passage_text',row['id'],ct,row['id'],row['language'],'passage_text',None,cr['source_pointer'],path,cr['source_pointer'],sha,blob,None,row['raw_text'])
+  out.executemany(_TEXT_INSERT,texts())
   n=src.execute('select count(*) from passage_occurrence_text').fetchone()[0];out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,'schema20:passage_occurrence_text','text',ct,n,tseq-before,'complete','exact passage occurrence text'))
  # Static readable segments and TextMap candidates are separate physical text
  # occurrences attached to the same accepted static container namespace.
  if 'static_segment_occurrence' in tables:
   ct='static_segment_occurrence';before=tseq
-  for row in src.execute('select * from static_segment_occurrence order by id'):
-   cid=containers[('static_evidence_container',str(row['evidence_container_id']))];cr=out.execute('select * from research_container where id=?',(cid,)).fetchone();tseq+=1;_text(out,tseq,cid,key,'schema20:static_segment_occurrence',tuple(cr[3:7]),row['evidence_container_id'],'readable_segment',row['id'],ct,row['id'],row['locale'],'readable_segment',row['file_local_ordinal'],row['source_pointer'],cr['source_path'],row['source_pointer'],cr['source_file_sha256'],cr['source_git_blob'],None,row['raw_text'])
+  def texts():
+   nonlocal tseq
+   for row,cr in _with_containers(out,src.execute('select * from static_segment_occurrence order by id'),lambda r:containers[('static_evidence_container',str(r['evidence_container_id']))]):
+    cid=cr['id'];tseq+=1
+    yield _text_values(tseq,cid,key,'schema20:static_segment_occurrence',tuple(cr[3:7]),row['evidence_container_id'],'readable_segment',row['id'],ct,row['id'],row['locale'],'readable_segment',row['file_local_ordinal'],row['source_pointer'],cr['source_path'],row['source_pointer'],cr['source_file_sha256'],cr['source_git_blob'],None,row['raw_text'])
+  out.executemany(_TEXT_INSERT,texts())
   n=src.execute('select count(*) from static_segment_occurrence').fetchone()[0];out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,'schema20:static_segment_occurrence','text',ct,n,tseq-before,'complete','exact readable segment occurrence'))
  if 'static_text_candidate_occurrence' in tables:
   ct='static_text_candidate_occurrence';before=tseq
   sql='select c.*,z.source_container_id from static_text_candidate_occurrence c join static_text_resolution_occurrence z on z.id=c.resolution_occurrence_id order by c.id'
-  for row in src.execute(sql):
-   cid=containers[('static_evidence_container',str(row['source_container_id']))];cr=out.execute('select * from research_container where id=?',(cid,)).fetchone();path,sha,blob=src.execute('select relative_path,sha256,upstream_blob_oid from source_file where id=?',(row['source_file_id'],)).fetchone();tseq+=1;_text(out,tseq,cid,key,'schema20:static_text_candidate_occurrence',tuple(cr[3:7]),row['source_container_id'],'text_candidate',row['id'],ct,row['id'],row['locale'],'static_text_candidate',None,row['source_pointer'],path,row['source_pointer'],sha,blob,None,row['raw_text'])
+  def texts():
+   nonlocal tseq
+   for row,cr in _with_containers(out,src.execute(sql),lambda r:containers[('static_evidence_container',str(r['source_container_id']))]):
+    cid=cr['id'];path,sha,blob=src.execute('select relative_path,sha256,upstream_blob_oid from source_file where id=?',(row['source_file_id'],)).fetchone();tseq+=1
+    yield _text_values(tseq,cid,key,'schema20:static_text_candidate_occurrence',tuple(cr[3:7]),row['source_container_id'],'text_candidate',row['id'],ct,row['id'],row['locale'],'static_text_candidate',None,row['source_pointer'],path,row['source_pointer'],sha,blob,None,row['raw_text'])
+  out.executemany(_TEXT_INSERT,texts())
   n=src.execute('select count(*) from static_text_candidate_occurrence').fetchone()[0];out.execute('insert into adapter_coverage values(?,?,?,?,?,?,?,?)',(key,'schema20:static_text_candidate_occurrence','text',ct,n,tseq-before,'complete','exact TextMap candidate occurrence'))
  adapted={r[0] for r in out.execute("select source_table from adapter_coverage where source_key=? and projection_kind='text'",(key,))}
  for table in sorted(tables-adapted-{'textmap_physical_occurrence'}):
