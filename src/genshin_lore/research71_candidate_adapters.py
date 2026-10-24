@@ -11,7 +11,8 @@ import json
 import sqlite3
 from functools import lru_cache
 
-from .research_index import _container, _text, _prov
+from .research_index import (_container, _text, _prov, _with_containers,
+                             _container_values, _text_values, _CONTAINER_INSERT, _TEXT_INSERT)
 
 VERSION = "research71-explicit-physical-adapters-v1"
 
@@ -81,45 +82,53 @@ def adapt(src, out, key, component, r0, cs, ts):
     parent, sql = SPECS[name]
     identity = tuple(component[k] for k in ("family", "contract", "parser", "run"))
     mapping = {};parent_keys = primary_columns(src, parent)
-    for row in src.execute(f'SELECT * FROM "{parent}" ORDER BY ' + ",".join('"'+k+'"' for k in parent_keys)):
-        row = dict(row);pkcol, pk = source_key(src, parent, row)
-        native_pk = str(row.get("id", row.get("ordinal")))
-        # Physical NPC evidence_ref is already a sealed source identity.
-        occurrence = row.get("evidence_ref", native_pk)
-        path = row["source_path"];ptr = row.get("pointer", row.get("source_pointer", "/"))
-        sha, blob = _prov(src, r0, path)
-        cs += 1
-        _container(out, cs, key, name + ":" + parent, identity, occurrence,
-                   row.get("kind", row.get("boundary", parent)), parent, pk, path, ptr, sha, blob,
-                   row.get("ordinal", row.get("source_ordinal")), "physical_source_ordinal", pkcol)
-        mapping[native_pk] = cs
+    def containers():
+        nonlocal cs
+        for row in src.execute(f'SELECT * FROM "{parent}" ORDER BY ' + ",".join('"'+k+'"' for k in parent_keys)):
+            row = dict(row);pkcol, pk = source_key(src, parent, row)
+            native_pk = str(row.get("id", row.get("ordinal")))
+            # Physical NPC evidence_ref is already a sealed source identity.
+            occurrence = row.get("evidence_ref", native_pk)
+            path = row["source_path"];ptr = row.get("pointer", row.get("source_pointer", "/"))
+            sha, blob = _prov(src, r0, path)
+            cs += 1
+            mapping[native_pk] = cs
+            yield _container_values(cs, key, name + ":" + parent, identity, occurrence,
+                       row.get("kind", row.get("boundary", parent)), parent, pk, path, ptr, sha, blob,
+                       row.get("ordinal", row.get("source_ordinal")), "physical_source_ordinal", pkcol)
+    # sqlite3 consumes each row before requesting the next; no full text or
+    # container rowset is buffered, and all parents exist before the text scan.
+    out.executemany(_CONTAINER_INSERT, containers())
     out.execute("INSERT INTO adapter_coverage VALUES(?,?,?,?,?,?,?,?)", (key,name+":"+parent,"container",parent,len(mapping),len(mapping),"complete","complete declared physical parent namespace"))
     if sql is None:
         return cs, ts, mapping
     table = TEXT_TABLE.get(name, "text_candidate")
     before = ts
-    for row in src.execute(sql):
-        row = dict(row)
-        pkcol, pk = source_key(src, table, row)
-        parent_id = str(row["parent_id"]);cid = mapping[parent_id]
-        cr = out.execute("SELECT * FROM research_container WHERE id=?", (cid,)).fetchone()
-        path = row["source_path"] if "source_path" in row else None
-        ptr = row.get("pointer", row.get("source_pointer"));pair = row.get("pair_ordinal")
-        if name == "quest_talk_physical":
-            locators = json.loads(row["locators_json"])
-            # This qualified projection stores one selected physical resolution;
-            # any unexpected multi-locator shape must not silently select first.
-            if len(locators) != 1 or locators[0]["raw_text"] != row["raw_text"]:
-                raise ValueError("Quest/Talk non-unique physical locator requires explicit adaptation")
-            path, ptr, pair = (locators[0][k] for k in ("path", "pointer", "pair_ordinal"))
-        elif name.startswith("narrative_"):
-            ptr = "/" + str(row["hash"])
-        sha, blob = _prov(src, r0, path)
-        child = row.get("id") or "physical-key:" + hashlib.sha256(pk.encode()).hexdigest()
-        ts += 1
-        _text(out,ts,cid,key,name+":"+table,tuple(cr[3:7]),cr[7],"physical_text_candidate",child,
-              table,pk,row["inherited_locale"],row["owner"],row.get("node_ordinal", pair),
-              row.get("owner", ptr),path,ptr,sha,blob,pair,row["raw_text"],pkcol)
+    def texts():
+        nonlocal ts
+        for row, cr in _with_containers(out, src.execute(sql),
+                                        lambda r: mapping[str(r["parent_id"])]):
+            row = dict(row)
+            pkcol, pk = source_key(src, table, row)
+            parent_id = str(row["parent_id"]);cid = mapping[parent_id]
+            path = row["source_path"] if "source_path" in row else None
+            ptr = row.get("pointer", row.get("source_pointer"));pair = row.get("pair_ordinal")
+            if name == "quest_talk_physical":
+                locators = json.loads(row["locators_json"])
+                # This qualified projection stores one selected physical resolution;
+                # any unexpected multi-locator shape must not silently select first.
+                if len(locators) != 1 or locators[0]["raw_text"] != row["raw_text"]:
+                    raise ValueError("Quest/Talk non-unique physical locator requires explicit adaptation")
+                path, ptr, pair = (locators[0][k] for k in ("path", "pointer", "pair_ordinal"))
+            elif name.startswith("narrative_"):
+                ptr = "/" + str(row["hash"])
+            sha, blob = _prov(src, r0, path)
+            child = row.get("id") or "physical-key:" + hashlib.sha256(pk.encode()).hexdigest()
+            ts += 1
+            yield _text_values(ts,cid,key,name+":"+table,tuple(cr[3:7]),cr[7],"physical_text_candidate",child,
+                  table,pk,row["inherited_locale"],row["owner"],row.get("node_ordinal", pair),
+                  row.get("owner", ptr),path,ptr,sha,blob,pair,row["raw_text"],pkcol)
+    out.executemany(_TEXT_INSERT, texts())
     denominator = src.execute(f'SELECT COUNT(*) FROM "{table}"' + (" WHERE raw_text IS NOT NULL" if name == "quest_talk_physical" else "")).fetchone()[0]
     if ts - before != denominator:
         raise ValueError("text adapter omitted physical candidates: " + name)

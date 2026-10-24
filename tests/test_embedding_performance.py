@@ -15,8 +15,9 @@ def vector(text):
     return result
 
 
-def test_length_batches_restore_source_ids_without_deduplicating():
-    inputs = ["合成" * (i % 37 + 1) for i in range(129)]
+@pytest.mark.parametrize('repeated', [False, True])
+def test_length_batches_restore_all_source_ids_with_inference_reuse(repeated):
+    inputs = ["合成" * ((i % 37 if repeated else i) + 1) for i in range(129)]
     original = inputs.copy()
     seen = []
 
@@ -27,11 +28,17 @@ def test_length_batches_restore_source_ids_without_deduplicating():
 
     actual = np.empty((len(inputs), 384), dtype=np.float32)
     progress = []
-    semantic.embed_windows(Model(), inputs, actual, progress=progress.append)
+    result = semantic.embed_windows(Model(), inputs, actual,
+        progress=lambda *event: progress.append(event))
     assert inputs == original
-    assert seen == sorted(inputs, key=len)
+    assert seen == sorted(dict.fromkeys(inputs), key=len)
     np.testing.assert_array_equal(actual, np.asarray([vector(text) for text in original]))
-    assert len(seen) == 129 and progress == [64, 128, 129]
+    unique = 37 if repeated else 129
+    assert len(seen) == unique
+    assert result == {'unique_inference_windows': unique,
+                      'reused_occurrence_windows': len(inputs) - unique}
+    assert progress == ([(0, 129, 37, 37)] if repeated else
+                        [(0, 64, 64, 129), (1, 128, 128, 129), (2, 129, 129, 129)])
 
 
 @pytest.mark.parametrize('bad', [np.zeros((2, 384)), np.full((2, 384), np.nan),

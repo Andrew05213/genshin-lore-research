@@ -112,7 +112,7 @@ def build(source,output,qt_manifest=QT_MANIFEST,qt_artifact=QT_ARTIFACT):
    if records:c.executemany(f"INSERT INTO {table} VALUES ({','.join('?'*len(records[0]))})",records)
   c.execute('INSERT INTO release VALUES(1,?)',(canon(release),));guard(c);c.commit();c.execute('VACUUM');c.close()
  except BaseException:
-  c.close();output.unlink(missing_ok=True);raise
+  c.close();raise
  return {'release':release,'artifact':{'size_bytes':output.stat().st_size,'sha256':sha(output)}}
 
 if __name__=='__main__':

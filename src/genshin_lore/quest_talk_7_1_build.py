@@ -362,14 +362,11 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
             "peak_rss_kib": (peak_rss_bytes() // 1024 if peak_rss_bytes() is not None else None),
         }
         print(canonical({"phase": "complete", "counts": report["counts"]}), flush=True)
+        stage.unlink()
         return report
     finally:
         if conn is not None:
             conn.close()
-        if stage.exists():
-            stage.unlink()
-        if compact.exists():
-            compact.unlink()
 
 
 def _insert_reference(conn: sqlite3.Connection, run: str, cid: str, path: str, ref: dict, kind: str, doc: dict) -> None:

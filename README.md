@@ -10,6 +10,8 @@
 
 后续 Linux 完整重建已在 `cf1788f` 实际通过：35 个输入、统一索引的完整来源核对、106,589 个向量窗口和 MCP 检查，总进程约 80 分钟。四次失败及诊断保留，不以成功覆盖历史记录。随后仅优化 embedding 构建调度，实际测量、完整向量等价核对及本轮未执行范围见 [Linux 构建性能记录](docs/linux-build-performance.md)。Windows 完整构建独立验收，Linux 成功不代表 Windows 成功。
 
+原生 Windows 的完整构建另在 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7` 记录通过。Linux 调度优化、Windows 来源绑定/磁盘 staging 与人物对白阅读已进入同一整合分支；本次补测范围及尚未重跑的整库验收见 [整合验证](docs/reviews/linux-windows-integration.md)，不把父分支的成功自动当作整合版本的全量成功。
+
 仓库分发代码、SQL 定义和必要的来源校验清单；**不分发游戏数据库、游戏正文、模型权重或向量索引**。数据由上游源码在构建环境中生成。
 
 ## 快速开始

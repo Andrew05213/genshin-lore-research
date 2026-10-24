@@ -105,7 +105,7 @@ def build(source, dependency, seal, output):
         if db.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or db.execute("PRAGMA foreign_key_check").fetchall():
             raise ValueError("Talk physical integrity failure")
     except Exception:
-        db.close();output.unlink();raise
+        db.close();raise
     finally:
         src.close()
     db.close()

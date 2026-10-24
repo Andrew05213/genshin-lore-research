@@ -14,7 +14,15 @@
 
 使用 multilingual MiniLM、384 维 float32、cosine HNSW，沿用 400 字符窗口、360 字符步长及既有高价值 CHS 字段选择。名称/标题另建 lexical 索引。范围见 [静态选择配方](../../recipes/semantic-input.json)，不为 ID、hash、纯玩法配置构建全文语义。
 
+推理按窗口长度稳定组批，减少同批短文本的 padding，batch size 保持 64。Linux 构建默认最多使用 4 个 affinity-visible 线程，Windows 等其他平台保持 2；查询线程仍为 2。向量写回原 vector ID，ANN 仍按原 ID 顺序构建，物理 occurrence 不去重；来源选区、模型及 ANN 参数不变。`build.json` 的 `timings_seconds` 分别记录 selection、embedding（含模型初始化）、ANN 和 lexical 构建耗时。优化后的向量 SHA 和 ANN seal 仍须实测，不根据组批策略推断逐字节相同。
+
+同一次构建中，逐字相同的窗口只推理一次，归一化后分别写入每个原始 vector ID；匹配使用完整字符串相等，不仅比较 hash。所有来源身份、物理窗口和 metadata 行分别保留，复用集合不跨构建保存。`embedding_batching` 记录 `unique_inference_windows` 和 `reused_occurrence_windows`；这些计数描述计算复用，不表示物理证据被合并。独立 oracle 仍枚举并核对全部窗口。
+
 Windows 使用 `.venv\Scripts\python.exe`；缺少适用 `hnswlib` wheel 时需 MSVC C++ Build Tools。离线环境可提前取得相同模型文件，但必须通过同一逐文件/目录核验。
+
+hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使用 ASCII 临时路径，Python 负责中文路径的文件读写；不改变二进制格式或向量核验。系统临时路径含非 ASCII 字符时尝试 Windows 短路径；没有可用 ASCII 别名则明确失败，不修改代码页或进程工作目录。保存先核对原生预期字节数，再刷盘并排他发布；失败的私有文件保留，计入项目临时空间。临时卷还须容纳一个 ANN 文件副本。
+
+安装 semantic extra 后，可运行不下载模型的真实 hnswlib 路径回归：`.venv/bin/python -m pytest -q tests/semantic_native.py`（Windows 替换 Python 路径）。此显式模块使用真实 builder、独立 oracle、运行时和 ANN，仅 embedding 使用合成向量；基础无 semantic 安装的源码测试仍用合成 ANN。两类测试都不能代替完整固定来源验收。
 
 ## 构建与运行
 

@@ -97,7 +97,7 @@ def _text_pairs(files: dict[str, bytes], paths: list[str], wanted: set[str]) -> 
         if locale is None:
             raise ValueError("TextMap locale unavailable")
         tier = "medium" if "_Medium" in relative else "main"
-        for pair in iter_textmap_pairs(files[relative]):
+        for pair in iter_textmap_pairs(files[relative], wanted_keys=wanted):
             if pair.key_text in wanted:
                 found[(locale, pair.key_text)].append((
                     relative, tier, pair.pair_ordinal, pair.pointer, pair.raw_text,
@@ -345,10 +345,6 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
     except BaseException:
         if conn is not None:
             conn.close()
-        if output.exists():
-            after = output.stat()
-            if (after.st_dev, after.st_ino) == owner:
-                output.unlink()
         raise
 
 

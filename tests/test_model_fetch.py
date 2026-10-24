@@ -71,3 +71,31 @@ def test_missing_or_extra_files_fail_offline_check(tmp_path, monkeypatch):
     setup(tmp_path, monkeypatch)
     with pytest.raises(ValueError, match="missing or differs"):
         fetcher.fetch(tmp_path / "cache", check_only=True)
+
+
+def test_mixed_case_model_names_preserve_the_pinned_tree_on_every_platform(
+    tmp_path, monkeypatch
+):
+    spec, _ = setup(tmp_path, monkeypatch)
+    files = {
+        "README.md": b"synthetic model readme",
+        "config.json": b'{"synthetic":true}',
+    }
+    # Fixed independently from the implementation: case-sensitive relative
+    # names, NUL, then each file's binary SHA256. WindowsPath ordering differs.
+    spec["model_tree_sha256"] = (
+        "c766933047b04e1d9d1096b4897d3e35004a00cd56e29154cef43ee57ff5620b"
+    )
+    spec["files"] = {
+        name: {"size_bytes": len(raw), "sha256": hashlib.sha256(raw).hexdigest()}
+        for name, raw in files.items()
+    }
+    (tmp_path / "code/recipes/embedding-model.json").write_text(json.dumps(spec))
+    monkeypatch.setattr(
+        fetcher.urllib.request,
+        "urlopen",
+        lambda url, **kwargs: io.BytesIO(files[url.rsplit("/", 1)[1]]),
+    )
+    cache = tmp_path / "cache"
+    assert fetcher.fetch(cache)["model_tree_sha256"] == spec["model_tree_sha256"]
+    assert fetcher.fetch(cache, check_only=True)["status"] == "PASS"

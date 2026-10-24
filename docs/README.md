@@ -5,6 +5,7 @@
 | 文档 | 内容 |
 |---|---|
 | [当前状态](status.md) | 已提供入口、实际验证范围与剩余限制 |
+| [Linux / Windows / 人物对白整合](reviews/linux-windows-integration.md) | 两个分支的保留范围、冲突处理、实际补测及未执行的整库验证 |
 | [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
