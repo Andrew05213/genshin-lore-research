@@ -87,7 +87,4 @@ def build(source_root,scope_path,output):
   release['artifact']={'size_bytes':output.stat().st_size,'sha256':sha(output)};release['logical_seals']={t:hashlib.sha256('\n'.join(json.dumps(list(x),ensure_ascii=False,separators=(',',':')) for x in expected[t]).encode()).hexdigest() for t in TABLES};return release
  except Exception:
   if conn is not None:capture();conn.close();capture()
-  if _owned(output,owned):output.unlink()
-  for item,identity in owned_sidecars.items():
-   if _owned(item,identity):item.unlink()
   raise

@@ -21,6 +21,16 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 默认含向量的全链路要求至少 27 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建仍为 25 GB。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
 
+Character 构建器与独立 oracle 各自按关系一次读取候选行，保留空集合、多候选及所有物理身份核对；foundation 的独立来源核验仍在每次资格检查时重放。M3/special 的 TextMap 查找可以仅为所需 key 生成 lexical hash，但仍完整解析所有词条，检查类型、重复 key、分隔符与尾随内容；完整物理 TextMap 扫描保持原行为。
+
+部分独立 oracle 和 Character 已封存输入使用有界 SQLite mmap，只作用于 `mode=ro&immutable=1` 的只读连接，上限为每库 2 GiB，并继续执行完整性、外键、来源行集和字节 seal 核验。存在 WAL、SHM 或 journal 时拒绝读取并保留现场。SQLite 可以按平台限制缩小或禁用映射，普通读取仍执行相同核验。写入、VACUUM 和发布使用原有连接；Windows 下不对仍需截断或替换的数据库启用此读取方式。
+
+Research 的适用父项和正文投影使用流式 `executemany`，按原顺序逐行消费来源，不累积整表待写列表；父项查询按最多 512 个来源行分批。每次批量写入完成后才检查 coverage 或运行后续投影，全部物理身份、候选、SQLite 约束和完整独立 oracle 保留。512 行限制不是进程总内存上限，单行正文大小仍影响内存。构建报告的 `phase_seconds` 分别记录投影、FTS、独立 oracle、压缩和发布耗时，`component_seconds` 记录各输入的投影及 seal 检查耗时。
+
+Research 在目标目录创建独占的 `.research-*.sqlite` 私有磁盘库；SQLite 主缓存为 16 MiB、临时库缓存为 8 MiB，关闭写库 mmap，临时工作使用文件。主库 `max_page_count` 根据本阶段剩余额度限制，为两个数据库镜像和 16 MiB reserve 留出压缩空间；压缩前再次核对页数及输出/系统临时卷空闲。保留原 `journal_mode=OFF` 与 `synchronous=FULL`，不引入未计入预算的全库回滚镜像。这些是 SQLite 缓存和页数限制，不是整个 Python 进程或独立 oracle 的 RAM 上限，仍需监测实际资源。
+
+投影边界、FTS、oracle、VACUUM 和发布事件逐条刷盘到 `index-oracles/index-staging-*.jsonl`。完整 oracle 首次返回后立即持久化；旧 `index-memory-oracle-*.json` 文件名保留兼容，但现在核验的是磁盘 staging。必需 VACUUM 完成后，再执行同一完整独立 oracle，将结果刷盘到 `index-post-vacuum-oracle-*.json`，关闭连接并刷盘后才以禁止覆盖的重命名发布。失败时保留已创建的私有/已发布数据库、现存 sidecar 和诊断，不以删除现场回滚；SQLite 关闭连接仍可能回滚未提交事务，失败字节不自动具备恢复或查询资格。
+
 ## 构建
 
 先运行无游戏数据测试，再执行高成本完整构建：
@@ -55,6 +65,12 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
 
 v2 阶段回执绑定 Python/SQLite/直接依赖版本、构建与验证 Python、SQL、静态 manifest/recipe、显式依赖与参数，以及三个报告文件的 size/SHA。恢复逐项检查，并拒绝 SQLite sidecar。未核验、失败、损坏或旧版回执不能自动恢复，必须保留原目录并使用新输出。此保守策略会使任意管线代码变化使旧阶段失效；无关文档、测试和 Git commit 变化不使回执失效。
+
+Character 后续组件通过本次 metadata 中显式的 `local-character-foundation-v1` 合同消费新 foundation：检查本次 artifact、完整 v2 回执、报告 seal、实现/环境和来源 scope，并重跑原独立 foundation 来源 oracle，要求结果与已封存报告一致。text/lore/voice 的 release 和 run 身份绑定本次 foundation 的实际 size/SHA，lore/voice 的 text 依赖也须精确匹配该 foundation。没有本地合同的历史路径继续要求原固定 artifact seal；不将新数据库写成历史 artifact，也不修改历史凭据。
+
+Native Message 属于 `--stage quest`：先完成本次 Quest/Talk、QuestNarrative 和独立 oracle，再在 metadata 中生成 `local-native-message-quest-narrative-v1` 绑定。消费时核对这两个阶段的当前 v2 回执、完整显式输入、实现/环境和 artifact/report seal，重跑 QuestNarrative 独立来源 oracle；MainQuest 候选集从本次目标 occurrence 与消息原始 locator 完整重建。历史 message scope 的路径、parser/run 与 seal 原样保留，不作为新构建的依赖。
+
+Readable 与 Subtitle 在消费 R0 前先核对本次完整 v2 依赖回执，再将精确 R0 size/SHA 写入本次 `metadata/` 下的作用域。其来源范围和 run 约束保留，builder 与独立 verifier 使用同一份作用域并继续精确核验；该动态文件也纳入阶段输入 seal。源码中的历史作用域及字节 seal 不改写，未核验、漂移或其他输出的依赖回执不能用来生成当前绑定。
 
 动态文件不再写入源码树：
 

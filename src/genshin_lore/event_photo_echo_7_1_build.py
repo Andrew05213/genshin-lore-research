@@ -152,6 +152,3 @@ def build(root,scope_path,output):
   return {**release,'artifact':seal}
  finally:
   if conn is not None:conn.close()
-  if stage.exists():
-   stat=stage.stat()
-   if (stat.st_dev,stat.st_ino)==stage_identity:stage.unlink()

@@ -26,6 +26,7 @@ from scripts.build_support import (
     load_object,
     pipeline_identity,
     require_success,
+    qualify_stage_dependency,
 )
 
 SNAPSHOT = "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
@@ -163,48 +164,10 @@ class Rebuild:
     def dependency_inputs(self, *names):
         paths = []
         for name in names:
-            directory = self.output / name
-            receipt = load_object(directory / "verified.json")
-            if (
-                receipt.get("contract") != RECEIPT_CONTRACT
-                or receipt.get("independent_verifier_completed") is not True
-            ):
-                raise ValueError(
-                    "dependency requires current complete verification: " + name
-                )
-            for record in ("build.json", "verify.json", "invocation.json"):
-                if receipt.get("records", {}).get(record) != seal(directory / record):
-                    raise ValueError("dependency report drift: " + name)
-            require_success(load_object(directory / "verify.json"))
-            identity = receipt.get("identity", {})
-            invocation = load_object(directory / "invocation.json")
-            if (
-                identity.get("parameters", {}).get("stage") != name
-                or invocation.get("stage") != name
-                or invocation.get("identity") != identity
-                or receipt.get("source_snapshot") != SNAPSHOT
-                or invocation.get("source_snapshot") != SNAPSHOT
-            ):
-                raise ValueError("dependency stage identity mismatch: " + name)
-            actual = pipeline_identity(
-                getattr(self, "identity_root", ROOT),
-                self.source,
-                self.history,
-                inputs=identity.get("stage_inputs", {}),
-                parameters=identity.get("parameters"),
-            )
-            if actual != identity:
-                raise ValueError(
-                    "dependency implementation/input identity drift: " + name
-                )
-            if seal(self.path(name)) != receipt.get("artifact"):
-                raise ValueError("dependency artifact drift: " + name)
-            if any(
-                Path(str(self.path(name)) + suffix).exists()
-                for suffix in ("-wal", "-shm", "-journal")
-            ):
-                raise ValueError("dependency SQLite sidecar: " + name)
-            paths.extend([self.path(name), directory / "verified.json"])
+            paths.extend(qualify_stage_dependency(
+                getattr(self, "identity_root", ROOT), self.source, self.history,
+                self.output / name, name, SNAPSHOT,
+            ))
         return paths
 
     def index_headroom(self):
@@ -459,9 +422,16 @@ class Rebuild:
             ),
         )
         manifest = load(ROOT / "recipes/character-foundation.json")
+        foundation_report = load(self.output / "character_foundation" / "build.json")
+        for key in ("parser_build_id", "ingest_run_id"):
+            manifest[key] = foundation_report[key]
         manifest["artifact"] = {
             **seal(self.path("character_foundation")),
             "machine_local_path": str(self.path("character_foundation")),
+        }
+        manifest["local_rebuild"] = {
+            "contract": "local-character-foundation-v1",
+            "receipt": seal(self.output / "character_foundation" / "verified.json"),
         }
         self.bind(
             "manifests/character-7.1-physical-foundation/immutable-runtime.json",
@@ -530,11 +500,6 @@ class Rebuild:
             ("gcg_card", "gcg_card_7_1", "gcg-card-7.1/scope.json"),
             ("loading_tips", "loading_tips_7_1", "loading-tips-7.1/scope.json"),
             ("mail", "mail_7_1", "mail-archive-7.1/source-scope-v1.json"),
-            (
-                "native_message",
-                "native_message_7_1",
-                "native-archive-7.1/message-scope-v1.json",
-            ),
         ):
             sp = ROOT / "manifests" / scope
             builder = module(mod + "_build")
@@ -546,6 +511,19 @@ class Rebuild:
                 if n == "loading_tips"
                 else v.verify(self.source, s, p, r),
             )
+
+    def native_message(self):
+        from genshin_lore.native_message_7_1_binding import prepare_scope, SCOPE
+
+        inputs = self.dependency_inputs("quest_narrative", "quest_talk")
+        self.bind(SCOPE, prepare_scope(self.source, self.output))
+        scope = self.metadata_path(SCOPE)
+        self.task(
+            "native_message",
+            lambda p: module("native_message_7_1_build").build(self.source, scope, p),
+            lambda p, r: module("native_message_7_1_verify").verify(self.source, scope, p, r),
+            inputs=inputs + [scope],
+        )
 
     def quest(self):
         scope = ROOT / "manifests/quest-talk-7.1/source-scope.json"
@@ -585,6 +563,7 @@ class Rebuild:
             ),
             inputs=self.dependency_inputs("quest_talk") + [qmp],
         )
+        self.native_message()
         if self.history is None:
             raise ValueError(
                 "--historical-source required for the original Review field-continuity oracle"
@@ -715,7 +694,12 @@ class Rebuild:
         )
 
     def readable(self):
-        scope = ROOT / "manifests/document-readable-7.1/source-scope.json"
+        inputs = self.dependency_inputs("r0", "document")
+        relative = "manifests/document-readable-7.1/source-scope.json"
+        value = load(ROOT / relative)
+        value["r0_dependency"].update(seal(self.path("r0")))
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
         self.task(
             "readable",
             lambda p: module("readable_7_1_build").build(
@@ -735,9 +719,17 @@ class Rebuild:
                 self.report("document"),
                 r,
             ),
-            inputs=self.dependency_inputs("r0", "document"),
+            inputs=inputs + [scope],
         )
-        scope = ROOT / "manifests/direct-text-7.1/subtitle-scope.json"
+        inputs = self.dependency_inputs("r0")
+        relative = "manifests/direct-text-7.1/subtitle-scope.json"
+        value = load(ROOT / relative)
+        actual = seal(self.path("r0"))
+        value["r0_dependency"].update(
+            artifact_size_bytes=actual["size_bytes"], artifact_sha256=actual["sha256"]
+        )
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
 
         def verify_subtitle(p, r):
             rel = release(p)
@@ -760,7 +752,7 @@ class Rebuild:
                 self.source, scope, p, self.path("r0")
             ),
             verify_subtitle,
-            inputs=self.dependency_inputs("r0"),
+            inputs=inputs + [scope],
         )
 
     def events(self):
@@ -1236,7 +1228,7 @@ class Rebuild:
             lambda p: builder.build(
                 manifest, bindings, p, remaining, corpus_path=cp, reports_dir=reports
             ),
-            lambda p, r: load(reports / ("index-memory-oracle-" + p.stem + ".json")),
+            lambda p, r: load(reports / ("index-post-vacuum-oracle-" + p.stem + ".json")),
             inputs=self.dependency_inputs(
                 *[p.parent.name for p in map(Path, bindings["artifacts"].values())]
             )

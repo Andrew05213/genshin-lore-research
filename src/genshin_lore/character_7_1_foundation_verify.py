@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .loading_tips_source import array_records, sha
+from .sealed_sqlite import open_immutable_readonly
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -91,6 +92,14 @@ def _rows(conn, query, params=()):
     return [tuple(row) for row in conn.execute(query, params)]
 
 
+def _candidate_rows_by_relation(conn):
+    """Read actual physical candidates once; expected rows stay source-derived."""
+    grouped = defaultdict(list)
+    for row in conn.execute("SELECT * FROM foundation_candidate ORDER BY id"):
+        grouped[row[1]].append(tuple(row))
+    return grouped
+
+
 def _verify_schema(conn):
     """Reconstruct the full sealed schema from the tracked SQL contract, not DB SQL."""
     expected = sqlite3.connect(":memory:")
@@ -132,7 +141,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
     implementation = {name: sha(ROOT / name) for name in IMPL}
     parser_id = _id("parser", implementation)
     run_id = _id("run", parser_id, sha(scope_file))
-    conn = sqlite3.connect(f"file:{artifact}?mode=ro&immutable=1", uri=True)
+    conn = open_immutable_readonly(artifact)
     try:
         _eq(conn.execute("PRAGMA integrity_check").fetchone()[0], "ok", "SQLite integrity")
         _eq(conn.execute("PRAGMA foreign_key_check").fetchall(), [], "SQLite foreign keys")
@@ -144,6 +153,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
         primary_ids = {}
         counts = Counter()
         relation_states = Counter()
+        candidate_rows = _candidate_rows_by_relation(conn)
         for basename, native_field in sorted(PRIMARY.items()):
             relative = "ExcelBinOutput/" + basename
             scanned = 0
@@ -267,7 +277,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
                     expected = (relation_id, row_id, pointer, kind, _json(value), boundary, status, len(targets), 0 if terminal else 1)
                     _eq(conn.execute("SELECT * FROM foundation_relation WHERE source_row_id=? AND kind=?", (row_id, kind)).fetchone(), expected, "relation " + kind + pointer)
                     expected_candidates = sorted((_id(relation_id, kind_, target_id), relation_id, target_id if kind_ == "primary" else None, target_id if kind_ == "lut" else None, target_id if kind_ == "item" else None, path, target_pointer) for kind_, target_id, path, target_pointer in targets)
-                    _eq(sorted(_rows(conn, "SELECT * FROM foundation_candidate WHERE relation_id=?", (relation_id,))), expected_candidates, "relation candidates " + kind + pointer)
+                    _eq(sorted(candidate_rows.get(relation_id, ())), expected_candidates, "relation candidates " + kind + pointer)
                     counts["relations"] += 1
                     counts["candidates"] += len(targets)
         actual_counts = {table: conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] for table in required_tables if table != "foundation_release"}

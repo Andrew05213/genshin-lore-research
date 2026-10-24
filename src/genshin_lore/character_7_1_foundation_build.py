@@ -256,10 +256,4 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
     except Exception:
         if conn is not None:
             conn.close()
-        try:
-            stat = output.stat()
-            if (stat.st_dev, stat.st_ino) == owned:
-                output.unlink()
-        except FileNotFoundError:
-            pass
         raise

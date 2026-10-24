@@ -214,5 +214,3 @@ def build(root: Path, scope_path: Path, component: str, output: Path):
     finally:
         if connection is not None:
             connection.close()
-        if stage.exists() and (stage.stat().st_dev, stage.stat().st_ino) == inode:
-            stage.unlink()

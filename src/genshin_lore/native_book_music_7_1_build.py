@@ -88,7 +88,4 @@ def build(source_root,scope_path,output):
  except Exception:
   if conn is not None:
    capture();conn.close();capture()
-  if _owned(output,owned):output.unlink()
-  for item,identity in owned_sidecars.items():
-   if _owned(item,identity):item.unlink()
   raise
