@@ -285,33 +285,32 @@ def test_publisher_directory_flush_failure_preserves_published_database(tmp_path
 
 
 def test_failed_research_publication_preserves_target_and_failed_receipt(tmp_path, monkeypatch):
-    from scripts.builders import research_dataset as module
+    from scripts.builders import research_staging as staging
     original = sqlite3.connect
+    publish = staging.publish_absent
     retained = []
-    error = InjectedFailure('synthetic failure after actual index backup')
+    error = InjectedFailure('synthetic failure after actual index publication')
 
-    class BrokenBackup(sqlite3.Connection):
-        def backup(self, target, **kwargs):
-            super().backup(target, **kwargs)
-            path = Path(target.execute('PRAGMA database_list').fetchone()[2])
-            Path(str(path)+'-journal').write_bytes(b'synthetic backup diagnostic')
-            retained.append(path)
-            raise error
+    def fail_after_publication(output, private, **kwargs):
+        publish(output, private, **kwargs)
+        assert output.is_file() and not private.exists()
+        Path(str(output)+'-journal').write_bytes(b'synthetic publication diagnostic')
+        retained.append(output)
+        raise error
 
-    def connect(path, *args, **kwargs):
-        if str(path) == ':memory:':
-            kwargs['factory'] = BrokenBackup
-        return original(path, *args, **kwargs)
-
-    monkeypatch.setattr(module, 'sqlite3', SimpleNamespace(**{**vars(sqlite3), 'connect': connect}))
+    monkeypatch.setattr(staging, 'publish_absent', fail_after_publication)
     pipeline = runpy.run_path(str(Path(__file__).with_name('test_research_pipeline.py')))['pipeline']
     with pytest.raises(InjectedFailure) as raised:
         pipeline(tmp_path/'stage')
     assert raised.value is error
     assert len(retained) == 1 and retained[0].is_file()
-    assert Path(str(retained[0])+'-journal').read_bytes() == b'synthetic backup diagnostic'
+    assert Path(str(retained[0])+'-journal').read_bytes() == b'synthetic publication diagnostic'
     directory = tmp_path/'stage/research_index'
     assert list(directory.glob('failure-*.json'))
     assert not (directory/'verified.json').exists()
+    diagnostic = json.loads((tmp_path/'stage/index-oracles/index-failure-artifact.json').read_text())
+    assert diagnostic['failed_phase'] == 'publication'
+    assert diagnostic['error_type'] == 'InjectedFailure'
+    assert diagnostic['error'] == str(error)
     with closing(original(retained[0].as_uri()+'?mode=ro&immutable=1', uri=True)) as db:
         assert db.execute('SELECT count(*) FROM research_text').fetchone()[0] == 2
