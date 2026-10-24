@@ -13,7 +13,7 @@
   → Agent 阅读、解释与引用
 ```
 
-完整有界数据入口按上述流程生成 35 个输入、统一索引与本次来源绑定。它不继承原部署 acceptance，也不自动构建可选 semantic overlay；实际验证范围见 [当前状态](status.md)。
+完整有界数据入口按上述流程生成 35 个输入、统一索引与本次来源绑定。`--stage all` 默认继续构建独立 semantic overlay，须先提供固定本地模型及 semantic 依赖；`--without-semantic` 显式选择基础数据模式。默认搜索仍为 literal，不继承原部署 acceptance；实际验证范围见 [当前状态](status.md)。
 
 ## 目录
 

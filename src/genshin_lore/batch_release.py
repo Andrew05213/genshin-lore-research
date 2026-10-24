@@ -171,10 +171,6 @@ def create_private_staging(target: str | Path, *, prefix: str) -> tuple[int, Pat
             os.fchmod(descriptor, stat.S_IRUSR | stat.S_IWUSR)
     except BaseException:
         os.close(descriptor)
-        try:
-            Path(name).unlink()
-        except FileNotFoundError:
-            pass
         raise
     return descriptor, Path(name)
 
@@ -199,7 +195,11 @@ def publish_absent(
     *,
     inputs: Iterable[tuple[str, str | Path]] = (),
 ) -> None:
-    """Atomically publish a staged output while never replacing a competitor."""
+    """Publish without replacing a competitor; retain files on flush failure.
+
+    An existing target is not proof of successful durability or verification.
+    Callers must require their independent verification and stage receipt.
+    """
 
     semantic_inputs = tuple(inputs) + (("staging", staging),)
     target_path, staging_path, _ = assert_output_paths(
@@ -207,7 +207,6 @@ def publish_absent(
     )
     assert staging_path is not None
     fsync_file(staging_path)
-    published_identity: tuple[int, int] | None = None
     with stable_sibling_lock(target_path, inputs=semantic_inputs):
         # This check is intentionally repeated under the stable lock.  A
         # caller racing the preflight can create the target between checks;
@@ -219,22 +218,8 @@ def publish_absent(
         if stat.S_ISLNK(before.st_mode) or not stat.S_ISREG(before.st_mode):
             raise BatchReleaseError("staging output changed to a non-regular file")
         os.replace(staging_path, target_path)
-        published_identity = (int(before.st_dev), int(before.st_ino))
-        try:
-            sync_directory(target_path.parent)
-        except BaseException:
-            # Roll back only the inode this invocation published.  If another
-            # process replaced the target, preserve that competitor's file.
-            try:
-                current = os.lstat(target_path)
-            except FileNotFoundError:
-                current = None
-            if current is not None and published_identity == (
-                int(current.st_dev), int(current.st_ino)
-            ):
-                target_path.unlink()
-                sync_directory(target_path.parent)
-            raise
+        # Failure remains unqualified; keep the published inode for diagnosis.
+        sync_directory(target_path.parent)
 
 
 __all__ = [

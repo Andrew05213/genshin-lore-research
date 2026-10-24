@@ -1,0 +1,149 @@
+{
+  "executed_at": "2026-10-19",
+  "scope": "Linux embedding build throughput; no parser, ranking, evidence, release or Windows deployment change",
+  "baseline_commit": "cf1788f3696cb07eae31c60b79539458936e6ce6",
+  "optimized_builder_commit": "003910e39247c6f05011a3d21f24510377a57d38",
+  "environment": {
+    "platform": "Linux x86_64 KVM",
+    "python": "3.12.3",
+    "sqlite": "3.45.1",
+    "affinity_cpu_count": 8,
+    "cpu_quota": "max",
+    "memory_bytes": 16762720256,
+    "swap_bytes": 4294963200,
+    "fastembed": "0.7.4",
+    "onnxruntime": "1.30.0",
+    "hnswlib": "0.8.0",
+    "numpy": "2.5.3"
+  },
+  "model": {
+    "name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "faf4aa4225822f3bc6376869cb1164e8e3feedd0",
+    "dimension": 384,
+    "model_tree_sha256": "a7afbe9e63e0060cf7ca4a995e11ee5c916ff0c129b3096b6309eb530427c19f"
+  },
+  "previous_complete_build": {
+    "executed_at": "2026-10-18",
+    "status": "PASS_LINUX_FULL_35_INPUT_REBUILD_WITH_SEMANTIC",
+    "commit": "cf1788f3696cb07eae31c60b79539458936e6ce6",
+    "wall": "1:19:54",
+    "max_rss_kib": 14677296,
+    "exact_inputs": 35,
+    "core_providers": 33,
+    "verified_database_stages": 60,
+    "new_observed_oom_kill": 0,
+    "preserved_failure_history_files": 633,
+    "source_acquisition": "existing clean pinned checkouts, not a new network acquisition",
+    "semantic_seconds": 2131.079369901214
+  },
+  "paired_screen": {
+    "status": "PASS_BYTE_IDENTICAL_VECTORS",
+    "method": "768 evenly spaced source windows; warmed local model; serial six arms, reversed second repeat",
+    "selection_sha256": "0c1b0969fe7d01a2f51f81c5bcda5aa169d6cdd31afaed48f183a8db135e16a0",
+    "raw_ndarray_sha256_all_runs": "35c017d0b1cea851a4e4fab55a3dee7fae43b6d9fc8fd139a4f1fdf01b218c3e",
+    "max_absolute_difference_all_runs": 0.0,
+    "seconds": {
+      "source_order_threads2_batch64": [16.479332632850856, 16.083717315923423],
+      "source_order_threads4_batch64": [9.403639182914048, 9.128853935748339],
+      "source_order_threads8_batch64": [9.414404506795108, 9.497468898072839],
+      "source_order_threads2_batch32": [13.480585725978017, 13.512524193152785],
+      "length_order_threads2_batch64": [10.356267630122602, 10.350121788214892],
+      "length_order_threads4_batch64": [5.75706806499511, 5.739497886970639]
+    },
+    "baseline_median_seconds": 16.28152497438714,
+    "adopted_median_seconds": 5.748282975982875,
+    "whole_pipeline_speedup_claimed": false
+  },
+  "complete_affected_overlay": {
+    "status": "PASS_AFFECTED_SEMANTIC_COMPONENT",
+    "freshly_computed": true,
+    "physical_occurrences": 105265,
+    "windows": 106589,
+    "build_seconds": 745.0361250317656,
+    "embedding_seconds": 708.6358516109176,
+    "ann_seconds": 16.849313866347075,
+    "build_verify_compare_and_config_wall": "13:07.04",
+    "max_rss_kib": 1630128,
+    "input_rowset_sha256": "4ef88ad7911980a991132f9b0993234b59572b5c4e1d538e6b230363c4592c2b",
+    "vectors_npy_sha256": "7cebf44a7104731c9912a9f140fe1d19b61dd1f3eaaac1b355bb8c97a725a38c",
+    "hnsw_sha256": "69ce93bfc36b75b4714681cca279bf5c433fb9059202f5963209e5528fa03702",
+    "metadata_sha256": "24941d9cc6f663c06ffab5397fe4222b428b1250fe483c355d0b9d6f9efce18d",
+    "lexicon_sha256": "0598d2cb1ca5303702cc110cfc5805c878192e997095e5a9b286b0821eb09cec",
+    "independent_full_source_oracle": "PASS",
+    "all_vector_rows_byte_equal_to_baseline": true,
+    "all_input_mapping_rows_equal_to_baseline": true,
+    "hnsw_byte_equal_to_baseline": true,
+    "timing_caveat": "Prior full run on a different day; only the small paired screen is contemporaneous controlled timing",
+    "full_35_input_reassembly_on_optimized_code": "NOT_RUN",
+    "formal_release_acceptance": "NOT_RUN"
+  },
+  "reused_research_index": {
+    "size_bytes": 6569705472,
+    "sha256": "7df0d9bb0230bf8df0bd4e9d44b35441b0c4ac22b051c0159ea2a3425f2755b8",
+    "counts": {
+      "source_artifact": 35,
+      "adapter_coverage": 195,
+      "research_container": 921382,
+      "research_text": 3761013,
+      "research_relation": 663590,
+      "research_candidate": 446132
+    }
+  },
+  "discarded_index_experiments": {
+    "all_complete_source_oracles_and_full_logical_rowsets": "PASS",
+    "baseline": {"build_and_memory_oracle_seconds": 415.5192213859409, "including_disk_oracle_seconds": 605.5438325339928, "max_rss_kib": 14408160},
+    "vacuum_into": {"build_and_memory_oracle_seconds": 523.7621462219395, "including_disk_oracle_seconds": 704.4226102670655, "max_rss_kib": 8318740},
+    "direct_backup": {"build_and_memory_oracle_seconds": 506.4400268322788, "including_disk_oracle_seconds": 703.0319031313993, "max_rss_kib": 8318992},
+    "decision": "REVERTED: less memory but slower; final research_dataset.py unchanged from baseline",
+    "whole_pipeline_memory_improvement_claimed": false,
+    "three_owned_closed_duplicate_trial_indexes_retired_after_equivalence": true,
+    "original_qualified_index_retained": true
+  },
+  "executed_checks": {
+    "locked_base_ci_environment": "PASS: 228 tests in 23.63 seconds, no optional model dependencies",
+    "original_tests_retained": 212,
+    "new_synthetic_cases": 16,
+    "compile": "PASS",
+    "six_public_help_commands": "PASS",
+    "markdown_links_and_apache_metadata": "PASS",
+    "wheel_metadata_and_no_data": "PASS",
+    "real_five_tool_mcp": "PASS",
+    "literal_default_and_four_explicit_modes": "PASS",
+    "search_pagination": "PASS",
+    "book_story_continuation": "PASS",
+    "dialogue_cursor_and_provenance": "PASS",
+    "preserved_intermediate_test_failure": "227 passed / 1 missing documentation link; linked report added, original test unchanged",
+    "windows_full_source_build": "NOT_RUN",
+    "model_answer_acceptance": "NOT_RUN",
+    "merged_prs": false,
+    "deployed_runtime_changed": false
+  },
+  "capacity": {
+    "accounting": "inclusive project roots and related tmp/worktrees/caches; allocated blocks; device/inode deduplicated",
+    "before_allocated_bytes": 80221032448,
+    "after_allocated_bytes": 81190805504,
+    "hard_bytes": 90000000000,
+    "warning_bytes": 77309411328,
+    "after_hard_headroom_bytes": 8809194496,
+    "after_host_free_bytes": 129146007552,
+    "unknown_count": 0,
+    "another_full_35_build_with_27_gb_additional_peak_fits": false
+  },
+  "local_raw_evidence": {
+    "distributed": false,
+    "retained_with_failures": true,
+    "relative_to_local_experiment_root_sha256": {
+      "embedding-input.json": "9e62eabcb7200d77521613c0398e0c635f28f7a07feb713ffc9b9108ca4fedad",
+      "embedding-screen.json": "d41acd033e8ea1457d78cb741cec8f8f6468e618f5deb302378271a6ba779b9c",
+      "index-before/qualification.json": "08e796014a74899d96af721e5d61b9f942e0758e3e606f98eb221f8a608c61f6",
+      "index-after/qualification.json": "3949f78587327328ba1112bc22a52ccc0dd93e25e6a5e853c60b25c00d11578b",
+      "index-after-final/qualification.json": "01e548fb0e3bd0febe6f65b0b72aa9d106fed193ae6b687b7506a2f70d01e103",
+      "semantic-after/build.json": "2ee2bcb0a7b8e11d9f3d71b859323db3d62c1176981b47ea794aee27d1b8ba6f",
+      "semantic-oracle.json": "226b030d1028896470b73bbe368d84b8aeec7f3904f8459f4c6fb93a182b9bc8",
+      "semantic-comparison.json": "367de73c4d8c0ae81b37c30ccb5e65f995e453c5cd9452e488354ef47b32933c",
+      "semantic-after.time.txt": "3be6fb70d2e068ae68ec35e34e4f3294c0d389126c78b2cac75b2aa35d6b4358",
+      "runtime-checks.json": "0437558603ab303ac3a09de2dd221feab86e51a37ff94ff55f4636fb0c986f00",
+      "pytest-final-ci.stdout.log": "1741cca4d94a087d92c85702c93492268491da3b68eb693bcb483df544869a42"
+    }
+  }
+}

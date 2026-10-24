@@ -227,10 +227,9 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
             raise FileExistsError("Readable output appeared during build")
         os.link(compact, output)
         compact.unlink()
+        stage.unlink()
         return {**release, "artifact": {"size_bytes": output.stat().st_size, "sha256": file_sha(output)},
                 "build_seconds": time.monotonic() - started}
     finally:
         if db is not None:
             db.close()
-        stage.unlink(missing_ok=True)
-        compact.unlink(missing_ok=True)

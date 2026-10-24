@@ -8,6 +8,7 @@ import numpy as np
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
+from .hnsw_io import load_index
 
 
 class SemanticUnavailable(RuntimeError):
@@ -24,7 +25,12 @@ def sha256_file(path: Path) -> str:
 
 def tree_sha256(path: Path) -> str:
     digest = hashlib.sha256()
-    for child in sorted(item for item in path.rglob("*") if item.is_file()):
+    # Hash the same case-sensitive relative-name order on every platform;
+    # WindowsPath's native comparisons otherwise move mixed-case filenames.
+    for child in sorted(
+        (item for item in path.rglob("*") if item.is_file()),
+        key=lambda item: item.relative_to(path).as_posix(),
+    ):
         digest.update(child.relative_to(path).as_posix().encode() + b"\0")
         digest.update(bytes.fromhex(sha256_file(child)))
     return digest.hexdigest()
@@ -155,8 +161,8 @@ class SemanticDiscovery:
             raise SemanticUnavailable("semantic runtime dependencies unavailable") from exc
         try:
             self.index = hnswlib.Index(space=config["metric"], dim=config["dimension"])
-            self.index.load_index(
-                str(self.hnsw_path), max_elements=config["unique_candidate_count"]
+            load_index(
+                self.index, self.hnsw_path, max_elements=config["unique_candidate_count"]
             )
         except Exception as exc:
             self.db.close()

@@ -737,7 +737,7 @@ def build_physical_artifact(
     # delegating all actual work to batch_m3_physical.
     if artifact_path is None:
         owned_root = Path(temp_root).absolute() if temp_root is not None else Path(
-            tempfile.mkdtemp(prefix="batch-m3-r0-inventory-", dir="/tmp")
+            tempfile.mkdtemp(prefix="batch-m3-r0-inventory-", dir=batch_space.temporary_root())
         )
         artifact_path = owned_root / PHYSICAL_ARTIFACT_NAME
         temp_root = owned_root

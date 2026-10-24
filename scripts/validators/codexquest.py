@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'src'))
 from genshin_lore.loading_tips_source import array_records,pairs,sha
+from genshin_lore.sealed_sqlite import open_immutable_readonly
 COMMIT='9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99';TREE='aa578c08c402af39b41f1ffc95124d10f5410272'
 MAIN='ExcelBinOutput/MainQuestExcelConfigData.json';CORE_SOURCE='ExcelBinOutput/QuestCodexExcelConfigData.json'
 TABLES=('codex_root','codex_child','codex_navigation','codex_candidate','codex_text_slot','codex_text_candidate')
@@ -78,10 +79,10 @@ def verify(source,artifact,report,core_manifest,core_artifact):
   check(local.stat().st_size==seal['size'] and sha(local)==seal['sha256'],'source bytes '+path)
   check(subprocess.check_output(['git','-C',str(source),'rev-parse',COMMIT+':'+path],text=True).strip()==seal['blob'],'source Git blob '+path)
  check(identity('run',release['snapshot'],release['parser_build_id'],release['source_seals'],dependency)==release['ingest_run_id'],'run identity')
- db=sqlite3.connect(artifact.absolute().as_uri()+'?mode=ro&immutable=1',uri=True);schema_check(db)
+ db=open_immutable_readonly(artifact);schema_check(db)
  check(db.execute('PRAGMA integrity_check').fetchone()[0]=='ok' and not db.execute('PRAGMA foreign_key_check').fetchall(),'database integrity')
  check(json.loads(db.execute('SELECT manifest_json FROM codex_release').fetchone()[0])==release,'release row')
- core=sqlite3.connect(Path(core_artifact).absolute().as_uri()+'?mode=ro&immutable=1',uri=True)
+ core=open_immutable_readonly(core_artifact)
  codex_targets=defaultdict(list)
  for oid,pointer,raw in core.execute("SELECT occurrence_id,source_pointer,raw_record_json FROM physical_row WHERE row_kind='primary'"):
   item=json.loads(raw);check(type(item.get('parentQuestId')) is int and type(item.get('id')) is int,'QuestCodex source row')

@@ -5,7 +5,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import sqlite3
+import stat
 import subprocess
 import time
 from collections import Counter
@@ -110,6 +112,32 @@ def scan(path: Path, relative: str):
     return (relative, root, source_sha, len(raw), "parsed_json", layout, status, len(rows)), rows
 
 
+def source_paths(source: Path) -> list[str]:
+    """Enumerate the fixed source boundary independently of artifact row claims."""
+    paths = []
+
+    def unreadable(error):
+        raise SystemExit("source inventory cannot traverse: " + str(error))
+
+    for name in ROOTS:
+        root = source / name
+        info = root.lstat()
+        if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+            raise SystemExit("fixed source root unavailable: " + name)
+        for current, directories, files in os.walk(root, followlinks=False, onerror=unreadable):
+            for directory in directories:
+                path = Path(current) / directory
+                info = path.lstat()
+                if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode):
+                    raise SystemExit("source inventory non-directory: " + str(path))
+            for file in files:
+                path = Path(current) / file
+                if not stat.S_ISREG(path.lstat().st_mode):
+                    raise SystemExit("source inventory non-regular file: " + str(path))
+                paths.append(path.relative_to(source).as_posix())
+    return sorted(paths, key=lambda value: value.encode("utf-8", "surrogateescape"))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", type=Path, required=True)
@@ -129,7 +157,9 @@ def main() -> int:
     metadata = {key: json.loads(value) for key, value in connection.execute("SELECT key,value FROM metadata")}
     if (metadata["snapshot_id"], metadata["parser_build_id"], metadata["ingest_run_id"]) != (SNAPSHOT, PARSER, RUN):
         raise SystemExit("R0 identity mismatch")
-    file_rows = connection.execute("SELECT source_file_id,relative_path,root,source_sha256,size_bytes,parse_status,layout,record_status,occurrence_count FROM source_file ORDER BY source_file_id")
+    file_rows = connection.execute("SELECT source_file_id,relative_path,root,source_sha256,size_bytes,parse_status,layout,record_status,occurrence_count FROM source_file ORDER BY source_file_id").fetchall()
+    if metadata.get("source_roots") != list(ROOTS) or [row[1] for row in file_rows] != source_paths(args.source):
+        raise SystemExit("source file set mismatch")
     occurrences = connection.execute("SELECT occurrence_id,source_file_id,ordinal,pointer,value_sha256,snapshot_id,parser_build_id,ingest_run_id FROM physical_occurrence ORDER BY occurrence_id")
     next_occurrence = occurrences.fetchone()
     files = records = bytes_total = 0
@@ -157,6 +187,9 @@ def main() -> int:
         raise SystemExit("SQLite integrity")
     connection.close()
     after = sha_file(args.artifact)
+    if before != after or any(Path(str(args.artifact) + suffix).exists()
+                              for suffix in ("-wal", "-shm", "-journal")):
+        raise SystemExit("artifact changed or SQLite sidecars appeared during verification")
     result = {
         "contract": "7.1-r0-independent-verifier-v1", "status": "PASS",
         "artifact": {"size_bytes": args.artifact.stat().st_size, "sha256": after},

@@ -119,8 +119,4 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
     except Exception:
         if db is not None:
             db.close()
-        if owned is not None and output.exists():
-            stat = output.stat()
-            if (stat.st_dev, stat.st_ino) == owned:
-                output.unlink()
         raise

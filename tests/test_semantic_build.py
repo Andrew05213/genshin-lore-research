@@ -1,6 +1,7 @@
 """Synthetic vectors exercise delivery/oracles, not multilingual model quality."""
 
 import hashlib
+import io
 import json
 from pathlib import Path
 import sqlite3
@@ -53,6 +54,11 @@ class FixtureIndex:
         with open(path, "wb") as stream:
             np.save(stream, self.get_items(range(len(self.values))))
 
+    def index_file_size(self):
+        stream = io.BytesIO()
+        np.save(stream, self.get_items(range(len(self.values))))
+        return len(stream.getvalue())
+
     def load_index(self, path, **kwargs):
         with open(path, "rb") as stream:
             self.values = dict(enumerate(np.load(stream)))
@@ -70,6 +76,68 @@ class FixtureEmbedding:
 
     def query_embed(self, texts, **kwargs):
         return self.embed(texts, **kwargs)
+
+
+def test_embedding_batches_are_stable_complete_and_bounded():
+    texts = ["长" * 400, "短" * 40, "中" * 80, "同" * 40]
+    batches = list(builder.embedding_batches(texts, batch_size=2))
+    assert batches == [[1, 3], [2, 0]]
+    assert sorted(i for batch in batches for i in batch) == list(range(len(texts)))
+    assert list(builder.embedding_batches([], batch_size=2)) == []
+    assert list(builder.embedding_batches(texts[:1], batch_size=64)) == [[0]]
+
+
+@pytest.mark.parametrize("batch_size", [0, -1])
+def test_embedding_batches_reject_nonpositive_bounds(batch_size):
+    with pytest.raises(ValueError, match="batch size"):
+        list(builder.embedding_batches(["合成"], batch_size=batch_size))
+
+
+def test_length_batches_reduce_padding_without_a_timing_threshold():
+    texts = ["长" * 400, "短" * 40] * 65
+    batches = list(builder.embedding_batches(texts))
+    assert [len(batch) for batch in batches] == [64, 64, 2]
+    assert sorted(i for batch in batches for i in batch) == list(range(len(texts)))
+    original_padding = sum(
+        max(map(len, texts[start : start + 64])) * len(texts[start : start + 64])
+        for start in range(0, len(texts), 64)
+    )
+    grouped_padding = sum(max(len(texts[i]) for i in batch) * len(batch) for batch in batches)
+    assert grouped_padding < original_padding
+
+
+def test_length_inference_preserves_original_vector_and_ann_order(
+    tmp_path, synthetic_model, monkeypatch
+):
+    inference_lengths = []
+    ann_ids = []
+
+    class ObservedEmbedding(FixtureEmbedding):
+        def embed(self, texts, **kwargs):
+            inference_lengths.extend(map(len, texts))
+            return super().embed(texts, **kwargs)
+
+    class ObservedIndex(FixtureIndex):
+        def add_items(self, values, ids):
+            ann_ids.extend(map(int, ids))
+            super().add_items(values, ids)
+
+    monkeypatch.setitem(sys.modules, "fastembed", SimpleNamespace(TextEmbedding=ObservedEmbedding))
+    monkeypatch.setitem(sys.modules, "hnswlib", SimpleNamespace(Index=ObservedIndex))
+    index, output, report = build_fixture(tmp_path)
+    assert inference_lengths == sorted(inference_lengths)
+    assert ann_ids == list(range(4))
+    vectors = np.load(output / "vectors.npy")
+    with sqlite3.connect(output / "metadata.sqlite") as meta, sqlite3.connect(index) as source:
+        for vector_id, source_id, start, end in meta.execute(
+            "SELECT vector_id,research_text_id,window_start,window_end "
+            "FROM semantic_occurrence ORDER BY vector_id"
+        ):
+            text = source.execute("SELECT raw_text FROM research_text WHERE id=?", (source_id,)).fetchone()[0]
+            expected = next(FixtureEmbedding().embed([text[start:end]]))
+            np.testing.assert_array_equal(vectors[vector_id], expected)
+    assert verify(index, output)["full_mapping_rows"] == 4
+    assert report["hnsw_parameters"] == {"M": 12, "ef_construction": 80, "seed": 100, "threads": 1}
 
 
 @pytest.fixture
@@ -187,6 +255,43 @@ def test_complete_mapping_preserves_duplicate_physical_occurrences(
             scope_path=tmp_path / "scope.json",
             available_allocated_bytes=3_000_000_000,
         )
+
+
+def test_sorted_inference_keeps_ann_insertion_and_vector_ids(tmp_path, synthetic_model, monkeypatch):
+    calls = []
+
+    class RecordingIndex(FixtureIndex):
+        def add_items(self, values, ids):
+            calls.extend(map(int, ids))
+            super().add_items(values, ids)
+
+    monkeypatch.setattr(sys.modules['hnswlib'], 'Index', RecordingIndex)
+    index, output, report = build_fixture(tmp_path)
+    with sqlite3.connect(output/'metadata.sqlite') as meta, sqlite3.connect(index) as source:
+        rows = meta.execute('SELECT vector_id,research_text_id,window_start,window_end FROM semantic_occurrence ORDER BY vector_id').fetchall()
+        values = np.load(output/'vectors.npy')
+        for vector_id, text_id, start, end in rows:
+            raw = source.execute('SELECT raw_text FROM research_text WHERE id=?',(text_id,)).fetchone()[0]
+            expected = next(FixtureEmbedding().embed([raw[start:end]]))
+            np.testing.assert_array_equal(values[vector_id], expected)
+    assert calls == list(range(len(rows)))
+    assert verify(index, output)['status'] == 'PASS'
+
+
+def test_build_threads_are_explicit_and_do_not_change_query_budget(tmp_path, synthetic_model, monkeypatch):
+    used = []
+
+    def embedding(**kwargs):
+        used.append(kwargs['threads'])
+        return FixtureEmbedding()
+
+    monkeypatch.setattr(sys.modules['fastembed'], 'TextEmbedding', embedding)
+    index, cache, scope = inputs(tmp_path)
+    report = builder.build(index, tmp_path/'overlay', cache, scope_path=scope,
+                           available_allocated_bytes=3_000_000_000, embedding_threads=3)
+    assert used == [3]
+    assert report['build_parameters']['embedding_threads'] == 3
+    assert report['config']['model']['threads'] == 2
 
 
 def test_independent_oracle_rejects_resealed_missing_source_window(
@@ -412,6 +517,10 @@ def test_vector_stage_qualifies_and_generates_usable_isolated_config(
     )
     assert json.loads(config.read_text())["bindings"] == "semantic-bindings.json"
     job.semantic()
+    job.embedding_threads = 7
+    with pytest.raises(ValueError, match="resume identity"):
+        job.semantic()
+    del job.embedding_threads
     value = json.loads(receipt.read_text())
     value["independent_verifier_completed"] = False
     receipt.write_text(json.dumps(value), encoding="utf-8")
