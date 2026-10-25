@@ -1,5 +1,6 @@
 """Caches reuse input syntax, never incomplete parses or oracle projections."""
 import json
+from functools import partial
 
 import pytest
 
@@ -9,9 +10,10 @@ from genshin_lore.textmap_input_cache import textmap_session
 
 
 RAW = br'{"ignored":"a", "1" : "\u4e2d\ntext", "x/y~z":"\"quoted\""}'
+cached_reader = partial(builder.iter_textmap_pairs, _reuse_input=True)
 
 
-@pytest.mark.parametrize('reader,error', [(builder.iter_textmap_pairs, builder.BatchM1Error),
+@pytest.mark.parametrize('reader,error', [(cached_reader, builder.BatchM1Error),
                                         (oracle._iter_source_pairs, oracle.BatchM1VerificationError)])
 def test_cache_and_uncached_complete_lexical_observations_match(reader, error):
     complete = list(reader(RAW))
@@ -27,7 +29,7 @@ def test_cache_and_uncached_complete_lexical_observations_match(reader, error):
 
 @pytest.mark.parametrize('raw', [b'{"good":"yes","bad":42}', b'{"good":"yes","good":"no"}',
     b'{"good":"yes"}trailing', b'{"good":"yes"', b'{"bad":"\xff"}', br'{"bad":"\q"}'])
-@pytest.mark.parametrize('reader,error', [(builder.iter_textmap_pairs, builder.BatchM1Error),
+@pytest.mark.parametrize('reader,error', [(cached_reader, builder.BatchM1Error),
                                         (oracle._iter_source_pairs, oracle.BatchM1VerificationError)])
 def test_cache_cannot_hide_unselected_errors_or_register_partial_parse(raw, reader, error):
     with textmap_session(1) as state:
@@ -39,7 +41,7 @@ def test_cache_cannot_hide_unselected_errors_or_register_partial_parse(raw, read
 
 def test_readers_do_not_consume_each_others_compiled_input_or_exceptions(monkeypatch):
     with textmap_session(1) as state:
-        list(builder.iter_textmap_pairs(RAW, wanted_keys={'1'}))
+        list(cached_reader(RAW, wanted_keys={'1'}))
         monkeypatch.setattr(builder, 'iter_textmap_pairs', lambda *a, **k: pytest.fail('oracle used builder'))
         result = list(oracle._iter_source_pairs(RAW, wanted_keys={'1'}))
         assert result[0].raw_text == '\u4e2d\ntext'
@@ -48,8 +50,8 @@ def test_readers_do_not_consume_each_others_compiled_input_or_exceptions(monkeyp
 
 def test_changed_bytes_miss_even_when_text_or_size_is_similar():
     with textmap_session(1) as state:
-        first = list(builder.iter_textmap_pairs(b'{"1":"A"}', wanted_keys={'1'}))
-        second = list(builder.iter_textmap_pairs(b'{"1":"B"}', wanted_keys={'1'}))
+        first = list(cached_reader(b'{"1":"A"}', wanted_keys={'1'}))
+        second = list(cached_reader(b'{"1":"B"}', wanted_keys={'1'}))
         assert first[0].raw_text == 'A' and second[0].raw_text == 'B'
         assert state['misses']['builder'] == 2
 
@@ -58,18 +60,45 @@ def test_oversized_inputs_are_validated_but_not_retained():
     raw = json.dumps({'1': 'x'*2_000_000}).encode()
     with textmap_session(1) as state:
         for _ in range(2):
-            assert list(builder.iter_textmap_pairs(raw, wanted_keys=set())) == []
+            assert list(cached_reader(raw, wanted_keys=set())) == []
         assert state['misses']['builder'] == 2 and not state['readers']['builder']
 
 
 def test_disabled_and_nested_sessions_do_not_leak_or_reuse():
     with textmap_session(1) as outer:
-        list(builder.iter_textmap_pairs(RAW, wanted_keys=set()))
+        list(cached_reader(RAW, wanted_keys=set()))
         with textmap_session(0) as inner:
-            list(builder.iter_textmap_pairs(RAW, wanted_keys=set()))
+            list(cached_reader(RAW, wanted_keys=set()))
             assert not inner['readers']
-        list(builder.iter_textmap_pairs(RAW, wanted_keys=set()))
+        list(cached_reader(RAW, wanted_keys=set()))
         assert outer['hits']['builder'] == 1
     with textmap_session(1) as fresh:
-        list(builder.iter_textmap_pairs(RAW, wanted_keys=set()))
+        list(cached_reader(RAW, wanted_keys=set()))
         assert fresh['misses']['builder'] == 1 and not fresh['hits']
+
+
+def test_other_shared_reader_callers_do_not_implicitly_enable_caching():
+    with textmap_session(1) as state:
+        for _ in range(2):
+            assert list(builder.iter_textmap_pairs(RAW, wanted_keys={'1'}))
+        assert state['readers'] == {} and state['hits'] == state['misses'] == {}
+
+
+@pytest.mark.parametrize('stage,limit', [('core', 1024*1024**2), ('narrative', 0)])
+def test_launcher_releases_core_cache_and_does_not_enable_other_stages(tmp_path, monkeypatch, stage, limit):
+    import sys
+    from types import SimpleNamespace
+    from scripts import build as driver
+    from genshin_lore.textmap_input_cache import _session
+    states = []
+    def run():
+        state = _session.get()
+        assert state['limit'] == limit
+        list(cached_reader(RAW, wanted_keys={'1'}))
+        states.append(state)
+    monkeypatch.setattr(driver, 'allocated', lambda *_: 0)
+    monkeypatch.setattr(driver, 'Rebuild', lambda *_: SimpleNamespace(**{stage:run}))
+    monkeypatch.setattr(sys, 'argv', ['build', '--stage', stage, '--source', str(tmp_path),
+                                     '--output-root', str(tmp_path/'output')])
+    driver.main()
+    assert len(states) == 1 and states[0]['readers'] == {} and _session.get() is None

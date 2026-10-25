@@ -96,14 +96,14 @@ def _pointer(ordinal: int, key: str) -> str:
 
 
 def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | None = None,
-                      _index=None) -> Iterator[PairOccurrence]:
+                      _index=None, _reuse_input=False) -> Iterator[PairOccurrence]:
     """Validate every pair; optionally materialize only selected lexical rows.
 
     Selection never short-circuits parsing, type/duplicate checks or EOF.
     With no selection the complete physical rowset is unchanged.
     """
 
-    if wanted_keys is not None and _index is None:
+    if _reuse_input and wanted_keys is not None and _index is None:
         from .textmap_input_cache import LexicalIndex, cached_index
         def compile_index():
             index = LexicalIndex()

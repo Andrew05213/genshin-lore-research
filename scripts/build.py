@@ -1582,11 +1582,14 @@ def main():
         else (args.stage,)
     )
     from genshin_lore.textmap_input_cache import textmap_session
-    with textmap_session(args.textmap_cache_mib) as cache:
-        for stage in selected:
+    for stage in selected:
+        # Only M3 opts in. Release its retained input before the memory-heavy
+        # independent Research rowset oracle and semantic stages begin.
+        with textmap_session(args.textmap_cache_mib if stage == 'core' else 0) as cache:
             getattr(job, stage)()
-    print(json.dumps({'stage': 'textmap_input_cache', **{
-        k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
+        if stage == 'core':
+            print(json.dumps({'stage': 'textmap_input_cache', **{
+                k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
 
 
 if __name__ == "__main__":

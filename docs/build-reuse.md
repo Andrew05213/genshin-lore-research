@@ -4,7 +4,7 @@
 
 ## 单次构建的输入复用
 
-`scripts/build.py` 的 `--textmap-cache-mib` 默认 1024，每个独立 reader 最多缓存 1 GiB，`0` 关闭。builder 与 oracle 分别完整扫描 TextMap 语法、类型、重复键和文件末尾，各自保存原文和词法位置，不共享解析器或投影结果。命中时仍核对全部输入字节 SHA，再取得所需 key 的原始 token、ordinal 和 pointer。缓存只存在于当前调用，结束即释放，不写数据库或常驻缓存服务。
+`scripts/build.py` 的 `--textmap-cache-mib` 默认 1024，每个独立 reader 最多缓存 1 GiB，`0` 关闭。仅 M3 显式启用；其 builder 与 oracle 分别完整扫描 TextMap 语法、类型、重复键和文件末尾，各自保存原文和词法位置，不共享解析器或投影结果。命中时仍核对全部输入字节 SHA，再取得所需 key 的原始 token、ordinal 和 pointer。共享 reader 的其他调用保持原行为。缓存在 core 阶段结束即释放，不驻留到内存密集的 Research oracle 或向量阶段，不写数据库或常驻缓存服务。
 
 此限额约束缓存，不代表整个进程的内存上限；首次解析、原始文件和数据库仍占内存。实测三个组件峰值 RSS 从约 514 MiB 增至 1,877 MiB。内存受限时关闭缓存，不关闭验证。512 MiB 的诊断曾发生六文件循环淘汰、没有命中且更慢，因此不采用该默认值。
 
