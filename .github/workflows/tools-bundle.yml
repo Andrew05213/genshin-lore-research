@@ -8,6 +8,12 @@ on:
       - 'scripts/maintenance/package_tools.py'
       - 'requirements-tools.lock'
       - 'requirements-wheel-build.*'
+      - 'src/**'
+      - 'scripts/**'
+      - 'recipes/**'
+      - 'schemas/**'
+      - 'migrations/**'
+      - 'pyproject.toml'
 
 permissions:
   contents: read
@@ -30,9 +36,9 @@ jobs:
       - name: Install locked native wheel build dependencies
         run: python -m pip install --require-hashes -r requirements-wheel-build.lock
       - name: Build platform wheels from locked inputs
-        run: |
-          python -m pip wheel --no-build-isolation --require-hashes -r requirements-tools.lock -w wheelhouse
-          python -m pip wheel --no-build-isolation --require-hashes -r requirements-wheel-build.lock -w wheelhouse
+        run: python -m pip wheel --no-build-isolation --require-hashes -r requirements-tools.lock -w wheelhouse
+      - name: Include locked build backend wheels
+        run: python -m pip wheel --no-build-isolation --require-hashes -r requirements-wheel-build.lock -w wheelhouse
       - name: Package source and dependencies only
         run: python scripts/maintenance/package_tools.py --wheelhouse wheelhouse --output tools.zip
       - name: Verify offline installation
