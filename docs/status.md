@@ -2,6 +2,8 @@
 
 ## 可执行入口
 
+冷构建输入复用与 v3 阶段回执新增了定向来源测量，见 [构建复用](build-reuse.md)。这不是本次完整 35 输入重建成功声明；原始失败和历史全量记录继续保留。代码/依赖平台包不包含模型或向量缓存。
+
 默认完整构建已包含向量阶段。Linux 在 `cf1788f` 完成了新的 35 输入、33 个 core providers、统一索引完整来源核对及 106,589 个有界向量窗口重建。后续 embedding 优化及独立验证见 [Linux 性能记录](linux-build-performance.md)。原生 Windows 后来在 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7` 记录完成 35 输入、默认向量与新配置 MCP；不是以 Linux/WSL 结果代替 Windows。[工程整改记录](engineering-finalization.md) 保留当时的执行范围。
 
 当前整合分支同时保留 Linux 线程/组批、Windows 来源绑定/磁盘 staging 和人物对白阅读。556 项合成测试、真实 hnswlib 路径、定向来源 A/B 与有界真实模型比较通过，详见 [整合验证](reviews/linux-windows-integration.md)。整合版本没有重新执行完整 35 输入构建，不继承两个父分支的全量成功资格，也没有部署或改动正式 current。

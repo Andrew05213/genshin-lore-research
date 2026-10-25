@@ -10,6 +10,7 @@
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
 | [Linux 构建性能](linux-build-performance.md) | 实际耗时、embedding 调度优化、等价验证及未采用的索引实验 |
+| [冷构建与阶段复用](build-reuse.md) | 进程内独立输入缓存、v3 回执、同条件耗时及未执行范围 |
 | [Windows 源码使用](guides/windows.md) | PowerShell、平台边界和原生 CI |
 | [工程维护范围](engineering-maintenance.md) | 当前重构边界、复杂度控制与验证层次 |
 | [工程整改交付（历史）](engineering-finalization.md) | 当时六个待审 PR、200 项测试、原生 CI、A/B、review 与执行范围 |

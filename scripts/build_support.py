@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import hashlib
+from fnmatch import fnmatchcase
 from importlib.metadata import PackageNotFoundError, version
 import json
 from pathlib import Path
 import sqlite3
 import sys
 
-RECEIPT_CONTRACT = "local-build-stage-receipt-v2"
+RECEIPT_CONTRACT = "local-build-stage-receipt-v3"
 # Actual complete-verification contracts used by build.py. These describe
 # verification execution, not logical identity or whole-game completeness.
 SUCCESS_STATES = frozenset({"PASS", "PASS_PHYSICAL_PROJECTION", "PASS_COMPLETE_SOURCE_ROWSETS"})
@@ -39,24 +40,74 @@ def file_seal(path):
     return {"size_bytes": path.stat().st_size, "sha256": digest.hexdigest()}
 
 
-def pipeline_identity(root, source, history, *, inputs=(), parameters=None):
-    """Conservative build-code/contract fingerprint; never hash docs or game trees.
+def code_scope(root, stage):
+    """Explicit ownership only; unclassified code/contracts remain shared.
 
-    Deliberately not an inferred dependency graph. Any pipeline implementation
-    change invalidates resume; stage-specific generated inputs are explicit.
+    Unknown stages retain a full fingerprint. This is not import inference:
+    domain dependencies are reviewed in the existing build recipe directory.
     """
+    policy_path = root / 'recipes/build-code-scopes.json'
+    if not policy_path.exists():
+        return None, None
+    policy = load_object(policy_path)
+    if (policy.get('contract') != 'explicit-build-code-scopes-v1'
+            or policy.get('unknown_files') != 'shared' or policy.get('unknown_stages') != 'full'):
+        raise ValueError('unknown build code scope policy')
+    groups = policy['groups']
+    selected = set()
+    for name, group in groups.items():
+        stages = set(group.get('stages', []))
+        if 'stage_recipe' in group:
+            stages.update(m['family'] for m in load_object(root/group['stage_recipe'])['mappings'])
+        if stage in stages:
+            selected.add(name)
+    if stage == 'r0':
+        selected.add('r0')  # R0 files are conservatively shared, not guessed by prefix.
+    if not selected:
+        return None, policy
+    pending = list(selected)
+    while pending:
+        name = pending.pop()
+        for dependency in groups.get(name, {}).get('depends', []):
+            if dependency not in groups:
+                raise ValueError('unknown explicit build code dependency: '+dependency)
+            if dependency not in selected:
+                selected.add(dependency)
+                pending.append(dependency)
+    return selected, policy
+
+
+def pipeline_identity(root, source, history, *, inputs=(), parameters=None):
+    """Stage-scoped code plus full source/input/environment/report bindings."""
     root = Path(root).resolve()
+    selected, policy = code_scope(root, (parameters or {}).get('stage'))
+    patterns = {}
+    if selected is not None:
+        for name, group in policy['groups'].items():
+            for pattern in group['files']:
+                directory, filename = pattern.rsplit('/', 1)
+                if any(c in directory for c in '*?['):
+                    raise ValueError('build ownership requires explicit directories')
+                patterns.setdefault(directory, []).append((name, filename))
     files = {}
     for directory, pattern in (("src", "*.py"), ("scripts", "*.py"), ("schemas", "*.sql"),
                                ("migrations", "*.sql"), ("recipes", "*.json"),
                                ("manifests", "*.json")):
         for path in sorted((root / directory).rglob(pattern)):
-            files[str(path.relative_to(root))] = file_seal(path)
+            relative = str(path.relative_to(root)).replace('\\', '/')
+            directory, filename = relative.rsplit('/', 1)
+            owners = list({name for name, pattern in patterns.get(directory, ())
+                           if fnmatchcase(filename, pattern)})
+            if len(owners) > 1:
+                raise ValueError('overlapping build code ownership: '+relative)
+            if selected is None or not owners or owners[0] in selected:
+                files[relative] = file_seal(path)
     for name in ("pyproject.toml", "requirements-build.txt"):
         if (root/name).is_file():
             files[name] = file_seal(root/name)
     declared = {str(Path(path).resolve()): file_seal(path) for path in inputs}
     return {"contract": RECEIPT_CONTRACT, "implementation_and_contracts": files,
+            "code_scope": sorted(selected) if selected is not None else 'conservative_full',
             "environment": environment_identity(),
             "source_root": str(Path(source).resolve()),
             "historical_source_root": str(Path(history).resolve()) if history else None,
@@ -82,7 +133,7 @@ def load_object(path):
 
 
 def qualify_stage_dependency(root, source, history, directory, name, snapshot):
-    """Check an exact v2 dependency; shared by orchestration and consumers."""
+    """Check an exact current dependency; shared by orchestration and consumers."""
     directory = Path(directory)
     artifact = directory / "artifact.sqlite"
     receipt = load_object(directory / "verified.json")

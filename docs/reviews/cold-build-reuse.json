@@ -1,0 +1,565 @@
+{
+  "artifact_byte_equivalence": true,
+  "ci": "pending push",
+  "control": {
+    "a_cache_mib": 0,
+    "b_cache_mib": 1024,
+    "input_scope": [
+      "activity_archive",
+      "avatar_config_archive",
+      "achievement_archive"
+    ],
+    "order": [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    "os_cache": "not flushed; application-cold only",
+    "process": "fresh process per run",
+    "repeats_per_arm": 2,
+    "verification": "complete independent source oracle for every component in every run"
+  },
+  "failures_retained": [
+    {
+      "error": "source checkout dirty before initial sparse checkout populated",
+      "fix": "populate only newly owned sparse worktree, then independently qualify exact snapshot",
+      "scope": "diagnostic source setup"
+    },
+    {
+      "error": "expected resume diagnostic while malformed policy rejected earlier",
+      "fix": "valid policy drift checks existing receipt; unknown policy remains rejected",
+      "scope": "new synthetic test"
+    }
+  ],
+  "full_35_input_build": "NOT_RUN: current project headroom below the 27 GB fresh peak gate",
+  "model_weights_published": false,
+  "rejected_experiments": {
+    "cache_512_mib": {
+      "hits": 0,
+      "reason": "six-file cyclic eviction; default changed before frozen comparison",
+      "total_s": 34.985700452234596
+    },
+    "deferred_research_indexes": {
+      "decision": "NOT_RETAINED",
+      "reason": "projection plus secondary indexes shows no meaningful gain; oracle variance dominates",
+      "runs": {
+        "index-final-a1": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09707826375961304,
+            "fts_integrity_and_release": 0.13736173091456294,
+            "independent_source_oracle": 5.939924045931548,
+            "post_vacuum_independent_oracle": 4.22037632483989,
+            "projection_with_input_seal_checks": 1.0962564088404179,
+            "secondary_indexes": 5.460809916257858e-06,
+            "vacuum": 0.23463172698393464
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 12.044680217746645
+        },
+        "index-final-a2": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09708628710359335,
+            "fts_integrity_and_release": 0.1330553931184113,
+            "independent_source_oracle": 4.1662072371691465,
+            "post_vacuum_independent_oracle": 4.1309996522031724,
+            "projection_with_input_seal_checks": 1.0729292598553002,
+            "secondary_indexes": 2.2980384528636932e-06,
+            "vacuum": 0.22948883520439267
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.144363767001778
+        },
+        "index-final-b1": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09913835488259792,
+            "fts_integrity_and_release": 0.1293913652189076,
+            "independent_source_oracle": 4.191459930036217,
+            "post_vacuum_independent_oracle": 4.19091980997473,
+            "projection_with_input_seal_checks": 0.9705111240036786,
+            "secondary_indexes": 0.11124277114868164,
+            "vacuum": 0.23123675817623734
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.212617747019976
+        },
+        "index-final-b2": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09876881493255496,
+            "fts_integrity_and_release": 0.134816100820899,
+            "independent_source_oracle": 4.0994093348272145,
+            "post_vacuum_independent_oracle": 4.193200322799385,
+            "projection_with_input_seal_checks": 0.9634403670206666,
+            "secondary_indexes": 0.09484641021117568,
+            "vacuum": 0.2230235398747027
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.089062260929495
+        }
+      }
+    }
+  },
+  "runs": [
+    {
+      "cache_mib": 0,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      },
+      "label": "a1",
+      "max_rss_kib": 526624,
+      "rows": [
+        {
+          "build_s": 4.342844453174621,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.780830561183393
+        },
+        {
+          "build_s": 4.422486217692494,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "eb743bbfc1a684db7edb60f329115b4fefe044abb93ef1dc0bbc90773ff06594",
+              "size_bytes": 4112384
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.8254735711961985
+        },
+        {
+          "build_s": 5.398350536823273,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "3cdf326fcae88ff77f67d12089079a49bd871ede70320fbd9d1c3e7c6b0f175a",
+              "size_bytes": 30642176
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 4.275298576802015
+        }
+      ],
+      "total_s": 26.045491284225136
+    },
+    {
+      "cache_mib": 1024,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      },
+      "label": "b1",
+      "max_rss_kib": 1914756,
+      "rows": [
+        {
+          "build_s": 5.755629315972328,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 5.13591766403988
+        },
+        {
+          "build_s": 1.3896219544112682,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "eb743bbfc1a684db7edb60f329115b4fefe044abb93ef1dc0bbc90773ff06594",
+              "size_bytes": 4112384
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 0.76810208754614
+        },
+        {
+          "build_s": 2.398857924155891,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "3cdf326fcae88ff77f67d12089079a49bd871ede70320fbd9d1c3e7c6b0f175a",
+              "size_bytes": 30642176
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 1.240097832866013
+        }
+      ],
+      "total_s": 16.688358729239553
+    },
+    {
+      "cache_mib": 1024,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      },
+      "label": "b2",
+      "max_rss_kib": 1922272,
+      "rows": [
+        {
+          "build_s": 5.811235324013978,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 5.0994655173271894
+        },
+        {
+          "build_s": 1.4197300616651773,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "eb743bbfc1a684db7edb60f329115b4fefe044abb93ef1dc0bbc90773ff06594",
+              "size_bytes": 4112384
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 0.7649186681956053
+        },
+        {
+          "build_s": 2.378253797069192,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "3cdf326fcae88ff77f67d12089079a49bd871ede70320fbd9d1c3e7c6b0f175a",
+              "size_bytes": 30642176
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 1.2211621832102537
+        }
+      ],
+      "total_s": 16.695506846997887
+    },
+    {
+      "cache_mib": 0,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      },
+      "label": "a2",
+      "max_rss_kib": 526864,
+      "rows": [
+        {
+          "build_s": 4.392005241941661,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.7912314902059734
+        },
+        {
+          "build_s": 4.467816985677928,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "eb743bbfc1a684db7edb60f329115b4fefe044abb93ef1dc0bbc90773ff06594",
+              "size_bytes": 4112384
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.8502719081006944
+        },
+        {
+          "build_s": 5.438853828236461,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "3cdf326fcae88ff77f67d12089079a49bd871ede70320fbd9d1c3e7c6b0f175a",
+              "size_bytes": 30642176
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 4.295729914680123
+        }
+      ],
+      "total_s": 26.236048575025052
+    }
+  ],
+  "scope": "three complete M3 components, not full 35-input rebuild",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "stage_resume": [
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [
+        "build",
+        "verify"
+      ],
+      "label": "fresh",
+      "seconds": 8.37642466602847
+    },
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "unchanged",
+      "seconds": 0.043083416763693094
+    },
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "runtime-change",
+      "seconds": 0.04283323185518384
+    }
+  ],
+  "status": "PASS_TARGETED_SOURCE_EQUIVALENCE",
+  "tests": "pending final run",
+  "tools_bundle": "pending offline installation",
+  "vectors_published": false
+}

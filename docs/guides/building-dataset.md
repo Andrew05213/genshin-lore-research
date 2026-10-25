@@ -64,13 +64,13 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 
 每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
 
-v2 阶段回执绑定 Python/SQLite/直接依赖版本、构建与验证 Python、SQL、静态 manifest/recipe、显式依赖与参数，以及三个报告文件的 size/SHA。恢复逐项检查，并拒绝 SQLite sidecar。未核验、失败、损坏或旧版回执不能自动恢复，必须保留原目录并使用新输出。此保守策略会使任意管线代码变化使旧阶段失效；无关文档、测试和 Git commit 变化不使回执失效。
+v3 阶段回执绑定 Python/SQLite/直接依赖版本、阶段代码域、SQL、静态 manifest/recipe、显式依赖与参数，以及三个报告文件的 size/SHA。恢复逐项检查，并拒绝 SQLite sidecar。未核验、失败、损坏或旧版回执不能自动恢复，必须保留原目录并使用新输出。代码域在 `recipes/build-code-scopes.json` 明确列出；未分类实现和全部静态合同仍共享，未知阶段绑定全部实现。v2 不自动转签为 v3。明确隔离的对白运行时代码变化不使数据阶段失效；无关文档、测试和 Git commit 变化不使回执失效。
 
-Character 后续组件通过本次 metadata 中显式的 `local-character-foundation-v1` 合同消费新 foundation：检查本次 artifact、完整 v2 回执、报告 seal、实现/环境和来源 scope，并重跑原独立 foundation 来源 oracle，要求结果与已封存报告一致。text/lore/voice 的 release 和 run 身份绑定本次 foundation 的实际 size/SHA，lore/voice 的 text 依赖也须精确匹配该 foundation。没有本地合同的历史路径继续要求原固定 artifact seal；不将新数据库写成历史 artifact，也不修改历史凭据。
+Character 后续组件通过本次 metadata 中显式的 `local-character-foundation-v1` 合同消费新 foundation：检查本次 artifact、完整 v3 回执、报告 seal、实现/环境和来源 scope，并重跑原独立 foundation 来源 oracle，要求结果与已封存报告一致。text/lore/voice 的 release 和 run 身份绑定本次 foundation 的实际 size/SHA，lore/voice 的 text 依赖也须精确匹配该 foundation。没有本地合同的历史路径继续要求原固定 artifact seal；不将新数据库写成历史 artifact，也不修改历史凭据。
 
-Native Message 属于 `--stage quest`：先完成本次 Quest/Talk、QuestNarrative 和独立 oracle，再在 metadata 中生成 `local-native-message-quest-narrative-v1` 绑定。消费时核对这两个阶段的当前 v2 回执、完整显式输入、实现/环境和 artifact/report seal，重跑 QuestNarrative 独立来源 oracle；MainQuest 候选集从本次目标 occurrence 与消息原始 locator 完整重建。历史 message scope 的路径、parser/run 与 seal 原样保留，不作为新构建的依赖。
+Native Message 属于 `--stage quest`：先完成本次 Quest/Talk、QuestNarrative 和独立 oracle，再在 metadata 中生成 `local-native-message-quest-narrative-v1` 绑定。消费时核对这两个阶段的当前 v3 回执、完整显式输入、实现/环境和 artifact/report seal，重跑 QuestNarrative 独立来源 oracle；MainQuest 候选集从本次目标 occurrence 与消息原始 locator 完整重建。历史 message scope 的路径、parser/run 与 seal 原样保留，不作为新构建的依赖。
 
-Readable 与 Subtitle 在消费 R0 前先核对本次完整 v2 依赖回执，再将精确 R0 size/SHA 写入本次 `metadata/` 下的作用域。其来源范围和 run 约束保留，builder 与独立 verifier 使用同一份作用域并继续精确核验；该动态文件也纳入阶段输入 seal。源码中的历史作用域及字节 seal 不改写，未核验、漂移或其他输出的依赖回执不能用来生成当前绑定。
+Readable 与 Subtitle 在消费 R0 前先核对本次完整 v3 依赖回执，再将精确 R0 size/SHA 写入本次 `metadata/` 下的作用域。其来源范围和 run 约束保留，builder 与独立 verifier 使用同一份作用域并继续精确核验；该动态文件也纳入阶段输入 seal。源码中的历史作用域及字节 seal 不改写，未核验、漂移或其他输出的依赖回执不能用来生成当前绑定。
 
 动态文件不再写入源码树：
 

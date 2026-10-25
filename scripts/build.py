@@ -1499,6 +1499,8 @@ def main():
     )
     parser.add_argument("--embedding-threads", type=int,
                         help="Positive ONNX build thread count; default Linux <=4 affinity-visible CPUs, other platforms 2")
+    parser.add_argument('--textmap-cache-mib', type=int, default=1024,
+                        help='Transient lexical input cache per independent reader, 0..1024 MiB; 0 disables')
     parser.add_argument(
         "--available-allocated-bytes",
         type=int,
@@ -1508,6 +1510,8 @@ def main():
     args = parser.parse_args()
     if args.embedding_threads is not None and args.embedding_threads <= 0:
         parser.error("--embedding-threads must be positive")
+    if not 0 <= args.textmap_cache_mib <= 1024:
+        parser.error('--textmap-cache-mib must be 0..1024')
     if args.stage in ("all", "quest", "events"):
         if args.historical_source is None:
             parser.error(
@@ -1577,8 +1581,12 @@ def main():
         if args.stage == "all"
         else (args.stage,)
     )
-    for stage in selected:
-        getattr(job, stage)()
+    from genshin_lore.textmap_input_cache import textmap_session
+    with textmap_session(args.textmap_cache_mib) as cache:
+        for stage in selected:
+            getattr(job, stage)()
+    print(json.dumps({'stage': 'textmap_input_cache', **{
+        k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
 
 
 if __name__ == "__main__":

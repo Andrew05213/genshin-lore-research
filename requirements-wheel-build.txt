@@ -1,0 +1,5 @@
+# Build backend for the platform-specific hnswlib wheel; no model downloads.
+setuptools==82.0.1
+wheel==0.48.0
+pybind11==3.0.2
+numpy==2.5.3

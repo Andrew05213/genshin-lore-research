@@ -160,11 +160,13 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
     helper_shas = {
         "physical_array_reader": file_sha(Path(physical_array_reader.__file__)),
         "textmap_lexical_reader": file_sha(Path(lexical_textmap_reader.__file__)),
+        "textmap_input_cache": file_sha(ROOT / "src/genshin_lore/textmap_input_cache.py"),
     }
     textmap_observation = None
     if family["v2_textmap_paths"]:
         textmap_parser = "m3-71-textmap-parser:" + identity(
-            "six-file-lexical-textmap-v1", helper_shas["textmap_lexical_reader"], sha(schema_raw)
+            "six-file-lexical-textmap-v2-input-cache", helper_shas["textmap_lexical_reader"],
+            helper_shas["textmap_input_cache"], sha(schema_raw)
         )[:40]
         textmap_run = "m3-71-textmap-run:" + identity(
             SNAPSHOT, textmap_parser,

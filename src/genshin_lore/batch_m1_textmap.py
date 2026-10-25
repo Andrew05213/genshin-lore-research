@@ -95,18 +95,35 @@ def _pointer(ordinal: int, key: str) -> str:
     return f"/@{ordinal}:{escaped}"
 
 
-def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | None = None) -> Iterator[PairOccurrence]:
+def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | None = None,
+                      _index=None) -> Iterator[PairOccurrence]:
     """Validate every pair; optionally materialize only selected lexical rows.
 
     Selection never short-circuits parsing, type/duplicate checks or EOF.
     With no selection the complete physical rowset is unchanged.
     """
 
+    if wanted_keys is not None and _index is None:
+        from .textmap_input_cache import LexicalIndex, cached_index
+        def compile_index():
+            index = LexicalIndex()
+            list(iter_textmap_pairs(raw, wanted_keys=frozenset(), _index=index))
+            return index
+        index = cached_index('builder', raw, compile_index)
+        if index is not None:
+            for ordinal, key, key_json, value_json in index.selected(wanted_keys):
+                record = f'{{"key":{key_json},"text":{value_json}}}'
+                yield PairOccurrence(ordinal, _pointer(ordinal, key), key_json, key,
+                    value_json, json.loads(value_json), sha256_text(key_json),
+                    sha256_text(value_json), sha256_text(record))
+            return
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
         raise BatchM1Error("TextMap is not valid UTF-8") from exc
     decoder = json.JSONDecoder()
+    if _index is not None:
+        _index.text = text
     position = _skip_ws(text, 0)
     if position >= len(text) or text[position] != "{":
         raise BatchM1Error("TextMap must be a top-level JSON object")
@@ -156,6 +173,8 @@ def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | N
         if key in seen:
             raise BatchM1Error(f"duplicate TextMap key observed at pair {ordinal}: {key!r}")
         seen.add(key)
+        if _index is not None:
+            _index.add(ordinal, key, key_start, key_end, value_start, value_end)
         ordinal += 1
         position = _skip_ws(text, value_end)
         if position >= len(text):
