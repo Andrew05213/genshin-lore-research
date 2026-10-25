@@ -29,6 +29,8 @@
 
 附件包含该 commit 的 tracked 源码、SQL/静态合同、锁定的公共 Python 依赖与平台 hnswlib wheel，以及 `bundle.json` 文件 SHA 和第三方许可元数据。原 wheel 内的第三方许可文件保留。它不包含游戏来源、数据库、运行绑定、模型权重、embedding 或向量缓存。代码继续使用 Apache-2.0，第三方依赖仍按各自许可分发。
 
+依赖 wheel 按上游原样保留；其中 NumPy 的测试数组和 ONNX Runtime 的微型示例模型不是本项目的 embedding 模型或向量缓存，不参与游戏文本索引。
+
 `requirements-tools.lock` 固定运行/semantic 依赖输入；`requirements-wheel-build.lock` 固定原生 wheel 构建依赖。编译后 wheel 的字节与上游 sdist 不同，因此附件 `install.lock` 使用实际平台 wheel 的新 SHA，而不伪称二者字节相同。附件只能用于标注的平台、架构和 Python ABI；不能复制已有 venv 跨平台使用。
 
 解压附件后，在解压目录执行：

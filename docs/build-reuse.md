@@ -24,13 +24,13 @@ Linux / Python 3.12，同一固定 7.1 源，串行 A–B–B–A，两组各两
 
 | 三个真实 M3 组件合计 | A：关闭缓存 | B：1024 MiB/reader |
 |---|---:|---:|
-| 第一次 | 26.045 s | 16.688 s |
-| 第二次 | 26.236 s | 16.696 s |
-| 中位数 | 26.141 s | 16.692 s |
+| 第一次 | 25.873 s | 16.825 s |
+| 第二次 | 25.918 s | 16.894 s |
+| 中位数 | 25.896 s | 16.859 s |
 
-Activity、Avatar、Achievement 的构建与独立 oracle 合计减少 9.449 s（36.15%）。每组均完整读取固定六个 TextMap；B 的 builder/oracle 各 6 次编译、12 次复用。十二个 artifact 的 size/SHA 按组件完全一致。
+Activity、Avatar、Achievement 的构建与独立 oracle 合计减少 9.036 s（34.90%）。每组均完整读取固定六个 TextMap；B 的 builder/oracle 各 6 次编译、12 次复用。十二个 artifact 的 size/SHA 按组件完全一致。加入显式 opt-in 和生命周期限定后重新执行这组测量，之前约 36.15% 的初测也保留在机器记录中。
 
-真实 Activity 阶段另测：首次构建和核验 8.376 s；相同身份恢复 0.043 s；仅修改隔离的对白 runtime 后恢复 0.043 s，均保留同一 artifact seal。后两次没有调用 builder/verifier，仍逐项检查回执及 artifact。
+真实 Activity 阶段另测：首次构建和核验 8.212 s；相同身份恢复 0.047 s；仅修改隔离的对白 runtime 后恢复 0.046 s，均保留同一 artifact seal。后两次没有调用 builder/verifier，仍逐项检查回执及 artifact。
 
 Research 延后创建五个非唯一索引也做了同条件 A–B–B–A。投影加建索引约 1.08 s，对照约 1.08 s；总耗时差异主要来自 oracle 运行波动，未采用此修改。
 
