@@ -55,6 +55,25 @@ def test_archive_manifest_hashes_platform_wheel_lock_and_untracked_exclusion(che
         package(root, wheels, tmp_path/'tools.zip')
 
 
+def test_vendored_distribution_metadata_is_not_the_wheels_own_metadata(checkout, tmp_path):
+    root, wheels = checkout
+    path = wheel(wheels)
+    with ZipFile(path, 'a') as z:
+        z.writestr('synthetic_dependency/_vendor/other.dist-info/METADATA',
+                   'Name: vendored-other\nVersion: 99\n')
+    result = package(root, wheels, tmp_path/'tools.zip')
+    assert result['wheels'][0]['name'] == 'synthetic-dependency'
+
+
+def test_multiple_top_level_metadata_directories_are_rejected(checkout, tmp_path):
+    root, wheels = checkout
+    path = wheel(wheels)
+    with ZipFile(path, 'a') as z:
+        z.writestr('other.dist-info/METADATA', 'Name: other\nVersion: 1.0\n')
+    with pytest.raises(ValueError, match='invalid wheel'):
+        package(root, wheels, tmp_path/'tools.zip')
+
+
 @pytest.mark.parametrize('failure', ['unlocked', 'duplicate', 'empty', 'data', 'dirty', 'symlink'])
 def test_bundle_rejects_untrusted_or_incomplete_inputs(checkout, tmp_path, failure):
     root, wheels = checkout

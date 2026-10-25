@@ -52,7 +52,8 @@ def package(root, wheelhouse, output):
             raise ValueError('wheelhouse must contain only platform wheels: '+path.name)
         raw = path.read_bytes()
         with ZipFile(path) as wheel:
-            metadata = [n for n in wheel.namelist() if n.endswith('.dist-info/METADATA')]
+            metadata = [n for n in wheel.namelist()
+                        if n.endswith('.dist-info/METADATA') and n.count('/') == 1]
             if len(metadata) != 1 or wheel.testzip() is not None:
                 raise ValueError('invalid wheel: '+path.name)
             info = BytesParser().parsebytes(wheel.read(metadata[0]))
