@@ -1,0 +1,943 @@
+{
+  "artifact_seals": {
+    "baseline": {
+      "codexquest": {
+        "sha256": "f2026fbe2dcbbcf346811511a11335e7ccd28b052fa35a00dc4518fc47f2121e",
+        "size_bytes": 870948864
+      },
+      "r0": {
+        "sha256": "216988588bdb059f9ab87d11fb068121b82f1a27ea5df249025315f9e8e2810e",
+        "size_bytes": 4711841792
+      },
+      "research_index": {
+        "sha256": "80a27f47253e5ac1d8187d2c0d0876a1072b1376aa67ce45a3f76aea198c1c8b",
+        "size_bytes": 6569967616
+      },
+      "schema20_core": {
+        "sha256": "3f32686f507018e272a770cb1723feb671b2f7517f33dab1ef2d5b65e5afcb99",
+        "size_bytes": 1050247168
+      }
+    },
+    "optimized": {
+      "codexquest": {
+        "sha256": "c4d881cb7681c91d4e93ec29f87464cb2b3c4e2bac3c0667da6478cd9f3825bd",
+        "size_bytes": 870862848
+      },
+      "r0": {
+        "sha256": "216988588bdb059f9ab87d11fb068121b82f1a27ea5df249025315f9e8e2810e",
+        "size_bytes": 4711841792
+      },
+      "research_index": {
+        "sha256": "65c9ef22b92ecb1c2606abddf202eee23d76be496bbdad68b02a12aa993def6d",
+        "size_bytes": 6569897984
+      },
+      "schema20_core": {
+        "sha256": "430a5510483cb50f8dcd0b280d9a9224b69507bd1bbdc2879fa9abb3a75c5e60",
+        "size_bytes": 1050247168
+      }
+    }
+  },
+  "authority": {
+    "accepted_files_and_WIP_restored_exactly": true,
+    "original_failed_comparison_retained": true,
+    "runtime_side_effects_archived": 2,
+    "unchanged": true
+  },
+  "baseline_implementation": "c5e7617e85861f09cef0250f7344c3d50a97c950",
+  "capacity": {
+    "accounting": "Same project, worktree, temporary-output and cache scope; device/inode dedup. Fresh output retained. Controlled trial/baseline database copies retired only after full verification; original reports/failures retained.",
+    "after": {
+      "allocated_bytes": 71904923648,
+      "hard_headroom_bytes": 18095076352,
+      "host_free_bytes": 146015932416,
+      "unknown": []
+    },
+    "before": {
+      "allocated_bytes": 52043014144,
+      "hard_headroom_bytes": 37956985856,
+      "host_free_bytes": 166777970688,
+      "unknown": []
+    },
+    "hard_bytes": 90000000000,
+    "new_nonvector_gate": 26000000000,
+    "new_with_vector_gate": 28000000000,
+    "warning_bytes": 77309411328
+  },
+  "controlled_codex_cache": {
+    "A_builder_median": 151.1879446117673,
+    "A_total_median": 233.51131182233803,
+    "B_builder_median": 64.2874836283736,
+    "B_total_median": 148.7250319160521,
+    "after_cache_kib": 131072,
+    "all_522_roots_and_7_support_inputs": true,
+    "all_bytes_and_logical_seals_equal": true,
+    "artifact": {
+      "sha256": "b1f631bb258cff2a9efe506cb7edd8efbbfcec736fbeabccef8414c2706c9fa7",
+      "size_bytes": 870895616
+    },
+    "before_cache_kib": 2000,
+    "order": [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    "run_totals": [
+      236.10285911196843,
+      150.17617557290941,
+      147.2738882591948,
+      230.91976453270763
+    ],
+    "total_reduction_percent": 36.30928165518325
+  },
+  "controlled_gc_scan": {
+    "A_median": 11.924630234017968,
+    "B_median": 10.420116535620764,
+    "complete_rowsets_equal": true,
+    "initial_A1_excluded": "Inventory walker overlapped; original output and timing retained. Repeated cleanly before B1, no result replacement.",
+    "order": [
+      "A1-clean",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    "reduction_percent": 12.616858291380854,
+    "seconds": [
+      11.896825999952853,
+      10.472204939927906,
+      10.368028131313622,
+      11.952434468083084
+    ]
+  },
+  "date": "2026-10-28",
+  "failures_and_limits": [
+    "Initial inventory-overlapped GC scan retained; clean A1 repeated before B1. All clean measurements retained.",
+    "Larger Research cache and regex whitespace are correctness PASS but performance adoption rejected.",
+    "First ordinary Git SSH push hung; initial PR creation returned422 before branch existed. Same-endpoint independent SSH retry succeeded; old owned push terminated after success. No force or disabled safety checks.",
+    "Initial final authority/WIP comparison failed only for two new 51-byte ONNX Runtime :memory:.ses files. Isolated InferenceSession(bytes) reproduced this. Exact originals archived locally; identical original snapshot comparison then passed. Failed check retained.",
+    "Existing ONNX telemetry/mean-pooling warnings retained. Provider/model unchanged. Working-directory session metadata remains an operational issue.",
+    "OS cache not purged. Fresh application/output builds, not guaranteed physical-disk cold tests. One full run per implementation; no full-run variance estimate or broad speed guarantee.",
+    "New data remains local source-qualified output, not a formal product/deployment change. No game text, DB, model or vector committed.",
+    "Ad-hoc reporting probes initially rejected a descriptive path phrase and required unpromised SQL in the code-only wheel. Descriptions/probe were corrected to the documented source-checkout contract; original failures retained and no repository validator or test weakened."
+  ],
+  "implementation": "6d14f18a7575ec1c7d58f7ec2ea78733dc4a6577",
+  "mcp": {
+    "dialogue": {
+      "body_and_provenance_equivalence": true,
+      "cursor_mismatch_rejected": true,
+      "pages": 2,
+      "reading_extension_release_accepted": false,
+      "status": "PASS_DIALOGUE_MCP",
+      "tools": [
+        "describe_corpus",
+        "search_evidence",
+        "read_evidence",
+        "follow_evidence",
+        "inspect_evidence"
+      ]
+    },
+    "fresh_semantic_modes": {
+      "calls": 17,
+      "default_literal_equal": true,
+      "formal_release_accepted": false,
+      "literal_pagination_nonrepeating": true,
+      "model_autonomous_acceptance": false,
+      "modes": {
+        "hybrid": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "lexical": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "literal": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "semantic": {
+          "hits": 3,
+          "read_inspect_pass": true
+        }
+      },
+      "status": "PASS_FRESH_SEMANTIC_MCP_MODES",
+      "tools": [
+        "describe_corpus",
+        "search_evidence",
+        "read_evidence",
+        "follow_evidence",
+        "inspect_evidence"
+      ]
+    },
+    "fulltext": {
+      "checks": {
+        "book": {
+          "actual_coverage": [
+            {
+              "first_ordinal": 0,
+              "last_ordinal": 6,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 7,
+              "last_ordinal": 13,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 14,
+              "last_ordinal": 21,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 22,
+              "last_ordinal": 28,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 29,
+              "last_ordinal": 36,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 37,
+              "last_ordinal": 43,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 44,
+              "last_ordinal": 51,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 52,
+              "last_ordinal": 58,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 59,
+              "last_ordinal": 65,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 66,
+              "last_ordinal": 73,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 74,
+              "last_ordinal": 80,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 81,
+              "last_ordinal": 84,
+              "lines": 4,
+              "total_physical_lines": 85
+            }
+          ],
+          "continuation_pages": 12,
+          "inspection_completed": true,
+          "local_eof": true
+        },
+        "narrative": {
+          "tools": [
+            "query_research71_preview",
+            "inspect_research71_preview"
+          ]
+        },
+        "research": {
+          "all_five_called": true,
+          "tools": [
+            "describe_corpus",
+            "search_evidence",
+            "read_evidence",
+            "follow_evidence",
+            "inspect_evidence"
+          ]
+        },
+        "story": {
+          "actual_coverage": [
+            {
+              "end": 576,
+              "full_text_sha256": "d80e4b67ef06f9fe20bb40b418c974652874cd28040bb6a257c06b0ac4c8ab9a",
+              "segment_sha256": "92a05a40f347d63668acab79977833b608f72d25a45fae887ac10b6aed40693c",
+              "start": 400,
+              "total_chars": 576
+            }
+          ],
+          "continuation_pages": 1,
+          "inspection_completed": true,
+          "local_eof": true
+        }
+      },
+      "formal_release_accepted": false,
+      "model_autonomous_acceptance": false,
+      "status": "PASS_REBUILT_MCP_TRANSPORT_AND_CONTINUATION"
+    }
+  },
+  "nonvector_full_comparison": {
+    "baseline": {
+      "environment": [
+        "{\"dependencies\": {\"jsonschema\": \"4.26.0\", \"mcp\": \"2.1.1\", \"numpy\": \"2.5.3\"}, \"python\": [3, 12, 3], \"sqlite\": \"3.45.1\"}"
+      ],
+      "exit": 0,
+      "max_rss_kib": 4118424,
+      "runtime_checks": 5,
+      "runtime_status": "PASS_LOCAL_REBUILT_RUNTIME",
+      "seconds": 2371.15,
+      "verified_stages": 60,
+      "wall": "39:31.15"
+    },
+    "change_seconds": -117.51999999999998,
+    "optimized": {
+      "environment": [
+        "{\"dependencies\": {\"jsonschema\": \"4.26.0\", \"mcp\": \"2.1.1\", \"numpy\": \"2.5.3\"}, \"python\": [3, 12, 3], \"sqlite\": \"3.45.1\"}"
+      ],
+      "exit": 0,
+      "max_rss_kib": 4067648,
+      "runtime_checks": 5,
+      "runtime_status": "PASS_LOCAL_REBUILT_RUNTIME",
+      "seconds": 2253.63,
+      "verified_stages": 60,
+      "wall": "37:33.63"
+    },
+    "reduction_percent": 4.956244860088986
+  },
+  "physical_equivalence": {
+    "codex_six_table_rowsets": {
+      "candidate": {
+        "rows": 1037,
+        "sha256": "0da9ea60c34853c912c92ecc446e54a41266b197e06faa96e3e8cacc78d03b92"
+      },
+      "child": {
+        "rows": 118866,
+        "sha256": "08290482d5bbb05d039a950c09c6899331327494c525514583e0de35a94b58a6"
+      },
+      "navigation": {
+        "rows": 1044,
+        "sha256": "556d149563711c6d9299d8b31beeb2e33228c64a820afe4be5c73a1abe701a7b"
+      },
+      "root": {
+        "rows": 522,
+        "sha256": "202c29d19a563780560e84a59c135ae0fda539c052b3b291f91322b08de2d222"
+      },
+      "slot": {
+        "rows": 710709,
+        "sha256": "16e5f5c4f8a81a603eb73dca726e4e58ff0c6506ba6d42b58d2524a765d6ca65"
+      },
+      "text": {
+        "rows": 705107,
+        "sha256": "5199b235b1569e1cdfda69f72fa448ad68273fceac5d81d0cbdf6b7f8818a917"
+      }
+    },
+    "identity_boundary": "Independent source oracles verified each declared parser/run. Supplemental coordinate/raw-text/status comparison excludes regenerated IDs and is not logical identity equivalence.",
+    "source_seals_equal": true
+  },
+  "raw_evidence_sha256": {
+    "authority-comparison.json": "2be75d2d6e65dd0abfb27d6dce14b542b808f3b47a2c92b097f0c140d1f3ebbf",
+    "authority-delivered.json": "89fb2383942d4222d32d38e4c06ef83ca8486eb00da1c21b55e295740d313485",
+    "authority-restored-comparison.json": "690e7245a638be110c1f211aab04a1146d1557d1ccc7fc87e6d547fbfc583e54",
+    "baseline-comparison-retirement-receipt.json": "f274732ed839df014f2599cdbd0ef6795f04243cdd054fb31417b86ecf74aa51",
+    "baseline-retirement-complete.json": "2972a8f6d9b4baec83c5954f48d2261149bcf6649fa30550bcdf67a908c77975",
+    "baseline.log": "a4d1e8ea5e9d7a7c8629b8587025554d7d8c843affb9de0acae0707d999b2281",
+    "baseline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline.time.txt": "4ebc2ea9a6124e0364ea29346715da53b53d18ef0965fc8c4d555977cad3a9c2",
+    "codex-comparison.json": "0b66eef7dd8c2d8a209b5859d82d580d9837e5c05163c142f3fb298cca38ee44",
+    "codex-physical-comparison.json": "16776fbe9e48d017db2bc2fc58716db71e62eb33c183c2ca4da788cffc139976",
+    "final-tests.xml": "dfc9fb134465a2b3ad9ed5edd8250c18f70781b627bf36af4e33f7350c7f3dd2",
+    "fresh-modes-mcp.json": "c501fd5c03b1cabb3b98e2135d6f2858ea1e389213e91dec6b1652e9968c9c8d",
+    "full-comparison.json": "6f2c20ae3bec85dc394268c7ba1fa3e334972a2329ceca9e95bab8fe63f8fbd5",
+    "git-transport-note.json": "257c290d94fc4c344be79e4f21a582cec775dab826517783284d74b548d29698",
+    "index-comparison.json": "6c91618ed323d764a3530b8d7581fbf95e4f629c4c16e8c176acb0827d0af497",
+    "index-source-coverage-comparison.json": "38f5bef6200633b53b5d85b4e679489fdc21e5310cfc10f1528cfdbf0c936f39",
+    "mcp-dialogue.log": "40450e0dd0d46d8078628e10ff8f28baa3c01439e6a3aaba525ac8fdd4b89ea5",
+    "mcp-fulltext.log": "c23d733bb79ab45e6bfae0f7b28a34dd96cd7cceea9a9470aa14c0317b905b79",
+    "native-tests.xml": "fd8f620b389b2673eec6a3a411c78b6b286f7869c446c9afe5b31f2cd571b797",
+    "onnx-session-archive-receipt.json": "15a76fe144f12c8ca3bb3f43b1fcca0cb29a6f4ce7b22ea4d5df30611e711bfe",
+    "onnx-side-effect-probe.json": "24c43d67879bd98530916327078a6721de4703c2708fa92437c70e169a4e3c7e",
+    "optimized.log": "8a95d7ecc91ea3947d1bf302e712d06d66f1c5f68a5145783eb4dec8264d6653",
+    "optimized.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "optimized.time.txt": "cbb29b293e8aab98cd30e5454637e5b18c5a6bf2eda278ab1e4954e650f9c483",
+    "optimized/semantic/build.json": "ce6b7154101a46e0ff98dd60db7e4cbe0fde725dd21ac9df178f378b6da35e94",
+    "optimized/semantic/verified.json": "bf20ef60a7c7f938d3bc022d9d038110b202990dc65d1a46e669b8f787fa616b",
+    "optimized/semantic/verify.json": "21203c6c9723108c15f476ad9cdc2f38b961b6ec86586849b731d671339ddcc7",
+    "post-build-checks.json": "4e37e3f5201a1c4682c8ba4cb786974c42353fda5ce16fccce24eb690ee3863b",
+    "report-probe-corrections.json": "9679a050fca4df7c6fdf3a4cbfae00d40a0ecf84a45fb422ec535bc1b16d746f",
+    "scan-comparison.json": "5aee4fb45902ed9fd40dbb9b19b85ef1d56bfcee1f0770f39abdafebf5ebd665",
+    "semantic-integration.time.txt": "fa16d0b251332806bb962ac6f36ac25c3ab36a01fc65be2a80421929c1603d51",
+    "wheel-check.json": "8c8f498b69bd6993af5c01505644cf268af69fa3189abc53e18ec1034806d465",
+    "whitespace-comparison.json": "202248b622a406b7dedf5067f8730e1df59576ea5284a4cd00ce58238ecb2039"
+  },
+  "rejected_experiments": {
+    "regex_whitespace": {
+      "A_median": 10.258419515797868,
+      "B_median": 10.480303744086996,
+      "adopt": false,
+      "full_rowsets_equal": true,
+      "reduction_percent": -2.1629474983688057,
+      "seconds": [
+        10.362773243803531,
+        10.453685441054404,
+        10.506922047119588,
+        10.154065787792206
+      ]
+    },
+    "research_cache": {
+      "A_projection_median": 58.13262526458129,
+      "A_total_median": 181.8519744439982,
+      "B_projection_median": 56.29135431069881,
+      "B_total_median": 186.16116364998743,
+      "adopt": false,
+      "all_bytes_equal": true,
+      "order": [
+        "A1",
+        "B1",
+        "B2",
+        "A2"
+      ],
+      "projection_reduction_percent": 3.1673624672930853,
+      "total_reduction_percent": -2.3696136482236922
+    }
+  },
+  "scope": "Linux fresh bounded 35-input nonvector A/B plus separate fresh local vector-stage integration; not a release or promotion",
+  "separate_vector_integration": {
+    "batching": {
+      "batch_size": 64,
+      "order": "length_then_first_vector_id",
+      "reuse": "exact_text_within_current_build",
+      "reused_occurrence_windows": 39485,
+      "unique_inference_windows": 67104
+    },
+    "build_parameters": {
+      "ann_insertion_order": "original-physical-source-order",
+      "batch_size": 64,
+      "embedding_threads": 4,
+      "inference_order": "stable-character-length-v1",
+      "vector_id_order": "original-physical-source-order"
+    },
+    "builder_seconds": 519.7466061250307,
+    "dependencies": {
+      "fastembed": "0.7.4",
+      "hnswlib": "0.8.0",
+      "numpy": "2.5.3",
+      "onnxruntime": "1.30.0"
+    },
+    "dimension": 384,
+    "files": {
+      "build.json": {
+        "sha256": "ce6b7154101a46e0ff98dd60db7e4cbe0fde725dd21ac9df178f378b6da35e94",
+        "size_bytes": 6380
+      },
+      "index.hnsw": {
+        "sha256": "3ec66f4b512d7aec428fc058d2fb4943bb0d9959f027db172daff402bc842424",
+        "size_bytes": 176155524
+      },
+      "invocation.json": {
+        "sha256": "bc6620cd65c5949999b5f4fca95c6b01b6b14e8ab0316feeed2f7fe6a73b7ba6",
+        "size_bytes": 95786
+      },
+      "lexicon.sqlite": {
+        "sha256": "155dc3d28b8115b781b609317c4e0d665a460aa39d27de5fb61208211b0c6cd5",
+        "size_bytes": 361144320
+      },
+      "metadata.sqlite": {
+        "sha256": "66c4c63605d8dfc5ed36202657db27832699c88232d6d60f6df40cc34d73b56a",
+        "size_bytes": 220737536
+      },
+      "scope.json": {
+        "sha256": "69e25bb646e6a7cb4cade15615806802bd1cc017d709a78b094a4c7ef065d698",
+        "size_bytes": 2207
+      },
+      "vectors.npy": {
+        "sha256": "015e232f636141974d2d01437c2291ce6460edc9ab77630f5aae19ca14430c56",
+        "size_bytes": 163720832
+      },
+      "verify.json": {
+        "sha256": "21203c6c9723108c15f476ad9cdc2f38b961b6ec86586849b731d671339ddcc7",
+        "size_bytes": 489
+      }
+    },
+    "max_rss_kib": 1412548,
+    "model": {
+      "cache_tree_sha256": "31fcb434456c41b62fabf58d08ecd447138d44952e186825da81b4ff33653e68",
+      "id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "license": "Apache-2.0",
+      "path_relative": "model",
+      "revision": "faf4aa4225822f3bc6376869cb1164e8e3feedd0",
+      "threads": 2,
+      "tree_sha256": "a7afbe9e63e0060cf7ca4a995e11ee5c916ff0c129b3096b6309eb530427c19f"
+    },
+    "model_and_vector_publication": false,
+    "not_a_single_all_with_vectors_process": true,
+    "not_part_of_nonvector_AB": true,
+    "oracle": {
+      "ann_to_original_vector_max_absolute_difference": 1.043081283569336e-07,
+      "full_mapping_rows": 106589,
+      "input_rowset_sha256": "ccadb0aa6809659b6668b9e84f3b49570b62a82b43108f728d77a38c4d990334",
+      "physical_occurrences": 105265,
+      "scope": "complete source selection, row/window/ref/coordinates, lexical rowset and stored vector binding; not relevance or logical identity",
+      "status": "PASS",
+      "vectors_sha256": "015e232f636141974d2d01437c2291ce6460edc9ab77630f5aae19ca14430c56"
+    },
+    "process_wall": "10:00.13",
+    "status": "PASS",
+    "timings_seconds": {
+      "ann": 18.49642962636426,
+      "embedding": 478.3029879690148,
+      "lexicon": 5.629193213768303,
+      "selection": 13.35650845989585
+    }
+  },
+  "source": {
+    "acquisition": "Clean worktree from existing local pinned Git objects, not a new full network reproduction",
+    "commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "tree": "aa578c08c402af39b41f1ffc95124d10f5410272"
+  },
+  "stage_times": [
+    {
+      "after_seconds": 12.32329,
+      "before_seconds": 12.130804,
+      "change_seconds": 0.192487,
+      "stage": "achievement_archive"
+    },
+    {
+      "after_seconds": 1.671733,
+      "before_seconds": 1.612885,
+      "change_seconds": 0.058848,
+      "stage": "activity_archive"
+    },
+    {
+      "after_seconds": 0.588385,
+      "before_seconds": 0.512749,
+      "change_seconds": 0.075636,
+      "stage": "avatar_codex_archive"
+    },
+    {
+      "after_seconds": 1.781792,
+      "before_seconds": 1.774602,
+      "change_seconds": 0.00719,
+      "stage": "avatar_config_archive"
+    },
+    {
+      "after_seconds": 9.489829,
+      "before_seconds": 9.581397,
+      "change_seconds": -0.091568,
+      "stage": "character_foundation"
+    },
+    {
+      "after_seconds": 7.888012,
+      "before_seconds": 7.894144,
+      "change_seconds": -0.006132,
+      "stage": "character_lore"
+    },
+    {
+      "after_seconds": 13.612144,
+      "before_seconds": 13.758036,
+      "change_seconds": -0.145892,
+      "stage": "character_text"
+    },
+    {
+      "after_seconds": 9.629532,
+      "before_seconds": 10.000475,
+      "change_seconds": -0.370944,
+      "stage": "character_voice"
+    },
+    {
+      "after_seconds": 141.27264,
+      "before_seconds": 207.544574,
+      "change_seconds": -66.271934,
+      "stage": "codexquest"
+    },
+    {
+      "after_seconds": 0.6238,
+      "before_seconds": 0.580941,
+      "change_seconds": 0.042859,
+      "stage": "cook_bonus_archive"
+    },
+    {
+      "after_seconds": 8.360275,
+      "before_seconds": 8.142129,
+      "change_seconds": 0.218146,
+      "stage": "cook_recipe_archive"
+    },
+    {
+      "after_seconds": 7.676216,
+      "before_seconds": 7.647861,
+      "change_seconds": 0.028355,
+      "stage": "document"
+    },
+    {
+      "after_seconds": 3.769739,
+      "before_seconds": 3.702525,
+      "change_seconds": 0.067214,
+      "stage": "dungeon_archive"
+    },
+    {
+      "after_seconds": 4.667997,
+      "before_seconds": 4.528676,
+      "change_seconds": 0.139322,
+      "stage": "event_10"
+    },
+    {
+      "after_seconds": 4.514424,
+      "before_seconds": 4.349288,
+      "change_seconds": 0.165136,
+      "stage": "event_11"
+    },
+    {
+      "after_seconds": 8.589888,
+      "before_seconds": 8.459875,
+      "change_seconds": 0.130013,
+      "stage": "event_12"
+    },
+    {
+      "after_seconds": 10.646459,
+      "before_seconds": 10.584266,
+      "change_seconds": 0.062193,
+      "stage": "event_13"
+    },
+    {
+      "after_seconds": 6.37493,
+      "before_seconds": 6.236161,
+      "change_seconds": 0.138768,
+      "stage": "event_14"
+    },
+    {
+      "after_seconds": 5.800523,
+      "before_seconds": 5.714118,
+      "change_seconds": 0.086405,
+      "stage": "event_15"
+    },
+    {
+      "after_seconds": 8.344087,
+      "before_seconds": 8.18951,
+      "change_seconds": 0.154577,
+      "stage": "event_16"
+    },
+    {
+      "after_seconds": 5.365913,
+      "before_seconds": 5.19932,
+      "change_seconds": 0.166594,
+      "stage": "event_17"
+    },
+    {
+      "after_seconds": 22.110777,
+      "before_seconds": 20.993928,
+      "change_seconds": 1.116849,
+      "stage": "event_18"
+    },
+    {
+      "after_seconds": 1.927617,
+      "before_seconds": 1.867646,
+      "change_seconds": 0.059971,
+      "stage": "furniture_make_archive"
+    },
+    {
+      "after_seconds": 7.312653,
+      "before_seconds": 7.159373,
+      "change_seconds": 0.15328,
+      "stage": "furniture_suite_archive"
+    },
+    {
+      "after_seconds": 7.770392,
+      "before_seconds": 7.556728,
+      "change_seconds": 0.213664,
+      "stage": "gadget_title_archive"
+    },
+    {
+      "after_seconds": 6.268487,
+      "before_seconds": 5.990586,
+      "change_seconds": 0.2779,
+      "stage": "gcg_card"
+    },
+    {
+      "after_seconds": 7.333047,
+      "before_seconds": 7.2175,
+      "change_seconds": 0.115547,
+      "stage": "homeworld_bgm_archive"
+    },
+    {
+      "after_seconds": 13.440978,
+      "before_seconds": 13.122425,
+      "change_seconds": 0.318553,
+      "stage": "homeworld_furniture_archive"
+    },
+    {
+      "after_seconds": 7.165355,
+      "before_seconds": 7.082204,
+      "change_seconds": 0.083151,
+      "stage": "homeworld_furniture_type_archive"
+    },
+    {
+      "after_seconds": 5.306223,
+      "before_seconds": 5.224598,
+      "change_seconds": 0.081626,
+      "stage": "loading_tips"
+    },
+    {
+      "after_seconds": 4.336992,
+      "before_seconds": 4.470453,
+      "change_seconds": -0.133461,
+      "stage": "mail"
+    },
+    {
+      "after_seconds": 20.939037,
+      "before_seconds": 20.322283,
+      "change_seconds": 0.616754,
+      "stage": "material_config_archive"
+    },
+    {
+      "after_seconds": 2.699461,
+      "before_seconds": 2.628673,
+      "change_seconds": 0.070788,
+      "stage": "monster_archive"
+    },
+    {
+      "after_seconds": 52.046083,
+      "before_seconds": 52.278734,
+      "change_seconds": -0.232651,
+      "stage": "narrative_dialog"
+    },
+    {
+      "after_seconds": 8.261097,
+      "before_seconds": 8.34289,
+      "change_seconds": -0.081793,
+      "stage": "narrative_npc"
+    },
+    {
+      "after_seconds": 10.21144,
+      "before_seconds": 10.041078,
+      "change_seconds": 0.170362,
+      "stage": "narrative_reminder"
+    },
+    {
+      "after_seconds": 27.134935,
+      "before_seconds": 27.36799,
+      "change_seconds": -0.233055,
+      "stage": "native_aux_quest"
+    },
+    {
+      "after_seconds": 4.322081,
+      "before_seconds": 4.301028,
+      "change_seconds": 0.021053,
+      "stage": "native_book_music"
+    },
+    {
+      "after_seconds": 7.271266,
+      "before_seconds": 7.10382,
+      "change_seconds": 0.167446,
+      "stage": "native_bulk"
+    },
+    {
+      "after_seconds": 111.801265,
+      "before_seconds": 112.726877,
+      "change_seconds": -0.925612,
+      "stage": "native_high_value"
+    },
+    {
+      "after_seconds": 34.399836,
+      "before_seconds": 33.632063,
+      "change_seconds": 0.767773,
+      "stage": "native_message"
+    },
+    {
+      "after_seconds": 17.200711,
+      "before_seconds": 17.241975,
+      "change_seconds": -0.041264,
+      "stage": "native_successor"
+    },
+    {
+      "after_seconds": 7.646492,
+      "before_seconds": 7.496094,
+      "change_seconds": 0.150398,
+      "stage": "npc_archive"
+    },
+    {
+      "after_seconds": 7.11454,
+      "before_seconds": 6.976795,
+      "change_seconds": 0.137745,
+      "stage": "profile_frame_archive"
+    },
+    {
+      "after_seconds": 7.071174,
+      "before_seconds": 7.073382,
+      "change_seconds": -0.002208,
+      "stage": "profile_picture_archive"
+    },
+    {
+      "after_seconds": 7.899973,
+      "before_seconds": 7.845667,
+      "change_seconds": 0.054306,
+      "stage": "quest_codex_archive"
+    },
+    {
+      "after_seconds": 16.327959,
+      "before_seconds": 16.176317,
+      "change_seconds": 0.151641,
+      "stage": "quest_narrative"
+    },
+    {
+      "after_seconds": 13.70415,
+      "before_seconds": 13.315301,
+      "change_seconds": 0.38885,
+      "stage": "quest_review"
+    },
+    {
+      "after_seconds": 0.703079,
+      "before_seconds": 0.682079,
+      "change_seconds": 0.021,
+      "stage": "quest_review_binding"
+    },
+    {
+      "after_seconds": 191.744543,
+      "before_seconds": 191.276563,
+      "change_seconds": 0.46798,
+      "stage": "quest_talk"
+    },
+    {
+      "after_seconds": 431.479532,
+      "before_seconds": 497.252924,
+      "change_seconds": -65.773392,
+      "stage": "r0"
+    },
+    {
+      "after_seconds": 45.280465,
+      "before_seconds": 45.451933,
+      "change_seconds": -0.171467,
+      "stage": "readable"
+    },
+    {
+      "after_seconds": 5.085681,
+      "before_seconds": 4.959411,
+      "change_seconds": 0.126269,
+      "stage": "reliquary_config_archive"
+    },
+    {
+      "after_seconds": 602.88782,
+      "before_seconds": 593.628,
+      "change_seconds": 9.259819,
+      "stage": "research_index"
+    },
+    {
+      "after_seconds": 0.978953,
+      "before_seconds": 0.876543,
+      "change_seconds": 0.10241,
+      "stage": "scene_archive"
+    },
+    {
+      "after_seconds": 65.747833,
+      "before_seconds": 65.60216,
+      "change_seconds": 0.145673,
+      "stage": "schema20_core"
+    },
+    {
+      "after_seconds": 13.093033,
+      "before_seconds": 13.059801,
+      "change_seconds": 0.033233,
+      "stage": "subtitle"
+    },
+    {
+      "after_seconds": 14.806255,
+      "before_seconds": 14.831798,
+      "change_seconds": -0.025543,
+      "stage": "talk_physical"
+    },
+    {
+      "after_seconds": 1.99209,
+      "before_seconds": 1.788222,
+      "change_seconds": 0.203869,
+      "stage": "weapon_config_archive"
+    },
+    {
+      "after_seconds": 8.926603,
+      "before_seconds": 8.858987,
+      "change_seconds": 0.067616,
+      "stage": "world_archive"
+    }
+  ],
+  "status": "PASS_EXECUTED_CHECKS",
+  "tests": {
+    "compile_six_help": "PASS",
+    "final_affected": {
+      "passed": 33,
+      "seconds": 1.93
+    },
+    "final_local_full": {
+      "passed": 619,
+      "seconds": 113.65
+    },
+    "implementation_ci": {
+      "engineering_run": 40647488531,
+      "focused_module_coverage_percent": 77,
+      "head": "6d14f18a7575ec1c7d58f7ec2ea78733dc4a6577",
+      "source_dependency_bundle_run": 40647488588,
+      "source_dependency_bundles_both_platforms": "success",
+      "ubuntu": {
+        "conclusion": "success",
+        "passed": 619,
+        "seconds": 144.92
+      },
+      "windows": {
+        "conclusion": "success",
+        "passed": 619,
+        "seconds": 655.18
+      }
+    },
+    "initial_local_full": {
+      "passed": 616,
+      "seconds": 123.79
+    },
+    "native_Windows_full_source_rebuild": "NOT_RUN",
+    "native_hnsw": {
+      "passed": 7,
+      "seconds": 1.69
+    },
+    "real_model_agent_matrix": "NOT_RUN; research runtime and policy unchanged",
+    "wheel": {
+      "license": "Apache-2.0",
+      "license_files": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "no_game_DB_model_vector": true,
+      "project": "genshin-lore-research",
+      "sha256": "699f8eed3a4004ceed37734be864b6ff312792ffe98b2f06e45d2b85640147cf",
+      "size_bytes": 1776652,
+      "source_checkout_contract_retained": true,
+      "standalone_resource_deployment_promised": false,
+      "status": "PASS_CODE_ONLY_WHEEL_CONTRACT",
+      "wheel": "genshin_lore_research-0.1.0-py3-none-any.whl"
+    }
+  },
+  "unchanged_scope": {
+    "all_six_index_table_counts": {
+      "adapter_coverage": 195,
+      "research_candidate": 446132,
+      "research_container": 921382,
+      "research_relation": 663590,
+      "research_text": 3761013,
+      "source_artifact": 35
+    },
+    "core_providers": 33,
+    "current_changed": false,
+    "database_stages": 60,
+    "exact_inputs": 35,
+    "formal_release_accepted": false,
+    "historical_component_records": 12,
+    "historical_contract_gaps": 8,
+    "schema_changed": false,
+    "source_oracles": "Complete rowsets retained, both index passes completed"
+  }
+}

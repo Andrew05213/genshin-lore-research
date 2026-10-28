@@ -2,15 +2,17 @@
 
 ## 可执行入口
 
-冷构建输入复用与 v3 阶段回执新增了定向来源测量，见 [构建复用](build-reuse.md)。这不是本次完整 35 输入重建成功声明；原始失败和历史全量记录继续保留。代码/依赖平台包不包含模型或向量缓存。
+最新 Linux 固定来源验收对应 `6d14f18`：35 个输入、33 个 core providers、统一索引和 60 个数据库阶段在新目录完整重建通过；另以同一代码和输入完成向量阶段，106,589 个物理窗口及完整来源映射核对通过。非向量进程 37:33.63，独立向量集成进程 10:00.13，不能当作单次命令或完整向量 A/B 的耗时。619 项合成测试在 Ubuntu/Windows CI 通过，Book/Story 续读、对白与四种搜索模式有实际 MCP 检查。详见 [最新完整构建与性能记录](nonvector-build-performance.md)。原始失败和历史全量记录继续保留；源码/依赖平台包不包含模型或向量缓存，验收没有自动部署或修改正式 current。
+
+进程内独立输入缓存与 v3 阶段回执的原始定向测量见 [构建复用](build-reuse.md)。阶段恢复须核对完整实现/输入/环境/回执身份；本次完整来源成功不是放行旧版或失败回执的许可。
 
 默认完整构建已包含向量阶段。Linux 在 `cf1788f` 完成了新的 35 输入、33 个 core providers、统一索引完整来源核对及 106,589 个有界向量窗口重建。后续 embedding 优化及独立验证见 [Linux 性能记录](linux-build-performance.md)。原生 Windows 后来在 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7` 记录完成 35 输入、默认向量与新配置 MCP；不是以 Linux/WSL 结果代替 Windows。[工程整改记录](engineering-finalization.md) 保留当时的执行范围。
 
-当前整合分支同时保留 Linux 线程/组批、Windows 来源绑定/磁盘 staging 和人物对白阅读。556 项合成测试、真实 hnswlib 路径、定向来源 A/B 与有界真实模型比较通过，详见 [整合验证](reviews/linux-windows-integration.md)。整合版本没有重新执行完整 35 输入构建，不继承两个父分支的全量成功资格，也没有部署或改动正式 current。
+此前 `ce53191` 整合了 Linux 线程/组批、Windows 来源绑定/磁盘 staging 和人物对白阅读；当时 556 项合成测试、真实 hnswlib 路径、定向来源 A/B 与有界真实模型比较通过，详见 [整合验证](reviews/linux-windows-integration.md)。该次整合没有重跑完整 35 输入，不继承两个父分支的全量成功资格；后续完整来源执行由上方记录独立证明，没有改写当时结论。最新实现尚未做原生 Windows 完整来源重建，不能用 Windows CI 合成测试代替。
 
 历史完整新目录实验通过 `PASS_COMPLETE_BOUNDED_DATA_REBUILD`：35 个输入、33 个 core contracts、统一索引的完整来源 rowset 核对及 MCP 续读检查通过。此结论不包括 semantic 重建或原部署正式 release 身份复刻。
 
-后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。四次完整重建失败、修复与定向检查保留在 [重试记录](full-rebuild-retry.md)、[合同核对](build-contract-audit.md) 和 [工程质量记录](engineering-quality.md)。第五次 Linux 完整重建在修复后通过，原始失败记录仍保留；当前性能分支只重建和验证受影响的完整 semantic 组件，没有再次重装 35 个数据库输入，不将两次执行混为一次全链路验收。
+后续工程整改加强了验证和恢复资格、独立 rowset 检查、输出隔离与 MCP 兼容测试。四次完整重建失败、修复与定向检查保留在 [重试记录](full-rebuild-retry.md)、[合同核对](build-contract-audit.md) 和 [工程质量记录](engineering-quality.md)。第五次 Linux 完整重建在修复后通过，原始失败记录仍保留；2026-10-19 的性能实验只重建和验证受影响的完整 semantic 组件，没有再次重装 35 个数据库输入，不将其与最新完整来源执行混为一次验收。
 
 `scripts/build.py` 提供 35 个有界数据输入、33 个 core providers、统一 Research 索引及生成配置的完整入口。来源绑定由本次构建产生，原来源 oracle 与证据边界保留，不依赖已部署游戏数据库。实际完整验证结果见 [完整重建实验](history/full-rebuild.md)。
 
@@ -44,7 +46,7 @@
 
 完整链路补齐静态构建 scope、动态来源绑定、全部独立输入、统一文本/关系核对和 MCP 启动。操作见 [完整重建指南](guides/building-dataset.md)。安装源码不会自动配置 Codex；客户端连接须使用本次生成的 runtime 配置。
 
-当前 `--stage all` 增加独立 semantic 构建及完整来源窗口核验，模型必须事先显式取得；`--without-semantic` 保留基础数据模式。默认搜索仍为 literal。向量合成测试和固定模型小型 A/B 不能替代全游戏来源的向量重建，原部署正式 release 的 acceptance 不由此入口生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
+当前 `--stage all` 包括独立 semantic 构建及完整来源窗口核验，模型必须事先显式取得；`--without-semantic` 保留基础数据模式。默认搜索仍为 literal。向量合成测试和固定模型小型 A/B 不能代替固定范围的真实来源重建，也不证明全游戏覆盖；原部署正式 release 的 acceptance 不由此入口生成。35 个 exact inputs/33 个 core providers 是有界数据范围，不是全游戏覆盖率；不能将来源核验结果写成正式产品自动晋级。
 
 ## 研究能力的固有限制
 

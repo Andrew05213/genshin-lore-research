@@ -41,6 +41,17 @@ hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使
 
 基础数据配置为 `runtime-config.literal.json`，向量配置为 `runtime-config.semantic.json`。两份 profile 与绑定独立，不原地修改基础 profile。向量来源 oracle 和新运行配置 smoke 均通过后，才交付默认 `runtime-config.json`。对已经由**同一实现与输入**验证的基础输出，可显式执行 `--stage semantic`，仍须完整回执与模型参数；保留原 literal 配置，仅在默认指针精确匹配本次基础配置时切换。未知或被修改的默认配置拒绝覆盖；旧代码或损坏/失败回执不能借此恢复。
 
+单独补建时保留初次基础构建的 source、historical-source 和 output 路径，例如：
+
+```sh
+.venv/bin/python scripts/build.py --source data/AnimeGameData \
+  --historical-source data/AnimeGameData-history --output-root data/rebuilt \
+  --model-cache data/model-cache --available-allocated-bytes HEADROOM_BYTES \
+  --stage semantic
+```
+
+这会复核本次基础阶段的完整身份并新建向量，不重装 35 个输入，不读取另一部署的旧向量。来源路径也属于恢复身份，不能省略或猜测历史来源。
+
 每个窗口保留原 evidence ref、完整正文 SHA、窗口范围和窗口 SHA。重复字符串不合并物理 occurrence。独立 oracle 从来源索引重新枚举完整选择范围，核对遗漏、顺序、正文坐标、ref、向量及 lexical 行集，不只信任构建报告自己的计数。
 
 向量不是 citation。搜索命中仍需正式 read/inspect；score 不是 confidence，相似性不证明人物、说话者、归属或剧情顺序。A/B 核对输入行集、向量值及确定性元数据；ANN 二进制是否逐字节相同另行报告。
