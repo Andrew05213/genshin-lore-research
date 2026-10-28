@@ -8,6 +8,7 @@ does not infer a family, join files, or de-duplicate equal values.
 
 from __future__ import annotations
 
+import gc
 import hashlib
 import json
 import os
@@ -240,6 +241,12 @@ def _scan_file(relative_path: str, path: Path) -> tuple[dict[str, Any], Iterator
     parsed: Any = None
     expected_count = 0
     if path.suffix.lower() == ".json":
+        # This fixed JSON decoder constructs an acyclic value tree. Defer
+        # repeated cyclic scans while allocating it; refcounting still runs.
+        # Restore the caller's GC state before consuming any occurrences.
+        gc_enabled = gc.isenabled()
+        if gc_enabled:
+            gc.disable()
         try:
             parsed = parse_json_physical(raw)
         except (UnicodeError, ValueError, RecursionError):
@@ -249,6 +256,9 @@ def _scan_file(relative_path: str, path: Path) -> tuple[dict[str, Any], Iterator
         else:
             parse_status = "parsed_json"
             layout, expected_count, record_status = _record_layout(root, parsed)
+        finally:
+            if gc_enabled:
+                gc.enable()
 
     # Keep the parsed container alive only for this file and yield one
     # occurrence at a time; never build a second list for a large TextMap.

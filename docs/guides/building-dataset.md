@@ -19,7 +19,7 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
 
-默认含向量的全链路要求至少 27 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建仍为 25 GB。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
+默认含向量的全链路要求至少 28 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 26 GB。完整固定来源测量中的索引压缩峰值保留约为 25.78 GB，因此不再采用此前的 25 GB 基础预检值。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
 
 Character 构建器与独立 oracle 各自按关系一次读取候选行，保留空集合、多候选及所有物理身份核对；foundation 的独立来源核验仍在每次资格检查时重放。M3/special 的 TextMap 查找可以仅为所需 key 生成 lexical hash，但仍完整解析所有词条，检查类型、重复 key、分隔符与尾随内容；完整物理 TextMap 扫描保持原行为。
 

@@ -44,7 +44,9 @@ STAGES = (
     "index",
     "semantic",
 )
-FULL_BUILD_PEAK_BYTES = 25_000_000_000
+# The full-source run reserves about 25.78 GB at index compaction. Round up;
+# this is additional build headroom, not the project's hard storage limit.
+FULL_BUILD_PEAK_BYTES = 26_000_000_000
 INDEX_BUILD_PEAK_BYTES = 7_000_000_000
 
 

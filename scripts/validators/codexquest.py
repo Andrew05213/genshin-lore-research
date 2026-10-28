@@ -28,10 +28,18 @@ def identity(*args):return 'cq71:'+h(j(args).encode())[:40]
 def check(value,message):
  if not value:raise ValueError(message)
 def compare(db,table,expected):
- actual=[tuple(r) for r in db.execute(f'SELECT * FROM {table} ORDER BY 1')]
  expected.sort()
- check(actual==expected,f'{table} source rowset differs actual={len(actual)} expected={len(expected)} first={next(((a[:5],b[:5]) for a,b in zip(actual,expected) if a!=b),None)}')
- return {'rows':len(actual),'sha256':h(b''.join((j([x.hex() if isinstance(x,bytes) else x for x in row])+'\n').encode() for row in actual))}
+ actual=db.execute(f'SELECT * FROM {table} ORDER BY 1');digest=hashlib.sha256()
+ for ordinal,wanted in enumerate(expected):
+  observed=actual.fetchone()
+  check(observed is not None,f'{table} source rowset shortage at {ordinal}')
+  row=tuple(observed)
+  check(row==wanted,f'{table} source row differs at {ordinal}: {row[:5]} != {wanted[:5]}')
+  # Preserve the exact historical row-seal encoding, without retaining a
+  # second full table and a joined serialization of every large raw record.
+  digest.update((j([x.hex() if isinstance(x,bytes) else x for x in row])+'\n').encode())
+ check(actual.fetchone() is None,f'{table} source rowset has extra rows')
+ return {'rows':len(expected),'sha256':digest.hexdigest()}
 def schema_check(db):
  expected=sqlite3.connect(':memory:');expected.executescript((ROOT/'schemas/codexquest-7.1-v1.sql').read_text())
  for table in (*TABLES,'codex_release'):
@@ -74,10 +82,25 @@ def verify(source,artifact,report,core_manifest,core_artifact):
   expected_files.append((path,blob,int(size)))
  check(len(expected_files)==522,'522 root denominator')
  check(set(release['source_seals'])=={p for p,_,_ in expected_files}|{MAIN}|{f'TextMap/TextMap{tier}{lang}.json' for lang in ('CHS','EN','JP') for tier in ('','_Medium')},'source seal path set')
+ # Obtain the pinned support identities in one independent Git inventory,
+ # rather than starting a Git process for each source file. The actual bytes
+ # are still hashed here, independently of the builder's checked input.
+ support_paths={MAIN}|{f'TextMap/TextMap{tier}{lang}.json' for lang in ('CHS','EN','JP') for tier in ('','_Medium')}
+ expected_git={p:(blob,size) for p,blob,size in expected_files}
+ support={}
+ for line in subprocess.check_output(['git','-C',str(source),'ls-tree','-rl',COMMIT,'--',*sorted(support_paths)],text=True).splitlines():
+  attrs,path=line.split('\t',1);_,kind,blob,size=attrs.split()
+  check(kind=='blob' and path in support_paths and path not in support,'support Git inventory')
+  support[path]=(blob,int(size))
+ check(set(support)==support_paths,'support Git path set')
+ expected_git.update(support)
  for path,seal in release['source_seals'].items():
-  local=source/path
-  check(local.stat().st_size==seal['size'] and sha(local)==seal['sha256'],'source bytes '+path)
-  check(subprocess.check_output(['git','-C',str(source),'rev-parse',COMMIT+':'+path],text=True).strip()==seal['blob'],'source Git blob '+path)
+  check(expected_git[path]==(seal['blob'],seal['size']),'source Git metadata '+path)
+  if path in support_paths:
+   raw=(source/path).read_bytes()
+   check(len(raw)==seal['size'] and h(raw)==seal['sha256'],'source bytes '+path)
+   pinned=hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0');pinned.update(raw)
+   check(pinned.hexdigest()==seal['blob'],'support source Git bytes '+path)
  check(identity('run',release['snapshot'],release['parser_build_id'],release['source_seals'],dependency)==release['ingest_run_id'],'run identity')
  db=open_immutable_readonly(artifact);schema_check(db)
  check(db.execute('PRAGMA integrity_check').fetchone()[0]=='ok' and not db.execute('PRAGMA foreign_key_check').fetchall(),'database integrity')
@@ -95,7 +118,9 @@ def verify(source,artifact,report,core_manifest,core_artifact):
   main_targets[item['id']].append((MAIN,f'/{ordinal}',str(item['id']),f'raw-mainquest:{ordinal}',release['snapshot']))
  roots=[];children=[];navs=[];candidates=[];owners=[];wanted=set();shapes=Counter();missing=0
  for path,blob,size in expected_files:
-  raw=(source/path).read_bytes();check(len(raw)==size and hashlib.sha1(b'blob '+str(size).encode()+b'\0'+raw).hexdigest()==blob,'physical root Git blob '+path)
+  raw=(source/path).read_bytes();pinned=hashlib.sha1(b'blob '+str(size).encode()+b'\0');pinned.update(raw)
+  check(len(raw)==size and pinned.hexdigest()==blob,'physical root Git blob '+path)
+  check(h(raw)==release['source_seals'][path]['sha256'],'physical root source seal '+path)
   value=json.loads(raw.decode('utf-8-sig'));shape=SIGNATURES.get(frozenset(value)) if isinstance(value,dict) else None
   check(shape is not None,'unknown root signature '+path)
   shapes[shape]+=1;spec=OLD.get(shape);id_field=spec[0] if spec else 'MFANMBMKKLC';native=value[id_field]

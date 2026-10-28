@@ -60,6 +60,39 @@ def test_index_capacity_fails_before_creating_outputs(tmp_path,monkeypatch):
     assert not output.exists()
 
 
+@pytest.mark.parametrize('without_semantic,budget',[(True,25_000_000_000),(False,27_000_000_000)])
+def test_full_capacity_rejects_superseded_peak_before_constructing_build(tmp_path,monkeypatch,without_semantic,budget):
+    from types import SimpleNamespace
+    proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
+    monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
+                        proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
+    monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
+    monkeypatch.setattr(driver,'Rebuild',lambda *args:pytest.fail('insufficient budget reached builder'))
+    output=tmp_path/'absent'
+    args=['rebuild','--source','missing','--historical-source','synthetic-history',
+          '--output-root',str(output),'--stage','all','--available-allocated-bytes',str(budget)]
+    if without_semantic:args.append('--without-semantic')
+    monkeypatch.setattr(sys,'argv',args)
+    assert driver.FULL_BUILD_PEAK_BYTES==26_000_000_000
+    with pytest.raises(ValueError,match='headroom'):driver.main()
+    assert not output.exists()
+
+
+def test_nonvector_full_capacity_accepts_26gb_boundary(tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
+    monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
+                        proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
+    monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
+    monkeypatch.setattr(driver,'allocated',lambda _:0)
+    def admitted(*args):raise RuntimeError('admitted past capacity gate')
+    monkeypatch.setattr(driver,'Rebuild',admitted)
+    monkeypatch.setattr(sys,'argv',['rebuild','--source','missing',
+        '--historical-source','synthetic-history','--output-root',str(tmp_path/'absent'),
+        '--stage','all','--without-semantic','--available-allocated-bytes','26000000000'])
+    with pytest.raises(RuntimeError,match='admitted past capacity gate'):driver.main()
+
+
 def test_release_reader_preserves_declared_identity(tmp_path):
     import sqlite3
     p=tmp_path/'synthetic.sqlite'
