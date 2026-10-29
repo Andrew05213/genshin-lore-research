@@ -13,6 +13,8 @@ import time
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from .sealed_sqlite import open_immutable_readonly
+
 ROOT = Path(__file__).resolve().parents[2]
 COMMIT = "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
 TREE = "aa578c08c402af39b41f1ffc95124d10f5410272"
@@ -235,7 +237,7 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
     signatures = {kind: set(signature_contract[kind]["signature_digests"]) for kind in ("quest", "talk")}
     for kind in ("quest", "talk"):
         require(len(signatures[kind]) == signature_binding[kind + "_distinct_signatures"], kind + " signature denominator")
-    conn = sqlite3.connect("file:" + str(artifact) + "?mode=ro&immutable=1", uri=True)
+    conn = open_immutable_readonly(artifact)
     conn.row_factory = sqlite3.Row
     try:
         require(conn.execute("PRAGMA integrity_check").fetchone()[0] == "ok", "SQLite integrity")

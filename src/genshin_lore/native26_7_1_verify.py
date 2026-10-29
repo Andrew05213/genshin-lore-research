@@ -50,7 +50,7 @@ def schema_objects(db, schema_name='main'):
 
 
 def mutation_cases(artifact):
-    actual = sqlite3.connect('file:' + str(artifact.resolve()) + '?mode=ro', uri=True)
+    actual = sqlite3.connect(artifact.resolve().as_uri() + '?mode=ro', uri=True)
     replica = sqlite3.connect(':memory:')
     actual.backup(replica)
     actual.close()
@@ -223,7 +223,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
                 if locator in hashes:
                     found[locator].append((path, ordinal, text))
             textmap[locale, tier] = found
-    oracle = sqlite3.connect(':memory:')
+    oracle = sqlite3.connect(':memory:', uri=True)
     oracle.execute('PRAGMA foreign_keys=ON')
     oracle.executescript(SCHEMA.read_text())
     counts = Counter()
@@ -320,7 +320,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
     if oracle.execute('PRAGMA foreign_key_check').fetchall():
         raise ValueError('Native26 oracle FK')
     oracle.commit()
-    oracle.execute('ATTACH DATABASE ? AS actual', ('file:' + str(artifact.resolve()) + '?mode=ro&immutable=1',))
+    oracle.execute('ATTACH DATABASE ? AS actual', (artifact.resolve().as_uri() + '?mode=ro&immutable=1',))
     if schema_objects(oracle, 'main') != schema_objects(oracle, 'actual'):
         raise ValueError('Native26 schema/index/trigger mismatch')
     if oracle.execute('PRAGMA actual.integrity_check').fetchone()[0] != 'ok' or oracle.execute('PRAGMA actual.foreign_key_check').fetchall():

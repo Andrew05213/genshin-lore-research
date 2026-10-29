@@ -51,7 +51,7 @@ def build_lexicon(index: Path, output: Path, corpus_ref: str,
     stage = output.with_name(f".{output.name}.staging")
     if stage.exists():
         raise FileExistsError(f"staging exists: {stage}")
-    source = sqlite3.connect(f"file:{index}?mode=ro&immutable=1", uri=True)
+    source = sqlite3.connect(index.resolve().as_uri()+"?mode=ro&immutable=1", uri=True)
     source.row_factory = sqlite3.Row
     target = sqlite3.connect(stage)
     try:
@@ -123,7 +123,7 @@ def build_lexicon(index: Path, output: Path, corpus_ref: str,
 class CorpusLexicon:
     def __init__(self, path: Path):
         self.path = path
-        self.db = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True)
+        self.db = sqlite3.connect(path.resolve().as_uri()+"?mode=ro&immutable=1", uri=True)
         self.db.row_factory = sqlite3.Row
         self.surfaces = tuple(row[0] for row in self.db.execute(
             "select surface_form from lexical_surface order by length(surface_form) desc,surface_form"))

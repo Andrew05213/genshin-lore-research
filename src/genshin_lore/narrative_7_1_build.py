@@ -177,8 +177,6 @@ def build(family, source, output, accounting_root):
                     "space_preflight": gate.events, "silent_skips": 0}
         except BaseException:
             c.close()
-            if output.exists() and (output.stat().st_dev, output.stat().st_ino) == owned_inode:
-                output.unlink()
-            if stage.exists() and (stage.stat().st_dev, stage.stat().st_ino) == owned_inode:
-                stage.unlink()
+            # Preserve the private/published database and sidecars for diagnosis.
+            # A failed invocation cannot acquire a successful stage receipt.
             raise

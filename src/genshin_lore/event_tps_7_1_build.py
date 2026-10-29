@@ -245,7 +245,3 @@ def build(source_root, scope_path, output):
     finally:
         if db is not None:
             db.close()
-        if stage.exists():
-            stat = stage.stat()
-            if (stat.st_dev, stat.st_ino) == stage_identity:
-                stage.unlink()

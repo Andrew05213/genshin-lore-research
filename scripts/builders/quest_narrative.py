@@ -117,7 +117,7 @@ def build(source,output,qt_artifact,qt_manifest):
    if records:db.executemany(f"INSERT INTO {table} VALUES ({','.join('?'*len(records[0]))})",records)
   db.execute('INSERT INTO release VALUES(1,?)',(canonical(release),));immutable(db);db.commit();db.execute('VACUUM');db.close()
  except BaseException:
-  db.close();output.unlink(missing_ok=True);raise
+  db.close();raise
  return {'release':release,'artifact':{'size_bytes':output.stat().st_size,'sha256':sha(output)}}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--output',required=True);p.add_argument('--quest-talk-artifact',default=QT_ARTIFACT);p.add_argument('--quest-talk-manifest',default=QT_MANIFEST);p.add_argument('--report');a=p.parse_args();result=build(a.source,a.output,a.quest_talk_artifact,a.quest_talk_manifest)

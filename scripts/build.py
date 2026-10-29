@@ -26,6 +26,7 @@ from scripts.build_support import (
     load_object,
     pipeline_identity,
     require_success,
+    qualify_stage_dependency,
 )
 
 SNAPSHOT = "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
@@ -41,6 +42,7 @@ STAGES = (
     "events",
     "native",
     "index",
+    "semantic",
 )
 FULL_BUILD_PEAK_BYTES = 25_000_000_000
 INDEX_BUILD_PEAK_BYTES = 7_000_000_000
@@ -162,48 +164,10 @@ class Rebuild:
     def dependency_inputs(self, *names):
         paths = []
         for name in names:
-            directory = self.output / name
-            receipt = load_object(directory / "verified.json")
-            if (
-                receipt.get("contract") != RECEIPT_CONTRACT
-                or receipt.get("independent_verifier_completed") is not True
-            ):
-                raise ValueError(
-                    "dependency requires current complete verification: " + name
-                )
-            for record in ("build.json", "verify.json", "invocation.json"):
-                if receipt.get("records", {}).get(record) != seal(directory / record):
-                    raise ValueError("dependency report drift: " + name)
-            require_success(load_object(directory / "verify.json"))
-            identity = receipt.get("identity", {})
-            invocation = load_object(directory / "invocation.json")
-            if (
-                identity.get("parameters", {}).get("stage") != name
-                or invocation.get("stage") != name
-                or invocation.get("identity") != identity
-                or receipt.get("source_snapshot") != SNAPSHOT
-                or invocation.get("source_snapshot") != SNAPSHOT
-            ):
-                raise ValueError("dependency stage identity mismatch: " + name)
-            actual = pipeline_identity(
-                getattr(self, "identity_root", ROOT),
-                self.source,
-                self.history,
-                inputs=identity.get("stage_inputs", {}),
-                parameters=identity.get("parameters"),
-            )
-            if actual != identity:
-                raise ValueError(
-                    "dependency implementation/input identity drift: " + name
-                )
-            if seal(self.path(name)) != receipt.get("artifact"):
-                raise ValueError("dependency artifact drift: " + name)
-            if any(
-                Path(str(self.path(name)) + suffix).exists()
-                for suffix in ("-wal", "-shm", "-journal")
-            ):
-                raise ValueError("dependency SQLite sidecar: " + name)
-            paths.extend([self.path(name), directory / "verified.json"])
+            paths.extend(qualify_stage_dependency(
+                getattr(self, "identity_root", ROOT), self.source, self.history,
+                self.output / name, name, SNAPSHOT,
+            ))
         return paths
 
     def index_headroom(self):
@@ -338,7 +302,8 @@ class Rebuild:
                     "timings_seconds": {
                         "builder": built_at - start,
                         "seal_and_verifier": verified_at - built_at,
-                        "post_verification_qualification": time.monotonic() - verified_at,
+                        "post_verification_qualification": time.monotonic()
+                        - verified_at,
                     },
                     "formal_release_accepted": False,
                 },
@@ -457,9 +422,16 @@ class Rebuild:
             ),
         )
         manifest = load(ROOT / "recipes/character-foundation.json")
+        foundation_report = load(self.output / "character_foundation" / "build.json")
+        for key in ("parser_build_id", "ingest_run_id"):
+            manifest[key] = foundation_report[key]
         manifest["artifact"] = {
             **seal(self.path("character_foundation")),
             "machine_local_path": str(self.path("character_foundation")),
+        }
+        manifest["local_rebuild"] = {
+            "contract": "local-character-foundation-v1",
+            "receipt": seal(self.output / "character_foundation" / "verified.json"),
         }
         self.bind(
             "manifests/character-7.1-physical-foundation/immutable-runtime.json",
@@ -528,11 +500,6 @@ class Rebuild:
             ("gcg_card", "gcg_card_7_1", "gcg-card-7.1/scope.json"),
             ("loading_tips", "loading_tips_7_1", "loading-tips-7.1/scope.json"),
             ("mail", "mail_7_1", "mail-archive-7.1/source-scope-v1.json"),
-            (
-                "native_message",
-                "native_message_7_1",
-                "native-archive-7.1/message-scope-v1.json",
-            ),
         ):
             sp = ROOT / "manifests" / scope
             builder = module(mod + "_build")
@@ -544,6 +511,19 @@ class Rebuild:
                 if n == "loading_tips"
                 else v.verify(self.source, s, p, r),
             )
+
+    def native_message(self):
+        from genshin_lore.native_message_7_1_binding import prepare_scope, SCOPE
+
+        inputs = self.dependency_inputs("quest_narrative", "quest_talk")
+        self.bind(SCOPE, prepare_scope(self.source, self.output))
+        scope = self.metadata_path(SCOPE)
+        self.task(
+            "native_message",
+            lambda p: module("native_message_7_1_build").build(self.source, scope, p),
+            lambda p, r: module("native_message_7_1_verify").verify(self.source, scope, p, r),
+            inputs=inputs + [scope],
+        )
 
     def quest(self):
         scope = ROOT / "manifests/quest-talk-7.1/source-scope.json"
@@ -583,6 +563,7 @@ class Rebuild:
             ),
             inputs=self.dependency_inputs("quest_talk") + [qmp],
         )
+        self.native_message()
         if self.history is None:
             raise ValueError(
                 "--historical-source required for the original Review field-continuity oracle"
@@ -713,7 +694,12 @@ class Rebuild:
         )
 
     def readable(self):
-        scope = ROOT / "manifests/document-readable-7.1/source-scope.json"
+        inputs = self.dependency_inputs("r0", "document")
+        relative = "manifests/document-readable-7.1/source-scope.json"
+        value = load(ROOT / relative)
+        value["r0_dependency"].update(seal(self.path("r0")))
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
         self.task(
             "readable",
             lambda p: module("readable_7_1_build").build(
@@ -733,9 +719,17 @@ class Rebuild:
                 self.report("document"),
                 r,
             ),
-            inputs=self.dependency_inputs("r0", "document"),
+            inputs=inputs + [scope],
         )
-        scope = ROOT / "manifests/direct-text-7.1/subtitle-scope.json"
+        inputs = self.dependency_inputs("r0")
+        relative = "manifests/direct-text-7.1/subtitle-scope.json"
+        value = load(ROOT / relative)
+        actual = seal(self.path("r0"))
+        value["r0_dependency"].update(
+            artifact_size_bytes=actual["size_bytes"], artifact_sha256=actual["sha256"]
+        )
+        self.bind(relative, value)
+        scope = self.metadata_path(relative)
 
         def verify_subtitle(p, r):
             rel = release(p)
@@ -758,7 +752,7 @@ class Rebuild:
                 self.source, scope, p, self.path("r0")
             ),
             verify_subtitle,
-            inputs=self.dependency_inputs("r0"),
+            inputs=inputs + [scope],
         )
 
     def events(self):
@@ -1234,7 +1228,7 @@ class Rebuild:
             lambda p: builder.build(
                 manifest, bindings, p, remaining, corpus_path=cp, reports_dir=reports
             ),
-            lambda p, r: load(reports / ("index-memory-oracle-" + p.stem + ".json")),
+            lambda p, r: load(reports / ("index-post-vacuum-oracle-" + p.stem + ".json")),
             inputs=self.dependency_inputs(
                 *[p.parent.name for p in map(Path, bindings["artifacts"].values())]
             )
@@ -1292,8 +1286,13 @@ class Rebuild:
                 "candidate_profile_sha256": sha(pp),
             },
         )
+        config_name = (
+            "runtime-config.literal.json"
+            if getattr(self, "with_semantic", False)
+            else "runtime-config.json"
+        )
         write(
-            self.output / "runtime-config.json",
+            self.output / config_name,
             {
                 "corpus": str(cp.relative_to(self.output)),
                 "profile": str(pp.relative_to(self.output)),
@@ -1305,7 +1304,176 @@ class Rebuild:
 
         write(
             self.output / "runtime-smoke.json",
-            smoke(self.output / "runtime-config.json"),
+            smoke(self.output / config_name),
+        )
+
+    def semantic(self):
+        """Build and qualify a derived overlay; leave literal evidence untouched."""
+        from importlib.metadata import version
+        from scripts.builders import semantic as builder
+        from scripts.validators.semantic import verify
+
+        directory = self.output / "semantic"
+        index = self.path("research_index")
+        literal_profile = self.metadata_path(
+            "manifests/research/candidate-7.1-complete-profile-v1.json"
+        )
+        corpus = self.metadata_path("manifests/research/candidate-7.1-complete-v1.json")
+        recipe = ROOT / "recipes/semantic-input.json"
+        embedding_threads = getattr(self, "embedding_threads", None)
+        if embedding_threads is None:
+            embedding_threads = builder.default_embedding_threads()
+        builder.check_model(self.model_cache)
+        scope = builder.make_scope(index, load(literal_profile)["corpus_ref"], recipe)
+        scope_path = self.output / "semantic-input.json"
+        write(scope_path, scope)
+        inputs = self.dependency_inputs("research_index") + [
+            literal_profile,
+            scope_path,
+            recipe,
+        ]
+        inputs += sorted(p for p in self.model_cache.rglob("*") if p.is_file())
+        identity = pipeline_identity(
+            ROOT,
+            self.source,
+            self.history,
+            inputs=inputs,
+            parameters={
+                "stage": "semantic",
+                "embedding_threads": embedding_threads,
+                "dependencies": {
+                    n: version(n)
+                    for n in ("fastembed", "onnxruntime", "hnswlib", "numpy")
+                },
+            },
+        )
+        names = (
+            "metadata.sqlite",
+            "index.hnsw",
+            "vectors.npy",
+            "lexicon.sqlite",
+            "scope.json",
+            "build.json",
+            "verify.json",
+            "invocation.json",
+        )
+        if directory.exists():
+            receipt = load_object(directory / "verified.json")
+            if (
+                receipt.get("identity") != identity
+                or receipt.get("contract") != "local-semantic-stage-v1"
+                or receipt.get("independent_verifier_completed") is not True
+            ):
+                raise ValueError(
+                    "semantic resume identity mismatch; prior records preserved"
+                )
+            if receipt.get("files") != {n: seal(directory / n) for n in names}:
+                raise ValueError("semantic resume artifact/report drift")
+            require_success(load_object(directory / "verify.json"))
+            require_success(verify(index, directory))
+            report = load(directory / "build.json")
+        else:
+            try:
+                remaining = self.available - max(
+                    0, allocated((ROOT, self.output)) - self.allocated_start
+                )
+                report = builder.build(
+                    index,
+                    directory,
+                    self.model_cache,
+                    scope_path=scope_path,
+                    available_allocated_bytes=remaining,
+                    embedding_threads=embedding_threads,
+                )
+                write(
+                    directory / "invocation.json",
+                    {"identity": identity, "formal_release_accepted": False},
+                )
+                checked = verify(index, directory)
+                write(directory / "verify.json", checked)
+                require_success(checked)
+                if (
+                    pipeline_identity(
+                        ROOT,
+                        self.source,
+                        self.history,
+                        inputs=inputs,
+                        parameters=identity["parameters"],
+                    )
+                    != identity
+                ):
+                    raise ValueError(
+                        "semantic inputs or implementation changed during build"
+                    )
+                write(
+                    directory / "verified.json",
+                    {
+                        "contract": "local-semantic-stage-v1",
+                        "identity": identity,
+                        "files": {n: seal(directory / n) for n in names},
+                        "independent_verifier_completed": True,
+                        "formal_release_accepted": False,
+                    },
+                )
+            except BaseException as exc:
+                if directory.exists():
+                    write(
+                        directory / ("failure-" + str(time.time_ns()) + ".json"),
+                        {"error": str(exc), "error_type": type(exc).__name__},
+                    )
+                raise
+        # New files, not an in-place rewrite of the qualified literal profile.
+        profile = load(literal_profile)
+        profile["semantic_discovery"] = report["config"]
+        profile["runtime_qualification"] = (
+            "manifests/research/candidate-7.1-semantic-agent-runtime-v1.json"
+        )
+        profile_path = self.metadata_path(
+            "manifests/research/candidate-7.1-semantic-profile-v1.json"
+        )
+        write(profile_path, profile)
+        qualification = load(
+            self.metadata_path("manifests/research/candidate-7.1-agent-runtime-v2.json")
+        )
+        qualification["candidate_profile_sha256"] = sha(profile_path)
+        write(self.metadata_path(profile["runtime_qualification"]), qualification)
+        bindings = load(self.output / "complete-bindings.json")
+        bindings["semantic_discovery"] = {
+            **{
+                k: str(directory / n)
+                for k, n in (
+                    ("metadata", "metadata.sqlite"),
+                    ("hnsw", "index.hnsw"),
+                    ("lexicon", "lexicon.sqlite"),
+                )
+            },
+            "model_cache": str(self.model_cache),
+        }
+        write(self.output / "semantic-bindings.json", bindings)
+        config = {
+            "corpus": str(corpus.relative_to(self.output)),
+            "profile": str(profile_path.relative_to(self.output)),
+            "bindings": "semantic-bindings.json",
+            "index": str(index.relative_to(self.output)),
+        }
+        semantic_config = self.output / "runtime-config.semantic.json"
+        write(semantic_config, config)
+        from scripts.serve import smoke
+
+        write(
+            self.output / "runtime-smoke.semantic.json",
+            smoke(semantic_config),
+        )
+        from scripts.runtime_config import activate_generated_config
+
+        activate_generated_config(
+            self.output,
+            config,
+            expected_previous={
+                **config,
+                "profile": str(literal_profile.relative_to(self.output)),
+                "bindings": "complete-bindings.json",
+            },
         )
 
 
@@ -1320,12 +1488,26 @@ def main():
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--stage", choices=(*STAGES, "all"), required=True)
     parser.add_argument(
+        "--without-semantic",
+        action="store_true",
+        help="Explicit literal-only full build; not a complete vector build",
+    )
+    parser.add_argument(
+        "--model-cache",
+        type=Path,
+        help="Existing pinned local model cache; never downloaded implicitly",
+    )
+    parser.add_argument("--embedding-threads", type=int,
+                        help="Positive ONNX build thread count; default Linux <=4 affinity-visible CPUs, other platforms 2")
+    parser.add_argument(
         "--available-allocated-bytes",
         type=int,
         default=0,
         help="Fresh project hard-limit headroom, NOT host free space; required for all/index",
     )
     args = parser.parse_args()
+    if args.embedding_threads is not None and args.embedding_threads <= 0:
+        parser.error("--embedding-threads must be positive")
     if args.stage in ("all", "quest", "events"):
         if args.historical_source is None:
             parser.error(
@@ -1352,8 +1534,19 @@ def main():
             raise ValueError(
                 "clean pinned historical source required; no database substitution"
             )
-    if args.stage in ("all", "index"):
+    with_semantic = args.stage == "semantic" or (
+        args.stage == "all" and not args.without_semantic
+    )
+    if args.stage == "semantic" and args.without_semantic:
+        parser.error("--stage semantic cannot be combined with --without-semantic")
+    if args.stage in ("all", "index", "semantic"):
         peak = FULL_BUILD_PEAK_BYTES if args.stage == "all" else INDEX_BUILD_PEAK_BYTES
+        if with_semantic:
+            peak = (
+                FULL_BUILD_PEAK_BYTES + 2_000_000_000
+                if args.stage == "all"
+                else 2_000_000_000
+            )
         parent = args.output_root.resolve()
         while not parent.exists():
             parent = parent.parent
@@ -1362,11 +1555,29 @@ def main():
             or shutil.disk_usage(parent).free < peak + 1_000_000_000
         ):
             raise ValueError("insufficient freshly measured project/host peak headroom")
+    if with_semantic:
+        if args.model_cache is None:
+            parser.error(
+                "--model-cache required for default full/vector build; use --without-semantic only for an explicit literal-only build"
+            )
+        from scripts.builders.semantic import check_model
+        import hnswlib
+        import fastembed
+
+        check_model(args.model_cache)
     allocated_start = allocated((ROOT, args.output_root))
     job = Rebuild(args.source, args.output_root, args.historical_source)
     job.available = args.available_allocated_bytes
     job.allocated_start = allocated_start
-    for stage in STAGES if args.stage == "all" else (args.stage,):
+    job.with_semantic = with_semantic
+    job.model_cache = args.model_cache.resolve() if args.model_cache else None
+    job.embedding_threads = args.embedding_threads
+    selected = (
+        tuple(s for s in STAGES if s != "semantic" or with_semantic)
+        if args.stage == "all"
+        else (args.stage,)
+    )
+    for stage in selected:
         getattr(job, stage)()
 
 

@@ -17,7 +17,7 @@ def test_replaces_only_research_command_preserving_citation_ledger(tmp_path):
     value=settings(tmp_path,config,['mcp_servers.genshin-lore-research71.args=["old"]',
         'mcp_servers.genshin-lore-research71.env.GENSHIN_CITATION_HANDOFF_DIR="private"',
         'mcp_servers.genshin-lore-research71-preview.args=["unchanged"]'])
-    assert value[0].endswith('="private"')
+    assert json.loads(value[0].split('=',1)[1]) == str(tmp_path/'private')
     assert 'mcp_servers.genshin-lore-research71-preview.args=["unchanged"]' in value
     assert sum(s.startswith('mcp_servers.genshin-lore-research71.args=') for s in value)==1
     assert any('--released-runtime-root' in s for s in value)
@@ -34,3 +34,11 @@ def test_capture_preserves_question_and_resume_parameters(tmp_path):
 
 def test_disabled_handoff_preserves_existing_settings(tmp_path):
     assert settings(tmp_path,None,['original'])==['original']
+
+
+def test_absolute_receipts_are_not_rewritten_and_unrelated_servers_stay_untouched(tmp_path):
+    config=fixture(tmp_path)
+    absolute='mcp_servers.genshin-lore-research71.env.GENSHIN_CITATION_HANDOFF_DIR='+json.dumps(str(tmp_path/'receipts'))
+    unrelated='mcp_servers.other.env.GENSHIN_CITATION_HANDOFF_DIR="relative"'
+    result=settings(tmp_path,config,[absolute,unrelated])
+    assert result[:2]==[absolute,unrelated]

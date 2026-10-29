@@ -79,3 +79,31 @@ def load_object(path):
     if not isinstance(value, dict) or not value:
         raise ValueError("missing nonempty stage record: " + str(path))
     return value
+
+
+def qualify_stage_dependency(root, source, history, directory, name, snapshot):
+    """Check an exact v2 dependency; shared by orchestration and consumers."""
+    directory = Path(directory)
+    artifact = directory / "artifact.sqlite"
+    receipt = load_object(directory / "verified.json")
+    if receipt.get("contract") != RECEIPT_CONTRACT or receipt.get("independent_verifier_completed") is not True:
+        raise ValueError("dependency requires current complete verification: " + name)
+    for record in ("build.json", "verify.json", "invocation.json"):
+        if receipt.get("records", {}).get(record) != file_seal(directory / record):
+            raise ValueError("dependency report drift: " + name)
+    require_success(load_object(directory / "verify.json"))
+    identity = receipt.get("identity", {})
+    invocation = load_object(directory / "invocation.json")
+    if (identity.get("parameters", {}).get("stage") != name
+            or invocation.get("stage") != name or invocation.get("identity") != identity
+            or receipt.get("source_snapshot") != snapshot or invocation.get("source_snapshot") != snapshot):
+        raise ValueError("dependency stage identity mismatch: " + name)
+    actual = pipeline_identity(root, source, history, inputs=identity.get("stage_inputs", {}),
+                               parameters=identity.get("parameters"))
+    if actual != identity:
+        raise ValueError("dependency implementation/input identity drift: " + name)
+    if file_seal(artifact) != receipt.get("artifact"):
+        raise ValueError("dependency artifact drift: " + name)
+    if any(Path(str(artifact) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+        raise ValueError("dependency SQLite sidecar: " + name)
+    return [artifact, directory / "verified.json"]

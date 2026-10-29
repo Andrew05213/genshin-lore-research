@@ -1,0 +1,26 @@
+{
+  "contract": "research71-narrative-semantic-input-v1",
+  "locale": "CHS",
+  "minimum_characters": 40,
+  "window_characters": 400,
+  "window_stride": 360,
+  "source_fields": {
+    "7.1-character-text": ["storyContextTextMapHash", "storyContext2TextMapHash", "voiceFileTextTextMapHash", "avatarDetailTextMapHash", "descTextMapHash"],
+    "7.1-readable_archive": ["body"],
+    "7.1-narrative_dialog": ["talkContentTextMapHash"],
+    "7.1-quest_narrative_archive": ["descTextMapHash", "stepDescTextMapHash"],
+    "7.1-quest_review_archive": ["descTextMapHash", "contentTextMapHash"],
+    "7.1-quest_talk_physical": ["*"],
+    "7.1-codexquest_archive": ["DialogNormal", "Narratage", "Aside", "MainQuestDesp"],
+    "7.1-event_narrative_10": ["contentTextMapHash", "descTextMapHash"],
+    "7.1-event_narrative_11": ["descTextMapHash", "reviewTextMapHash"],
+    "7.1-event_narrative_12": ["descTextMapHash", "markDescTextMapHash"],
+    "7.1-event_narrative_15": ["voiceDescTextMapHash", "descTextMapHash", "markTipContentTextMapHash"],
+    "7.1-mail_narrative": ["contentTextMapHash"],
+    "7.1-native_book_music": ["talkContentTextMapHash", "contentTextMapHash", "descTextMapHash"],
+    "7.1-native_high_value_physical": ["talkContent/0", "talkContent/1", "cgDesTextMapHash", "newsTextTextMapHash"]
+  },
+  "excluded": ["empty and short boilerplate", "name/title-only rows (lexicon instead)", "raw Reminder roles", "opaque Event fields", "IDs paths hashes numerical and gameplay support fields", "non-CHS dense discovery"],
+  "semantic_identity": "physical occurrence and source window only; no logical deduplication",
+  "completeness": "bounded high-value selection; not corpus-complete"
+}
