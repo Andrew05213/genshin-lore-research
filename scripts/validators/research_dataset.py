@@ -6,6 +6,7 @@ reader and hashing are shared utilities, not business projection functions.
 from __future__ import annotations
 
 import argparse
+from collections import OrderedDict
 import hashlib
 import json
 import sqlite3
@@ -35,6 +36,17 @@ class SourceRows:
         self.sources = sources
         self.batch_size = batch_size
         self.schemas = {}
+        self.lookups = OrderedDict()
+
+    def one(self, src, query, parameters):
+        """Reuse bounded owner lookups within already sealed read-only inputs."""
+        key = (src, query, tuple(parameters))
+        if key not in self.lookups:
+            self.lookups[key] = src.execute(query, parameters).fetchone()
+            if len(self.lookups) > 4096:
+                self.lookups.popitem(last=False)
+        self.lookups.move_to_end(key)
+        return self.lookups[key]
 
     def schema(self, src, table):
         if not table.replace('_', '').isalnum():
@@ -298,32 +310,34 @@ def fetch(src,table,column,value):
 
 
 def owner(src,table,record,reader=None):
+    def one(query,parameters):
+        return reader.one(src,query,parameters) if reader else src.execute(query,parameters).fetchone()
     if table.endswith('_text_candidate_occurrence'):
         prefix=table.removesuffix('_text_candidate_occurrence');ot=prefix+'_text_owner_occurrence'
         oc=reader.columns(src,ot) if reader else {r[1] for r in src.execute('PRAGMA table_info('+ot+')')}
         if 'owner_id' in record:
-            got=src.execute(f'SELECT * FROM {ot} WHERE owner_id=? AND ingest_run_id=?',(record['owner_id'],record['ingest_run_id'])).fetchone()
+            got=one(f'SELECT * FROM {ot} WHERE owner_id=? AND ingest_run_id=?',(record['owner_id'],record['ingest_run_id']))
         else:
             rt=prefix+'_text_resolution_occurrence';rc=reader.columns(src,rt) if reader else {r[1] for r in src.execute('PRAGMA table_info('+rt+')')}
             pk='id' if 'id' in rc else 'occurrence_id'
-            z=src.execute(f'SELECT * FROM {rt} WHERE {pk}=?',(record['resolution_occurrence_id'],)).fetchone()
+            z=one(f'SELECT * FROM {rt} WHERE {pk}=?',(record['resolution_occurrence_id'],))
             ownerpk='id' if 'id' in oc else 'occurrence_id'
-            got=src.execute(f'SELECT * FROM {ot} WHERE {ownerpk}=?',(z['owner_occurrence_id'],)).fetchone()
+            got=one(f'SELECT * FROM {ot} WHERE {ownerpk}=?',(z['owner_occurrence_id'],))
         if got is None:raise ValueError('independent core owner join absent')
         got=dict(got)
         return got.get('row_occurrence_id',got.get('source_row_occurrence_id')),got.get('field_name',got.get('field_path')),record.get('locale')
     if 'slot_id' in record:
         st={'codex_text_candidate':'codex_text_slot','native71_text':'native71_slot','event71_text':'event71_slot','document_text':'document_slot','loading_tip_text':'loading_tip_slot','gcg_card_text':'gcg_card_slot','mail_text':'mail_slot','event_narrative_text':'event_narrative_slot','native_archive_text':'native_archive_slot'}.get(table,'text_slot')
-        z=dict(src.execute(f'SELECT * FROM {st} WHERE id=?',(record['slot_id'],)).fetchone())
+        z=dict(one(f'SELECT * FROM {st} WHERE id=?',(record['slot_id'],)))
         return z.get('row_id',z.get('container_id',z.get('root_id'))),z.get('owner_field',z.get('field',z.get('source_label'))),z['locale']
     if table=='candidate':
-        z=src.execute('SELECT row_id,field_name,locale FROM resolution WHERE owner_id=? AND locale=?',(record['owner_id'],record['locale'])).fetchone()
+        z=one('SELECT row_id,field_name,locale FROM resolution WHERE owner_id=? AND locale=?',(record['owner_id'],record['locale']))
         return tuple(z)
     if table=='text_slot':
-        z=src.execute('SELECT container_id,pointer FROM talk_node WHERE id=?',(record['node_id'],)).fetchone()
+        z=one('SELECT container_id,pointer FROM talk_node WHERE id=?',(record['node_id'],))
         return z[0],z[1],record['locale']
     if table=='textmap_candidate':
-        z=src.execute('SELECT row_id,field_pointer FROM numeric_observation WHERE id=?',(record['observation_id'],)).fetchone()
+        z=one('SELECT row_id,field_pointer FROM numeric_observation WHERE id=?',(record['observation_id'],))
         return z[0],z[1],record['locale']
     if table=='text_candidate' and 'row_ordinal' in record:
         return str(record['row_ordinal']),record['field'],record['locale']

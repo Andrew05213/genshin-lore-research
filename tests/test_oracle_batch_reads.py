@@ -85,3 +85,24 @@ def test_batch_reduces_queries_without_dropping_rows():
 def test_batch_size_is_bounded(size):
     with pytest.raises(ValueError,match='batch size'):
         SourceRows({},size)
+
+
+def test_owner_lookups_are_bounded_and_keep_connection_and_parameters():
+    source,index=databases()
+    other=sqlite3.connect(':memory:');other.row_factory=sqlite3.Row
+    try:
+        other.executescript("CREATE TABLE item(run,id,raw_text); INSERT INTO item VALUES('a','1','other artifact');")
+        reader=SourceRows({'source':source,'other':other})
+        query='SELECT * FROM item WHERE run=? AND id=?'
+        traces=[];source.set_trace_callback(traces.append)
+        for _ in range(3):
+            assert reader.one(source,query,('a','1'))['raw_text']=='synthetic a'
+        assert len(traces)==1
+        assert reader.one(source,query,('b','1'))['raw_text']=='synthetic b'
+        assert reader.one(other,query,('a','1'))['raw_text']=='other artifact'
+        for ordinal in range(4100):
+            assert reader.one(source,query,('missing',str(ordinal))) is None
+        assert len(reader.lookups)==4096
+        assert (source,query,('a','1')) not in reader.lookups
+    finally:
+        source.close();other.close();index.close()
