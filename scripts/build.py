@@ -21,6 +21,7 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT)]
 from scripts.build_component import qualify, sha
+from scripts.build_workers import WorkerTree
 from scripts.build_support import (
     RECEIPT_CONTRACT,
     load_object,
@@ -1502,7 +1503,7 @@ def run_stages(job, selected, cache_mib, jobs):
             if stage not in selected:
                 continue
             token = str(time.time_ns())
-            entry = {'process': None, 'streams': [], 'command': [],
+            entry = {'process': None, 'tree': None, 'streams': [], 'command': [],
                      'record': job.output / f'{stage}-worker-{token}.json',
                      'observed_finish_seconds': None}
             workers[stage] = entry
@@ -1518,9 +1519,9 @@ def run_stages(job, selected, cache_mib, jobs):
                 command += ['--historical-source', str(job.history)]
             entry['command'] = command
             env = {**os.environ, 'PYTHONPATH': str(ROOT / 'src'), 'PYTHONUTF8': '1'}
-            worker = entry['process'] = subprocess.Popen(command, cwd=ROOT, env=env,
-                                      stdin=subprocess.DEVNULL,
+            tree = entry['tree'] = WorkerTree(command, cwd=ROOT, env=env,
                                       stdout=entry['streams'][0], stderr=entry['streams'][1])
+            worker = entry['process'] = tree.process
             print('STARTED independent worker', stage, worker.pid, flush=True)
         for stage in selected:
             for entry in workers.values():
@@ -1548,25 +1549,34 @@ def run_stages(job, selected, cache_mib, jobs):
                     k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
         completed = True
     finally:
+        cleanup_errors = []
+        for entry in workers.values():
+            stopped = None  # No returned owner: do not certify startup cleanup.
+            try:
+                if entry['tree'] is not None:
+                    entry['tree'].stop()
+                    stopped = True
+            except BaseException as exc:
+                stopped = False
+                cleanup_errors.append(exc)
+            entry['stopped'] = stopped
+        # Stop every tree before closing/writing any logs. A full disk or one
+        # cleanup error must not prevent cancellation of the other worker.
         for entry in workers.values():
             worker = entry['process']
-            if worker is not None and worker.poll() is None:
-                worker.terminate()
-                try:
-                    worker.wait(timeout=30)
-                except subprocess.TimeoutExpired:
-                    worker.kill()
-                    worker.wait()
             for stream in entry['streams']:
                 stream.close()
             write(entry['record'], {
-                'command': entry['command'], 'parent_completed': completed,
+                'command': entry['command'], 'parent_completed': completed and not cleanup_errors,
+                'worker_tree_shutdown_completed': entry['stopped'],
                 'worker_returncode': worker.returncode if worker else None,
                 'parent_elapsed_seconds': time.monotonic() - started,
                 'worker_observed_finish_seconds': entry['observed_finish_seconds'],
                 'stdout': str(entry['paths'][0]), 'stderr': str(entry['paths'][1]),
                 'failure_outputs_retained': True,
             })
+        if cleanup_errors:
+            raise RuntimeError('build worker tree cleanup failed; outputs retained') from cleanup_errors[0]
 
 
 def main():

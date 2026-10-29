@@ -68,9 +68,19 @@ class Worker:
     def kill(self):self.killed=True;self.returncode=-9
 
 
+class Tree:
+    def __init__(self,worker):self.process=worker
+    def stop(self):
+        if self.process.poll() is None:self.process.terminate()
+        self.process.wait()
+
+
+def fake_tree(*args,**kwargs):return Tree(Worker(*args,**kwargs))
+
+
 def test_zero_exit_without_qualified_artifact_does_not_reach_consumer(tmp_path,monkeypatch):
     events=[];j=job(tmp_path,events)
-    monkeypatch.setattr(build.subprocess,'Popen',Worker)
+    monkeypatch.setattr(build,'WorkerTree',fake_tree)
     def rejected(_):raise ValueError('no qualified artifact')
     j.dependency_inputs=rejected
     with pytest.raises(ValueError,match='no qualified artifact'):
@@ -83,8 +93,8 @@ def test_zero_exit_without_qualified_artifact_does_not_reach_consumer(tmp_path,m
 def test_failure_stops_before_consumers_and_retains_logs(tmp_path,monkeypatch,failure):
     events=[];j=job(tmp_path,events);workers=[]
     def spawn(*args,**kwargs):
-        w=Worker(*args,**kwargs);workers.append(w);return w
-    monkeypatch.setattr(build.subprocess,'Popen',spawn)
+        w=Worker(*args,**kwargs);workers.append(w);return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
     def core():
         if failure=='parent':raise RuntimeError('parent failed')
         workers[0].returncode=7
@@ -102,8 +112,8 @@ def test_failure_stops_before_consumers_and_retains_logs(tmp_path,monkeypatch,fa
 def test_three_jobs_qualifies_every_quest_output_before_continuing(tmp_path,monkeypatch):
     events=[];j=job(tmp_path,events);workers=[]
     def spawn(*args,**kwargs):
-        w=Worker(*args,**kwargs);workers.append(w);return w
-    monkeypatch.setattr(build.subprocess,'Popen',spawn)
+        w=Worker(*args,**kwargs);workers.append(w);return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
     j.dependency_inputs=lambda *names:events.extend('qualified '+n for n in names)
     j.quest=lambda:pytest.fail('parent duplicated Quest worker')
     build.run_stages(j,('core','quest','r0','readable'),0,3)
@@ -120,8 +130,8 @@ def test_second_spawn_failure_cancels_the_already_started_worker(tmp_path,monkey
     events=[];j=job(tmp_path,events);workers=[]
     def spawn(*args,**kwargs):
         if workers:raise OSError('second worker could not start')
-        w=Worker(*args,**kwargs);workers.append(w);return w
-    monkeypatch.setattr(build.subprocess,'Popen',spawn)
+        w=Worker(*args,**kwargs);workers.append(w);return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
     with pytest.raises(OSError,match='could not start'):
         build.run_stages(j,('core','quest','r0','readable'),0,3)
     assert not events
@@ -130,23 +140,25 @@ def test_second_spawn_failure_cancels_the_already_started_worker(tmp_path,monkey
     assert len(records)==2
     assert all(not r['parent_completed'] for r in records)
     assert any(r['worker_returncode'] is None for r in records)
+    assert any(r['worker_tree_shutdown_completed'] is None for r in records)
 
 
-def test_unresponsive_worker_is_killed_only_after_termination_timeout(tmp_path,monkeypatch):
+def test_cleanup_error_does_not_leave_the_other_worker_running(tmp_path,monkeypatch):
     events=[];j=job(tmp_path,events);workers=[]
-    class Unresponsive(Worker):
-        def terminate(self):self.terminated=True
-        def wait(self,timeout=None):
-            if timeout is not None:raise subprocess.TimeoutExpired(self.args,timeout)
-            return self.returncode
     def spawn(*args,**kwargs):
-        w=Unresponsive(*args,**kwargs);workers.append(w);return w
-    monkeypatch.setattr(build.subprocess,'Popen',spawn)
+        w=Worker(*args,**kwargs);workers.append(w)
+        if len(workers)==1:
+            return SimpleNamespace(process=w,stop=lambda:(_ for _ in ()).throw(OSError('stop failed')))
+        return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
     def fail():raise ValueError('parent stopped')
     j.core=fail
-    with pytest.raises(ValueError,match='parent stopped'):
-        build.run_stages(j,('core','r0','readable'),0,2)
-    assert workers[0].terminated and workers[0].killed
+    with pytest.raises(RuntimeError,match='worker tree cleanup failed'):
+        build.run_stages(j,('core','quest','r0','readable'),0,3)
+    assert workers[1].terminated
+    records=[json.loads(p.read_text()) for p in tmp_path.glob('*-worker-*.json')]
+    assert len(records)==2 and all(not r['parent_completed'] for r in records)
+    assert sorted(r['worker_tree_shutdown_completed'] for r in records)==[False,True]
     assert not events
 
 

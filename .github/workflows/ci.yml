@@ -35,9 +35,11 @@ jobs:
         run: python -m pip install --require-hashes -r requirements-dev.lock
       - name: Install editable source
         run: python -m pip install --no-deps --no-build-isolation -e .
+      - name: Worker process-tree cancellation
+        run: python -m pytest -q tests/test_build_stage_overlap.py tests/test_build_worker_tree.py
       - name: Unit tests, negative probes, links and license metadata
         run: |
-          python -m pytest -q --cov=scripts.build --cov=scripts.build_support --cov=scripts.runtime_config --cov=genshin_lore.mcp_transport --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
+          python -m pytest -q --cov=scripts.build --cov=scripts.build_workers --cov=scripts.build_support --cov=scripts.runtime_config --cov=genshin_lore.mcp_transport --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
       - name: Compile Python source
         run: python -m compileall -q src scripts tests
       - name: Public command help

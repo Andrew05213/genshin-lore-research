@@ -62,7 +62,7 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 
 主链顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native、统一索引和向量 overlay。默认 `--jobs 2` 提前以独立进程构建 R0；到主链 R0 屏障时等待，并核对其完整资格回执。`--jobs 3` 还提前运行不依赖 core/R0 的 Quest 链；使用之前须核对 Quest/Talk、派生叙事、Native Message、Review binding 和 Talk physical 六个产物。进程隔离 GC、输入缓存和 SQLite writer；不并行写同一数据库，统一索引和向量阶段仍等待全部必需输入。
 
-`--jobs 1` 保留完整串行路径，适用于内存受限环境或串行对照。worker 上限包含主进程；只支持这两条已声明的独立链，不自动推断其他依赖。失败会停止后续阶段、关闭本次启动的 worker，并保留各自日志、未完成数据库和 sidecar；退出码为零不代替来源核验。输出根目录仍只允许一个构建协调进程，不能对同一路径同时启动两个独立 `--stage all`。
+`--jobs 1` 保留完整串行路径，适用于内存受限环境或串行对照。worker 上限包含主进程；只支持这两条已声明的独立链，不自动推断其他依赖。失败会停止后续阶段，并终止、等待本次 worker 及其验证器后代退出：Linux 使用独立进程组，Windows 在释放启动门之前加入独立 Job Object。所有进程树先停止，随后才关闭和写入诊断；一个清理错误不会跳过另一个 worker。日志、未完成数据库和 sidecar 保留；退出码为零不代替来源核验。输出根目录仍只允许一个构建协调进程，不能对同一路径同时启动两个独立 `--stage all`。
 
 仅需基础数据时显式加 `--without-semantic`，不需要模型参数。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
 
