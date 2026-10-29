@@ -22,4 +22,6 @@ Linux 定向测试 **21 项 / 1.28 秒**通过；完整合成回归 **661 项 / 
 
 原有仅模拟根进程的超时测试由上述真实 TERM-resistant 后代测试替代，未移除验证/数据断言。Windows 原生 Job 路径由同一测试集在两平台 CI 执行；以 PR 对应 head 的检查为合并门槛。CI 覆盖率增加 `scripts.build_workers`；本地未安装 `pytest-cov`，完整测试未带覆盖率参数，未跳过测试。
 
+首次 Windows CI `e50b57c` 为 **660 通过、1 失败**，位于双 worker 先退出后的存活断言；[原始失败](https://github.com/Andrew05213/genshin-lore-research/actions/runs/40885198527)保留。该日志未记录具体存活对象，清理后仅凭 PID 重新打开进程也不能排除 PID 复用，不能据此断言 Job 泄漏。后续测试在触发退出前持有原进程的 Windows handle / Linux pidfd，明确让 worker 等观测就绪后才退出，并记录每个对象的 wait/exit 状态；“全部原进程已退出”和“没有晚写”两项断言均保留，清理测试自身也只针对所持原进程身份。[进程句柄与 PID 的生命周期](https://learn.microsoft.com/en-us/windows/win32/procthread/process-handles-and-identifiers)有别，最终以稳定身份的原生复验结果为准。CI 先运行这组快速取消测试，随后仍执行全部合成回归。
+
 本修复未重新执行 35 输入数据构建、向量构建或完整耗时 A/B。此前 [33:53.58 的实测](../cold-build-throughput.md) 仍只属于其冻结实现，不改写为本补丁的新计时或新来源验收。新实现继续遵守 v3 资格身份，不重签旧回执。

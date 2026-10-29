@@ -1,9 +1,11 @@
 """Real worker -> verifier -> writer lifetime, on Linux and native Windows."""
 import ctypes
+import errno
 import json
 import os
 from pathlib import Path
 import signal
+import select
 import subprocess
 import sys
 import time
@@ -14,24 +16,64 @@ import pytest
 from scripts import build, build_workers
 
 
-def running(pid):
-    if os.name == 'nt':
-        api=ctypes.WinDLL('kernel32',use_last_error=True)
-        api.OpenProcess.restype=ctypes.c_void_p
-        api.OpenProcess.argtypes=[ctypes.c_uint32,ctypes.c_int,ctypes.c_uint32]
-        api.WaitForSingleObject.restype=ctypes.c_uint32
-        api.WaitForSingleObject.argtypes=[ctypes.c_void_p,ctypes.c_uint32]
-        api.CloseHandle.argtypes=[ctypes.c_void_p]
-        handle=api.OpenProcess(0x00100000,False,pid)  # SYNCHRONIZE
-        if not handle:
-            if ctypes.get_last_error() in (87,1168):return False
-            raise ctypes.WinError(ctypes.get_last_error())
-        try:return api.WaitForSingleObject(handle,0)!=0
-        finally:api.CloseHandle(handle)
-    try:
-        state=(Path('/proc')/str(pid)/'stat').read_text().rsplit(')',1)[1].split()[0]
-        return state not in ('Z','X')
-    except FileNotFoundError:return False
+class ObservedProcess:
+    """Hold identity BEFORE cleanup: a later OpenProcess(PID) may find reuse."""
+    def __init__(self,pid):
+        self.pid=pid;self.fd=None
+        if os.name=='nt':
+            self.api=ctypes.WinDLL('kernel32',use_last_error=True)
+            signatures={
+                'OpenProcess':(ctypes.c_void_p,[ctypes.c_uint32,ctypes.c_int,ctypes.c_uint32]),
+                'WaitForSingleObject':(ctypes.c_uint32,[ctypes.c_void_p,ctypes.c_uint32]),
+                'GetExitCodeProcess':(ctypes.c_int,[ctypes.c_void_p,ctypes.POINTER(ctypes.c_uint32)]),
+                'TerminateProcess':(ctypes.c_int,[ctypes.c_void_p,ctypes.c_uint32]),
+                'CloseHandle':(ctypes.c_int,[ctypes.c_void_p]),
+            }
+            for name,(result,args) in signatures.items():
+                fn=getattr(self.api,name);fn.restype=result;fn.argtypes=args
+            self.handle=self.api.OpenProcess(0x00100000|0x1000|0x0001,False,pid)
+            if not self.handle:raise ctypes.WinError(ctypes.get_last_error())
+        else:
+            self.birth=self.stat()[19]
+            if hasattr(os,'pidfd_open'):
+                try:self.fd=os.pidfd_open(pid)
+                except OSError as exc:
+                    if exc.errno not in (errno.ENOSYS,errno.EPERM,errno.EACCES):raise
+
+    def stat(self):
+        return (Path('/proc')/str(self.pid)/'stat').read_text().rsplit(')',1)[1].split()
+
+    def snapshot(self):
+        if os.name=='nt':
+            status=self.api.WaitForSingleObject(self.handle,0)
+            if status not in (0,258):raise ctypes.WinError(ctypes.get_last_error())
+            code=ctypes.c_uint32()
+            if not self.api.GetExitCodeProcess(self.handle,ctypes.byref(code)):
+                raise ctypes.WinError(ctypes.get_last_error())
+            return {'pid':self.pid,'running':status==258,'wait_status':status,'exit_code':code.value}
+        if self.fd is not None:
+            poll=select.poll();poll.register(self.fd,select.POLLIN)
+            return {'pid':self.pid,'running':not bool(poll.poll(0))}
+        try:
+            fields=self.stat()
+            return {'pid':self.pid,'running':fields[19]==self.birth and fields[0] not in ('Z','X')}
+        except FileNotFoundError:return {'pid':self.pid,'running':False}
+
+    def close(self):
+        if os.name=='nt':self.api.CloseHandle(self.handle)
+        elif self.fd is not None:os.close(self.fd)
+
+    def stop_fixture(self):
+        if not self.snapshot()['running']:return
+        if os.name=='nt':
+            if not self.api.TerminateProcess(self.handle,1):
+                if self.snapshot()['running']:raise ctypes.WinError(ctypes.get_last_error())
+            assert self.api.WaitForSingleObject(self.handle,5000)==0
+        else:
+            try:
+                if self.fd is not None:signal.pidfd_send_signal(self.fd,signal.SIGKILL)
+                elif self.stat()[19]==self.birth:os.kill(self.pid,signal.SIGKILL)
+            except ProcessLookupError:pass
 
 
 def wait_for(path):
@@ -67,30 +109,40 @@ p=argparse.ArgumentParser();p.add_argument('--output-root');p.add_argument('--st
 out=Path(a.output_root)/a.stage;out.mkdir();(out/'worker.pid').write_text(str(os.getpid()))
 child=subprocess.Popen([sys.executable,'-c',VERIFIER,str(out),IGNORE,LEAF])
 if FAILURE=='worker':
- while not (out/'ready').exists():time.sleep(.01)
+ end=time.monotonic()+10
+ while not (out/'allow-worker-exit').exists():
+  if time.monotonic()>end:os._exit(8)
+  time.sleep(.01)
  os._exit(7)
 child.wait()
 '''
     (root/'scripts/build.py').write_text('VERIFIER='+repr(verifier)+'\nLEAF='+repr(leaf)+
         '\nIGNORE='+repr(str(ignore_term))+'\nFAILURE='+repr(failure)+'\n'+script)
     failed_at=[]
+    probes={}
     worker_names=('r0',) if jobs==2 else ('r0','quest')
     def core():
         for name in worker_names:wait_for(output/name/'ready')
+        for worker in worker_names:
+            for name in ('worker','verifier','leaf'):
+                pid=int((output/worker/(name+'.pid')).read_text())
+                probes[worker+'/'+name]=ObservedProcess(pid)
+        assert all(p.snapshot()['running'] for p in probes.values())
         failed_at.append(time.monotonic())
         if failure=='parent':raise ValueError('synthetic parent failure')
+        for name in worker_names:(output/name/'allow-worker-exit').touch()
     def unexpected(*args):pytest.fail('continued to a consumer after failure')
     job=SimpleNamespace(output=output,source=tmp_path/'source',history=None,
         core=core,r0=unexpected,readable=unexpected,dependency_inputs=unexpected)
     monkeypatch.setattr(build,'ROOT',root)
     monkeypatch.setattr(build_workers,'STOP_GRACE_SECONDS',.15)
-    pids=[]
     try:
-        with pytest.raises(ValueError if failure=='parent' else subprocess.CalledProcessError):
+        with pytest.raises(ValueError if failure=='parent' else subprocess.CalledProcessError) as caught:
             build.run_stages(job,('core','quest','r0','readable') if jobs==3 else ('core','r0','readable'),0,jobs)
+        if failure=='worker':assert caught.value.returncode==7
         elapsed=time.monotonic()-failed_at[0]
-        pids=[int((output/worker/(name+'.pid')).read_text()) for worker in worker_names for name in ('worker','verifier','leaf')]
-        assert not any(running(pid) for pid in pids), 'cleanup returned with a live descendant'
+        states={name:p.snapshot() for name,p in probes.items()}
+        assert not any(s['running'] for s in states.values()), states
         assert all(not (output/name/'late-output').exists() for name in worker_names)
         if ignore_term and os.name!='nt':assert elapsed>=.15  # TERM-resistant leaf required escalation.
         records=[json.loads(p.read_text()) for p in output.glob('*-worker-*.json')]
@@ -99,12 +151,10 @@ child.wait()
         assert all(r['worker_returncode']!=0 for r in records)
     finally:
         # Also contain a regression of this test itself: kill only its fixture
-        # PIDs. No child is allowed to linger when an assertion fails.
-        for path in output.glob('*/*.pid'):
-            pid=int(path.read_text())
-            if running(pid):
-                try:os.kill(pid,signal.SIGTERM if os.name=='nt' else signal.SIGKILL)
-                except ProcessLookupError:pass
+        # Stable original identities only, never a PID recycled by the runner.
+        for probe in probes.values():
+            try:probe.stop_fixture()
+            finally:probe.close()
 
 
 def test_successful_worker_keeps_exit_code_and_close_is_idempotent(tmp_path):
