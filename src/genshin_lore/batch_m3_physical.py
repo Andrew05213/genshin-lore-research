@@ -8,6 +8,7 @@ does not infer a family, join files, or de-duplicate equal values.
 
 from __future__ import annotations
 
+import gc
 import hashlib
 import json
 import os
@@ -24,8 +25,6 @@ from .batch_release import (
     assert_output_paths,
     create_private_staging,
     publish_absent,
-    stable_sibling_lock,
-    sync_directory,
 )
 from .batch_m0_baseline import (
     PairsObject,
@@ -242,6 +241,12 @@ def _scan_file(relative_path: str, path: Path) -> tuple[dict[str, Any], Iterator
     parsed: Any = None
     expected_count = 0
     if path.suffix.lower() == ".json":
+        # This fixed JSON decoder constructs an acyclic value tree. Defer
+        # repeated cyclic scans while allocating it; refcounting still runs.
+        # Restore the caller's GC state before consuming any occurrences.
+        gc_enabled = gc.isenabled()
+        if gc_enabled:
+            gc.disable()
         try:
             parsed = parse_json_physical(raw)
         except (UnicodeError, ValueError, RecursionError):
@@ -251,6 +256,9 @@ def _scan_file(relative_path: str, path: Path) -> tuple[dict[str, Any], Iterator
         else:
             parse_status = "parsed_json"
             layout, expected_count, record_status = _record_layout(root, parsed)
+        finally:
+            if gc_enabled:
+                gc.enable()
 
     # Keep the parsed container alive only for this file and yield one
     # occurrence at a time; never build a second list for a large TextMap.
@@ -352,9 +360,9 @@ def _put_metadata(connection: sqlite3.Connection, values: Mapping[str, Any]) -> 
     )
 
 
-def _artifact_root(output_path: Path, temp_root: str | Path | None, invocation_id: str) -> Path:
+def _artifact_root(temp_root: str | Path | None, invocation_id: str) -> Path:
     if temp_root is None:
-        candidate = Path(tempfile.mkdtemp(prefix="batch-m3-r0-", dir="/tmp"))
+        candidate = Path(tempfile.mkdtemp(prefix="batch-m3-r0-", dir=batch_space.temporary_root()))
     else:
         candidate = Path(temp_root).absolute()
     try:
@@ -711,7 +719,8 @@ def build_r0_artifact(
     The scan is performed outside the final lock, but all output identity and
     target-absence checks are repeated by ``publish_absent`` under its stable
     sibling lock.  Source-bound verification completes on the same-directory
-    private staging inode before the one atomic rename.
+    private staging inode before the one atomic rename. R0 verification failures
+    retain their staging or published artifact for diagnosis; no receipt is implied.
     """
 
     source = Path(source_root).resolve()
@@ -725,96 +734,56 @@ def build_r0_artifact(
         raise BatchM3PhysicalError(f"source root is unavailable: {source}")
     output.parent.mkdir(parents=True, exist_ok=True)
     invocation = invocation_id or batch_space.new_invocation_id()
-    owned = _artifact_root(output, temp_root, invocation)
+    owned = _artifact_root(temp_root, invocation)
     gate = _space_gate(
         Path(repo_root).resolve() if repo_root is not None else Path(__file__).resolve().parents[2],
         owned,
         invocation,
         reservation_bytes=artifact_limit_bytes,
     )
+    # Preflight before any source scan. Failure leaves prior evidence intact.
     try:
-        # Preflight before any source scan.  The final target must be absent
-        # and all SQLite sidecars/aliases must be clear.
-        try:
-            assert_output_paths(output, inputs=(("source", source),), target_must_be_absent=True)
-        except BatchReleaseError as exc:
-            raise BatchM3PhysicalError(str(exc)) from exc
-        descriptor, staging = create_private_staging(
-            output, prefix=f".{output.name}.{invocation}-"
-        )
-        os.close(descriptor)
-        try:
-            assert_output_paths(
-                output, inputs=(("source", source),), staging=staging,
-                target_must_be_absent=True,
-            )
-            dynamic = _write_artifact(
-                staging, source, roots,
-                snapshot_id=snapshot_id, parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
-                artifact_limit_bytes=artifact_limit_bytes,
-            )
-            gate.check("m3-r0-physical-prepublish", projected_bytes=0, cleanup=False)
-            # Verify against source bytes while the private staging inode is
-            # still the exact file produced by this invocation.
-            verify_r0_artifact(
-                staging, source_root=source, selected_roots=roots,
-                snapshot_id=snapshot_id, parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
-                artifact_limit_bytes=artifact_limit_bytes,
-            )
-            try:
-                publish_absent(output, staging, inputs=(("source", source),))
-            except BatchReleaseError as exc:
-                raise BatchM3PhysicalError(str(exc)) from exc
-            staging = None
-        finally:
-            if staging is not None:
-                for sidecar in (Path(f"{staging}-journal"), Path(f"{staging}-wal"), Path(f"{staging}-shm")):
-                    try:
-                        sidecar.unlink()
-                    except FileNotFoundError:
-                        pass
-                try:
-                    staging.unlink()
-                except FileNotFoundError:
-                    pass
-
-        # Re-open the published inode read-only for the returned summary.  If
-        # a post-publish check fails, remove only the inode this invocation
-        # published while holding the same stable lock.
-        published = os.lstat(output)
-        published_identity = (int(published.st_dev), int(published.st_ino))
-        try:
-            gate.check("m3-r0-physical-final", projected_bytes=0, cleanup=False)
-            summary = verify_r0_artifact(
-                output, selected_roots=roots, snapshot_id=snapshot_id,
-                parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
-                artifact_limit_bytes=artifact_limit_bytes,
-            )
-        except Exception:
-            try:
-                with stable_sibling_lock(output, inputs=(("source", source),)):
-                    try:
-                        current = os.lstat(output)
-                    except FileNotFoundError:
-                        current = None
-                    if current is not None and published_identity == (int(current.st_dev), int(current.st_ino)):
-                        output.unlink()
-                        sync_directory(output.parent)
-            except (OSError, BatchReleaseError):
-                pass
-            raise
-        summary.update({
-            "dynamic": dynamic,
-            "selected_roots": list(roots),
-            "space": gate.report(),
-            "invocation_id": invocation,
-            "owned_temp_root": str(owned),
-        })
-        return summary
-    except Exception:
-        # ``create_private_staging`` paths are cleaned in the inner finally;
-        # the ownership marker and unrelated invocations remain untouched.
-        raise
+        assert_output_paths(output, inputs=(("source", source),), target_must_be_absent=True)
+    except BatchReleaseError as exc:
+        raise BatchM3PhysicalError(str(exc)) from exc
+    descriptor, staging = create_private_staging(
+        output, prefix=f".{output.name}.{invocation}-"
+    )
+    os.close(descriptor)
+    assert_output_paths(
+        output, inputs=(("source", source),), staging=staging,
+        target_must_be_absent=True,
+    )
+    dynamic = _write_artifact(
+        staging, source, roots,
+        snapshot_id=snapshot_id, parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
+        artifact_limit_bytes=artifact_limit_bytes,
+    )
+    gate.check("m3-r0-physical-prepublish", projected_bytes=0, cleanup=False)
+    # Verify exact source bytes on the private inode before atomic publication.
+    verify_r0_artifact(
+        staging, source_root=source, selected_roots=roots,
+        snapshot_id=snapshot_id, parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
+        artifact_limit_bytes=artifact_limit_bytes,
+    )
+    try:
+        publish_absent(output, staging, inputs=(("source", source),))
+    except BatchReleaseError as exc:
+        raise BatchM3PhysicalError(str(exc)) from exc
+    gate.check("m3-r0-physical-final", projected_bytes=0, cleanup=False)
+    summary = verify_r0_artifact(
+        output, selected_roots=roots, snapshot_id=snapshot_id,
+        parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
+        artifact_limit_bytes=artifact_limit_bytes,
+    )
+    summary.update({
+        "dynamic": dynamic,
+        "selected_roots": list(roots),
+        "space": gate.report(),
+        "invocation_id": invocation,
+        "owned_temp_root": str(owned),
+    })
+    return summary
 
 
 # Friendly aliases for callers that use the shorter verifier/summary names.

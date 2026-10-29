@@ -56,10 +56,11 @@ def readonly(path: Path) -> sqlite3.Connection:
     return sqlite3.connect(path.absolute().as_uri() + '?mode=ro&immutable=1', uri=True)
 
 
-def build(source: Path, output: Path) -> dict:
+def build(source: Path, output: Path, *, manifest_path=None) -> dict:
+    manifest = Path(manifest_path or MANIFEST)
     source, output = Path(source), Path(output)
     require(subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines() == [SOURCE_COMMIT, SOURCE_TREE], '7.1 source pin')
-    accepted = json.loads(MANIFEST.read_text())['components']
+    accepted = json.loads(manifest.read_text())['components']
     review, narrative = accepted['quest_review_archive'], accepted['quest_narrative_archive']
     for entry in (review, narrative):
         require(entry['acceptance_status'] == 'PHYSICAL_FOUNDATION_ACCEPTED' and entry['source_snapshot'] == SNAPSHOT and entry['product_accepted'] is False, 'accepted physical dependency')
@@ -97,7 +98,7 @@ def build(source: Path, output: Path) -> dict:
     require(qr_row_count == 622 and len(qr_rows) == qr_row_count, 'complete Review row namespace')
     implementations = {str(path.relative_to(ROOT)): sha(path) for path in (ROOT / 'scripts/builders/quest_review_binding_v2.py', SCHEMA)}
     parser = ident('parser', implementations)
-    dependencies = {'manifest_sha256': sha(MANIFEST), 'review': {k: review[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}, 'narrative': {k: narrative[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}}
+    dependencies = {'manifest_sha256': sha(manifest), 'review': {k: review[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}, 'narrative': {k: narrative[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}}
     run = ident('run', SNAPSHOT, parser, dependencies)
     locators, candidates = [], []
     counts = defaultdict(int)
@@ -143,7 +144,6 @@ def build(source: Path, output: Path) -> dict:
         db.close()
     except BaseException:
         db.close()
-        output.unlink(missing_ok=True)
         raise
     finally:
         qr.close()

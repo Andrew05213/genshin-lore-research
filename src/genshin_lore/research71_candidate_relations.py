@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import json
 
-from .research71_candidate_adapters import canonical, source_key, primary_columns
+from .research71_candidate_adapters import canonical, source_key, primary_columns, SPECS, TEXT_TABLE
+from .research_adapters import CANDIDATE_UNSUPPORTED_RELATIONS, relation_like_tables
+from .research_index import _record_unsupported_relations
 
 # table, physical parent FK, candidate table, observation FK
 SCOPES = {
@@ -19,6 +21,33 @@ SCOPES = {
     "narrative_reminder": [("locator","row_ordinal","physical_candidate",None)],
     "talk_physical": [("talk_physical_reference","file_id","talk_physical_candidate","reference_id")],
 }
+
+
+def record_unsupported(src, out, key, component):
+    """Declare known partial scopes, including empty ones; reject unknown ones.
+
+    Run before projection so schema/contract drift fails without building a
+    whole in-memory index. Do not infer new adapters from table-name markers.
+    """
+    mode = component['adapter']
+    if mode in ('core33', 'formal_compatible'):
+        _record_unsupported_relations(src, out, key, component['family'])
+        return
+    texts = {'candidate'} if mode == 'character_text' else set()
+    if mode in SPECS and SPECS[mode][1] is not None:
+        texts.add(TEXT_TABLE.get(mode, 'text_candidate'))
+    declared = {s[i] for s in SCOPES.get(mode, ()) for i in (0, 2)}
+    unsupported = CANDIDATE_UNSUPPORTED_RELATIONS.get(mode, ())
+    unknown = relation_like_tables(src, component['family']) - texts - declared - {t for _, t in unsupported}
+    if unknown:
+        raise ValueError('relation-like tables absent from explicit adapter contract: '+','.join(sorted(unknown)))
+    tables = {r[0] for r in src.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    for kind, table in unsupported:
+        if table in tables:
+            count = src.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+            out.execute('INSERT INTO adapter_coverage VALUES(?,?,?,?,?,?,?,?)',
+                (key, mode+':unsupported:'+table, kind, table, count, 0, 'unsupported',
+                 'explicit physical scope; no safe relation projection; follow remains partial'))
 
 
 def project(src,out,key,component,mapping,rs,ks):

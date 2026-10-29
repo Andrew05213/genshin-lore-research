@@ -1,7 +1,7 @@
 """Stable sibling-lock promotion protocol for Phase 4E2 databases."""
 from __future__ import annotations
 
-import fcntl
+from .platform_io import lock_exclusive, unlock
 import hashlib
 import os
 import stat
@@ -49,7 +49,7 @@ def promote_database(
     replaced = False
     published_identity: tuple[int, int] | None = None
     try:
-        fcntl.flock(lock_descriptor, fcntl.LOCK_EX)
+        lock_exclusive(lock_descriptor)
         locked = True
         lock_info = os.fstat(lock_descriptor)
         path_lock_info = os.lstat(lock_path)
@@ -146,5 +146,5 @@ def promote_database(
         if target_descriptor >= 0:
             os.close(target_descriptor)
         if locked:
-            fcntl.flock(lock_descriptor, fcntl.LOCK_UN)
+            unlock(lock_descriptor)
         os.close(lock_descriptor)

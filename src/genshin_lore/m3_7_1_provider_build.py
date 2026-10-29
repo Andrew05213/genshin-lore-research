@@ -18,6 +18,7 @@ from . import batch_m3_r1_projection as physical_array_reader
 from . import batch_m1_textmap as lexical_textmap_reader
 from .batch_m3_r1_projection import _iter_array_records
 from .batch_m1_textmap import iter_textmap_pairs
+from .batch_release import fsync_file
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -85,7 +86,7 @@ def _candidate_map(raw_files: dict[str, bytes], family: dict, hashes: set[str]) 
         locale = next((value for value in LOCALES if suffix.endswith(value + ".json")), None)
         if locale is None:
             raise ValueError("unknown TextMap locale: " + relative)
-        for item in iter_textmap_pairs(raw_files[relative]):
+        for item in iter_textmap_pairs(raw_files[relative], wanted_keys=hashes, _reuse_input=True):
             if item.key_text in hashes:
                 matched[(locale, item.key_text)].append((
                     tier, relative, item.pair_ordinal, "/", item.pointer,
@@ -116,15 +117,7 @@ def _owned_output(path: Path) -> tuple[sqlite3.Connection, tuple[int, int]]:
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_if_owned(path, owner)
         raise
-
-
-def _remove_if_owned(path: Path, owner: tuple[int, int] | None) -> None:
-    if owner is not None and path.exists():
-        stat = path.stat()
-        if (stat.st_dev, stat.st_ino) == owner:
-            path.unlink()
 
 
 def build(source_root: str | Path, family_name: str, output_path: str | Path,
@@ -167,11 +160,13 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
     helper_shas = {
         "physical_array_reader": file_sha(Path(physical_array_reader.__file__)),
         "textmap_lexical_reader": file_sha(Path(lexical_textmap_reader.__file__)),
+        "textmap_input_cache": file_sha(ROOT / "src/genshin_lore/textmap_input_cache.py"),
     }
     textmap_observation = None
     if family["v2_textmap_paths"]:
         textmap_parser = "m3-71-textmap-parser:" + identity(
-            "six-file-lexical-textmap-v1", helper_shas["textmap_lexical_reader"], sha(schema_raw)
+            "six-file-lexical-textmap-v2-input-cache", helper_shas["textmap_lexical_reader"],
+            helper_shas["textmap_input_cache"], sha(schema_raw)
         )[:40]
         textmap_run = "m3-71-textmap-run:" + identity(
             SNAPSHOT, textmap_parser,
@@ -284,12 +279,10 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
         if any(Path(str(output) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
             raise ValueError("M3 candidate sidecar present")
         qualify_source(source, family, frozen)
-        with output.open("rb") as stream:
-            os.fsync(stream.fileno())
+        fsync_file(output)
         return {**release, "artifact": {"size_bytes": output.stat().st_size,
                                          "sha256": file_sha(output)}}
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_if_owned(output, owner)
         raise

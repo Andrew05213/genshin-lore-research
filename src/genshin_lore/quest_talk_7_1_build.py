@@ -8,7 +8,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import resource
+from .platform_io import peak_rss_bytes
 import sqlite3
 import subprocess
 import tempfile
@@ -359,17 +359,14 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
             "counts": dict(sorted(counters.items())), "states": dict(sorted(states.items())),
             "silent_skip_count": 0, "cross_snapshot_identity_merge_count": 0,
             "build_seconds": time.monotonic() - started,
-            "peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+            "peak_rss_kib": (peak_rss_bytes() // 1024 if peak_rss_bytes() is not None else None),
         }
         print(canonical({"phase": "complete", "counts": report["counts"]}), flush=True)
+        stage.unlink()
         return report
     finally:
         if conn is not None:
             conn.close()
-        if stage.exists():
-            stage.unlink()
-        if compact.exists():
-            compact.unlink()
 
 
 def _insert_reference(conn: sqlite3.Connection, run: str, cid: str, path: str, ref: dict, kind: str, doc: dict) -> None:

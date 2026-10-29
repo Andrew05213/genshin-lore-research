@@ -37,7 +37,7 @@ tool_timeout_sec = 60
 
 保留 release 模式通过独立脚本进程启动；不支持在已经导入另一版本 `genshin_lore` 的 Python 进程中混载。这样避免 Python 模块缓存把指定代码根换成另一份实现。
 
-项目日常启动器可复用 `scripts/dialogue_daily.py` 的命令 handoff。在本地 `research-daily.json` 设置绝对路径 `dialogue_runtime_root` 后，调用 `settings(project, config_path, overrides)`，或以 `capture_wrapper` 包装已有 capture。它只替换五工具服务器的启动命令，保留原问题、resume 参数、引用回执目录和原 renderer，不替换 task 便利服务器。`dialogue_runtime.py` 同时接受既有 `GENSHIN_CITATION_HANDOFF_DIR` 环境配置。配置与备份留在部署环境，不提交个人路径。
+项目日常启动器可复用 `scripts/dialogue_daily.py` 的命令 handoff。在本地 `research-daily.json` 设置绝对路径 `dialogue_runtime_root` 后，调用 `settings(project, config_path, overrides)`，或以 `capture_wrapper` 包装已有 capture。它只替换五工具服务器的启动命令，保留原问题、resume 参数、引用回执目录和原 renderer，不替换 task 便利服务器。`scripts/serve_dialogue.py` 同时接受既有 `GENSHIN_CITATION_HANDOFF_DIR` 环境配置。配置与备份留在部署环境，不提交个人路径。
 
 当前日常集成不组合旧 compact-context 传输实验；请求两者时明确拒绝，不悄悄改用旧阅读路径。恢复原入口时还原项目 MCP 参数，并移除本地 `dialogue_runtime_root`；不要改数据库或发布 receipt。
 
@@ -49,6 +49,18 @@ tool_timeout_sec = 60
 ```
 
 已存在的 `scripts/serve.py`、query/inspect 便利接口及 Book/Story 续读保持兼容。此扩展没有更换 semantic 模型、重建索引或扩大数据覆盖。
+
+## 按人物查任务档案中的发言
+
+以姓名关键词搜索，选返回的 NPC 或其姓名 ref，调用 `read_evidence(view="dialogue", locale="CHS", limit=...)`。该读取视图使用已有 CodexQuest 的 `SpeakerKnown` 来源标注，分页返回同物理节点中的正文、姓名、任务/片段标题及前后各一个来源节点。每条材料保留原 exact ref、proof 和 provenance；选择正文 ref 再以同一 view 读取，可继续该物理片段。
+
+这里不是对全文中“提到姓名”的简单搜索，也不是按相同 ID 推断说话者。跨 NPC 与档案的相同姓名仅用来发现候选；每条结果显示同节点来源标注，以及新 wrapper 的未证明角色状态。不同 NPC 物理记录、同文的不同档案版本均不自动合并。
+
+此路径只枚举已索引 CodexQuest 中该 locale 的明确姓名标注，不承诺全部 NPC 发言。DialogExcel 的明确 `talkRole` 路径继续通过既有 follow/read 使用；匿名、别名及未映射来源不由此补齐。`scope_complete` 仅指本次来源姓名匹配范围分页结束，不是角色全台词或游戏 corpus 完整。
+
+正文位于 `nodes[].texts`，来源姓名位于 `speaker.names`，可读标题与前后文位于 `source_context`。前后文是同一物理 section 数组的顺序，不证明播放顺序、分支顺序或剧情时间。标题、姓名、正文均可分别 read/inspect，不用路径或节点编号代替引用。
+
+`view="dialogue"` 的 `before/after` 保持 0，前后文已在返回结构内；分页复用 cursor。`source_item_type` 保留可见的来源类型（如 `MultiDialog`），多个文本条目不应自动拼成连续发言。引用标签采用回读的来源标题，内部编号留在来源详情。
 
 ## 从搜索到阅读
 
@@ -68,8 +80,8 @@ tool_timeout_sec = 60
 - DialogExcel 与 BinOutput/Talk 是不同来源命名空间。没有明确跨源链接时，任务归属保持未解析，不按相同 ID 或台词拼接。
 - Quest/Talk 当前投影没有正式的 speaker decoder；扩展不猜说话者。阅读卡目前不解析场景名，`scene_display_name` 为空；这不表示来源完全没有标题字段，Dialog 的 `talkTitleTextMapHash` 尚未在本扩展展示。
 - Dialog 展开明确的 `nextDialogs`；Talk 仅沿已投影、同物理容器的 local successors 展开。外部候选和 dangling 保留在边信息，不自动跨容器追踪。
-- 读取视图采用广度优先遍历，保留各边的位置与分支，遇到循环不重复节点。该展示顺序不是游戏播放顺序或叙事时间顺序。
-- 每页限制 80,000 序列化字节，连续视图最多访问 128 个节点。达到限制时明确 partial；仍可选择已返回的分支 ref 单独读取。超大单节点明确拒绝，不偷偷截断原文。
+- Dialog/Talk 图读取采用广度优先遍历，保留各边的位置与分支，遇到循环不重复节点。Codex 读取则沿已声明的姓名 occurrence 或同物理 section 分页；这些展示顺序均不是游戏播放顺序或叙事时间顺序。
+- 每页限制 80,000 序列化字节，Dialog/Talk 连续图视图最多访问 128 个节点。达到限制时明确 partial；仍可选择已返回的分支 ref 单独读取。超大单节点明确拒绝，不偷偷截断原文。
 - `reachable_local_graph_exhausted` 只表示当前可达局部图已遍历；不表示整个任务、其他分支来源或全 corpus 完整。
 
 ## 回答与引用
@@ -81,3 +93,5 @@ tool_timeout_sec = 60
 `--citation-receipts <private-directory>` 可复用现有 scoped handle transport。模型仍选择引用并 inspect，程序只做 exact ref 映射；原生 Codex TUI/Desktop 不自动获得项目 renderer。未选择或未检查的引用不能由程序补齐。
 
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
+
+人物到任务档案发言的修复、真实 MCP/Sol 检查与保留失败见 [案例验证](../reviews/npc-dialogue-discovery.md)。

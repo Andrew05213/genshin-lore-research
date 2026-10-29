@@ -1,0 +1,69 @@
+{
+  "contract": "explicit-build-code-scopes-v1",
+  "unknown_files": "shared",
+  "unknown_stages": "full",
+  "groups": {
+    "m3": {
+      "stage_recipe": "recipes/m3-7.1-provider-mappings.json",
+      "files": ["src/genshin_lore/m3_7_1_provider_*.py"]
+    },
+    "special": {
+      "stage_recipe": "recipes/special-core-7.1-mappings.json",
+      "files": ["src/genshin_lore/special_core_7_1_*.py", "src/genshin_lore/special_historical_7_1_*.py"]
+    },
+    "assembly": {
+      "stages": ["schema20_core"],
+      "depends": ["m3", "special"],
+      "files": ["src/genshin_lore/schema20_7_1_*.py"]
+    },
+    "character": {
+      "stages": ["character_foundation", "character_text", "character_lore", "character_voice"],
+      "files": ["src/genshin_lore/character_7_1_*.py"]
+    },
+    "narrative": {
+      "stages": ["narrative_npc", "narrative_dialog", "narrative_reminder"],
+      "files": ["src/genshin_lore/narrative_7_1_*.py"]
+    },
+    "quest": {
+      "stages": ["quest_talk", "quest_narrative", "quest_review", "quest_review_binding", "talk_physical"],
+      "depends": ["assembly"],
+      "files": ["src/genshin_lore/quest_talk_7_1_*.py", "src/genshin_lore/quest_narrative_7_1_*.py", "src/genshin_lore/quest_review_7_1_*.py", "src/genshin_lore/talk_physical_7_1.py", "scripts/builders/quest_*.py", "scripts/validators/quest_*.py"]
+    },
+    "native": {
+      "stages": ["native_successor", "native_message", "native_bulk", "native_book_music", "native_aux_quest", "native_high_value"],
+      "depends": ["event", "quest"],
+      "files": ["src/genshin_lore/native*_7_1_*.py"]
+    },
+    "event": {
+      "stages": ["event_10", "event_11", "event_12", "event_13", "event_14", "event_15", "event_16", "event_17", "event_18"],
+      "depends": ["quest", "native"],
+      "files": ["src/genshin_lore/event*_7_1_*.py"]
+    },
+    "readable": {
+      "stages": ["document", "readable", "subtitle"],
+      "files": ["src/genshin_lore/document_7_1_*.py", "src/genshin_lore/readable_7_1_*.py", "src/genshin_lore/subtitle_7_1_*.py"]
+    },
+    "small": {
+      "stages": ["gcg_card", "loading_tips", "mail"],
+      "files": ["src/genshin_lore/gcg_card_7_1_*.py", "src/genshin_lore/loading_tips_7_1_*.py", "src/genshin_lore/mail_7_1_*.py"]
+    },
+    "codex": {
+      "stages": ["codexquest"],
+      "files": ["src/genshin_lore/codexquest_*.py", "scripts/builders/codexquest.py", "scripts/validators/codexquest.py"]
+    },
+    "research": {
+      "stages": ["research_index"],
+      "depends": ["character", "quest", "native", "narrative", "readable", "codex"],
+      "files": ["scripts/builders/research_*.py", "scripts/validators/research_*.py", "src/genshin_lore/research71_candidate_adapters.py", "src/genshin_lore/research71_candidate_relations.py"]
+    },
+    "semantic": {
+      "stages": ["semantic"],
+      "depends": ["research"],
+      "files": ["scripts/builders/semantic.py", "scripts/validators/semantic.py"]
+    },
+    "dialogue_runtime": {
+      "stages": [],
+      "files": ["src/genshin_lore/dialogue/*.py", "src/genshin_lore/research_server.py", "scripts/serve_dialogue.py", "scripts/check_dialogue.py", "scripts/dialogue_daily.py"]
+    }
+  }
+}

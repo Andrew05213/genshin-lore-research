@@ -49,16 +49,18 @@ def qualify_source(source):
         raise ValueError("source checkout must be clean")
 
 
-def build(source: Path, output: Path, *, include_special=False):
+def build(source: Path, output: Path, *, include_special=False, metadata_root=None):
     qualify_source(source)
     if output.exists() or any(Path(str(output) + s).exists() for s in ("-wal", "-shm", "-journal")):
         raise FileExistsError(output)
-    items = json.loads(MAPPINGS.read_text())["mappings"]
+    mappings = Path(metadata_root) / MAPPINGS.relative_to(ROOT) if metadata_root is not None else MAPPINGS
+    special_mappings = Path(metadata_root) / SPECIAL_MAPPINGS.relative_to(ROOT) if metadata_root is not None else SPECIAL_MAPPINGS
+    items = json.loads(mappings.read_text())["mappings"]
     if len(items) != 20 or len({x["family"] for x in items}) != 10:
         raise ValueError("frozen M3 denominator changed")
     inputs = {}
     files = {}
-    special = json.loads(SPECIAL_MAPPINGS.read_text())["mappings"] if include_special else []
+    special = json.loads(special_mappings.read_text())["mappings"] if include_special else []
     if include_special and len(special) != 13:
         raise ValueError("special core denominator changed")
     for item in items + special:
@@ -155,5 +157,5 @@ def build(source: Path, output: Path, *, include_special=False):
             db.close()
         return {"status": "CORE33_MATERIALIZED_AWAITING_QUALIFICATION" if include_special else "PARTIAL_CORE_MATERIALIZED", "snapshot": SNAPSHOT, "schema_version": 20, "candidate_ddl_contract": GUARD_CONTRACT, "assembly_implementation_sha256": sha256_file(Path(__file__)), "special_adapter_sha256": sha256_file(ROOT / "src/genshin_lore/schema20_7_1_special.py"), "provider_contracts": counts, "qualified_provider_count": len(counts), "required_provider_count": 33, "artifact": {"size_bytes": output.stat().st_size, "sha256": sha256_file(output)}, "source_files": files, "inputs": list(inputs.values()), "schema21_required_for_this_projection": False, "product_accepted": False}
     except Exception:
-        output.unlink(missing_ok=True)
+        # Keep the unqualified database for diagnosis; never reuse it as PASS.
         raise

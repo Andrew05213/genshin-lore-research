@@ -66,7 +66,8 @@ def mutation_matrix(db):
     return count
 
 
-def verify(root: Path, scope_path: Path, artifact: Path):
+def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
+    metadata = Path(metadata_root) if metadata_root is not None else ROOT
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
@@ -74,10 +75,10 @@ def verify(root: Path, scope_path: Path, artifact: Path):
         raise ValueError('Native21 exact source selection contract')
     if any(Path(str(artifact) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
         raise ValueError('Native21 artifact sidecar')
-    event = json.loads((ROOT / SOURCES[0]).read_text())
-    derived = json.loads((ROOT / SOURCES[1]).read_text())['components']['quest_narrative_archive']
-    npc = json.loads((ROOT / SOURCES[2]).read_text())['families']['npc']
-    talk = json.loads((ROOT / SOURCES[3]).read_text())
+    event = json.loads((metadata / SOURCES[0]).read_text())
+    derived = json.loads((metadata / SOURCES[1]).read_text())['components']['quest_narrative_archive']
+    npc = json.loads((metadata / SOURCES[2]).read_text())['families']['npc']
+    talk = json.loads((metadata / SOURCES[3]).read_text())
     artifacts = ((Path(event['artifact']['path_machine_local']), event['artifact']),
                  (Path(derived['artifact']['path_machine_local']), derived['artifact']),
                  (Path(npc['artifact']['path_machine_local']), npc['artifact']),
@@ -120,7 +121,8 @@ def verify(root: Path, scope_path: Path, artifact: Path):
     if len(source_rows) != 1045 or len(binding['occurrences']) != 9:
         raise ValueError('Native21 source/binding row denominator')
     implementation = {path: sha(ROOT / path) for path in (
-        'src/genshin_lore/native21_7_1_build.py', 'schemas/native21-7.1-projection-v1.sql', *SOURCES)}
+        'src/genshin_lore/native21_7_1_build.py', 'schemas/native21-7.1-projection-v1.sql')}
+    implementation.update({path: sha(metadata / path) for path in SOURCES})
     parser = digest_id('parser', implementation)
     run = digest_id('run', parser, sha(scope_path), scope['snapshot_id'])
     expected = {table: [] for table in TABLES}
@@ -266,7 +268,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
         if got_release != release:
             raise ValueError('Native21 release contract mismatch')
         mutation_cases = mutation_matrix(db)
-    return {'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
+    return {'status': 'PASS', 'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
             'counts': release['counts'], 'text_states': release['text_states'],
             'relation_states': release['relation_states'], 'second_hop_candidate_rows': len(expected['relation_candidate']),
             'snez_exact_reuse_count': 9, 'schema_exact': True, 'mutation_cases': mutation_cases,

@@ -5,6 +5,7 @@
 | 工作内容 | 从哪里读 |
 |---|---|
 | 五工具注册与参数 | `research_server.py` |
+| 固定 SDK stdio 兼容 | `mcp_transport.py`；不依赖历史 provider 服务 |
 | 搜索、读取、关系与来源核验 | `research_query.py`、`research_index.py`、`research_refs.py` |
 | 统一 7.1 来源适配 | `research71_candidate_adapters.py`、`research71_candidate_relations.py`、`research71_candidate_query.py` |
 | 统一任务与完整正文 | `research71_unified.py`、`narrative_assistant_7_1.py`、`research71_preview_server.py` |

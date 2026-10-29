@@ -50,7 +50,7 @@ def schema_objects(db, schema_name='main'):
 
 
 def mutation_cases(artifact):
-    actual = sqlite3.connect('file:' + str(artifact.resolve()) + '?mode=ro', uri=True)
+    actual = sqlite3.connect(artifact.resolve().as_uri() + '?mode=ro', uri=True)
     replica = sqlite3.connect(':memory:')
     actual.backup(replica)
     actual.close()
@@ -94,7 +94,10 @@ def mutation_cases(artifact):
     return count
 
 
-def verify(root: Path, scope_path: Path, artifact: Path):
+def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
+    metadata = Path(metadata_root) if metadata_root is not None else ROOT
+    event_manifest = metadata / EVENT.relative_to(ROOT)
+    talk_manifest = metadata / TALK.relative_to(ROOT)
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
@@ -123,17 +126,18 @@ def verify(root: Path, scope_path: Path, artifact: Path):
             raise ValueError('Native26 independent declaration mismatch: ' + declaration['path'])
     if any(Path(str(artifact) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
         raise ValueError('Native26 SQLite sidecar')
-    event = json.loads(EVENT.read_text())
-    talk = json.loads(TALK.read_text())
+    event = json.loads(event_manifest.read_text())
+    talk = json.loads(talk_manifest.read_text())
     event_path = Path(event['artifact']['path_machine_local'])
     talk_path = Path(talk['local_artifact_path'])
     for path, seal in ((event_path, event['artifact']), (talk_path, talk['artifact'])):
         if (path.stat().st_size, sha(path)) != (seal['size_bytes'], seal['sha256']):
             raise ValueError('Native26 oracle accepted input artifact drift')
-    if sha(EVENT) != scope['event16_manifest_sha256']:
+    if sha(event_manifest) != scope['event16_manifest_sha256']:
         raise ValueError('Native26 oracle Event16 binding seal')
-    code_hashes = {str(path.relative_to(ROOT)): sha(path) for path in (
-        ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY, EVENT, TALK)}
+    code_hashes = {path.relative_to(ROOT).as_posix(): sha(path) for path in (
+        ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY)}
+    code_hashes.update({path.relative_to(ROOT).as_posix(): sha(metadata / path.relative_to(ROOT)) for path in (EVENT, TALK)})
     parser = key('parser', code_hashes)
     run = key('run', parser, sha(scope_path), scope['snapshot_id'])
     source = []
@@ -219,7 +223,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
                 if locator in hashes:
                     found[locator].append((path, ordinal, text))
             textmap[locale, tier] = found
-    oracle = sqlite3.connect(':memory:')
+    oracle = sqlite3.connect(':memory:', uri=True)
     oracle.execute('PRAGMA foreign_keys=ON')
     oracle.executescript(SCHEMA.read_text())
     counts = Counter()
@@ -316,7 +320,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
     if oracle.execute('PRAGMA foreign_key_check').fetchall():
         raise ValueError('Native26 oracle FK')
     oracle.commit()
-    oracle.execute('ATTACH DATABASE ? AS actual', ('file:' + str(artifact.resolve()) + '?mode=ro&immutable=1',))
+    oracle.execute('ATTACH DATABASE ? AS actual', (artifact.resolve().as_uri() + '?mode=ro&immutable=1',))
     if schema_objects(oracle, 'main') != schema_objects(oracle, 'actual'):
         raise ValueError('Native26 schema/index/trigger mismatch')
     if oracle.execute('PRAGMA actual.integrity_check').fetchone()[0] != 'ok' or oracle.execute('PRAGMA actual.foreign_key_check').fetchall():
@@ -328,7 +332,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
             raise ValueError('Native26 no-extra/no-omission rowset: ' + table)
     oracle.close()
     negatives = mutation_cases(artifact)
-    return {'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
+    return {'status': 'PASS', 'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
             'counts': release['counts'], 'text_states': release['text_states'],
             'relation_states': release['relation_states'], 'event16_exact_reuse': 44,
             'unprojectable_historical_owner_row_slots': missing_owner_rows,

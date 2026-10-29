@@ -15,6 +15,7 @@ import os
 import stat
 import shutil
 import uuid
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -177,7 +178,8 @@ def ensure_owned_tmp_root(
         return path
     try:
         os.write(descriptor, payload)
-        os.fchmod(descriptor, 0o600)
+        if hasattr(os, "fchmod"):
+            os.fchmod(descriptor, 0o600)
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
@@ -192,9 +194,16 @@ def _within(path: Path, parent: Path) -> bool:
     return True
 
 
+def temporary_root(value: str | Path = "/tmp") -> Path:
+    """Shared creation/discovery root; resolve the legacy default before abspath."""
+    if os.name == 'nt' and str(value).replace('\\', '/') == '/tmp':
+        value = tempfile.gettempdir()
+    return Path(value).absolute()
+
+
 def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> bool:
     return (
-        root.parent == Path(convention_root).absolute()
+        root.parent == temporary_root(convention_root)
         and root.name.startswith(PROJECT_TMP_PREFIXES)
     )
 
@@ -202,7 +211,7 @@ def _is_convention_root(root: Path, convention_root: str | Path = "/tmp") -> boo
 def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...]:
     """Discover only convention-named project roots, never the whole /tmp tree."""
 
-    root = Path(tmp_root).absolute()
+    root = temporary_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
@@ -211,6 +220,8 @@ def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
         ) from exc
     selected: list[Path] = []
     for item in candidates:
+        if not item.name.startswith(PROJECT_TMP_PREFIXES):
+            continue
         try:
             info = item.lstat()
         except OSError as exc:
@@ -220,7 +231,6 @@ def discover_project_tmp_roots(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
         if (
             stat.S_ISDIR(info.st_mode)
             and not stat.S_ISLNK(info.st_mode)
-            and item.name.startswith(PROJECT_TMP_PREFIXES)
         ):
             selected.append(item)
     return tuple(sorted(selected))
@@ -232,18 +242,20 @@ def discover_project_tmp_paths(tmp_root: str | Path = "/tmp") -> tuple[Path, ...
     Discovery grants accounting scope only; it never grants cleanup authority.
     """
 
-    root = Path(tmp_root).absolute()
+    root = temporary_root(tmp_root)
     try:
         candidates = tuple(root.iterdir())
     except OSError as exc:
         raise SpaceGateError(f"project temporary-path discovery cannot inspect: {root}") from exc
     selected: list[Path] = []
     for item in candidates:
+        if not item.name.startswith(PROJECT_TMP_PREFIXES):
+            continue
         try:
             info = item.lstat()
         except OSError as exc:
             raise SpaceGateError(f"project temporary-path discovery cannot lstat: {item}") from exc
-        if stat.S_ISLNK(info.st_mode) or not item.name.startswith(PROJECT_TMP_PREFIXES):
+        if stat.S_ISLNK(info.st_mode):
             continue
         if stat.S_ISDIR(info.st_mode) or stat.S_ISREG(info.st_mode):
             selected.append(item)
@@ -492,7 +504,7 @@ class ProjectSpaceGate:
         discovery_root: str | Path = "/tmp",
     ) -> None:
         self.repo_root = Path(repo_root).absolute()
-        self.discovery_root = Path(discovery_root).absolute()
+        self.discovery_root = temporary_root(discovery_root)
         discovered = discover_project_tmp_paths(self.discovery_root)
         explicit_cleanup = tuple(
             Path(item).absolute()
@@ -606,5 +618,5 @@ __all__ = [
     "MARKER_VERSION", "OWNERSHIP_KIND", "OWNERSHIP_MARKER", "PROJECT_SPACE_LIMIT_BYTES",
     "PROJECT_SPACE_WARNING_BYTES", "PROJECT_TMP_PREFIXES", "ProjectSpaceGate", "SpaceGateError", "SpaceInventory",
     "SpaceRoot", "broad_inventory", "discover_project_tmp_paths", "discover_project_tmp_roots", "ensure_owned_tmp_root", "inventory",
-    "new_invocation_id", "register_disposable_path", "safe_cleanup",
+    "new_invocation_id", "register_disposable_path", "safe_cleanup", "temporary_root",
 ]

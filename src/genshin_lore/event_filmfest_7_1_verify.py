@@ -47,7 +47,7 @@ def _owner_values(record, declarations):
 
 
 def verify(source_root, historical_source, scope_path, qt_artifact, artifact,
-           runtime_manifest=None):
+           runtime_manifest=None, *, qt_manifest_path=None):
     source_root = Path(source_root)
     historical_source = Path(historical_source)
     scope_path = Path(scope_path)
@@ -55,7 +55,8 @@ def verify(source_root, historical_source, scope_path, qt_artifact, artifact,
     artifact = Path(artifact)
     scope = json.loads(scope_path.read_text())
     historical = json.loads(HISTORICAL.read_text())
-    qt_manifest = json.loads(QT_MANIFEST.read_text())
+    manifest_path = Path(qt_manifest_path) if qt_manifest_path is not None else QT_MANIFEST
+    qt_manifest = json.loads(manifest_path.read_text())
     check_files(source_root, scope)
     check_historical(historical_source, historical)
     if (scope['contract'] != 'event-filmfest-7.1-versioned-scope-v1'
@@ -63,9 +64,12 @@ def verify(source_root, historical_source, scope_path, qt_artifact, artifact,
             or scope['family_contract_version'] != historical['family_contract_version']
             or len(scope['sources']) != 4 or len(historical['sources']) != 4
             or scope['languages'] != historical['languages']
-            or scope['talk_candidate_namespace']['accepted_manifest_sha256'] != sha(QT_MANIFEST)
+            or scope['talk_candidate_namespace']['accepted_manifest_sha256'] != sha(manifest_path)
             or scope['talk_candidate_namespace']['artifact'] != qt_manifest['artifact']
+            or scope['talk_candidate_namespace']['contract'] != qt_manifest['contract']
+            or scope['talk_candidate_namespace']['parser'] != qt_manifest['parser_build_id']
             or scope['talk_candidate_namespace']['run'] != qt_manifest['ingest_run_id']
+            or scope['talk_candidate_namespace']['search_complete'] is not True
             or qt_artifact.stat().st_size != qt_manifest['artifact']['size_bytes']
             or sha(qt_artifact) != qt_manifest['artifact']['sha256']):
         raise ValueError('oracle Filmfest historical/accepted external binding')

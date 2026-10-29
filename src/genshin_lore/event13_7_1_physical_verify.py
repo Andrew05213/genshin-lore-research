@@ -243,7 +243,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
         raise ValueError('Event13 self-reported counts')
     mutation_cases = mutation_matrix(connection)
     connection.close()
-    return {'verified': True, 'source_files': len(scope['files']), 'physical_rows': len(expected_rows),
+    return {'status': 'PASS', 'verified': True, 'source_files': len(scope['files']), 'physical_rows': len(expected_rows),
             'numeric_observations': len(expected_numeric), 'textmap_candidates': len(expected_candidates),
             'mutation_cases': mutation_cases, 'parser_build_id': parser, 'ingest_run_id': run,
             'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)}}

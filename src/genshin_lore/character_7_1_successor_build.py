@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .loading_tips_source import pairs, sha
+from .sealed_sqlite import open_immutable_readonly
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,19 +59,31 @@ def _seal(conn: sqlite3.Connection, kind: str) -> None:
 
 
 def _readonly(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True)
-    conn.execute("PRAGMA query_only=ON")
-    return conn
+    return open_immutable_readonly(path)
 
 
-def qualify_foundation(path: str | Path) -> tuple[sqlite3.Connection, dict]:
+def _candidate_rows_by_relation(conn):
+    """Retain every physical candidate and its original ID ordering."""
+    grouped = defaultdict(list)
+    for row in conn.execute("SELECT * FROM foundation_candidate ORDER BY id"):
+        grouped[row[1]].append(tuple(row))
+    return grouped
+
+
+def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
     """No default/latest or historical-runtime fallback is allowed."""
     path = Path(path)
-    manifest = json.loads(FOUNDATION_MANIFEST.read_text())
-    if (manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"], manifest["parser_build_id"], manifest["ingest_run_id"]) != (SNAPSHOT, SOURCE_COMMIT, SOURCE_TREE, FOUNDATION_PARSER, FOUNDATION_RUN):
+    manifest = json.loads(Path(foundation_manifest or FOUNDATION_MANIFEST).read_text())
+    if (manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"]) != (SNAPSHOT, SOURCE_COMMIT, SOURCE_TREE):
         raise ValueError("immutable foundation manifest identity")
-    if manifest["artifact"]["size_bytes"] != FOUNDATION_SIZE or manifest["artifact"]["sha256"] != FOUNDATION_SHA or path.stat().st_size != FOUNDATION_SIZE or sha(path) != FOUNDATION_SHA:
-        raise ValueError("immutable foundation artifact identity")
+    if "local_rebuild" in manifest:
+        from .character_7_1_foundation_binding import qualify_local_foundation
+        qualify_local_foundation(path, foundation_manifest, manifest)
+    else:
+        if (manifest["parser_build_id"], manifest["ingest_run_id"]) != (FOUNDATION_PARSER, FOUNDATION_RUN):
+            raise ValueError("immutable foundation manifest identity")
+        if manifest["artifact"]["size_bytes"] != FOUNDATION_SIZE or manifest["artifact"]["sha256"] != FOUNDATION_SHA or path.stat().st_size != FOUNDATION_SIZE or sha(path) != FOUNDATION_SHA:
+            raise ValueError("immutable foundation artifact identity")
     if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("immutable foundation sidecar")
     scope = json.loads((ROOT / manifest["source_scope"]).read_text())
@@ -84,9 +97,9 @@ def qualify_foundation(path: str | Path) -> tuple[sqlite3.Connection, dict]:
             if conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] != expected:
                 raise ValueError("foundation denominator " + table)
         release = json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])
-        if (release["snapshot_id"], release["parser_build_id"], release["ingest_run_id"]) != (SNAPSHOT, FOUNDATION_PARSER, FOUNDATION_RUN):
+        if (release["snapshot_id"], release["parser_build_id"], release["ingest_run_id"]) != (SNAPSHOT, manifest["parser_build_id"], manifest["ingest_run_id"]):
             raise ValueError("foundation release identity")
-        if conn.execute("SELECT count(*) FROM foundation_primary_row WHERE snapshot_id!=? OR parser_build_id!=? OR ingest_run_id!=?", (SNAPSHOT, FOUNDATION_PARSER, FOUNDATION_RUN)).fetchone()[0]:
+        if conn.execute("SELECT count(*) FROM foundation_primary_row WHERE snapshot_id!=? OR parser_build_id!=? OR ingest_run_id!=?", (SNAPSHOT, manifest["parser_build_id"], manifest["ingest_run_id"])).fetchone()[0]:
             raise ValueError("foundation row identity")
         return conn, scope
     except Exception:
@@ -128,24 +141,28 @@ def _output(kind: str, path: str | Path) -> sqlite3.Connection:
     except Exception:
         if conn is not None:
             conn.close()
-        if path.exists() and (path.stat().st_dev, path.stat().st_ino) == owned:
-            path.unlink()
         raise
 
 
-def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Path | None = None, source_scope: dict | None = None) -> dict:
+def _foundation_run(foundation: sqlite3.Connection) -> str:
+    return json.loads(foundation.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"]
+
+
+def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Path | None = None, source_scope: dict | None = None, foundation_run_id: str = FOUNDATION_RUN) -> dict:
     implementation = {
         "src/genshin_lore/character_7_1_successor_build.py": sha(ROOT / "src/genshin_lore/character_7_1_successor_build.py"),
         SCHEMAS[kind]: sha(ROOT / SCHEMAS[kind]),
     }
     parser_id = _identity(kind, "parser", implementation)
-    run_id = _identity(kind, "run", parser_id, FOUNDATION_RUN, sha(text) if text else None)
+    foundation_sha = sha(foundation)
+    foundation_size = foundation.stat().st_size
+    run_id = _identity(kind, "run", parser_id, foundation_run_id, foundation_sha, sha(text) if text else None)
     release = {
         "contract": f"character-7.1-{kind}-successor-v1",
         "snapshot_id": SNAPSHOT,
-        "foundation_run_id": FOUNDATION_RUN,
-        "foundation_size_bytes": FOUNDATION_SIZE,
-        "foundation_sha256": FOUNDATION_SHA,
+        "foundation_run_id": foundation_run_id,
+        "foundation_size_bytes": foundation_size,
+        "foundation_sha256": foundation_sha,
         "parser_build_id": parser_id,
         "ingest_run_id": run_id,
         "implementation": implementation,
@@ -174,21 +191,13 @@ def _finish(conn: sqlite3.Connection, path: Path, report: dict) -> dict:
     return {**report, "artifact": {"size_bytes": path.stat().st_size, "sha256": sha(path)}}
 
 
-def _remove_owned_output(path: Path, owner: tuple[int, int] | None) -> None:
-    # A failed build may remove only the inode it created, never a replacement.
-    if owner is not None and path.exists():
-        current = path.stat()
-        if (current.st_dev, current.st_ino) == owner:
-            path.unlink()
-
-
-def build_text(source_root: str | Path, foundation_path: str | Path, output_path: str | Path) -> dict:
-    foundation, scope = qualify_foundation(foundation_path)
-    source = qualify_source(source_root, scope)
+def build_text(source_root: str | Path, foundation_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, scope = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     output = Path(output_path)
     conn = None
     owned = None
     try:
+        source = qualify_source(source_root, scope)
         owner_rows = foundation.execute("SELECT id,row_id,pointer,field_name,textmap_hash FROM foundation_text_owner ORDER BY id").fetchall()
         hashes = {row[4] for row in owner_rows}
         matches: dict[tuple[str, str], list[tuple[str, str, int, str]]] = defaultdict(list)
@@ -210,7 +219,7 @@ def build_text(source_root: str | Path, foundation_path: str | Path, output_path
                 conn.executemany("INSERT INTO candidate VALUES(?,?,?,?,?,?,?)", ((owner_id, locale, tier, path, ordinal, key, value) for tier, path, ordinal, value in found))
         if len(owner_rows) != 34817 or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3:
             raise ValueError("text owner denominator")
-        release = _release("text", conn, Path(foundation_path), source_scope=scope)
+        release = _release("text", conn, Path(foundation_path), source_scope=scope, foundation_run_id=_foundation_run(foundation))
         report = _finish(conn, output, {**release, "resolution_states": dict(sorted(counts.items())), "owner_count": len(owner_rows), "silent_skips": 0})
         conn = None
         qualify_source(source, scope)
@@ -218,29 +227,37 @@ def build_text(source_root: str | Path, foundation_path: str | Path, output_path
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_owned_output(output, owned)
         raise
     finally:
         foundation.close()
 
 
-def _qualify_text(path: Path, foundation_path: Path) -> sqlite3.Connection:
+def _qualify_text(path: Path, foundation_path: Path, *, foundation_run_id: str = FOUNDATION_RUN) -> sqlite3.Connection:
+    if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+        raise ValueError("text projection sidecar")
     conn = _readonly(path)
     try:
         release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
-        if release["contract"] != "character-7.1-text-successor-v1" or release["foundation_sha256"] != FOUNDATION_SHA or release["foundation_run_id"] != FOUNDATION_RUN or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3:
+        if (release["contract"] != "character-7.1-text-successor-v1"
+                or release["snapshot_id"] != SNAPSHOT
+                or release["foundation_sha256"] != sha(foundation_path)
+                or release["foundation_size_bytes"] != foundation_path.stat().st_size
+                or release["foundation_run_id"] != foundation_run_id
+                or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3):
             raise ValueError("text projection identity")
-        if Path(foundation_path).stat().st_size != FOUNDATION_SIZE:
-            raise ValueError("foundation drift")
         return conn
     except Exception:
         conn.close()
         raise
 
 
-def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path) -> dict:
-    foundation, _ = qualify_foundation(foundation_path)
-    text = _qualify_text(Path(text_path), Path(foundation_path))
+def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
+    try:
+        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation))
+    except Exception:
+        foundation.close()
+        raise
     output = Path(output_path)
     conn = None
     owned = None
@@ -248,6 +265,7 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
         conn = _output("lore", output)
         owned = (output.stat().st_dev, output.stat().st_ino)
         counts = Counter()
+        candidate_rows = _candidate_rows_by_relation(foundation)
         for basename, kind in LORE.items():
             path = "ExcelBinOutput/" + basename
             for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
@@ -266,36 +284,40 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
                         raise ValueError("Lore/Story raw condition parent missing")
                     conn.executemany("INSERT INTO lore_raw_field_ref VALUES(?,?,?,?,?,?,?)", ((row_id, *field) for field in fields))
                 if rel:
-                    candidates = foundation.execute("SELECT target_primary_id FROM foundation_candidate WHERE relation_id=? ORDER BY id", (rel[0],)).fetchall()
+                    candidates = [(row[2],) for row in candidate_rows.get(rel[0], ())]
                     if len(candidates) != candidate_count:
                         raise ValueError("lore ownership candidate count")
                     conn.executemany("INSERT INTO lore_avatar_candidate VALUES(?,?,?)", ((row_id, rel[0], target) for (target,) in candidates))
                 counts[kind] += 1
         if counts != {"avatar": 167, "fetter_info": 124, "story": 974}:
             raise ValueError("Lore/Story full denominator")
-        release = _release("lore", conn, Path(foundation_path), text=Path(text_path))
+        release = _release("lore", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation))
         report = _finish(conn, output, {**release, "record_counts": dict(counts), "silent_skips": 0})
         conn = None
         return report
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_owned_output(output, owned)
         raise
     finally:
         foundation.close()
         text.close()
 
 
-def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path) -> dict:
-    foundation, _ = qualify_foundation(foundation_path)
-    text = _qualify_text(Path(text_path), Path(foundation_path))
+def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
+    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
+    try:
+        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation))
+    except Exception:
+        foundation.close()
+        raise
     output = Path(output_path)
     conn = None
     owned = None
     try:
         conn = _output("voice", output)
         owned = (output.stat().st_dev, output.stat().st_ino)
+        candidate_rows = _candidate_rows_by_relation(foundation)
         for row_id, path, ordinal, pointer in foundation.execute("SELECT id,source_path,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (VOICE,)):
             avatar_rel = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='source_avatar_id_candidate'", (row_id,)).fetchone()
             lut_rel = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='fetter_voice_slot_candidate'", (row_id,)).fetchone()
@@ -311,7 +333,8 @@ def build_voice(foundation_path: str | Path, text_path: str | Path, output_path:
                 raise ValueError("Voice raw open condition parent missing")
             conn.executemany("INSERT INTO voice_raw_field_ref VALUES(?,?,?,?,?,?,?)", ((row_id, *field) for field in fields))
             for relation, table, target in ((avatar_rel, "voice_avatar_candidate", "target_primary_id"), (lut_rel, "voice_lut_candidate", "target_lut_id")):
-                candidates = foundation.execute(f"SELECT {target} FROM foundation_candidate WHERE relation_id=? ORDER BY id", (relation[0],)).fetchall()
+                column = 2 if target == "target_primary_id" else 3
+                candidates = [(row[column],) for row in candidate_rows.get(relation[0], ())]
                 if len(candidates) != relation[2]:
                     raise ValueError("Voice candidate count")
                 conn.executemany(f"INSERT INTO {table} VALUES(?,?,?)", ((row_id, relation[0], target_id) for (target_id,) in candidates))
@@ -329,14 +352,13 @@ def build_voice(foundation_path: str | Path, text_path: str | Path, output_path:
         missing = conn.execute("SELECT count(*) FROM item_ref WHERE variants_status='missing'").fetchone()[0]
         if (unattached, missing) != (8, 1):
             raise ValueError("Voice legal missing/unattached denominator")
-        release = _release("voice", conn, Path(foundation_path), text=Path(text_path))
+        release = _release("voice", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation))
         report = _finish(conn, output, {**release, "unattached_lut_slots": unattached, "missing_variant_arrays": missing, "coverage": "Character/Fetter Voice only", "silent_skips": 0})
         conn = None
         return report
     except Exception:
         if conn is not None:
             conn.close()
-        _remove_owned_output(output, owned)
         raise
     finally:
         foundation.close()

@@ -11,12 +11,12 @@ def seal(root,path):
 def artifact(path):
  p=Path(path).resolve();return {'path':str(p),'size_bytes':p.stat().st_size,'sha256':sha(p)}
 def main(argv=None):
- p=argparse.ArgumentParser();p.add_argument('--source',type=Path,default=ROOT/'cache/upstream-agd-git');p.add_argument('--message-artifact',type=Path,required=True);p.add_argument('--output',type=Path,default=ROOT/'manifests/native-archive-7.1/book-music-scope-v1.json');a=p.parse_args(argv)
+ p=argparse.ArgumentParser();p.add_argument('--message-runtime',type=Path,default=ROOT/'manifests/native-archive-7.1/message-runtime-v1.json');p.add_argument('--source',type=Path,default=ROOT/'cache/upstream-agd-git');p.add_argument('--message-artifact',type=Path,required=True);p.add_argument('--output',type=Path,default=ROOT/'manifests/native-archive-7.1/book-music-scope-v1.json');a=p.parse_args(argv)
  sp=ROOT/'manifests/native-archive-7.1/book-music-selection-v1.json';selection=json.loads(sp.read_text())
  if subprocess.check_output(['git','-C',str(a.source),'rev-parse','HEAD'],text=True).strip()!=COMMIT or subprocess.check_output(['git','-C',str(a.source),'rev-parse','HEAD^{tree}'],text=True).strip()!=TREE:raise ValueError('pinned source mismatch')
  if subprocess.check_output(['git','-C',str(a.source),'status','--porcelain'],text=True).strip():raise ValueError('source checkout dirty')
  paths=[x['path'] for x in selection['sources']]+[v for x in selection['textmaps'].values() for v in (x['main'],x['medium'])];files=[seal(a.source,x) for x in paths]
- mr=json.loads((ROOT/'manifests/native-archive-7.1/message-runtime-v1.json').read_text());ma=artifact(a.message_artifact)
+ mr=json.loads(a.message_runtime.read_text());ma=artifact(a.message_artifact)
  if ma['size_bytes']!=mr['artifact']['size_bytes'] or ma['sha256']!=mr['artifact']['sha256']:raise ValueError('message artifact authority')
  candidates=[];c=sqlite3.connect(a.message_artifact);c.row_factory=sqlite3.Row
  values=set()

@@ -81,7 +81,7 @@ def _textmap(files: dict[str, bytes], paths: list[str], wanted: set[str]) -> dic
         locale = next((item for item in LOCALES if path.endswith(item + ".json")), None)
         if locale is None:
             raise ValueError("unrecognized TextMap shard " + path)
-        for pair in iter_textmap_pairs(files[path]):
+        for pair in iter_textmap_pairs(files[path], wanted_keys=wanted):
             if pair.key_text in wanted:
                 found[(locale, pair.key_text)].append((
                     path, tier, pair.pair_ordinal, pair.pointer, pair.raw_key_json,
@@ -112,13 +112,6 @@ def _write_guards(conn: sqlite3.Connection) -> None:
             conn.execute(f"""CREATE TRIGGER {table}_immutable_{action.lower()}
                 BEFORE {action} ON {table}
                 BEGIN SELECT RAISE(ABORT,'immutable special-core evidence'); END""")
-
-
-def _remove_owned(output: Path, owner: tuple[int, int] | None) -> None:
-    if owner and output.exists():
-        stat = output.stat()
-        if (stat.st_dev, stat.st_ino) == owner:
-            output.unlink()
 
 
 def build(source_root: str | Path, family: str, output_path: str | Path) -> dict:
@@ -315,7 +308,6 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
     except BaseException:
         if conn is not None:
             conn.close()
-        _remove_owned(output, owner)
         raise
 
 

@@ -5,8 +5,17 @@
 | 文档 | 内容 |
 |---|---|
 | [当前状态](status.md) | 已提供入口、实际验证范围与剩余限制 |
+| [Linux / Windows / 人物对白整合](reviews/linux-windows-integration.md) | 两个分支的保留范围、冲突处理、实际补测及未执行的整库验证 |
 | [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
+| [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
+| [Linux 构建性能](linux-build-performance.md) | 实际耗时、embedding 调度优化、等价验证及未采用的索引实验 |
+| [冷构建与阶段复用](build-reuse.md) | 进程内独立输入缓存、v3 回执、同条件耗时及未执行范围 |
+| [非向量完整构建性能](nonvector-build-performance.md) | 两次新目录完整来源构建、保留/放弃的优化、完整核验与实际耗时 |
+| [Windows 源码使用](guides/windows.md) | PowerShell、平台边界和原生 CI |
+| [工程维护范围](engineering-maintenance.md) | 当前重构边界、复杂度控制与验证层次 |
+| [工程整改交付（历史）](engineering-finalization.md) | 当时六个待审 PR、200 项测试、原生 CI、A/B、review 与执行范围 |
+| [后续审查修复](reviews/engineering-followup.md) | 两项 Windows 实际路径缺口、正式关系 oracle 完整性及新增 12 项测试 |
 | [完整重建实验](history/full-rebuild.md) | 完整链路实际执行、失败修复及验证结果 |
 | [完整重建机器记录](history/full-rebuild.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
 | [架构说明](architecture.md) | 数据流程、代码目录、Research 工具与证据语义 |
@@ -14,6 +23,7 @@
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |
+| [工程质量记录](engineering-quality.md) | 构建可信度、输出隔离、MCP 兼容、CI、实际执行与未运行项 |
 | [目录与命名规范](naming.md) | 常用入口、旧命令迁移与保留历史名称的原因 |
 | [源码分发与数据留存](distribution.md) | 分发文件、生成数据与许可状态 |
 | [构建验证记录](history/component-build-validation.json) | 固定快照和已执行构建的机器可读结果 |

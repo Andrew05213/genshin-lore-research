@@ -13,6 +13,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .loading_tips_source import pairs, sha
+from .sealed_sqlite import open_immutable_readonly
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -54,9 +55,15 @@ def _rows(conn: sqlite3.Connection, table: str) -> list[tuple]:
 
 
 def _open(path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(f"file:{path}?mode=ro&immutable=1", uri=True)
-    conn.execute("PRAGMA query_only=ON")
-    return conn
+    return open_immutable_readonly(path)
+
+
+def _candidate_rows_by_relation(conn):
+    """Independently load actual rows, never builder-produced expectations."""
+    grouped = defaultdict(list)
+    for row in conn.execute("SELECT * FROM foundation_candidate ORDER BY id"):
+        grouped[row[1]].append(tuple(row))
+    return grouped
 
 
 def _schema(conn: sqlite3.Connection, kind: str) -> None:
@@ -79,17 +86,51 @@ def _schema(conn: sqlite3.Connection, kind: str) -> None:
         expected.close()
 
 
-def _foundation(path: Path) -> tuple[sqlite3.Connection, dict]:
-    manifest = json.loads(MANIFEST.read_text())
-    _eq((manifest["artifact"]["size_bytes"], manifest["artifact"]["sha256"], manifest["source_snapshot"], manifest["parser_build_id"], manifest["ingest_run_id"]),
-        (FOUNDATION_SIZE, FOUNDATION_SHA, SNAPSHOT, FOUNDATION_PARSER, FOUNDATION_RUN), "frozen foundation manifest")
-    _eq((path.stat().st_size, sha(path)), (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation bytes")
+def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
+    manifest = json.loads(Path(foundation_manifest or MANIFEST).read_text())
+    _eq((manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"]),
+        (SNAPSHOT, COMMIT, TREE), "foundation source identity")
+    if "local_rebuild" in manifest:
+        from .character_7_1_foundation_binding import qualify_local_foundation
+        qualify_local_foundation(path, foundation_manifest, manifest)
+    else:
+        _eq((manifest["parser_build_id"], manifest["ingest_run_id"]),
+            (FOUNDATION_PARSER, FOUNDATION_RUN), "historical foundation namespace")
+        _eq((manifest["artifact"]["size_bytes"], manifest["artifact"]["sha256"]),
+            (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation manifest")
+        _eq((path.stat().st_size, sha(path)), (FOUNDATION_SIZE, FOUNDATION_SHA), "frozen foundation bytes")
+    if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+        raise ValueError("foundation sidecar")
     scope = json.loads((ROOT / manifest["source_scope"]).read_text())
     _eq((scope["source_commit"], scope["source_tree"], scope["snapshot_id"], len(scope["files"])), (COMMIT, TREE, SNAPSHOT, 18), "frozen source scope")
     conn = _open(path)
-    _eq(json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"], FOUNDATION_RUN, "foundation release")
-    _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], 34817, "text owner count")
-    return conn, scope
+    try:
+        release = json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])
+        _eq((release["snapshot_id"], release["parser_build_id"], release["ingest_run_id"]),
+            (SNAPSHOT, manifest["parser_build_id"], manifest["ingest_run_id"]), "foundation release")
+        _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], 34817, "text owner count")
+        return conn, scope
+    except Exception:
+        conn.close()
+        raise
+
+
+def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_RUN) -> sqlite3.Connection:
+    """Bind a text dependency to this exact foundation, including byte identity."""
+    if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
+        raise ValueError("text projection sidecar")
+    conn = _open(path)
+    try:
+        release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
+        _eq((release["contract"], release["snapshot_id"], release["foundation_run_id"],
+             release["foundation_size_bytes"], release["foundation_sha256"]),
+            ("character-7.1-text-successor-v1", SNAPSHOT, foundation_run_id,
+             foundation.stat().st_size, sha(foundation)), "text foundation identity")
+        _eq(conn.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text denominator")
+        return conn
+    except Exception:
+        conn.close()
+        raise
 
 
 def _source(source: Path, scope: dict) -> None:
@@ -137,6 +178,7 @@ def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text:
     kinds = {"AvatarExcelConfigData.json": "avatar", "FetterInfoExcelConfigData.json": "fetter_info", "FetterStoryExcelConfigData.json": "story"}
     records, refs, fields, candidates = [], [], [], []
     counts = Counter()
+    candidate_rows = _candidate_rows_by_relation(foundation)
     for basename, kind in kinds.items():
         path = "ExcelBinOutput/" + basename
         for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
@@ -153,7 +195,7 @@ def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text:
                     observed_parents.add(name)
             _eq(observed_parents, set(required_raw), "Lore/Story required raw condition parents")
             if relation:
-                targets = foundation.execute("SELECT target_primary_id FROM foundation_candidate WHERE relation_id=?", (relation[0],)).fetchall()
+                targets = [(row[2],) for row in candidate_rows.get(relation[0], ())]
                 _eq(len(targets), count, "Story owner candidates")
                 candidates.extend((row_id, relation[0], target) for (target,) in targets)
             counts[kind] += 1
@@ -169,6 +211,7 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
     _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text binding")
     path = "ExcelBinOutput/FettersExcelConfigData.json"
     records, refs, fields, avatar_candidates, lut_candidates = [], [], [], [], []
+    candidate_rows = _candidate_rows_by_relation(foundation)
     for row_id, ordinal, pointer in foundation.execute("SELECT id,ordinal,pointer FROM foundation_primary_row WHERE source_path=? ORDER BY ordinal", (path,)):
         avatar = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='source_avatar_id_candidate'", (row_id,)).fetchone()
         lut = foundation.execute("SELECT id,status,candidate_count FROM foundation_relation WHERE source_row_id=? AND kind='fetter_voice_slot_candidate'", (row_id,)).fetchone()
@@ -183,7 +226,8 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
                 observed_parents.add(name)
         _eq(observed_parents, {"openConds"}, "Voice required raw open condition parent")
         for relation, destination, column in ((avatar, avatar_candidates, "target_primary_id"), (lut, lut_candidates, "target_lut_id")):
-            targets = foundation.execute(f"SELECT {column} FROM foundation_candidate WHERE relation_id=?", (relation[0],)).fetchall()
+            position = 2 if column == "target_primary_id" else 3
+            targets = [(row[position],) for row in candidate_rows.get(relation[0], ())]
             _eq(len(targets), relation[2], "Voice owner/LUT candidate count")
             destination.extend((row_id, relation[0], target) for (target,) in targets)
     expected_lut = foundation.execute("SELECT l.id,l.source_path,l.object_key,l.object_ordinal,l.pointer,l.voice_slot,k.item_id FROM foundation_voice_lut l JOIN foundation_voice_link k ON k.lut_id=l.id").fetchall()
@@ -199,7 +243,7 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
     return {"voice_owner_rows": len(records), "raw_condition_refs": len(fields), "lut_count": len(expected_lut), "item_count": len(expected_item), "audio_variant_count": len(expected_audio), "unattached_lut_slots": unattached, "missing_variant_arrays": missing}
 
 
-def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *, source_root: str | Path | None = None, text_path: str | Path | None = None, expected_artifact: dict | None = None) -> dict:
+def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *, source_root: str | Path | None = None, text_path: str | Path | None = None, expected_artifact: dict | None = None, foundation_manifest=None) -> dict:
     if kind not in SCHEMAS:
         raise ValueError("unknown successor kind")
     artifact = Path(artifact_path)
@@ -209,10 +253,12 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
     seal = {"size_bytes": before.st_size, "sha256": sha(artifact)}
     if expected_artifact is not None:
         _eq(seal, expected_artifact, "candidate artifact seal")
-    foundation, scope = _foundation(Path(foundation_path))
-    conn = _open(artifact)
-    text = _open(Path(text_path)) if text_path else None
+    foundation, scope = _foundation(Path(foundation_path), foundation_manifest=foundation_manifest)
+    conn = text = None
     try:
+        foundation_run = json.loads(foundation.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"]
+        conn = _open(artifact)
+        text = _text(Path(text_path), Path(foundation_path), foundation_run_id=foundation_run) if text_path else None
         _eq(conn.execute("PRAGMA integrity_check").fetchone()[0], "ok", "integrity")
         _eq(conn.execute("PRAGMA foreign_key_check").fetchall(), [], "foreign keys")
         _schema(conn, kind)
@@ -226,13 +272,15 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
             counts = (_verify_lore if kind == "lore" else _verify_voice)(conn, foundation, text)
         implementation = {"src/genshin_lore/character_7_1_successor_build.py": sha(ROOT / "src/genshin_lore/character_7_1_successor_build.py"), SCHEMAS[kind]: sha(ROOT / SCHEMAS[kind])}
         parser_id = _id(kind, "parser", implementation)
-        run_id = _id(kind, "run", parser_id, FOUNDATION_RUN, sha(Path(text_path)) if text_path else None)
+        foundation_sha = sha(Path(foundation_path))
+        foundation_size = Path(foundation_path).stat().st_size
+        run_id = _id(kind, "run", parser_id, foundation_run, foundation_sha, sha(Path(text_path)) if text_path else None)
         expected_release = {
             "contract": f"character-7.1-{kind}-successor-v1",
             "snapshot_id": SNAPSHOT,
-            "foundation_run_id": FOUNDATION_RUN,
-            "foundation_size_bytes": FOUNDATION_SIZE,
-            "foundation_sha256": FOUNDATION_SHA,
+            "foundation_run_id": foundation_run,
+            "foundation_size_bytes": foundation_size,
+            "foundation_sha256": foundation_sha,
             "parser_build_id": parser_id,
             "ingest_run_id": run_id,
             "implementation": implementation,
@@ -252,7 +300,8 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
     finally:
         if text:
             text.close()
-        conn.close()
+        if conn:
+            conn.close()
         foundation.close()
     after = artifact.stat()
     _eq((before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns, seal["sha256"]), (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, sha(artifact)), "artifact stable")

@@ -121,7 +121,7 @@ def main():
     query = ReleasedSuccessor71(a.corpus,a.bindings,a.index,a.profile)
     try:
         import anyio
-        from .mcp_server import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+        from .mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
         if a.surface == 'research':
             from .research_server import create_server
             server = create_server(query)

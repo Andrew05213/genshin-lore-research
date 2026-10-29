@@ -1,5 +1,6 @@
 """Fresh physical successors for three explicitly frozen narrative families."""
-import fcntl
+from .platform_io import lock_exclusive, sync_directory
+from .batch_release import fsync_file
 import hashlib
 import json
 import os
@@ -33,7 +34,7 @@ def build(family, source, output, accounting_root):
     # here grants accounting only, never cleanup permission.
     broad = broad_inventory(accounting_root)
     roots = {Path(r.path) for r in broad.roots} | {source.absolute(), ROOT}
-    roots.update(Path("/tmp").glob("genshin-semantic*"))
+    roots.update(gate.discovery_root.glob("genshin-semantic*"))
     seen = set()
     allocated = sum(_walk_bytes(p, seen)[1] for p in sorted(roots, key=lambda p: (len(p.parts), str(p))))
     host_free = shutil.disk_usage(output.parent).free
@@ -42,7 +43,7 @@ def build(family, source, output, accounting_root):
         raise ValueError("inclusive source/model project-space preflight")
     output.parent.mkdir(parents=True, exist_ok=True)
     with Path(str(output) + ".lock").open("a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        lock_exclusive(lock, blocking=False)
         if output.exists():
             raise FileExistsError(output)
         start = time.monotonic()
@@ -163,16 +164,11 @@ def build(family, source, output, accounting_root):
             c.close()
             no_sidecars(stage)
             check_source(source, scope)
-            with stage.open("rb") as f:
-                os.fsync(f.fileno())
+            fsync_file(stage)
             no_sidecars(output)
             os.link(stage, output)
             stage.unlink()
-            d = os.open(output.parent, os.O_RDONLY)
-            try:
-                os.fsync(d)
-            finally:
-                os.close(d)
+            sync_directory(output.parent)
             return {"status": "built_unaccepted_candidate", "family": family, "artifact": {"size_bytes": output.stat().st_size, "sha256": sha(output)},
                     "release": release, "build_seconds": time.monotonic() - start,
                     "promotion_inode": list(owned_inode),
@@ -181,8 +177,6 @@ def build(family, source, output, accounting_root):
                     "space_preflight": gate.events, "silent_skips": 0}
         except BaseException:
             c.close()
-            if output.exists() and (output.stat().st_dev, output.stat().st_ino) == owned_inode:
-                output.unlink()
-            if stage.exists() and (stage.stat().st_dev, stage.stat().st_ino) == owned_inode:
-                stage.unlink()
+            # Preserve the private/published database and sidecars for diagnosis.
+            # A failed invocation cannot acquire a successful stage receipt.
             raise

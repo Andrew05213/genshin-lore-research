@@ -10,6 +10,8 @@ __pycache__/
 *.hnsw
 *.npy
 *.npz
+*.onnx
+*.onnx_data
 *.jsonl
 .env
 .env.*
@@ -17,6 +19,9 @@ __pycache__/
 .pytest_cache/
 build/
 dist/
+.coverage
+coverage.xml
+htmlcov/
 
 # Local source-qualified bindings, not distributable release authority
 /manifests/m3-7.1-provider/accepted-exact-mappings-v1.json

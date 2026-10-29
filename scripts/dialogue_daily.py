@@ -22,7 +22,20 @@ def settings(project, config_path, overrides):
             '--released-runtime-root', str(retained)]
     prefixes = (f'mcp_servers.{SERVER}.args=', f'mcp_servers.{SERVER}.cwd=',
                 f'mcp_servers.{SERVER}.required=')
-    result = [s for s in overrides if not s.startswith(prefixes)]
+    result = []
+    receipt_prefix = f'mcp_servers.{SERVER}.env.GENSHIN_CITATION_HANDOFF_DIR='
+    for setting in overrides:
+        if setting.startswith(prefixes):
+            continue
+        if setting.startswith(receipt_prefix):
+            value = json.loads(setting[len(receipt_prefix):])
+            if not isinstance(value, str) or not value:
+                raise ValueError('Explicit citation receipt directory required')
+            # MCP runs in the maintenance checkout, the renderer in the client
+            # project. Bind the existing ledger before changing server cwd.
+            if not Path(value).is_absolute():
+                setting = receipt_prefix + json.dumps(str((project / value).resolve()))
+        result.append(setting)
     return result + [f'mcp_servers.{SERVER}.args='+json.dumps(args),
                      f'mcp_servers.{SERVER}.cwd='+json.dumps(str(root)),
                      f'mcp_servers.{SERVER}.required=true']

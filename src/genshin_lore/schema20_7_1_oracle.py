@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SNAPSHOT = "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99"
 
 
-def verify(source: Path, artifact: Path, report: dict):
+def verify(source: Path, artifact: Path, report: dict, *, metadata_root=None):
     def git(*args):
         return subprocess.check_output(["git", "--no-optional-locks", "-C", str(source), *args], text=True).strip()
     if git("rev-parse", "HEAD") != SNAPSHOT.rsplit(":", 1)[1] or git("rev-parse", "HEAD^{tree}") != "aa578c08c402af39b41f1ffc95124d10f5410272" or git("status", "--porcelain", "--untracked-files=all"):
@@ -29,7 +29,8 @@ def verify(source: Path, artifact: Path, report: dict):
         raise ValueError("external assembly artifact seal mismatch")
     if any(Path(str(artifact) + s).exists() for s in ("-wal", "-shm", "-journal")):
         raise ValueError("assembly sidecar")
-    mappings = json.loads((ROOT / "manifests/m3-7.1-provider/accepted-exact-mappings-v1.json").read_text())["mappings"]
+    metadata = Path(metadata_root) if metadata_root is not None else ROOT
+    mappings = json.loads((metadata / "manifests/m3-7.1-provider/accepted-exact-mappings-v1.json").read_text())["mappings"]
     db = sqlite3.connect(artifact.as_uri() + "?mode=ro&immutable=1", uri=True)
     db.row_factory = sqlite3.Row
     try:
@@ -126,7 +127,7 @@ def verify(source: Path, artifact: Path, report: dict):
         special = None
         if report["qualified_provider_count"] == 33:
             from .schema20_7_1_special_oracle import verify as verify_special
-            special = verify_special(source, db)
+            special = verify_special(source, db, metadata_root=metadata)
         elif db.execute("SELECT COUNT(*) FROM source_record").fetchone()[0] != sum(len(v) for v in physical.values()):
             raise ValueError("source record extras/omissions")
         return {"status": "PASS", "scope": "33 core provider contracts" if special else "20 M3 provider contracts only", "special_core": special, "schema_version": 20, "source_primary_oracle": "full physical source bytes to rows", "text_oracle": "full sealed input-to-Schema20 child equality; inherited sealed independent source/TextMap proof", "provider_contracts": summary, "no_extras_no_omissions": True, "source_primary_rows_distinct": sum(len(v) for v in physical.values()), "artifact": report["artifact"]}

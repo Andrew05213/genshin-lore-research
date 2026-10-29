@@ -10,7 +10,12 @@ TABLES=('native_archive_container','native_archive_slot','native_archive_text','
 def iid(*p):return 'nbm71:'+hashlib.sha256(json.dumps(p,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()[:40]
 def schema(c):return [[a,b,d,' '.join((s or '').split()).lower()] for a,b,d,s in c.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name")]
 def target(a,path,pointer,native,raw_sha,occ):return {'target_source_path':path,'target_source_pointer':pointer,'target_native_id':native,'target_raw_sha256':raw_sha,'target_family':'native_archive','target_contract':a['release']['contract'],'target_parser':a['release']['parser_build_id'],'target_run':a['release']['run_id'],'target_occurrence_id':occ}
-def verify(source_root,scope_path,artifact,message_artifact,runtime_manifest_path=None):
+def message_binding(message_artifact, message_runtime_path=None):
+ path=Path(message_runtime_path) if message_runtime_path is not None else ROOT/'manifests/native-archive-7.1/message-runtime-v1.json'
+ manifest=json.loads(path.read_text())
+ if {'size_bytes':Path(message_artifact).stat().st_size,'sha256':sha(message_artifact)}!=manifest['artifact']:raise ValueError('message dependency identity')
+ return manifest
+def verify(source_root,scope_path,artifact,message_artifact,runtime_manifest_path=None,*,message_runtime_path=None):
  start=time.perf_counter();scope=json.loads(Path(scope_path).read_text())
  if scope.get('selection_manifest')!='manifests/native-archive-7.1/book-music-selection-v1.json':raise ValueError('unapproved selection authority')
  selection_path=ROOT/scope['selection_manifest'];selection=json.loads(selection_path.read_text())
@@ -40,8 +45,7 @@ def verify(source_root,scope_path,artifact,message_artifact,runtime_manifest_pat
     if key in wanted:index[key].append((path,ordinal,'/'+key,text,seals[path]))
    tiers.append(index)
   maps[locale]=tiers
- mr=json.loads((ROOT/'manifests/native-archive-7.1/message-runtime-v1.json').read_text())
- if {'size_bytes':Path(message_artifact).stat().st_size,'sha256':sha(message_artifact)}!=mr['artifact']:raise ValueError('message dependency identity')
+ mr=message_binding(message_artifact,message_runtime_path)
  if scope.get('reuse_targets')!=[]:raise ValueError('book/music wave has no projection reuse')
  external=defaultdict(list);rebuilt=[];mc=sqlite3.connect(message_artifact);mc.row_factory=sqlite3.Row
  for spec in scope['sources']:

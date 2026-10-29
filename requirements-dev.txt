@@ -1,2 +1,7 @@
 -r requirements-build.txt
 pytest==9.1.1
+pytest-cov>=6,<8
+PyYAML>=6,<7
+build>=1.2,<2
+setuptools>=77,<83
+wheel>=0.45,<1

@@ -11,6 +11,7 @@ from mcp import ClientSession,StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 ROOT=Path(__file__).resolve().parents[1]
+sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 
 
 def payload(result):
@@ -20,7 +21,9 @@ def payload(result):
 
 
 async def check(config):
-    values=json.loads(config.read_text())
+    from scripts.runtime_config import load_runtime_paths
+    config=Path(config).resolve()
+    values=load_runtime_paths(config)
     corpus=json.loads(Path(values['profile']).read_text())['corpus_ref']
     results={}
     for surface in ('research','narrative'):

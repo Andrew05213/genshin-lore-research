@@ -8,7 +8,7 @@ from typing import Any
 from mcp.server import MCPServer
 from mcp.types import ToolAnnotations
 from .research_query import ResearchNotFound,ResearchQuery,ResearchUnavailable
-from .mcp_server import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
+from .mcp_transport import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
 
 READONLY=ToolAnnotations(readOnlyHint=True,destructiveHint=False,idempotentHint=True,openWorldHint=False)
 
@@ -30,7 +30,7 @@ def create_server(service:ResearchQuery)->MCPServer:
  def describe_corpus(corpus_ref:str,detail:str|None=None)->dict[str,Any]:return wrap(service.describe,corpus_ref,detail)
  @server.tool(name="search_evidence",description="Literal search by default; optional corpus-backed lexical, semantic, or sparse-first hybrid candidate discovery with exact evidence recheck.",annotations=READONLY)
  def search_evidence(corpus_ref:str,query:str,locale:str|None=None,families:list[str]|None=None,source_prefix:str|None=None,limit:int=20,cursor:str|None=None,mode:str="literal",domain:str|None=None,story_release:str|None=None)->dict[str,Any]:return wrap(service.search,corpus_ref,query,locale,families,source_prefix,limit,cursor,mode,domain,story_release)
- @server.tool(name="read_evidence",description="Read exact evidence. Default physical view preserves same-container before/after. For Dialog/Talk, view='dialogue' returns bounded source-connected nodes, source-role names and supported quest title candidates; reuse its cursor with the same anchor/limit/locale. Branch links are not narrative chronology. Inspect the returned text refs, not node IDs.",annotations=READONLY)
+ @server.tool(name="read_evidence",description="Read exact evidence. Default physical view preserves same-container before/after. Use view='dialogue' on an NPC/name ref to page source-labelled Codex speech candidates, not just mentions of the name. On a Codex speaker/body ref it returns the physical node, source titles and before/after section neighbours. Name equality is not unique NPC ownership; new-wrapper role limitations remain. Dialog/Talk view returns source-connected nodes and supported title candidates. Reuse cursors with the same anchor/limit/locale. Physical neighbours/branch links are not narrative chronology. Inspect returned text/name/title refs, not node IDs.",annotations=READONLY)
  def read_evidence(corpus_ref:str,evidence_ref:str,before:int=0,after:int=0,limit:int=20,cursor:str|None=None,view:str='physical',locale:str='CHS')->dict[str,Any]:return wrap(service.read,corpus_ref,evidence_ref,before,after,limit,cursor,view=view,locale=locale)
  @server.tool(name="follow_evidence",description="Follow only source-authored evidence relations. For Dialog/Talk, relation_kind='dialogue_predecessor' finds checked local incoming links to read earlier context; it is not narrative chronology.",annotations=READONLY)
  def follow_evidence(corpus_ref:str,evidence_ref:str,relation_kind:str|None=None,limit:int=20,cursor:str|None=None,resolve_targets:bool=True)->dict[str,Any]:return wrap(service.follow,corpus_ref,evidence_ref,relation_kind,limit,cursor,resolve_targets)

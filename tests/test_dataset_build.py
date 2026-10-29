@@ -15,6 +15,9 @@ driver=importlib.util.module_from_spec(spec);spec.loader.exec_module(driver)
 def job(tmp_path):
     result=object.__new__(driver.Rebuild)
     result.output=tmp_path;result.source=tmp_path/'source';result.history=None
+    result.identity_root=tmp_path/'implementation'
+    (result.identity_root/'src').mkdir(parents=True)
+    (result.identity_root/'src/parser.py').write_text('parser version 1')
     return result
 
 
@@ -55,6 +58,39 @@ def test_index_capacity_fails_before_creating_outputs(tmp_path,monkeypatch):
         '--stage','index','--available-allocated-bytes','1'])
     with pytest.raises(ValueError,match='headroom'):driver.main()
     assert not output.exists()
+
+
+@pytest.mark.parametrize('without_semantic,budget',[(True,25_000_000_000),(False,27_000_000_000)])
+def test_full_capacity_rejects_superseded_peak_before_constructing_build(tmp_path,monkeypatch,without_semantic,budget):
+    from types import SimpleNamespace
+    proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
+    monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
+                        proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
+    monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
+    monkeypatch.setattr(driver,'Rebuild',lambda *args:pytest.fail('insufficient budget reached builder'))
+    output=tmp_path/'absent'
+    args=['rebuild','--source','missing','--historical-source','synthetic-history',
+          '--output-root',str(output),'--stage','all','--available-allocated-bytes',str(budget)]
+    if without_semantic:args.append('--without-semantic')
+    monkeypatch.setattr(sys,'argv',args)
+    assert driver.FULL_BUILD_PEAK_BYTES==26_000_000_000
+    with pytest.raises(ValueError,match='headroom'):driver.main()
+    assert not output.exists()
+
+
+def test_nonvector_full_capacity_accepts_26gb_boundary(tmp_path,monkeypatch):
+    from types import SimpleNamespace
+    proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
+    monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
+                        proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
+    monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
+    monkeypatch.setattr(driver,'allocated',lambda _:0)
+    def admitted(*args):raise RuntimeError('admitted past capacity gate')
+    monkeypatch.setattr(driver,'Rebuild',admitted)
+    monkeypatch.setattr(sys,'argv',['rebuild','--source','missing',
+        '--historical-source','synthetic-history','--output-root',str(tmp_path/'absent'),
+        '--stage','all','--without-semantic','--available-allocated-bytes','26000000000'])
+    with pytest.raises(RuntimeError,match='admitted past capacity gate'):driver.main()
 
 
 def test_release_reader_preserves_declared_identity(tmp_path):
@@ -116,7 +152,7 @@ def test_capacity_deduplicates_nested_roots_hardlinks_without_following_symlinks
     file=child/'artifact';file.write_bytes(b'synthetic' * 1000)
     os.link(file,child/'same-inode');link=child/'symlink';link.symlink_to(file)
     stat=link.lstat()
-    expected=file.stat().st_blocks*512+(stat.st_blocks*512 or stat.st_size)
+    expected=(getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)+(getattr(stat,'st_blocks',0)*512 or stat.st_size)
     assert driver.allocated((tmp_path,child))==expected
 
 

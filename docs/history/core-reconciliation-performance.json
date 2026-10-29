@@ -1,0 +1,15 @@
+{
+  "scope": "synthetic in-memory core-contract reconciliation only; not full build speedup",
+  "date": "2026-10-18",
+  "repeats_per_arm": 3,
+  "rows_per_table": 120000,
+  "tables": 2,
+  "exact_contract_bindings": 33,
+  "original_seconds": [0.4961709948256612, 0.49654998909682035, 0.5060032568871975],
+  "two_scan_seconds": [0.1480609648860991, 0.1484520952217281, 0.14839715883135796],
+  "original_median_seconds": 0.49654998909682035,
+  "two_scan_median_seconds": 0.14839715883135796,
+  "full_rowset_equivalence": "covered by test_core_contract_reconciliation.py",
+  "full_real_source_build_after_change": "NOT_RUN",
+  "qualification": "Independent full source oracle retained; no hash, rowset or provenance checks removed. Conservative resume identity retained pending separate evidence for a safer narrower scope."
+}

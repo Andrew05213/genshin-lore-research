@@ -9,6 +9,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'src'))
+sys.path.insert(0, str(ROOT))
+from scripts.build_support import require_success
 COMMIT = '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
 TREE = 'aa578c08c402af39b41f1ffc95124d10f5410272'
 
@@ -44,9 +46,10 @@ def compare(left,right):
     for directory in (Path(left),Path(right)):
         verification=json.loads((directory/'verify.json').read_text())
         build=json.loads((directory/'build.json').read_text())
-        if verification.get('status') != 'PASS':
-            raise ValueError('both arms require independent verification PASS')
+        require_success(verification)
         artifact=directory/'artifact.sqlite'
+        if any(Path(str(artifact)+suffix).exists() for suffix in ('-wal','-shm','-journal')):
+            raise ValueError('A/B artifact has SQLite sidecars')
         seal={'size_bytes':artifact.stat().st_size,'sha256':sha(artifact)}
         if build.get('artifact') != seal:
             raise ValueError('artifact differs from its build seal')
@@ -84,7 +87,7 @@ def rebuild(source,component,output_root):
         verification=verify(source,artifact,report)
         # The narrative oracle declares its result as verdict, unlike the
         # other component oracles. Preserve it and expose the common envelope.
-        verification={**verification,'status':verification.get('verdict')}
+        verification={'status':verification.get('verdict'),**verification}
     else:
         from genshin_lore.m3_7_1_provider_build import build
         from genshin_lore.m3_7_1_provider_verify import verify
@@ -92,8 +95,10 @@ def rebuild(source,component,output_root):
         write(directory/'build.json',report)
         verification=verify(source,component,artifact,directory/'build.json')
     write(directory/'verify.json',verification)
-    if verification.get('status') != 'PASS':
-        raise ValueError('independent verification did not PASS')
+    require_success(verification)
+    if (report['artifact']!={'size_bytes':artifact.stat().st_size,'sha256':sha(artifact)} or
+            any(Path(str(artifact)+suffix).exists() for suffix in ('-wal','-shm','-journal'))):
+        raise ValueError('verified component artifact seal/sidecar drift')
     return {'status':'PASS','component':component,'artifact':report['artifact'],
             'verification':'independent source/artifact check','formal_release_accepted':False}
 

@@ -11,8 +11,8 @@ requires-python = ">=3.12"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 dependencies = [
-    "jsonschema>=4.23,<5",
-    "mcp>=2,<3",
+    "jsonschema==4.26.0",
+    "mcp==2.1.1",
     "numpy==2.5.3",
 ]
 

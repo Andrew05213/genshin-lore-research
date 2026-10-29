@@ -157,7 +157,7 @@ def _escape(key: str) -> str:
     return key.replace("~", "~0").replace("/", "~1")
 
 
-def _iter_source_pairs(raw: bytes) -> Iterable[SourcePair]:
+def _iter_source_pairs(raw: bytes, *, wanted_keys=None, _index=None) -> Iterable[SourcePair]:
     """Independent lexical object-pair reader used by the verifier.
 
     It intentionally does not import the builder parser. Raw token spelling is
@@ -165,11 +165,25 @@ def _iter_source_pairs(raw: bytes) -> Iterable[SourcePair]:
     duplicate keys, ordering and trailing bytes.
     """
 
+    if wanted_keys is not None and _index is None:
+        from .textmap_input_cache import LexicalIndex, cached_index
+        def compile_index():
+            index = LexicalIndex()
+            list(_iter_source_pairs(raw, wanted_keys=frozenset(), _index=index))
+            return index
+        index = cached_index('oracle', raw, compile_index)
+        if index is not None:
+            for ordinal, key, key_json, value_json in index.selected(wanted_keys):
+                yield SourcePair(ordinal, f'/@{ordinal}:{_escape(key)}', key_json, key,
+                                 value_json, json.loads(value_json))
+            return
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
         raise BatchM1VerificationError("independent TextMap JSON parse failed") from exc
     decoder = json.JSONDecoder()
+    if _index is not None:
+        _index.text = text
     position = _skip_ws(text, 0)
     if position >= len(text) or text[position] != "{":
         _fail("independent TextMap root is not an object")
@@ -209,15 +223,18 @@ def _iter_source_pairs(raw: bytes) -> Iterable[SourcePair]:
         if key in seen:
             _fail(f"independent TextMap duplicate key at pair {ordinal}: {key!r}")
         seen.add(key)
+        if _index is not None:
+            _index.add(ordinal, key, key_start, key_end, value_start, value_end)
         raw_text_json = text[value_start:value_end]
-        yield SourcePair(
-            pair_ordinal=ordinal,
-            pointer=f"/@{ordinal}:{_escape(key)}",
-            raw_key_json=raw_key_json,
-            key_text=key,
-            raw_text_json=raw_text_json,
-            raw_text=value,
-        )
+        if wanted_keys is None or key in wanted_keys:
+            yield SourcePair(
+                pair_ordinal=ordinal,
+                pointer=f"/@{ordinal}:{_escape(key)}",
+                raw_key_json=raw_key_json,
+                key_text=key,
+                raw_text_json=raw_text_json,
+                raw_text=value,
+            )
         ordinal += 1
         position = _skip_ws(text, value_end)
         if position >= len(text):

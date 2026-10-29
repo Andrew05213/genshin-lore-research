@@ -6,7 +6,7 @@ import anyio
 
 from .research71_candidate_query import CandidateResearch71
 from .research_server import create_server
-from .mcp_server import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+from .mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
 
 
 def main():

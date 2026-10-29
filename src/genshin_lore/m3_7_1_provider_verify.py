@@ -161,11 +161,13 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
         ):
             raise ValueError("release source scope or authority semantics mismatch")
         helper_shas = {"physical_array_reader": _file_sha(PHYSICAL_READER),
-                       "textmap_lexical_reader": _file_sha(LEXICAL_READER)}
+                       "textmap_lexical_reader": _file_sha(LEXICAL_READER),
+                       "textmap_input_cache": _file_sha(ROOT / "src/genshin_lore/textmap_input_cache.py")}
         observation = None
         if family["v2_textmap_paths"]:
             tm_parser = "m3-71-textmap-parser:" + _id(
-                "six-file-lexical-textmap-v1", helper_shas["textmap_lexical_reader"],
+                "six-file-lexical-textmap-v2-input-cache", helper_shas["textmap_lexical_reader"],
+                helper_shas["textmap_input_cache"],
                 _file_sha(SCHEMA),
             )[:40]
             tm_run = "m3-71-textmap-run:" + _id(
@@ -215,7 +217,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
             if locale is None:
                 raise ValueError("TextMap locale path mismatch")
             tier = "medium" if "_Medium" in name else "main"
-            for item in _iter_source_pairs(raw_files[relative]):
+            for item in _iter_source_pairs(raw_files[relative], wanted_keys=hashes):
                 if item.key_text in hashes:
                     key_json, text_json = item.raw_key_json, item.raw_text_json
                     by_hash[(locale, item.key_text)].append((

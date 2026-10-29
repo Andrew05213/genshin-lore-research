@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import fcntl
+from .platform_io import lock_exclusive, unlock
 import hashlib
 import os
 import shutil
@@ -240,7 +240,7 @@ def _promote_absent_target(target: Path, staging: Path) -> None:
     )
     locked = False
     try:
-        fcntl.flock(lock_descriptor, fcntl.LOCK_EX)
+        lock_exclusive(lock_descriptor)
         locked = True
         lock_info, lock_path_info = os.fstat(lock_descriptor), os.lstat(lock_path)
         if (
@@ -291,7 +291,7 @@ def _promote_absent_target(target: Path, staging: Path) -> None:
             raise
     finally:
         if locked:
-            fcntl.flock(lock_descriptor, fcntl.LOCK_UN)
+            unlock(lock_descriptor)
         os.close(lock_descriptor)
 
 

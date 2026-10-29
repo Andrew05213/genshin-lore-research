@@ -24,12 +24,14 @@ SIGNATURES={
  ('APEPAFOBDGB','EIFDMLOMFHF','HOBBPLPNMDP','MEGJPCLADOG','MHGNMKHOKHI','NCNGHCODLAK','PIAAIKBBCGB'):'alternate_3',
 }
 TABLES=('codex_root','codex_child','codex_navigation','codex_candidate','codex_text_slot','codex_text_candidate')
+# Bound the private writer's page cache; this is not a whole-process RAM limit.
+WRITE_CACHE_KIB=128*1024
 def canonical(v):return json.dumps(v,sort_keys=True,ensure_ascii=True,separators=(',',':'))
 def hash_bytes(v):return hashlib.sha256(v).hexdigest()
 def ident(*parts):return 'cq71:'+hash_bytes(canonical(parts).encode())[:40]
-def inventory(source):
+def inventory(source, paths=(PREFIX,)):
  result=[]
- for line in subprocess.check_output(['git','-C',str(source),'ls-tree','-rl',COMMIT,'--',PREFIX],text=True).splitlines():
+ for line in subprocess.check_output(['git','-C',str(source),'ls-tree','-rl',COMMIT,'--',*paths],text=True).splitlines():
   left,path=line.split('\t',1);parts=left.split()
   if len(parts)!=4 or parts[1]!='blob' or not path.endswith('.json'):raise ValueError('CodexQuest inventory object')
   result.append((path,parts[2],int(parts[3])))
@@ -74,18 +76,27 @@ def build(source,output,core_manifest,core_artifact):
  for ordinal,record,_ in array_records(source/MAIN):
   if type(record.get('id')) is not int:raise ValueError('MainQuest lookup shape')
   main_by_id[record['id']].append((MAIN,f'/{ordinal}',str(record['id']),f'raw-mainquest:{ordinal}',SNAPSHOT))
- source_seals={};text_paths=[f'TextMap/TextMap{tier}{language}.json' for language in ('CHS','EN','JP') for tier in ('','_Medium')]
+ source_seals={};raw_files={};text_paths=[f'TextMap/TextMap{tier}{language}.json' for language in ('CHS','EN','JP') for tier in ('','_Medium')]
  for path,blob,size in files:
   raw=(source/path).read_bytes()
-  if len(raw)!=size or hashlib.sha1(b'blob '+str(size).encode()+b'\0'+raw).hexdigest()!=blob:raise ValueError('source drift '+path)
+  pinned=hashlib.sha1(b'blob '+str(size).encode()+b'\0');pinned.update(raw)
+  if len(raw)!=size or pinned.hexdigest()!=blob:raise ValueError('source drift '+path)
   source_seals[path]={'size':size,'sha256':hash_bytes(raw),'blob':blob}
- for path in (MAIN,*text_paths):
-  source_seals[path]={'size':(source/path).stat().st_size,'sha256':sha(source/path),'blob':subprocess.check_output(['git','-C',str(source),'rev-parse',COMMIT+':'+path],text=True).strip()}
+  raw_files[path]=raw
+ support=inventory(source,(MAIN,*text_paths))
+ if {path for path,_,_ in support}!={MAIN,*text_paths} or len(support)!=7:raise ValueError('support source path set')
+ for path,blob,size in support:
+  raw=(source/path).read_bytes()
+  pinned=hashlib.sha1(b'blob '+str(size).encode()+b'\0');pinned.update(raw)
+  if len(raw)!=size or pinned.hexdigest()!=blob:raise ValueError('source drift '+path)
+  source_seals[path]={'size':size,'sha256':hash_bytes(raw),'blob':blob}
  impl={p:sha(ROOT/p) for p in ('scripts/builders/codexquest.py','schemas/codexquest-7.1-v1.sql','src/genshin_lore/loading_tips_source.py')}
  parser=ident('parser',impl);run=ident('run',SNAPSHOT,parser,source_seals,core)
  roots=[];children=[];navigations=[];candidates=[];owners=[];wanted=set();shapes=Counter();missing_wrapper=0
  for path,blob,size in files:
-  raw=(source/path).read_bytes();value=json.loads(raw.decode('utf-8-sig'))
+  # Project the same bytes already checked against the pinned Git tree. The
+  # roots below retain these raw objects anyway, so this adds no second body copy.
+  raw=raw_files.pop(path);value=json.loads(raw.decode('utf-8-sig'))
   if not isinstance(value,dict):raise ValueError('Codex root not object '+path)
   signature=tuple(sorted(value));shape=SIGNATURES.get(signature)
   if shape is None:raise ValueError('unknown 7.1 Codex root signature '+path)
@@ -141,13 +152,14 @@ def build(source,output,core_manifest,core_artifact):
  release={'contract':'codexquest-7.1-physical-text-foundation-v1','status':'physical_foundation_candidate','snapshot':SNAPSHOT,'source_commit':COMMIT,'source_tree':TREE,'source_seals':source_seals,'implementation':impl,'parser_build_id':parser,'ingest_run_id':run,'quest_codex_binding':core,'counts':{table:len(rows) for table,rows in zip(TABLES,data)},'shape_counts':dict(shapes),'missing_text_id_wrappers':missing_wrapper,'new_shape_semantic_section_node_mapping':'unresolved; physical section_like/node_like only','child_raw_json_semantics':'canonical parsed subtree; root raw_bytes retain authoritative lexical source','quest_codex_navigation':'reverse physical candidates; not logical relation','product_accepted':False}
  if output.exists():raise FileExistsError(output)
  output.parent.mkdir(parents=True,exist_ok=True);db=sqlite3.connect(output);db.execute('PRAGMA page_size=4096');db.execute('PRAGMA journal_mode=OFF');db.execute('PRAGMA foreign_keys=ON')
+ db.execute(f'PRAGMA cache_size=-{WRITE_CACHE_KIB}')
  try:
   db.executescript((ROOT/'schemas/codexquest-7.1-v1.sql').read_text())
   for table,rows in zip(TABLES,data):
    if rows:db.executemany(f"INSERT INTO {table} VALUES ({','.join('?'*len(rows[0]))})",rows)
   db.execute('INSERT INTO codex_release VALUES(1,?)',(canonical(release),));immutable(db);db.commit();db.execute('VACUUM');db.close()
  except BaseException:
-  db.close();output.unlink(missing_ok=True);raise
+  db.close();raise
  return {'release':release,'artifact':{'size_bytes':output.stat().st_size,'sha256':sha(output)}}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--output',required=True);p.add_argument('--core-manifest',default=CORE);p.add_argument('--core-artifact',default=CORE_ARTIFACT);p.add_argument('--report');a=p.parse_args();result=build(a.source,a.output,a.core_manifest,a.core_artifact)

@@ -38,7 +38,7 @@ def project(source_root, scope_path):
     check_files(source_root, scope)
     historical = json.loads(HISTORICAL.read_text())
     if (scope['contract'] != 'event-successor-7.1-versioned-scope-v1'
-            or scope['historical_scope'] != str(HISTORICAL.relative_to(ROOT))
+            or scope['historical_scope'] != HISTORICAL.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or scope['family_contract_version'] != 'event-narrative-evidence-v2'
             or historical['text_lookup'] != 'all physical main candidates first; Medium only when main has no candidate'
@@ -161,8 +161,4 @@ def build(source_root, scope_path, output):
     except Exception:
         if connection is not None:
             connection.close()
-        if owned is not None and output.exists():
-            stat = output.stat()
-            if (stat.st_dev, stat.st_ino) == owned:
-                output.unlink()
         raise

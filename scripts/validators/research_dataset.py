@@ -9,11 +9,198 @@ import argparse
 import hashlib
 import json
 import sqlite3
+import sys
 from pathlib import Path
 
+# Also support the documented source-checkout script invocation from any cwd.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from genshin_lore.research_index import sha256_file
+from genshin_lore.research_adapters import CANDIDATE_UNSUPPORTED_RELATIONS, RELATIONS
+from scripts.validators.research_index import expected_adapter_tables, explicit_text_tables
 
 KEYS={}
+
+# Independent source contracts, not the builder's emitted coverage rows or
+# projection functions. None means that this adapter deliberately has no
+# container/text projection (e.g. binding-only and character text overlays).
+SOURCE_PROJECTIONS = {
+    'character_foundation': ('foundation_primary_row', None),
+    'character_text': (None, 'candidate'),
+    'quest_review_binding': (None, None),
+    'quest_narrative_archive': ('excel_row', 'text_candidate'),
+    'quest_review_archive': ('evidence_row', 'text_candidate'),
+    'codexquest_archive': ('codex_root', 'codex_text_candidate'),
+    'native_message': ('native71_row', 'native71_text'),
+    'event_native_text_17': ('event71_row', 'event71_text'),
+    'native_successor_physical': ('row_occurrence', 'text_candidate'),
+    'native_high_value_physical': ('row_occurrence', 'text_candidate'),
+    'event_physical_13': ('physical_row', 'textmap_candidate'),
+    'event_physical_16': ('selected_occurrence', None),
+    'event_physical_18': ('selected_occurrence', None),
+    'quest_talk_physical': ('physical_container', 'text_slot'),
+    'narrative_npc': ('physical_row', 'text_candidate'),
+    'narrative_dialog': ('physical_row', 'text_candidate'),
+    'narrative_reminder': ('physical_row', 'text_candidate'),
+}
+SOURCE_RELATIONS = {
+    'character_foundation': ('foundation_relation', 'foundation_candidate'),
+    'quest_review_binding': ('bound_locator', 'bound_candidate'),
+    'native_message': ('native71_relation', 'native71_candidate'),
+    'event_native_text_17': ('event71_relation', 'event71_candidate'),
+    'native_successor_physical': ('relation_locator', 'relation_candidate'),
+    'native_high_value_physical': ('relation_locator', 'relation_candidate'),
+    'codexquest_archive': ('codex_navigation', 'codex_candidate'),
+    'narrative_npc': ('locator', 'physical_candidate'),
+    'narrative_dialog': ('locator', 'physical_candidate'),
+    'narrative_reminder': ('locator', 'physical_candidate'),
+}
+
+
+def verify_formal_relation_projections(index, src, key, family, declarations):
+    """Derive supported relation/candidate counts from source, not coverage.
+
+    Formal adapters may exclude relations whose physical parent namespace is
+    not indexed. Such partial scopes remain legal, but their projected subset
+    cannot be reduced to zero by editing a derived status/count. Candidate
+    expectations use SOURCE relation IDs, never surviving index relations.
+    Only the static table/FK contract is shared with the builder.
+    """
+    specs = RELATIONS.get(family, ())
+    if not specs:
+        return
+    tables = {r[0] for r in src.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+    parents = set()
+    for identity, column, value in index.execute(
+        'SELECT occurrence_id,pk_column,pk_value FROM research_container WHERE source_key=?', (key,)):
+        # These formal adapters map the source id PK directly. Do not let an
+        # edited derived occurrence_id redefine which source parents qualify;
+        # fetch() subsequently verifies every physical source key and row.
+        if column != 'id' or identity != value:
+            raise ValueError('formal relation projection parent identity differs from source key: '+key)
+        parents.add(value)
+    for spec in specs:
+        relation, candidate = spec['table'], spec['candidate']
+        if relation not in tables:
+            continue
+        wanted = set()
+        relation_total = 0
+        for identity, parent in src.execute(f'SELECT id,"{spec["parent"]}" FROM "{relation}"'):
+            relation_total += 1
+            if str(parent) in parents:
+                wanted.add(str(identity))
+        candidate_total = candidate_expected = 0
+        if candidate in tables:
+            for (parent,) in src.execute(f'SELECT relation_id FROM "{candidate}"'):
+                candidate_total += 1
+                candidate_expected += str(parent) in wanted
+        for kind, table, denominator, expected in (
+            ('relation', relation, relation_total, len(wanted)),
+            ('candidate', candidate, candidate_total, candidate_expected),
+        ):
+            declaration = declarations.get((kind, table))
+            status = 'complete' if expected == denominator else 'unsupported'
+            if kind == 'relation':
+                actual = index.execute('SELECT COUNT(*) FROM research_relation WHERE source_key=? AND source_table=?',
+                                       (key, table)).fetchone()[0]
+            else:
+                actual = index.execute('SELECT COUNT(*) FROM research_candidate c JOIN research_relation r ON r.id=c.relation_id '
+                                       'WHERE r.source_key=? AND c.source_table=?', (key, table)).fetchone()[0]
+            if (declaration is None or actual != expected or
+                (declaration['denominator'], declaration['indexed_count'], declaration['status']) !=
+                    (denominator, expected, status)):
+                raise ValueError('formal relation projection differs from source parent scope: '+key+': '+table)
+
+
+def verify_required_source_projections(index, manifest, sources):
+    """Coverage cannot choose its own denominator or downgrade required work."""
+    for component in manifest['components']:
+        key, mode = component['source_key'], component['adapter']
+        if mode == 'dependency_only':
+            if key not in sources:
+                continue
+            required = set()
+            full = set()
+        src = sources[key]
+        if mode in ('core33', 'formal_compatible', 'talk_physical'):
+            required = expected_adapter_tables(src, component['family'])
+            full = {(kind, table) for kind, table in required if kind == 'container' or
+                    (kind == 'text' and table in explicit_text_tables(src, component['family']))}
+        elif mode != 'dependency_only':
+            if mode not in SOURCE_PROJECTIONS:
+                raise ValueError('unknown required source projection contract: '+mode)
+            required = {(kind, table) for kind, table in
+                        zip(('container', 'text'), SOURCE_PROJECTIONS[mode]) if table is not None}
+            required.update(zip(('relation', 'candidate'), SOURCE_RELATIONS.get(mode, ())))
+            full = required
+        required = required | {(kind, table) for kind, table in CANDIDATE_UNSUPPORTED_RELATIONS.get(mode, ())
+                               if src.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()}
+        declarations = {(r['projection_kind'], r['source_table']): r for r in index.execute(
+            'SELECT * FROM adapter_coverage WHERE source_key=?', (key,))}
+        if not required <= declarations.keys():
+            missing = ', '.join(kind+':'+table for kind, table in sorted(required-declarations.keys()))
+            raise ValueError('required source projection declaration missing: '+key+': '+missing)
+        for projection in full:
+            row = declarations[projection]
+            if row['status'] != 'complete' or row['indexed_count'] != row['denominator']:
+                raise ValueError('required source projection incomplete: '+key+': '+projection[1])
+        if mode in ('core33', 'formal_compatible', 'talk_physical'):
+            verify_formal_relation_projections(index, src, key, component['family'], declarations)
+
+
+def verify_source_declarations(index, manifest):
+    """An omitted component must not turn an empty loop into success."""
+    expected = {c['source_key']: c for c in manifest['components']}
+    if len(expected) != len(manifest['components']):
+        raise ValueError('duplicate manifest source key')
+    actual = {r['source_key']: r for r in index.execute('SELECT * FROM source_artifact')}
+    if set(actual) != set(expected):
+        raise ValueError('index source component rowset differs from manifest')
+    covered = {r[0] for r in index.execute('SELECT DISTINCT source_key FROM adapter_coverage')}
+    for key, component in expected.items():
+        row = actual[key]
+        for field in ('family', 'contract', 'parser', 'run'):
+            if row['artifact_'+field] != component[field]:
+                raise ValueError('index source identity differs from manifest: '+key)
+        if (row['size_bytes'], row['sha256']) != (component['artifact']['size_bytes'], component['artifact']['sha256']):
+            raise ValueError('index source seal differs from manifest: '+key)
+        if component['adapter'] != 'dependency_only' and key not in covered:
+            raise ValueError('component projection coverage is missing: '+key)
+    if not covered <= set(expected):
+        raise ValueError('coverage references undeclared component')
+
+
+def verify_projection_counts(index):
+    """Check actual index rowsets, not the builder's indexed_count claims.
+
+    Every present row is subsequently source-reconstructed by this oracle.
+    Counts plus unique physical locators prevent omission/duplication from
+    being hidden by an unchanged adapter_coverage report.
+    """
+    if index.execute('PRAGMA foreign_key_check').fetchone() is not None:
+        raise ValueError('Research index contains dangling physical references')
+    declarations = {}
+    for row in index.execute('SELECT * FROM adapter_coverage'):
+        key = (row['source_key'], row['projection_kind'], row['source_table'])
+        if key in declarations:
+            raise ValueError('ambiguous duplicate coverage declaration')
+        declarations[key] = row['indexed_count']
+    actual = {}
+    for kind, table in [('container', 'research_container'), ('text', 'research_text'),
+                        ('relation', 'research_relation'), ('candidate', 'research_candidate')]:
+        relation_join = ' JOIN research_relation z ON z.id=r.relation_id' if kind == 'candidate' else ''
+        source = 'z.source_key' if kind == 'candidate' else 'r.source_key'
+        groups = index.execute(f'SELECT {source},r.source_table,COUNT(*) FROM {table} r{relation_join} '
+                               f'GROUP BY {source},r.source_table')
+        for source_key, source_table, count in groups:
+            actual[source_key, kind, source_table] = count
+        duplicates = index.execute(f'SELECT 1 FROM {table} r{relation_join} GROUP BY {source},'
+            'r.source_table,r.pk_column,r.pk_value HAVING COUNT(*)>1 LIMIT 1').fetchone()
+        if duplicates:
+            raise ValueError('duplicate exact source occurrence in '+table)
+    if any(key not in declarations for key in actual):
+        raise ValueError('indexed rowset lacks coverage declaration')
+    if any(actual.get(key, 0) != count for key, count in declarations.items()):
+        raise ValueError('actual indexed rowset differs from coverage count')
 
 
 def canon(value):
@@ -74,6 +261,7 @@ def owner(src,table,record):
 
 def verify_connection(index,manifest,bindings):
     index.row_factory=sqlite3.Row
+    verify_source_declarations(index, manifest)
     provenance_path=Path(bindings['provenance_artifact']);provenance_seal=manifest['provenance_dependency']
     if provenance_path.stat().st_size!=provenance_seal['size_bytes'] or sha256_file(provenance_path)!=provenance_seal['sha256']:raise ValueError('independent snapshot-local provenance seal drift')
     provenance=sqlite3.connect(provenance_path.as_uri()+'?mode=ro&immutable=1',uri=True)
@@ -87,6 +275,8 @@ def verify_connection(index,manifest,bindings):
         source_seals.append({'source_key':key,'artifact':seal})
     nc=nt=nr=nk=0;terminal=[];family_sources={};reuse_rows=[];second_hops={'verified_indexed_targets':0,'verified_projection_reuse_targets':0,'not_index_addressable':0,'target_scope_unknown':0,'locator_not_declared_as_target_primary_native_id':0}
     try:
+        verify_required_source_projections(index, manifest, sources)
+        verify_projection_counts(index)
         for r in index.execute('SELECT * FROM research_container ORDER BY id'):
             src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
             path=got.get('source_path',got.get('source_file_path'));ptr=got.get('pointer',got.get('source_pointer'))

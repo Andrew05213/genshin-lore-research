@@ -4,7 +4,7 @@ import concurrent.futures
 import hashlib
 import json
 import os
-import resource
+from .platform_io import peak_rss_bytes
 import shutil
 import sqlite3
 import subprocess
@@ -95,14 +95,35 @@ def _pointer(ordinal: int, key: str) -> str:
     return f"/@{ordinal}:{escaped}"
 
 
-def iter_textmap_pairs(raw: bytes) -> Iterator[PairOccurrence]:
-    """Yield top-level object pairs while retaining exact JSON token spelling."""
+def iter_textmap_pairs(raw: bytes, *, wanted_keys: set[str] | frozenset[str] | None = None,
+                      _index=None, _reuse_input=False) -> Iterator[PairOccurrence]:
+    """Validate every pair; optionally materialize only selected lexical rows.
 
+    Selection never short-circuits parsing, type/duplicate checks or EOF.
+    With no selection the complete physical rowset is unchanged.
+    """
+
+    if _reuse_input and wanted_keys is not None and _index is None:
+        from .textmap_input_cache import LexicalIndex, cached_index
+        def compile_index():
+            index = LexicalIndex()
+            list(iter_textmap_pairs(raw, wanted_keys=frozenset(), _index=index))
+            return index
+        index = cached_index('builder', raw, compile_index)
+        if index is not None:
+            for ordinal, key, key_json, value_json in index.selected(wanted_keys):
+                record = f'{{"key":{key_json},"text":{value_json}}}'
+                yield PairOccurrence(ordinal, _pointer(ordinal, key), key_json, key,
+                    value_json, json.loads(value_json), sha256_text(key_json),
+                    sha256_text(value_json), sha256_text(record))
+            return
     try:
         text = raw.decode("utf-8-sig")
     except UnicodeDecodeError as exc:
         raise BatchM1Error("TextMap is not valid UTF-8") from exc
     decoder = json.JSONDecoder()
+    if _index is not None:
+        _index.text = text
     position = _skip_ws(text, 0)
     if position >= len(text) or text[position] != "{":
         raise BatchM1Error("TextMap must be a top-level JSON object")
@@ -136,21 +157,24 @@ def iter_textmap_pairs(raw: bytes) -> Iterator[PairOccurrence]:
         if not isinstance(value, str):
             raise BatchM1Error(f"TextMap value {ordinal} is not a string")
         raw_text_json = text[value_start:value_end]
-        raw_record = f'{{"key":{raw_key_json},"text":{raw_text_json}}}'
-        yield PairOccurrence(
-            pair_ordinal=ordinal,
-            pointer=_pointer(ordinal, key),
-            raw_key_json=raw_key_json,
-            key_text=key,
-            raw_text_json=raw_text_json,
-            raw_text=value,
-            raw_key_sha256=sha256_text(raw_key_json),
-            raw_text_sha256=sha256_text(raw_text_json),
-            raw_record_sha256=sha256_text(raw_record),
-        )
+        if wanted_keys is None or key in wanted_keys:
+            raw_record = f'{{"key":{raw_key_json},"text":{raw_text_json}}}'
+            yield PairOccurrence(
+                pair_ordinal=ordinal,
+                pointer=_pointer(ordinal, key),
+                raw_key_json=raw_key_json,
+                key_text=key,
+                raw_text_json=raw_text_json,
+                raw_text=value,
+                raw_key_sha256=sha256_text(raw_key_json),
+                raw_text_sha256=sha256_text(raw_text_json),
+                raw_record_sha256=sha256_text(raw_record),
+            )
         if key in seen:
             raise BatchM1Error(f"duplicate TextMap key observed at pair {ordinal}: {key!r}")
         seen.add(key)
+        if _index is not None:
+            _index.add(ordinal, key, key_start, key_end, value_start, value_end)
         ordinal += 1
         position = _skip_ws(text, value_end)
         if position >= len(text):
@@ -327,8 +351,10 @@ def storage_reservation(
 
 
 def _peak_rss_bytes() -> int:
-    value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    return int(value * 1024 if os.uname().sysname == "Linux" else value)
+    value = peak_rss_bytes()
+    if value is None:
+        raise BatchM1Error("process peak memory metric unavailable on this platform")
+    return value
 
 
 def _benchmark_file(arguments: tuple[str, dict[str, Any]]) -> dict[str, Any]:

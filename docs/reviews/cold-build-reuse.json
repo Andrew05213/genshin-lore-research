@@ -1,0 +1,823 @@
+{
+  "artifact_byte_equivalence": true,
+  "artifact_seals": {
+    "achievement_archive": {
+      "sha256": "e94088cfde6e894236987a7654a24c63ecad3c348d5e18e47eb994cefacb9be0",
+      "size_bytes": 30552064
+    },
+    "activity_archive": {
+      "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+      "size_bytes": 94208
+    },
+    "avatar_config_archive": {
+      "sha256": "0a3e4841d5b888d2ff711a2b36f9aef42d70b7dd872ab78f9257bcd56449d7c2",
+      "size_bytes": 4083712
+    }
+  },
+  "authority_and_existing_wip_unchanged": true,
+  "ci": {
+    "engineering_run": "https://github.com/Andrew05213/genshin-lore-research/actions/runs/40175962412",
+    "implementation_commit": "d28d398075eccc0097428890e166a1d7a26c9993",
+    "status": "See exact linked workflow conclusions; no prior full-build qualification inferred."
+  },
+  "control": {
+    "a_cache_mib": 0,
+    "b_cache_mib": 1024,
+    "input_scope": [
+      "activity_archive",
+      "avatar_config_archive",
+      "achievement_archive"
+    ],
+    "order": [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    "os_cache": "not flushed; application-cold only",
+    "process": "fresh process per run",
+    "repeats_per_arm": 2,
+    "verification": "complete independent source oracle for every component in every run"
+  },
+  "environment": {
+    "memory_bytes": 16762720256,
+    "platform": "Linux-6.8.0-139-generic-x86_64-with-glibc2.39",
+    "python": "Python 3.12.3",
+    "swap_bytes": 4294963200
+  },
+  "failures_retained": [
+    {
+      "error": "source checkout dirty before initial sparse checkout populated",
+      "fix": "populate only newly owned sparse worktree, then independently qualify exact snapshot",
+      "scope": "diagnostic source setup"
+    },
+    {
+      "error": "expected resume diagnostic while malformed policy rejected earlier",
+      "fix": "valid policy drift checks existing receipt; unknown policy remains rejected",
+      "scope": "new synthetic test"
+    },
+    {
+      "error": "setuptools vendored dist-info mistaken for top-level wheel metadata",
+      "fix": "require exactly one top-level metadata; retain vendor metadata; add positive/negative tests",
+      "scope": "tools bundle"
+    }
+  ],
+  "full_35_input_build": "NOT_RUN: current project headroom below the 27 GB fresh peak gate",
+  "implementation_commit": "d28d398075eccc0097428890e166a1d7a26c9993",
+  "implementation_files": {
+    "recipes/build-code-scopes.json": "bf475b8b1f850590b68ff721b8503dfbf69212d1072ac37d9e3ac6b4e146ba7d",
+    "scripts/build.py": "80312f18daf910ae82135b46e4901c0e9a94290d3d3ec20b100916aa1dd6382d",
+    "scripts/build_support.py": "5cb7f347f0e5a12ec08be8b47ea61ff05f5e65169f9173adee6d3ca78b2ec88a",
+    "src/genshin_lore/batch_m1_textmap.py": "ebac1f3e041b82caba4354e863dec0340cb63070a7ae75c48e15b9ab5a1b8da4",
+    "src/genshin_lore/batch_m1_verifier.py": "82f9538d7a28156981ccc1290f7788bf49b07e2bc9bd3d8b13ceb7a648cfd413",
+    "src/genshin_lore/m3_7_1_provider_build.py": "0173132bac52289829a3f4c55e4da404bda6d03808b81d9ba3320896f37b4634",
+    "src/genshin_lore/m3_7_1_provider_verify.py": "53db1d7d00e901123e9fc4238f99820a95b8da84af2317f61be26de98a4cf6e1",
+    "src/genshin_lore/textmap_input_cache.py": "1f588d522f271c34cb224f809195d7bb81db98f2e9689d9d5d8511c67d24a846"
+  },
+  "initial_comparison": [
+    {
+      "label": "a1",
+      "cache_mib": 0,
+      "total_s": 26.045491284225136,
+      "max_rss_kib": 526624,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      }
+    },
+    {
+      "label": "b1",
+      "cache_mib": 1024,
+      "total_s": 16.688358729239553,
+      "max_rss_kib": 1914756,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      }
+    },
+    {
+      "label": "b2",
+      "cache_mib": 1024,
+      "total_s": 16.695506846997887,
+      "max_rss_kib": 1922272,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      }
+    },
+    {
+      "label": "a2",
+      "cache_mib": 0,
+      "total_s": 26.236048575025052,
+      "max_rss_kib": 526864,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      }
+    }
+  ],
+  "model_weights_published": false,
+  "rejected_experiments": {
+    "cache_512_mib": {
+      "hits": 0,
+      "reason": "six-file cyclic eviction; default changed before frozen comparison",
+      "total_s": 34.985700452234596
+    },
+    "deferred_research_indexes": {
+      "decision": "NOT_RETAINED",
+      "reason": "projection plus secondary indexes shows no meaningful gain; oracle variance dominates",
+      "runs": {
+        "index-final-a1": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09707826375961304,
+            "fts_integrity_and_release": 0.13736173091456294,
+            "independent_source_oracle": 5.939924045931548,
+            "post_vacuum_independent_oracle": 4.22037632483989,
+            "projection_with_input_seal_checks": 1.0962564088404179,
+            "secondary_indexes": 0.000005460809916257858,
+            "vacuum": 0.23463172698393464
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 12.044680217746645
+        },
+        "index-final-a2": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09708628710359335,
+            "fts_integrity_and_release": 0.1330553931184113,
+            "independent_source_oracle": 4.1662072371691465,
+            "post_vacuum_independent_oracle": 4.1309996522031724,
+            "projection_with_input_seal_checks": 1.0729292598553002,
+            "secondary_indexes": 0.0000022980384528636932,
+            "vacuum": 0.22948883520439267
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.144363767001778
+        },
+        "index-final-b1": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09913835488259792,
+            "fts_integrity_and_release": 0.1293913652189076,
+            "independent_source_oracle": 4.191459930036217,
+            "post_vacuum_independent_oracle": 4.19091980997473,
+            "projection_with_input_seal_checks": 0.9705111240036786,
+            "secondary_indexes": 0.11124277114868164,
+            "vacuum": 0.23123675817623734
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.212617747019976
+        },
+        "index-final-b2": {
+          "candidate_rows": 9905,
+          "container_rows": 16306,
+          "phase_seconds": {
+            "exclusive_publication": 0.09876881493255496,
+            "fts_integrity_and_release": 0.134816100820899,
+            "independent_source_oracle": 4.0994093348272145,
+            "post_vacuum_independent_oracle": 4.193200322799385,
+            "projection_with_input_seal_checks": 0.9634403670206666,
+            "secondary_indexes": 0.09484641021117568,
+            "vacuum": 0.2230235398747027
+          },
+          "relation_rows": 9937,
+          "text_rows": 42922,
+          "wall_s": 10.089062260929495
+        }
+      }
+    }
+  },
+  "runs": [
+    {
+      "cache_mib": 0,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      },
+      "label": "a1",
+      "max_rss_kib": 523756,
+      "rows": [
+        {
+          "build_s": 4.348805789835751,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.729752756189555
+        },
+        {
+          "build_s": 4.428327450994402,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "0a3e4841d5b888d2ff711a2b36f9aef42d70b7dd872ab78f9257bcd56449d7c2",
+              "size_bytes": 4083712
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.768442395143211
+        },
+        {
+          "build_s": 5.370447730179876,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "e94088cfde6e894236987a7654a24c63ecad3c348d5e18e47eb994cefacb9be0",
+              "size_bytes": 30552064
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 4.22751684486866
+        }
+      ],
+      "total_s": 25.873415669891983
+    },
+    {
+      "cache_mib": 1024,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      },
+      "label": "b1",
+      "max_rss_kib": 1919456,
+      "rows": [
+        {
+          "build_s": 5.79063394991681,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 5.21758349519223
+        },
+        {
+          "build_s": 1.4194073276594281,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "0a3e4841d5b888d2ff711a2b36f9aef42d70b7dd872ab78f9257bcd56449d7c2",
+              "size_bytes": 4083712
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 0.7664834982715547
+        },
+        {
+          "build_s": 2.383354429155588,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "e94088cfde6e894236987a7654a24c63ecad3c348d5e18e47eb994cefacb9be0",
+              "size_bytes": 30552064
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 1.244278864003718
+        }
+      ],
+      "total_s": 16.82521235430613
+    },
+    {
+      "cache_mib": 1024,
+      "cache_stats": {
+        "hits": {
+          "builder": 12,
+          "oracle": 12
+        },
+        "limit": 1073741824,
+        "misses": {
+          "builder": 6,
+          "oracle": 6
+        },
+        "peak_bytes": {
+          "builder": 659709104,
+          "oracle": 659709104
+        }
+      },
+      "label": "b2",
+      "max_rss_kib": 1914224,
+      "rows": [
+        {
+          "build_s": 5.911222903989255,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 5.22522350680083
+        },
+        {
+          "build_s": 1.439135315362364,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "0a3e4841d5b888d2ff711a2b36f9aef42d70b7dd872ab78f9257bcd56449d7c2",
+              "size_bytes": 4083712
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 0.769566347822547
+        },
+        {
+          "build_s": 2.297288779169321,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "e94088cfde6e894236987a7654a24c63ecad3c348d5e18e47eb994cefacb9be0",
+              "size_bytes": 30552064
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 1.2504670107737184
+        }
+      ],
+      "total_s": 16.89357694517821
+    },
+    {
+      "cache_mib": 0,
+      "cache_stats": {
+        "hits": {},
+        "limit": 0,
+        "misses": {},
+        "peak_bytes": {}
+      },
+      "label": "a2",
+      "max_rss_kib": 533292,
+      "rows": [
+        {
+          "build_s": 4.315251035615802,
+          "family": "activity_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+              "size_bytes": 94208
+            },
+            "counts": {
+              "CHS:missing": 2,
+              "EN:missing": 2,
+              "JP:missing": 2,
+              "text_candidates": 0,
+              "text_owners": 2,
+              "text_resolutions": 6,
+              "v1_rows": 2,
+              "v2_rows": 2
+            },
+            "family": "activity_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.8112955424003303
+        },
+        {
+          "build_s": 4.371452155057341,
+          "family": "avatar_config_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "0a3e4841d5b888d2ff711a2b36f9aef42d70b7dd872ab78f9257bcd56449d7c2",
+              "size_bytes": 4083712
+            },
+            "counts": {
+              "CHS:missing": 423,
+              "CHS:resolved_unique": 298,
+              "EN:missing": 428,
+              "EN:resolved_unique": 293,
+              "JP:missing": 428,
+              "JP:resolved_unique": 293,
+              "text_candidates": 884,
+              "text_owners": 721,
+              "text_resolutions": 2163,
+              "v1_rows": 167,
+              "v2_rows": 167
+            },
+            "family": "avatar_config_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 3.819263339973986
+        },
+        {
+          "build_s": 5.339776972774416,
+          "family": "achievement_archive",
+          "verification": {
+            "artifact": {
+              "sha256": "e94088cfde6e894236987a7654a24c63ecad3c348d5e18e47eb994cefacb9be0",
+              "size_bytes": 30552064
+            },
+            "counts": {
+              "CHS:missing": 2190,
+              "CHS:resolved_unique": 3846,
+              "EN:missing": 2190,
+              "EN:resolved_unique": 3846,
+              "JP:missing": 2190,
+              "JP:resolved_unique": 3846,
+              "text_candidates": 11538,
+              "text_owners": 6036,
+              "text_resolutions": 18108,
+              "v1_rows": 2012,
+              "v2_rows": 2012
+            },
+            "family": "achievement_archive",
+            "independent_source_oracle": true,
+            "no_extras_or_omissions": true,
+            "schema_and_all_guard_definitions_exact": true,
+            "status": "PASS"
+          },
+          "verify_s": 4.260967068839818
+        }
+      ],
+      "total_s": 25.9181422078982
+    }
+  ],
+  "scope": "three complete M3 components, not full 35-input rebuild",
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_inputs": {
+    "primaries": {
+      "achievement_archive": {
+        "git_blob_oid": "8564625576e1222b3f72a6be1ea4fb99bf495728",
+        "sha256": "9694153d4550c286fa1f834daa3d868260b4b392dd95f60ce75866083005eb72",
+        "size_bytes": 953167
+      },
+      "activity_archive": {
+        "git_blob_oid": "14606695c5c568e3b954d832a77c93e38317ce4f",
+        "sha256": "7c6a733b4f3f3697e3324f8ae7d280968c9ddf4f1ec1e7732f2f2643143c200d",
+        "size_bytes": 574
+      },
+      "avatar_config_archive": {
+        "git_blob_oid": "b9376cd637d59deb46fd0e7d6dc29c10c1eb3685",
+        "sha256": "a0ac92f1abb48e2ef6552cae2fefad95d51973dec9632f15dc51d85594efcfaf",
+        "size_bytes": 351799
+      }
+    },
+    "textmap": {
+      "TextMap/TextMapCHS.json": {
+        "git_blob_oid": "2f5e815b41f387273d7b8eaf09f00509358e3523",
+        "sha256": "358e586f097d4081b804744375be128fa932406aa2de7cb2410d1de46998bbb8",
+        "size_bytes": 49920231
+      },
+      "TextMap/TextMapEN.json": {
+        "git_blob_oid": "3d6b3fb277f8b517fb535db83d86345a5cc9c3f1",
+        "sha256": "ae115b4a8c2b81ffd2586f892b5e515df5d729b17349b08d31bc1d1424ff01f6",
+        "size_bytes": 55719620
+      },
+      "TextMap/TextMapJP.json": {
+        "git_blob_oid": "1a20cbe328ef7e25bcfe401b797ad0e484337183",
+        "sha256": "6a0f2658cca8db4c3c3789eee65e0466b4afc1933afddf74620c6f4497d5d0d7",
+        "size_bytes": 63445300
+      },
+      "TextMap/TextMap_MediumCHS.json": {
+        "git_blob_oid": "ddf41a92f596f3f3300d7b0901c2b8f61a3ecb6d",
+        "sha256": "199dbfde784867efa49e209ef3c219420c28bf3da6f51a83b6acc84298c0ba66",
+        "size_bytes": 18801724
+      },
+      "TextMap/TextMap_MediumEN.json": {
+        "git_blob_oid": "e9e278567a37220d46e1a86a0c7876f57f71abd6",
+        "sha256": "2a5aaaa5a980f121a6694fde8231c72a35bc32c51bf25d2e45e33aaf2cb02992",
+        "size_bytes": 20704568
+      },
+      "TextMap/TextMap_MediumJP.json": {
+        "git_blob_oid": "ed32257c5b6329e65fef837189d111262d655c87",
+        "sha256": "5d6052854bd9ff1508fefc48973f63c25ef7a73b14a2ca2c953a7b53f5741844",
+        "size_bytes": 23059132
+      }
+    }
+  },
+  "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+  "stage_resume": [
+    {
+      "artifact": {
+        "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+        "size_bytes": 94208
+      },
+      "executed": [
+        "build",
+        "verify"
+      ],
+      "label": "fresh",
+      "seconds": 8.212056800257415
+    },
+    {
+      "artifact": {
+        "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "unchanged",
+      "seconds": 0.046620605047792196
+    },
+    {
+      "artifact": {
+        "sha256": "a1e53f8a9e5d2abe6c71b86610bcaf8f173e023ef27365fecbf53a1bed81a612",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "runtime-change",
+      "seconds": 0.045776080805808306
+    }
+  ],
+  "stage_resume_initial": [
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [
+        "build",
+        "verify"
+      ],
+      "label": "fresh",
+      "seconds": 8.37642466602847
+    },
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "unchanged",
+      "seconds": 0.043083416763693094
+    },
+    {
+      "artifact": {
+        "sha256": "470e831da3c2a3742a70fb0ea9da8b02aede14789ef2dd424c1693d4d5b4d567",
+        "size_bytes": 94208
+      },
+      "executed": [],
+      "label": "runtime-change",
+      "seconds": 0.04283323185518384
+    }
+  ],
+  "status": "PASS_TARGETED_SOURCE_EQUIVALENCE",
+  "tests": {
+    "cache_lifecycle_and_opt_in": {
+      "passed": 21,
+      "status": "PASS"
+    },
+    "cache_scope_trust_after_opt_in": {
+      "passed": 83,
+      "status": "PASS"
+    },
+    "compile": "PASS",
+    "links_license_packaging": "PASS within full suite",
+    "local_full_before_final_cache_lifecycle": {
+      "passed": 595,
+      "seconds": 143.17,
+      "status": "PASS"
+    },
+    "native_hnsw": {
+      "passed": 14,
+      "status": "PASS"
+    },
+    "retained_release_mcp": {
+      "calls": 26,
+      "scope": "new reader over independently qualified retained release, not fresh full-build",
+      "seconds": 26.14950675610453,
+      "status": "PASS",
+      "tools": 5
+    },
+    "six_public_help": "PASS",
+    "final_targeted": {
+      "status": "PASS",
+      "passed": 50,
+      "seconds": 1.64,
+      "includes": "links, Apache metadata, all six help checks, scoped resume, input cache, tools bundle"
+    },
+    "implementation_ubuntu_ci": {
+      "status": "PASS",
+      "passed": 598,
+      "seconds": 259.68,
+      "job_id": 121116625517,
+      "commit": "d28d398075eccc0097428890e166a1d7a26c9993"
+    }
+  },
+  "tools_bundle": {
+    "ci_run": "https://github.com/Andrew05213/genshin-lore-research/actions/runs/40175962463",
+    "local_linux_archive_sha256": "19ffbf63ed89097b0487217fbbc5eeb8e71f38f91e0099010da63c8d9a6725f7",
+    "local_linux_archive_size_bytes": 76930917,
+    "local_linux_wheels": 55,
+    "project_embedding_weights_included": false,
+    "project_game_artifacts_included": false,
+    "project_vector_cache_included": false,
+    "source_commit": "d28d398075eccc0097428890e166a1d7a26c9993",
+    "status": "PASS_LINUX_AND_WINDOWS_OFFLINE_INSTALL",
+    "third_party_fixtures": "Unmodified numpy wheels include five .npy test fixtures; onnxruntime includes three tiny example ONNX models. These are dependency test data, not project weights/vectors. The initial local diagnostic model_files=0 referred to project payload, not all dependency fixtures."
+  },
+  "vectors_published": false,
+  "storage": {
+    "before_allocated_bytes": 83043573760,
+    "after_allocated_bytes": 87472381952,
+    "hard_limit_bytes": 90000000000,
+    "warning_bytes": 77309411328,
+    "remaining_bytes": 2527618048,
+    "host_free_bytes": 130616602624,
+    "scope": "same project roots, related tmp/cache, device/inode deduplicated; includes retained new test fixtures, archives, dependency environments and independent build outputs",
+    "unknown": []
+  },
+  "review": {
+    "scope": "actual diff, explicit ownership, independent parse namespaces, exact source oracle/byte equality, cache lifetime, offline Linux/Windows installation, unchanged current/WIP",
+    "unmeasured": "Full 35-input build and total pipeline speedup remain NOT_RUN. No remote merge or deployed runtime change."
+  }
+}

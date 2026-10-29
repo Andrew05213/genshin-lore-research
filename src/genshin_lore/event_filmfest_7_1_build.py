@@ -41,10 +41,12 @@ def _owners(row, specs):
             raise ValueError('Filmfest undeclared owner shape')
 
 
-def _target_candidates(source_root, qt_artifact, scope):
-    accepted = json.loads(QT_MANIFEST.read_text())
+def discover_target_candidates(source_root, qt_artifact, scope, *, qt_manifest_path=None):
+    """Derive a new scope's targets from its explicitly bound Quest/Talk input."""
+    manifest_path = Path(qt_manifest_path) if qt_manifest_path is not None else QT_MANIFEST
+    accepted = json.loads(manifest_path.read_text())
     binding = scope['talk_candidate_namespace']
-    if (binding['accepted_manifest_sha256'] != sha(QT_MANIFEST)
+    if (binding['accepted_manifest_sha256'] != sha(manifest_path)
             or binding['artifact'] != accepted['artifact']
             or binding['contract'] != accepted['contract']
             or binding['parser'] != accepted['parser_build_id']
@@ -82,12 +84,18 @@ def _target_candidates(source_root, qt_artifact, scope):
                                'target_run_id': accepted['ingest_run_id'],
                                'target_occurrence_id': item['id']})
     db.close()
+    return candidates
+
+
+def _target_candidates(source_root, qt_artifact, scope, *, qt_manifest_path=None):
+    candidates = discover_target_candidates(
+        source_root, qt_artifact, scope, qt_manifest_path=qt_manifest_path)
     if candidates != scope['talk_candidates']:
         raise ValueError('Filmfest complete accepted Talk candidate set drift')
     return candidates
 
 
-def project(source_root, scope_path, qt_artifact):
+def project(source_root, scope_path, qt_artifact, *, qt_manifest_path=None):
     source_root, scope_path = Path(source_root), Path(scope_path)
     scope = json.loads(scope_path.read_text())
     check_files(source_root, scope)
@@ -100,7 +108,8 @@ def project(source_root, scope_path, qt_artifact):
             or {s['path'] for s in scope['sources']} != {s['path'] for s in historical['sources']}
             or len(scope['files']) != 15):
         raise ValueError('Filmfest exact historical source boundary')
-    candidates = _target_candidates(source_root, qt_artifact, scope)
+    candidates = _target_candidates(source_root, qt_artifact, scope,
+                                    qt_manifest_path=qt_manifest_path)
     implementation = {name: sha(ROOT / name) for name in (
         'src/genshin_lore/event_filmfest_7_1_build.py',
         'src/genshin_lore/event_7_1_source.py',
@@ -242,12 +251,13 @@ def project(source_root, scope_path, qt_artifact):
     return expected, release
 
 
-def build(source_root, scope_path, qt_artifact, output):
+def build(source_root, scope_path, qt_artifact, output, *, qt_manifest_path=None):
     output = Path(output)
     sidecars = [Path(str(output) + suffix) for suffix in ('-wal', '-shm', '-journal')]
     if output.exists() or any(path.exists() for path in sidecars):
         raise FileExistsError('Filmfest output/sidecar already exists')
-    expected, release = project(source_root, scope_path, qt_artifact)
+    expected, release = project(source_root, scope_path, qt_artifact,
+                                qt_manifest_path=qt_manifest_path)
     owned = None
     connection = None
     try:
@@ -278,8 +288,4 @@ def build(source_root, scope_path, qt_artifact, output):
     except Exception:
         if connection is not None:
             connection.close()
-        if owned is not None and output.exists():
-            stat = output.stat()
-            if (stat.st_dev, stat.st_ino) == owned:
-                output.unlink()
         raise

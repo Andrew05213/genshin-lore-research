@@ -16,7 +16,10 @@ SCHEMA = REPO / 'schemas/native21-7.1-projection-v1.sql'
 HISTORY = REPO / 'manifests/native-archive/high-value-open-selection.json'
 EVENT16 = REPO / 'manifests/event-narrative-7.1/component-16-physical-runtime-v1.json'
 QUEST_TALK = REPO / 'manifests/quest-talk-7.1/standalone-candidate.json'
-TALK_ARTIFACT = Path(json.loads(QUEST_TALK.read_text())['local_artifact_path'])
+def dependency_manifests(metadata_root=None):
+    base = Path(metadata_root) if metadata_root is not None else REPO
+    return base / EVENT16.relative_to(REPO), base / QUEST_TALK.relative_to(REPO)
+
 TABLES = ('row_occurrence', 'text_slot', 'text_candidate', 'relation_locator', 'relation_candidate')
 
 
@@ -49,24 +52,26 @@ def leaf_values(row, field, shape='scalar'):
     yield from walk(row, 0, '')
 
 
-def _accepted(scope):
-    event = json.loads(EVENT16.read_text())
-    talk = json.loads(QUEST_TALK.read_text())
+def _accepted(scope, metadata_root=None):
+    event_manifest, talk_manifest = dependency_manifests(metadata_root)
+    event = json.loads(event_manifest.read_text())
+    talk = json.loads(talk_manifest.read_text())
+    talk_artifact = Path(talk['local_artifact_path'])
     event_path = Path(event['artifact']['path_machine_local'])
-    if (sha(EVENT16) != scope['event16_manifest_sha256'] or
+    if (sha(event_manifest) != scope['event16_manifest_sha256'] or
             event['artifact'] != scope['event16_artifact'] or
             event['parser_build_id'] != scope['event16_parser'] or
             event['ingest_run_id'] != scope['event16_run'] or
             (event_path.stat().st_size, sha(event_path)) !=
             (event['artifact']['size_bytes'], event['artifact']['sha256'])):
         raise ValueError('Native26 accepted Event16 identity')
-    if (TALK_ARTIFACT.stat().st_size, sha(TALK_ARTIFACT)) != (
+    if (talk_artifact.stat().st_size, sha(talk_artifact)) != (
             talk['artifact']['size_bytes'], talk['artifact']['sha256']):
         raise ValueError('Native26 accepted Quest/Talk identity')
     return event, event_path, talk
 
 
-def project(root: Path, scope_path: Path):
+def project(root: Path, scope_path: Path, *, metadata_root=None):
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
     historical = json.loads(HISTORY.read_text())
@@ -92,9 +97,11 @@ def project(root: Path, scope_path: Path):
                 or current.get('relations', []) != old.get('relations', [])
                 or current['historical_field_classification'] != old['field_classification']):
             raise ValueError('Native26 per-source historical declaration drift: ' + current['path'])
-    event, event_path, talk = _accepted(scope)
-    implementation = {str(path.relative_to(REPO)): sha(path) for path in
-                      (Path(__file__), SCHEMA, HISTORY, EVENT16, QUEST_TALK)}
+    event, event_path, talk = _accepted(scope, metadata_root)
+    implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
+                      (Path(__file__), SCHEMA, HISTORY)}
+    implementation.update({original.relative_to(REPO).as_posix(): sha(actual)
+                           for original, actual in zip((EVENT16, QUEST_TALK), dependency_manifests(metadata_root))})
     parser = oid('parser', implementation)
     run = oid('run', parser, sha(scope_path), scope['snapshot_id'])
     event_reuse = {item['source_pointer']: item for item in scope['event16_reuse_targets']}
@@ -165,7 +172,7 @@ def project(root: Path, scope_path: Path):
                     'native_archive', 'native26-7.1-physical-text-candidate-v1', parser, run,
                     target_id, path, pointer, hashlib.sha256(raw.encode()).hexdigest()))
     talk_targets = defaultdict(list)
-    with sqlite3.connect(TALK_ARTIFACT) as db:
+    with sqlite3.connect(talk['local_artifact_path']) as db:
         for rid, path, pointer, native, digest in db.execute(
                 "SELECT id,source_path,pointer,native_id,raw_sha256 FROM physical_container WHERE kind='talk_root' AND ingest_run_id=?",
                 (talk['ingest_run_id'],)):
@@ -269,14 +276,15 @@ def project(root: Path, scope_path: Path):
     return scope, expected, release
 
 
-def build(root: Path, scope_path: Path, output: Path):
+def build(root: Path, scope_path: Path, output: Path, *, metadata_root=None):
+    event_manifest, talk_manifest = dependency_manifests(metadata_root)
     root, scope_path, output = Path(root).resolve(), Path(scope_path).resolve(), Path(output).absolute()
     scope = json.loads(scope_path.read_text())
     inputs = [('source_root', root), ('scope', scope_path), ('schema', SCHEMA),
-              ('history', HISTORY), ('event16', EVENT16), ('quest_talk', QUEST_TALK)]
+              ('history', HISTORY), ('event16', event_manifest), ('quest_talk', talk_manifest)]
     inputs += [(str(i), root / item['path']) for i, item in enumerate(scope['files'])]
     assert_output_paths(output, inputs=inputs)
-    _, rows, release = project(root, scope_path)
+    _, rows, release = project(root, scope_path, metadata_root=metadata_root)
     fd, stage = create_private_staging(output, prefix='.native26-71-')
     owned = stage.stat().st_dev, stage.stat().st_ino
     connection = None
@@ -306,5 +314,3 @@ def build(root: Path, scope_path: Path, output: Path):
     finally:
         if connection is not None:
             connection.close()
-        if stage.exists() and (stage.stat().st_dev, stage.stat().st_ino) == owned:
-            stage.unlink()
