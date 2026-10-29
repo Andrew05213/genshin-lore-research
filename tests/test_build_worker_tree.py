@@ -142,7 +142,7 @@ child.wait()
         if failure=='worker':assert caught.value.returncode==7
         elapsed=time.monotonic()-failed_at[0]
         states={name:p.snapshot() for name,p in probes.items()}
-        assert not any(s['running'] for s in states.values()), states
+        assert not any(s['running'] for s in states.values()), json.dumps(states)
         assert all(not (output/name/'late-output').exists() for name in worker_names)
         if ignore_term and os.name!='nt':assert elapsed>=.15  # TERM-resistant leaf required escalation.
         records=[json.loads(p.read_text()) for p in output.glob('*-worker-*.json')]
@@ -202,3 +202,44 @@ def test_spawn_failure_closes_unused_windows_job(tmp_path,monkeypatch):
     with pytest.raises(OSError,match='spawn failure'):
         build_workers.WorkerTree([sys.executable,'unused.py'],cwd=tmp_path)
     assert jobs[0].closed
+
+
+@pytest.mark.parametrize('wait_result', [0,258])
+def test_windows_job_waits_for_original_handles_after_accounting_zero(wait_result):
+    events=[]
+    class API:
+        def TerminateJobObject(self,handle,code):events.append('terminate');return 1
+        def QueryInformationJobObject(self,handle,kind,buffer,size,unused):
+            assert kind==1
+            ctypes.cast(buffer,ctypes.POINTER(build_workers._Accounting)).contents.active=0
+            events.append('accounting-zero');return 1
+        def WaitForSingleObject(self,handle,timeout):
+            assert handle==123 and 0<=timeout<=5000
+            events.append('wait-original');return wait_result
+        def CloseHandle(self,handle):events.append(('close',handle));return 1
+    job=object.__new__(build_workers._WindowsJob);job.api=API();job.handle=456
+    def original_handles():events.append('retain-original');return [123]
+    job.process_handles=original_handles
+    if wait_result==258:
+        with pytest.raises(TimeoutError,match='descendant did not finish'):job.stop()
+    else:job.stop()
+    assert events==['retain-original','terminate','accounting-zero','wait-original',('close',123)]
+
+
+def test_windows_job_snapshot_excludes_recycled_pid():
+    closed=[]
+    class API:
+        def QueryInformationJobObject(self,handle,kind,buffer,size,unused):
+            assert kind==3
+            words=ctypes.cast(buffer,ctypes.POINTER(ctypes.c_uint32));words[0]=2;words[1]=2
+            pids=ctypes.cast(ctypes.addressof(buffer._obj)+8,ctypes.POINTER(ctypes.c_size_t))
+            pids[0]=21;pids[1]=22
+            return 1
+        def OpenProcess(self,rights,inherit,pid):return pid+100
+        def IsProcessInJob(self,process,handle,belongs):
+            ctypes.cast(belongs,ctypes.POINTER(ctypes.c_int)).contents.value=int(process==121)
+            return 1
+        def CloseHandle(self,handle):closed.append(handle);return 1
+    job=object.__new__(build_workers._WindowsJob);job.api=API();job.handle=456
+    assert job.process_handles()==[121]
+    assert closed==[122]

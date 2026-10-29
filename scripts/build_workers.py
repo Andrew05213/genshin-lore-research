@@ -64,6 +64,8 @@ class _WindowsJob:
             'AssignProcessToJobObject': (ctypes.c_int, [handle, handle]),
             'TerminateJobObject': (ctypes.c_int, [handle, uint]),
             'QueryInformationJobObject': (ctypes.c_int, [handle, ctypes.c_int, pointer, uint, pointer]),
+            'IsProcessInJob': (ctypes.c_int, [handle, handle, pointer]),
+            'WaitForSingleObject': (uint, [handle, uint]),
             'CloseHandle': (ctypes.c_int, [handle]),
         }
         for name, (result, arguments) in signatures.items():
@@ -92,19 +94,70 @@ class _WindowsJob:
         finally:
             self.api.CloseHandle(process)
 
+    def process_handles(self):
+        # Hold original process objects before requesting termination. Job
+        # accounting can reach zero before their wait handles are signaled.
+        capacity = 16
+        while True:
+            class ProcessList(ctypes.Structure):
+                _fields_ = [('assigned', ctypes.c_uint32), ('count', ctypes.c_uint32),
+                            ('pids', ctypes.c_size_t * capacity)]
+            members = ProcessList()
+            if self.api.QueryInformationJobObject(self.handle, 3, ctypes.byref(members), ctypes.sizeof(members), None):
+                break
+            error = ctypes.get_last_error()
+            if error != 234:  # ERROR_MORE_DATA
+                raise ctypes.WinError(error)
+            capacity = max(capacity * 2, members.assigned)
+        handles = []
+        try:
+            for pid in members.pids[:members.count]:
+                process = self.api.OpenProcess(0x00100000 | 0x1000, False, pid)
+                if not process:
+                    error = ctypes.get_last_error()
+                    if error == 87:  # Exited and gone between enumeration/open.
+                        continue
+                    raise ctypes.WinError(error)
+                handles.append(process)
+                belongs = ctypes.c_int()
+                if not self.api.IsProcessInJob(process, self.handle, ctypes.byref(belongs)):
+                    raise ctypes.WinError(ctypes.get_last_error())
+                if not belongs.value:  # Recycled PID, never wait/kill another job.
+                    self.api.CloseHandle(handles.pop())
+            return handles
+        except BaseException:
+            for process in handles:
+                self.api.CloseHandle(process)
+            raise
+
     def stop(self):
+        deadline = time.monotonic() + KILL_WAIT_SECONDS
+        handles = self.process_handles()
+        try:
+            self._stop_and_wait(deadline, handles)
+        finally:
+            for process in handles:
+                self.api.CloseHandle(process)
+
+    def _stop_and_wait(self, deadline, handles):
         if not self.api.TerminateJobObject(self.handle, 1):
             raise ctypes.WinError(ctypes.get_last_error())
-        deadline = time.monotonic() + KILL_WAIT_SECONDS
         while True:
             accounting = _Accounting()
             if not self.api.QueryInformationJobObject(self.handle, 1, ctypes.byref(accounting), ctypes.sizeof(accounting), None):
                 raise ctypes.WinError(ctypes.get_last_error())
             if accounting.active == 0:
-                return
+                break
             if time.monotonic() >= deadline:
                 raise TimeoutError('Windows build worker job did not stop')
             time.sleep(.01)
+        for process in handles:
+            remaining_ms = max(0, int((deadline - time.monotonic()) * 1000))
+            result = self.api.WaitForSingleObject(process, remaining_ms)
+            if result == 258:
+                raise TimeoutError('Windows build descendant did not finish termination')
+            if result != 0:
+                raise ctypes.WinError(ctypes.get_last_error())
 
     def close(self):
         if self.handle:
