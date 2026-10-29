@@ -22,6 +22,7 @@ from genshin_lore.semantic_discovery import sha256_file, tree_sha256
 ROOT = Path(__file__).resolve().parents[2]
 MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 REVISION = "faf4aa4225822f3bc6376869cb1164e8e3feedd0"
+INFERENCE_BATCH_SIZE = 32
 
 
 def default_embedding_threads():
@@ -41,16 +42,19 @@ def windows(text, size=400, stride=360):
             break
 
 
-def embedding_batches(texts, batch_size=64):
+def embedding_batches(texts, batch_size=64, *, lengths=None):
     """Reduce padding while retaining each window's original vector ID."""
     if batch_size <= 0:
         raise ValueError("embedding batch size must be positive")
-    order = sorted(range(len(texts)), key=lambda i: (len(texts[i]), i))
+    if lengths is not None and (len(lengths) != len(texts) or
+                               any(type(n) is not int or n <= 0 for n in lengths)):
+        raise ValueError('invalid embedding token lengths')
+    order = sorted(range(len(texts)), key=lambda i: (len(texts[i]) if lengths is None else lengths[i], i))
     for start in range(0, len(order), batch_size):
         yield order[start : start + batch_size]
 
 
-def embed_windows(model, texts, vectors, *, batch_size=64, progress=None):
+def embed_windows(model, texts, vectors, *, batch_size=64, progress=None, use_token_lengths=False):
     """Infer exact text once in this call; retain every physical vector row.
 
     Groups store only text references and original IDs. Normalized vectors are
@@ -62,8 +66,20 @@ def embed_windows(model, texts, vectors, *, batch_size=64, progress=None):
     for vector_id, text in enumerate(texts):
         occurrences.setdefault(text, []).append(vector_id)
     unique_texts = list(occurrences)
+    lengths = None
+    if use_token_lengths:
+        lengths = []
+        # FastEmbed's pinned backend exposes its configured tokenizer. Count
+        # non-padding tokens using that same truncation/normalization, in
+        # bounded chunks; do not retain all encodings or change model input.
+        for start in range(0, len(unique_texts), 256):
+            chunk = unique_texts[start:start + 256]
+            encodings = model.model.tokenize(chunk)
+            if len(encodings) != len(chunk):
+                raise ValueError('tokenizer length row count differs from input')
+            lengths.extend(sum(encoding.attention_mask) for encoding in encodings)
     done = inferred = 0
-    for batch_number, ids in enumerate(embedding_batches(unique_texts, batch_size)):
+    for batch_number, ids in enumerate(embedding_batches(unique_texts, batch_size, lengths=lengths)):
         batch = np.asarray(
             list(model.embed([unique_texts[i] for i in ids], batch_size=batch_size)),
             dtype=np.float32,
@@ -251,7 +267,8 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes, embedd
                 ),
                 flush=True,
             )
-    inference = embed_windows(model, inputs, vectors, progress=progress)
+    inference = embed_windows(model, inputs, vectors, batch_size=INFERENCE_BATCH_SIZE,
+                              progress=progress, use_token_lengths=True)
     vectors.flush()
     embedded_at = time.perf_counter()
     del model
@@ -336,8 +353,8 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes, embedd
         "vectors_sha256": sha256_file(output / "vectors.npy"),
         "source_counts": counts,
         "seconds": time.perf_counter() - started,
-        "build_parameters": {"embedding_threads": embedding_threads, "batch_size": 64,
-                             "inference_order": "stable-character-length-v1",
+        "build_parameters": {"embedding_threads": embedding_threads, "batch_size": INFERENCE_BATCH_SIZE,
+                             "inference_order": "stable-token-length-v1",
                              "vector_id_order": "original-physical-source-order",
                              "ann_insertion_order": "original-physical-source-order"},
         "dependencies": {
@@ -345,8 +362,9 @@ def build(index, output, cache, *, scope_path, available_allocated_bytes, embedd
         },
         "hnsw_parameters": {"M": 12, "ef_construction": 80, "seed": 100, "threads": 1},
         "embedding_batching": {
-            "order": "length_then_first_vector_id",
-            "batch_size": 64,
+            "order": "nonpadding_tokens_then_first_vector_id",
+            "token_count_batch_size": 256,
+            "batch_size": INFERENCE_BATCH_SIZE,
             "reuse": "exact_text_within_current_build",
             **inference,
         },

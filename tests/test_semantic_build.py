@@ -66,7 +66,10 @@ class FixtureIndex:
 
 class FixtureEmbedding:
     def __init__(self, **kwargs):
-        pass
+        self.model = self
+
+    def tokenize(self, texts):
+        return [SimpleNamespace(attention_mask=[1] * len(text)) for text in texts]
 
     def embed(self, texts, **kwargs):
         for text in texts:
@@ -91,6 +94,42 @@ def test_embedding_batches_are_stable_complete_and_bounded():
 def test_embedding_batches_reject_nonpositive_bounds(batch_size):
     with pytest.raises(ValueError, match="batch size"):
         list(builder.embedding_batches(["合成"], batch_size=batch_size))
+
+
+def test_token_batches_ignore_padding_and_preserve_original_vector_ids():
+    class Tokens(FixtureEmbedding):
+        def __init__(self):
+            super().__init__()
+            self.calls=[]
+            self.tokens=[]
+        def tokenize(self,texts):
+            self.tokens.extend(texts)
+            sizes={'long synthetic':2,'短':5}
+            return [SimpleNamespace(attention_mask=[1]*sizes[t]+[0]*(8-sizes[t])) for t in texts]
+        def embed(self,texts,**kwargs):
+            self.calls.extend(texts)
+            return super().embed(texts,**kwargs)
+    texts=['短','long synthetic','短']
+    model=Tokens();vectors=np.empty((3,384),dtype=np.float32)
+    result=builder.embed_windows(model,texts,vectors,batch_size=1,use_token_lengths=True)
+    assert model.tokens==['短','long synthetic']
+    assert model.calls==['long synthetic','短']
+    expected=np.asarray(list(FixtureEmbedding().embed(texts)))
+    assert np.array_equal(vectors,expected)
+    assert result['reused_occurrence_windows']==1
+
+
+@pytest.mark.parametrize('lengths',[[1], [0,1], [-1,1], [True,1]])
+def test_token_length_metadata_cannot_drop_or_invent_rows(lengths):
+    with pytest.raises(ValueError,match='token lengths'):
+        list(builder.embedding_batches(['a','b'],lengths=lengths))
+
+
+def test_tokenization_row_loss_is_rejected():
+    class Lost(FixtureEmbedding):
+        def tokenize(self,texts):return []
+    with pytest.raises(ValueError,match='row count'):
+        builder.embed_windows(Lost(),['synthetic'],np.empty((1,384),dtype=np.float32),use_token_lengths=True)
 
 
 def test_length_batches_reduce_padding_without_a_timing_threshold():

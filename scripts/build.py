@@ -1479,6 +1479,96 @@ class Rebuild:
         )
 
 
+def run_stages(job, selected, cache_mib, jobs):
+    """Overlap fixed independent R0/Quest chains; join before their consumers.
+
+    Separate processes isolate SQLite writers, GC and input caches. All other
+    stages retain their declared order and their independent qualification.
+    """
+    from genshin_lore.textmap_input_cache import textmap_session
+
+    if type(jobs) is not int or jobs not in (1, 2, 3):
+        raise ValueError('build jobs must be 1, 2 or 3')
+    workers = {}
+    completed = False
+    started = time.monotonic()
+    outputs = {
+        'r0': ('r0',),
+        'quest': ('quest_talk', 'quest_narrative', 'native_message',
+                  'quest_review', 'quest_review_binding', 'talk_physical'),
+    }
+    try:
+        for stage in ('r0', 'quest')[:jobs - 1] if len(selected) > 1 else ():
+            if stage not in selected:
+                continue
+            token = str(time.time_ns())
+            entry = {'process': None, 'streams': [], 'command': [],
+                     'record': job.output / f'{stage}-worker-{token}.json',
+                     'observed_finish_seconds': None}
+            workers[stage] = entry
+            log_paths = [job.output / f'{stage}-worker-{token}.{kind}.log'
+                         for kind in ('stdout', 'stderr')]
+            entry['paths'] = log_paths
+            for path in log_paths:
+                entry['streams'].append(path.open('x', encoding='utf-8'))
+            command = [sys.executable, str(ROOT / 'scripts/build.py'),
+                       '--source', str(job.source), '--output-root', str(job.output),
+                       '--stage', stage, '--jobs', '1', '--textmap-cache-mib', '0']
+            if job.history is not None:
+                command += ['--historical-source', str(job.history)]
+            entry['command'] = command
+            env = {**os.environ, 'PYTHONPATH': str(ROOT / 'src'), 'PYTHONUTF8': '1'}
+            worker = entry['process'] = subprocess.Popen(command, cwd=ROOT, env=env,
+                                      stdin=subprocess.DEVNULL,
+                                      stdout=entry['streams'][0], stderr=entry['streams'][1])
+            print('STARTED independent worker', stage, worker.pid, flush=True)
+        for stage in selected:
+            for entry in workers.values():
+                worker = entry['process']
+                code = worker.poll()
+                if code is not None and entry['observed_finish_seconds'] is None:
+                    entry['observed_finish_seconds'] = time.monotonic() - started
+                if code not in (None, 0):
+                    raise subprocess.CalledProcessError(worker.returncode, worker.args)
+            if stage in workers:
+                worker = workers[stage]['process']
+                code = worker.wait()
+                if workers[stage]['observed_finish_seconds'] is None:
+                    workers[stage]['observed_finish_seconds'] = time.monotonic() - started
+                if code != 0:
+                    raise subprocess.CalledProcessError(code, worker.args)
+                # Exit zero is insufficient: independently qualify the actual
+                # artifact, exact stage identity and complete verifier receipt.
+                job.dependency_inputs(*outputs[stage])
+                continue
+            with textmap_session(cache_mib if stage == 'core' else 0) as cache:
+                getattr(job, stage)()
+            if stage == 'core':
+                print(json.dumps({'stage': 'textmap_input_cache', **{
+                    k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
+        completed = True
+    finally:
+        for entry in workers.values():
+            worker = entry['process']
+            if worker is not None and worker.poll() is None:
+                worker.terminate()
+                try:
+                    worker.wait(timeout=30)
+                except subprocess.TimeoutExpired:
+                    worker.kill()
+                    worker.wait()
+            for stream in entry['streams']:
+                stream.close()
+            write(entry['record'], {
+                'command': entry['command'], 'parent_completed': completed,
+                'worker_returncode': worker.returncode if worker else None,
+                'parent_elapsed_seconds': time.monotonic() - started,
+                'worker_observed_finish_seconds': entry['observed_finish_seconds'],
+                'stdout': str(entry['paths'][0]), 'stderr': str(entry['paths'][1]),
+                'failure_outputs_retained': True,
+            })
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
@@ -1503,6 +1593,8 @@ def main():
                         help="Positive ONNX build thread count; default Linux <=4 affinity-visible CPUs, other platforms 2")
     parser.add_argument('--textmap-cache-mib', type=int, default=1024,
                         help='Transient lexical input cache per independent reader, 0..1024 MiB; 0 disables')
+    parser.add_argument('--jobs', type=int, choices=(1, 2, 3), default=2,
+                        help='Full build only: 2 overlaps R0; 3 also overlaps Quest; 1 runs serially')
     parser.add_argument(
         "--available-allocated-bytes",
         type=int,
@@ -1583,15 +1675,7 @@ def main():
         if args.stage == "all"
         else (args.stage,)
     )
-    from genshin_lore.textmap_input_cache import textmap_session
-    for stage in selected:
-        # Only M3 opts in. Release its retained input before the memory-heavy
-        # independent Research rowset oracle and semantic stages begin.
-        with textmap_session(args.textmap_cache_mib if stage == 'core' else 0) as cache:
-            getattr(job, stage)()
-        if stage == 'core':
-            print(json.dumps({'stage': 'textmap_input_cache', **{
-                k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
+    run_stages(job, selected, args.textmap_cache_mib, args.jobs)
 
 
 if __name__ == "__main__":

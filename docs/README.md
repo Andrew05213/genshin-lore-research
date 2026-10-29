@@ -9,6 +9,7 @@
 | [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
+| [完整冷构建性能](cold-build-throughput.md) | 默认向量单命令对照、固定阶段重叠、token 调度、完整来源/向量核对与资源代价 |
 | [Linux 构建性能](linux-build-performance.md) | 实际耗时、embedding 调度优化、等价验证及未采用的索引实验 |
 | [冷构建与阶段复用](build-reuse.md) | 进程内独立输入缓存、v3 回执、同条件耗时及未执行范围 |
 | [非向量完整构建性能](nonvector-build-performance.md) | 两次新目录完整来源构建、保留/放弃的优化、完整核验与实际耗时 |
