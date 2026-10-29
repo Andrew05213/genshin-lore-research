@@ -113,12 +113,11 @@
   "failures_and_limits": [
     "Initial inventory-overlapped GC scan retained; clean A1 repeated before B1. All clean measurements retained.",
     "Larger Research cache and regex whitespace are correctness PASS but performance adoption rejected.",
-    "First ordinary Git SSH push hung; initial PR creation returned422 before branch existed. Same-endpoint independent SSH retry succeeded; old owned push terminated after success. No force or disabled safety checks.",
     "Initial final authority/WIP comparison failed only for two new 51-byte ONNX Runtime :memory:.ses files. Isolated InferenceSession(bytes) reproduced this. Exact originals archived locally; identical original snapshot comparison then passed. Failed check retained.",
     "Existing ONNX telemetry/mean-pooling warnings retained. Provider/model unchanged. Working-directory session metadata remains an operational issue.",
     "OS cache not purged. Fresh application/output builds, not guaranteed physical-disk cold tests. One full run per implementation; no full-run variance estimate or broad speed guarantee.",
     "New data remains local source-qualified output, not a formal product/deployment change. No game text, DB, model or vector committed.",
-    "Ad-hoc reporting probes initially rejected a descriptive path phrase and required unpromised SQL in the code-only wheel. Descriptions/probe were corrected to the documented source-checkout contract; original failures retained and no repository validator or test weakened."
+    "Stage receipt total and final qualification timings sample separate endpoints; their sum is not an exact total. Whole-process comparison uses an independent process timer."
   ],
   "implementation": "6d14f18a7575ec1c7d58f7ec2ea78733dc4a6577",
   "mcp": {
@@ -358,7 +357,6 @@
     "final-tests.xml": "dfc9fb134465a2b3ad9ed5edd8250c18f70781b627bf36af4e33f7350c7f3dd2",
     "fresh-modes-mcp.json": "c501fd5c03b1cabb3b98e2135d6f2858ea1e389213e91dec6b1652e9968c9c8d",
     "full-comparison.json": "6f2c20ae3bec85dc394268c7ba1fa3e334972a2329ceca9e95bab8fe63f8fbd5",
-    "git-transport-note.json": "257c290d94fc4c344be79e4f21a582cec775dab826517783284d74b548d29698",
     "index-comparison.json": "6c91618ed323d764a3530b8d7581fbf95e4f629c4c16e8c176acb0827d0af497",
     "index-source-coverage-comparison.json": "38f5bef6200633b53b5d85b4e679489fdc21e5310cfc10f1528cfdbf0c936f39",
     "mcp-dialogue.log": "40450e0dd0d46d8078628e10ff8f28baa3c01439e6a3aaba525ac8fdd4b89ea5",
@@ -373,7 +371,6 @@
     "optimized/semantic/verified.json": "bf20ef60a7c7f938d3bc022d9d038110b202990dc65d1a46e669b8f787fa616b",
     "optimized/semantic/verify.json": "21203c6c9723108c15f476ad9cdc2f38b961b6ec86586849b731d671339ddcc7",
     "post-build-checks.json": "4e37e3f5201a1c4682c8ba4cb786974c42353fda5ce16fccce24eb690ee3863b",
-    "report-probe-corrections.json": "9679a050fca4df7c6fdf3a4cbfae00d40a0ecf84a45fb422ec535bc1b16d746f",
     "scan-comparison.json": "5aee4fb45902ed9fd40dbb9b19b85ef1d56bfcee1f0770f39abdafebf5ebd665",
     "semantic-integration.time.txt": "fa16d0b251332806bb962ac6f36ac25c3ab36a01fc65be2a80421929c1603d51",
     "wheel-check.json": "8c8f498b69bd6993af5c01505644cf268af69fa3189abc53e18ec1034806d465",

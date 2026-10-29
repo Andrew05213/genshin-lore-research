@@ -23,6 +23,10 @@ MCP 在 Windows 使用固定 SDK 的公开 stdio，在 POSIX 保留已有已验�
 
 R0 扫描器、旧 inventory 兼容入口和容量发现共用 `batch_space.temporary_root`：Windows 默认使用系统临时目录，显式自定义工作目录保留。R0 的合成入口测试实际执行 `Rebuild.r0()`、扫描、SQLite 发布和独立来源行集 oracle；仅模拟合成来源无法具备的固定 Git 身份，不替换 builder 或行集检查。R0 核验失败时保留本次 staging、已发布数据库和 sidecar，不生成成功回执；已有产物拒绝覆盖。
 
-历史原地数据库晋级工具不是公开的从源码新建路径；本次不承诺其 Windows 文件替换语义。semantic 依赖单独安装；若 `hnswlib` 缺少适用 wheel，构建其扩展需要 MSVC C++ Build Tools，不能把缺依赖静默当作向量构建成功。
+原生 Windows 的完整 35 输入及默认向量构建记录对应 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7`。后续 Linux 优化的完整来源验证见 [性能记录](../nonvector-build-performance.md)，其 Windows CI 结果不能代替相同实现的 Windows 全量重建。
+
+历史 Schema 晋级工具不是公开的从源码新建路径。Phase 4E5/4F5、Talk comparison C3B 与 Avatar Codex G2 仍有 Windows 目录刷盘、可写句柄或 POSIX 权限检查限制，不承诺这些历史发布路径在 Windows 可用。它们不参与 `scripts/build.py` 的 35 输入路径，也不由该路径的成功自动取得资格。
+
+semantic 依赖单独安装；若 `hnswlib` 缺少适用 wheel，构建其扩展需要 MSVC C++ Build Tools，不能把缺依赖静默当作向量构建成功。
 
 当前完整来源入口在构建、刷盘或核验失败时保留已创建的私有数据库、已发布文件和现存 sidecar，传播失败，不以删除现场完成回滚。成功后的私有镜像清理仍执行。产物路径存在不代表验收成功；仅完整匹配的独立核验及阶段回执允许恢复，失败目录须保留并另选新输出。统一 Research 索引使用目标目录内的私有磁盘 staging 和有限 SQLite 缓存；oracle 与阶段诊断在 VACUUM 前刷盘，压缩后再次完整核验，关闭所有写连接并刷盘后才发布。失败时无需将内存整库临时导出，现存磁盘库直接留存；容量口径与限制见 [完整指南](building-dataset.md)。

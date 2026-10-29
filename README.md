@@ -6,11 +6,9 @@
 
 源码发行版提供 **完整有界数据构建入口**：35 个独立输入、Schema20 的 33 个 core providers，以及统一 Research 文本、关系和候选索引。原 14 类基础组件入口继续保留，适合小范围验证。
 
-历史完整链路曾在新解压目录从固定源码重建通过：35 个输入、33 个 core contracts、统一索引及 MCP 调用完成来源核验，索引包含 3,761,013 条物理文本。详见 [完整重建实验](docs/history/full-rebuild.md)。最新工程修订的测试、最小来源 A/B 和未运行范围见 [工程质量记录](docs/engineering-quality.md)，不以历史成功替代新代码的完整验收。此前失败记录保持不变。
+最近的 Linux 固定来源验证在两个新输出目录分别完成了全部 35 个输入、统一索引的完整来源核对及 MCP 检查；索引包含 3,761,013 条物理文本。非向量进程从 39 分 31 秒降至 37 分 34 秒（约 5%）；优化版另行完成 106,589 个向量窗口重建及核验，耗时约 10 分钟。两个独立进程的时间不作为单次完整命令成绩。条件、限制与原始记录摘要见 [完整构建性能记录](docs/nonvector-build-performance.md)。
 
-后续 Linux 完整重建已在 `cf1788f` 实际通过：35 个输入、统一索引的完整来源核对、106,589 个向量窗口和 MCP 检查，总进程约 80 分钟。四次失败及诊断保留，不以成功覆盖历史记录。随后仅优化 embedding 构建调度，实际测量、完整向量等价核对及本轮未执行范围见 [Linux 构建性能记录](docs/linux-build-performance.md)。Windows 完整构建独立验收，Linux 成功不代表 Windows 成功。
-
-原生 Windows 的完整构建另在 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7` 记录通过。Linux 调度优化、Windows 来源绑定/磁盘 staging 与人物对白阅读已进入同一整合分支；本次补测范围及尚未重跑的整库验收见 [整合验证](docs/reviews/linux-windows-integration.md)，不把父分支的成功自动当作整合版本的全量成功。
+Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的完整来源构建另有 [既有验证记录](docs/guides/windows.md)，最新 Linux 优化尚未在 Windows 重跑完整 35 输入；CI 不能代替这项验证。历史成功、原始失败、[工程质量记录](docs/engineering-quality.md) 和各次实现的执行范围分别保留，入口见 [当前状态](docs/status.md)。
 
 仓库分发代码、SQL 定义和必要的来源校验清单；**不分发游戏数据库、游戏正文、模型权重或向量索引**。数据由上游源码在构建环境中生成。
 
