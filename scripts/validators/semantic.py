@@ -7,6 +7,7 @@ import sqlite3
 from contextlib import ExitStack, closing
 from pathlib import Path
 import numpy as np
+from genshin_lore.hnsw_io import load_index
 from genshin_lore.research_refs import decode_ref
 from genshin_lore.semantic_discovery import sha256_file
 
@@ -51,7 +52,7 @@ def _verify(index, build_dir, resources):
     vectors = np.load(build_dir / "vectors.npy", mmap_mode="r")
     resources.callback(vectors._mmap.close)
     ann = hnswlib.Index(space="cosine", dim=384)
-    ann.load_index(str(build_dir / "index.hnsw"))
+    load_index(ann, build_dir / "index.hnsw")
     require(
         ann.get_current_count() == len(vectors) == config["unique_candidate_count"],
         "ANN, vectors and declared candidate counts differ",

@@ -30,6 +30,11 @@ def table_rows(db: sqlite3.Connection, table: str) -> list[tuple]:
 def verify(source: Path, scope_path: Path, artifact: Path, report: dict) -> dict:
     source, scope_path, artifact = Path(source), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
+    if 'local_rebuild' in scope:
+        from .native_message_7_1_binding import qualify_scope
+        qualify_scope(source, scope_path, scope)
+    elif scope != json.loads((ROOT / 'manifests/native-archive-7.1/message-scope-v1.json').read_text()):
+        raise ValueError('Native Message historical scope must retain its exact seal')
     check_files(source, scope)
     if any(Path(str(artifact) + end).exists() for end in ('-wal', '-shm', '-journal')):
         raise ValueError('Native Message sidecar')
@@ -61,6 +66,8 @@ def verify(source: Path, scope_path: Path, artifact: Path, report: dict) -> dict
         raise ValueError('Native Message parser/run')
 
     dependency = scope['dependency']
+    if report.get('dependency') != {k: v for k, v in dependency.items() if k != 'target_artifact_machine_local'}:
+        raise ValueError('Native Message reported dependency binding')
     target_path = Path(dependency['target_artifact_machine_local'])
     if target_path.stat().st_size != dependency['artifact']['size_bytes'] or sha(target_path) != dependency['artifact']['sha256']:
         raise ValueError('Native Message dependency seal')
@@ -103,6 +110,19 @@ def verify(source: Path, scope_path: Path, artifact: Path, report: dict) -> dict
                 if type(obj.get(field)) is not int:
                     raise ValueError('Native Message TextMap locator type: ' + path + pointer + '/' + field)
                 hashes.add(str(obj[field]))
+    external = []
+    locators = {str(obj[relation['field']]) for declaration in declarations
+                for relation in declaration.get('relations', [])
+                for _, obj, _ in source_rows[declaration['path']]}
+    for locator in sorted(locators):
+        for candidate in targets[locator]:
+            external.append({'raw_locator': locator, 'target_occurrence_id': candidate['id'],
+                             'target_run': candidate['run_id'], 'target_source_path': candidate['source_path'],
+                             'target_source_pointer': candidate['pointer'], 'target_native_id': candidate['native_id'],
+                             'target_raw_sha256': candidate['raw_sha256']})
+    if sorted(external, key=lambda x: (x['raw_locator'], x['target_occurrence_id'])) != sorted(
+            scope['external_candidates'], key=lambda x: (x['raw_locator'], x['target_occurrence_id'])):
+        raise ValueError('Native Message complete target set drift')
     lookup: dict[tuple[str, str, str], list[tuple]] = defaultdict(list)
     for locale in scope['languages']:
         for tier in ('main', 'medium'):

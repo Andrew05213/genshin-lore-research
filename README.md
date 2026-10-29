@@ -8,7 +8,9 @@
 
 历史完整链路曾在新解压目录从固定源码重建通过：35 个输入、33 个 core contracts、统一索引及 MCP 调用完成来源核验，索引包含 3,761,013 条物理文本。详见 [完整重建实验](docs/history/full-rebuild.md)。最新工程修订的测试、最小来源 A/B 和未运行范围见 [工程质量记录](docs/engineering-quality.md)，不以历史成功替代新代码的完整验收。此前失败记录保持不变。
 
-修改后的全链路已实际重试四次；第四次完成前置输入，在统一索引的必需范围声明检查处失败。已整理重复声明规则并补充真实索引/oracle/MCP 小链路，但**修复后的完整重建验收尚未完成**。已执行范围、失败及修复见 [重试记录](docs/full-rebuild-retry.md)。
+后续 Linux 完整重建已在 `cf1788f` 实际通过：35 个输入、统一索引的完整来源核对、106,589 个向量窗口和 MCP 检查，总进程约 80 分钟。四次失败及诊断保留，不以成功覆盖历史记录。随后仅优化 embedding 构建调度，实际测量、完整向量等价核对及本轮未执行范围见 [Linux 构建性能记录](docs/linux-build-performance.md)。Windows 完整构建独立验收，Linux 成功不代表 Windows 成功。
+
+原生 Windows 的完整构建另在 [PR #9](https://github.com/Andrew05213/genshin-lore-research/pull/9) 的 `5c421f7` 记录通过。Linux 调度优化、Windows 来源绑定/磁盘 staging 与人物对白阅读已进入同一整合分支；本次补测范围及尚未重跑的整库验收见 [整合验证](docs/reviews/linux-windows-integration.md)，不把父分支的成功自动当作整合版本的全量成功。
 
 仓库分发代码、SQL 定义和必要的来源校验清单；**不分发游戏数据库、游戏正文、模型权重或向量索引**。数据由上游源码在构建环境中生成。
 

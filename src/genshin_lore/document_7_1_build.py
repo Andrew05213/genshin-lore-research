@@ -216,12 +216,9 @@ def build(source_root, scope_path, output):
             raise FileExistsError("Document 7.1 output appeared during build")
         os.link(compact, output)
         compact.unlink()
+        scratch.unlink()
         return {**release, "artifact": {"size_bytes": output.stat().st_size, "sha256": file_sha(output)},
                 "build_seconds": time.monotonic() - started}
     finally:
         if db is not None:
             db.close()
-        if scratch.exists():
-            scratch.unlink()
-        if compact.exists():
-            compact.unlink()

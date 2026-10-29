@@ -146,12 +146,6 @@ def build(root: Path, scope: Path, output: Path) -> dict:
         if conn is not None:
             conn.close()
             conn = None
-        try:
-            current = output.stat()
-            if (current.st_dev, current.st_ino) == (owned.st_dev, owned.st_ino):
-                output.unlink()
-        except FileNotFoundError:
-            pass
         raise
     finally:
         if conn is not None:

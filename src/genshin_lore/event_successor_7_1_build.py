@@ -161,8 +161,4 @@ def build(source_root, scope_path, output):
     except Exception:
         if connection is not None:
             connection.close()
-        if owned is not None and output.exists():
-            stat = output.stat()
-            if (stat.st_dev, stat.st_ino) == owned:
-                output.unlink()
         raise

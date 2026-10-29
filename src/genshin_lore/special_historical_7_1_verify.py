@@ -177,7 +177,7 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
         if locale is None:
             raise ValueError("TextMap locale invalid")
         tier = "medium" if "_Medium" in path else "main"
-        for pair in iter_textmap_pairs(raw_files[path]):
+        for pair in iter_textmap_pairs(raw_files[path], wanted_keys=wanted):
             if pair.key_text in wanted:
                 pairs[(locale, pair.key_text)].append((
                     path, tier, pair.pair_ordinal, pair.pointer, pair.raw_text, pair.raw_record_sha256))

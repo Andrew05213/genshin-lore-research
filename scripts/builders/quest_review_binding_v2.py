@@ -144,7 +144,6 @@ def build(source: Path, output: Path, *, manifest_path=None) -> dict:
         db.close()
     except BaseException:
         db.close()
-        output.unlink(missing_ok=True)
         raise
     finally:
         qr.close()
