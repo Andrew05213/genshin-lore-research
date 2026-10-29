@@ -20,6 +20,79 @@ from scripts.validators.research_index import expected_adapter_tables, explicit_
 
 KEYS={}
 
+
+class SourceRows:
+    """Bounded physical-key reads owned by one independent oracle invocation.
+
+    Requests keep their ordinals: equal keys are not merged, and a partial
+    composite key must still match exactly one source row. No builder output
+    or cross-artifact cache is used to reconstruct source evidence.
+    """
+
+    def __init__(self, sources, batch_size=256):
+        if not 1 <= batch_size <= 256:
+            raise ValueError('oracle batch size outside 1..256')
+        self.sources = sources
+        self.batch_size = batch_size
+        self.schemas = {}
+
+    def schema(self, src, table):
+        if not table.replace('_', '').isalnum():
+            raise ValueError('oracle unsafe source table')
+        key = (src, table)
+        if key not in self.schemas:
+            rows = list(src.execute(f'PRAGMA table_info("{table}")'))
+            self.schemas[key] = (
+                [r[1] for r in sorted(rows, key=lambda r: r[5]) if r[5]],
+                {r[1] for r in rows},
+            )
+        return self.schemas[key]
+
+    def columns(self, src, table):
+        return self.schema(src, table)[1]
+
+    def rows(self, index, query):
+        cursor = index.execute(query)
+        while batch := cursor.fetchmany(self.batch_size):
+            groups = {}
+            result = {}
+            for ordinal, row in enumerate(batch):
+                groups.setdefault((row['source_key'], row['source_table'], row['pk_column']), []).append((ordinal, row))
+            for (source_key, table, column), requests in groups.items():
+                src = self.sources[source_key]
+                keys, columns = self.schema(src, table)
+                names = json.loads(column) if column.startswith('[') else [column]
+                if (names != keys and not (len(names) == 1 and names[0] in keys)):
+                    raise ValueError('independent physical key scope mismatch')
+                if '__oracle_request' in columns:
+                    raise ValueError('oracle reserved request column collision')
+                # Stay below SQLite's portable 999-variable budget even for
+                # composite keys. Every requested occurrence remains distinct.
+                step = min(self.batch_size, max(1, 900 // max(1, len(names))))
+                for start in range(0, len(requests), step):
+                    selected = requests[start:start + step]
+                    parameters = []
+                    values_sql = []
+                    for ordinal, row in selected:
+                        values = json.loads(row['pk_value']) if column.startswith('[') else [row['pk_value']]
+                        if len(values) != len(names):
+                            raise ValueError('independent physical key scope mismatch')
+                        values_sql.append('(' + str(ordinal) + ',' + ','.join('?' for _ in values) + ')')
+                        parameters.extend(values)
+                    aliases = ','.join(f'k{i}' for i in range(len(names)))
+                    terms = ' AND '.join(f's."{name}"=q.k{i}' for i, name in enumerate(names))
+                    query = (f'WITH q(__oracle_request,{aliases}) AS (VALUES ' + ','.join(values_sql) + ') '
+                             f'SELECT q.__oracle_request,s.* FROM q JOIN "{table}" s ON {terms}')
+                    for physical in src.execute(query, parameters):
+                        ordinal = physical[0]
+                        if ordinal in result:
+                            raise ValueError('index source occurrence absent or ambiguous across exact runs')
+                        result[ordinal] = {name: physical[name] for name in columns}
+                    if any(ordinal not in result for ordinal, _ in selected):
+                        raise ValueError('index source occurrence absent or ambiguous across exact runs')
+            for ordinal, row in enumerate(batch):
+                yield row, result[ordinal]
+
 # Independent source contracts, not the builder's emitted coverage rows or
 # projection functions. None means that this adapter deliberately has no
 # container/text projection (e.g. binding-only and character text overlays).
@@ -224,14 +297,14 @@ def fetch(src,table,column,value):
     return dict(rows[0])
 
 
-def owner(src,table,record):
+def owner(src,table,record,reader=None):
     if table.endswith('_text_candidate_occurrence'):
         prefix=table.removesuffix('_text_candidate_occurrence');ot=prefix+'_text_owner_occurrence'
-        oc={r[1] for r in src.execute('PRAGMA table_info('+ot+')')}
+        oc=reader.columns(src,ot) if reader else {r[1] for r in src.execute('PRAGMA table_info('+ot+')')}
         if 'owner_id' in record:
             got=src.execute(f'SELECT * FROM {ot} WHERE owner_id=? AND ingest_run_id=?',(record['owner_id'],record['ingest_run_id'])).fetchone()
         else:
-            rt=prefix+'_text_resolution_occurrence';rc={r[1] for r in src.execute('PRAGMA table_info('+rt+')')}
+            rt=prefix+'_text_resolution_occurrence';rc=reader.columns(src,rt) if reader else {r[1] for r in src.execute('PRAGMA table_info('+rt+')')}
             pk='id' if 'id' in rc else 'occurrence_id'
             z=src.execute(f'SELECT * FROM {rt} WHERE {pk}=?',(record['resolution_occurrence_id'],)).fetchone()
             ownerpk='id' if 'id' in oc else 'occurrence_id'
@@ -277,8 +350,9 @@ def verify_connection(index,manifest,bindings):
     try:
         verify_required_source_projections(index, manifest, sources)
         verify_projection_counts(index)
-        for r in index.execute('SELECT * FROM research_container ORDER BY id'):
-            src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
+        reader=SourceRows(sources)
+        for r,got in reader.rows(index,'SELECT * FROM research_container ORDER BY id'):
+            src=sources[r['source_key']]
             path=got.get('source_path',got.get('source_file_path'));ptr=got.get('pointer',got.get('source_pointer'))
             if 'source_record_id' in got:
                 p=src.execute('SELECT s.pointer,f.relative_path FROM source_record s JOIN source_file f ON f.id=s.source_file_id WHERE s.id=?',(got['source_record_id'],)).fetchone()
@@ -306,12 +380,16 @@ def verify_connection(index,manifest,bindings):
             if got['raw_sha256']!=physical.get('raw_sha256',physical.get('raw_record_sha256')):raise ValueError('full projection reuse target raw SHA mismatch')
             second_hops['verified_projection_reuse_targets']+=1
         reuse_rows.clear()
-        for r in index.execute('SELECT * FROM research_text ORDER BY id'):
-            src=sources[r['source_key']];got=fetch(src,r['source_table'],r['pk_column'],r['pk_value'])
+        for r,got in reader.rows(index,'''SELECT t.*,c.id AS __container_id,
+                c.pk_value AS __container_pk,c.occurrence_id AS __container_occurrence,
+                c.source_path AS __container_path FROM research_text t
+                LEFT JOIN research_container c ON c.id=t.container_id ORDER BY t.id'''):
+            src=sources[r['source_key']]
             raw=got.get('raw_text',got.get('raw_cue_text'))
             if raw!=r['raw_text'] or hashlib.sha256(raw.encode()).hexdigest()!=r['text_sha256']:raise ValueError('independent fulltext/SHA mismatch')
-            parent,field,locale=owner(src,r['source_table'],got)
-            container=index.execute('SELECT * FROM research_container WHERE id=?',(r['container_id'],)).fetchone()
+            parent,field,locale=owner(src,r['source_table'],got,reader)
+            if r['__container_id'] is None:raise ValueError('independent text container missing')
+            container={'pk_value':r['__container_pk'],'occurrence_id':r['__container_occurrence'],'source_path':r['__container_path']}
             expected_parent=container['pk_value'] if r['source_key'].startswith('7.1-narrative_') else container['occurrence_id']
             if str(parent)!=expected_parent or field!=r['owner_field'] or (locale is not None and locale!=r['locale']):raise ValueError('independent owner/container/locale mismatch')
             path=got.get('source_path',got.get('relative_path'));ptr=got.get('pointer',got.get('source_pointer'));pair=got.get('pair_ordinal')
@@ -328,23 +406,27 @@ def verify_connection(index,manifest,bindings):
             if source_files.get(path)!=r['text_source_file_sha256']:raise ValueError('text snapshot-local file checksum mismatch')
             nt+=1
             if nt%500000==0:print('oracle texts',nt,flush=True)
-        for r in index.execute('SELECT * FROM research_relation ORDER BY id'):
-            got=fetch(sources[r['source_key']],r['source_table'],r['pk_column'],r['pk_value'])
+        for r,got in reader.rows(index,'''SELECT r.*,c.id AS __container_id,
+                c.pk_value AS __container_pk,c.occurrence_id AS __container_occurrence,
+                COALESCE(k.n,0) AS __candidate_count FROM research_relation r
+                LEFT JOIN research_container c ON c.id=r.container_id
+                LEFT JOIN (SELECT relation_id,COUNT(*) n FROM research_candidate GROUP BY relation_id) k
+                    ON k.relation_id=r.id ORDER BY r.id'''):
             if r['adapter_id'].startswith(('character_foundation:','quest_review_binding:','native_message:','event_native_text_17:','native_successor_physical:','native_high_value_physical:','codexquest_archive:','narrative_','talk_physical:')):
                 if canon(got)!=r['raw_locator']:raise ValueError('complete original relation row mismatch')
             status=got.get('status',got.get('state','mapping_unresolved'))
             count=got.get('candidate_count',got.get('known_candidate_count'))
             if status!=r['status'] or (count is not None and count!=r['candidate_count']):raise ValueError('relation state/cardinality mismatch')
-            indexed=index.execute('SELECT COUNT(*) FROM research_candidate WHERE relation_id=?',(r['id'],)).fetchone()[0]
+            indexed=r['__candidate_count']
             if indexed!=r['candidate_count']:raise ValueError('relation candidate set cardinality not complete')
-            container=index.execute('SELECT * FROM research_container WHERE id=?',(r['container_id'],)).fetchone()
+            if r['__container_id'] is None:raise ValueError('independent relation container missing')
+            container={'pk_value':r['__container_pk'],'occurrence_id':r['__container_occurrence']}
             fk=next((c for c in ('source_row_id','source_review_row_id','root_id','row_id','container_id','file_id','reuse_id') if c in got),None)
             if fk and str(got[fk])!=container['occurrence_id']:raise ValueError('independent relation parent binding mismatch')
             if 'row_ordinal' in got and str(got['row_ordinal'])!=container['pk_value']:raise ValueError('independent locator parent coordinate mismatch')
             nr+=1
             if nr%250000==0:print('oracle relations',nr,flush=True)
-        for r in index.execute('SELECT k.*,z.source_key,z.adapter_id,z.pk_value relation_pk_value FROM research_candidate k JOIN research_relation z ON z.id=k.relation_id ORDER BY k.id'):
-            got=fetch(sources[r['source_key']],r['source_table'],r['pk_column'],r['pk_value'])
+        for r,got in reader.rows(index,'SELECT k.*,z.source_key,z.adapter_id,z.pk_value relation_pk_value FROM research_candidate k JOIN research_relation z ON z.id=k.relation_id ORDER BY k.id'):
             fk=next((c for c in ('relation_id','locator_id','navigation_id','reference_id') if c in got),None)
             if fk and str(got[fk])!=r['relation_pk_value']:raise ValueError('independent candidate relation FK mismatch')
             if fk is None and 'item_ordinal' in got:
