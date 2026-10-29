@@ -3299,6 +3299,7 @@
     }
   ],
   "limits": [
+    "Aligned full-vector equality uses numpy.array_equal and zero numeric difference; bitwise equality including signed-zero representation was not independently tested. File/order/namespace differences remain recorded.",
     "Full runs once per arm; no variance estimate or hardware-independent speed guarantee.",
     "Local source/model/dependencies reused; not a fresh network acquisition experiment.",
     "Per-stage receipt timings sample separate endpoints and do not sum to process wall.",
