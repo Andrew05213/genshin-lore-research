@@ -19,7 +19,7 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
 
-默认含向量的全链路要求至少 28 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 26 GB。完整固定来源测量中的索引压缩峰值保留约为 25.78 GB，因此不再采用此前的 25 GB 基础预检值。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。增加并行构建会改变峰值，不属于此入口的容量保证。
+默认含向量的全链路要求至少 28 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 26 GB。完整固定来源测量中的索引压缩峰值保留约为 25.78 GB，因此不再采用此前的 25 GB 基础预检值。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。并行模式须另核对实际内存与临时空间峰值；磁盘预检不等于 RAM 上限。
 
 Character 构建器与独立 oracle 各自按关系一次读取候选行，保留空集合、多候选及所有物理身份核对；foundation 的独立来源核验仍在每次资格检查时重放。M3/special 的 TextMap 查找可以仅为所需 key 生成 lexical hash，但仍完整解析所有词条，检查类型、重复 key、分隔符与尾随内容；完整物理 TextMap 扫描保持原行为。
 
@@ -60,7 +60,13 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
   --stage all
 ```
 
-构建顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native、统一索引和向量 overlay。仅需基础数据时显式加 `--without-semantic`，不需要模型参数。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
+主链顺序为 core、Character、NPC/Dialog/Reminder、独立文本组件、Quest/Talk、Codex、R0、Readable/Subtitle、Event、Native、统一索引和向量 overlay。默认 `--jobs 2` 提前以独立进程构建 R0；到主链 R0 屏障时等待，并核对其完整资格回执。`--jobs 3` 还提前运行不依赖 core/R0 的 Quest 链；使用之前须核对 Quest/Talk、派生叙事、Native Message、Review binding 和 Talk physical 六个产物。进程隔离 GC、输入缓存和 SQLite writer；不并行写同一数据库，统一索引和向量阶段仍等待全部必需输入。
+
+`--jobs 1` 保留完整串行路径，适用于内存受限环境或串行对照。worker 上限包含主进程；只支持这两条已声明的独立链，不自动推断其他依赖。失败会停止后续阶段、关闭本次启动的 worker，并保留各自日志、未完成数据库和 sidecar；退出码为零不代替来源核验。输出根目录仍只允许一个构建协调进程，不能对同一路径同时启动两个独立 `--stage all`。
+
+仅需基础数据时显式加 `--without-semantic`，不需要模型参数。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
+
+Research 独立 oracle 每批最多回读 256 个物理键，保持每个请求的身份、顺序及缺失/歧义检查；同一身份的重复请求不合并。容器和候选数量通过完整关联核对，压缩前后两次完整来源 oracle 均保留。批量读取不是抽样或整体内存硬上限，单行正文大小仍影响峰值。
 
 每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
 

@@ -14,7 +14,7 @@
 
 使用 multilingual MiniLM、384 维 float32、cosine HNSW，沿用 400 字符窗口、360 字符步长及既有高价值 CHS 字段选择。名称/标题另建 lexical 索引。范围见 [静态选择配方](../../recipes/semantic-input.json)，不为 ID、hash、纯玩法配置构建全文语义。
 
-推理按窗口长度稳定组批，减少同批短文本的 padding，batch size 保持 64。Linux 构建默认最多使用 4 个 affinity-visible 线程，Windows 等其他平台保持 2；查询线程仍为 2。向量写回原 vector ID，ANN 仍按原 ID 顺序构建，物理 occurrence 不去重；来源选区、模型及 ANN 参数不变。`build.json` 的 `timings_seconds` 分别记录 selection、embedding（含模型初始化）、ANN 和 lexical 构建耗时。优化后的向量 SHA 和 ANN seal 仍须实测，不根据组批策略推断逐字节相同。
+推理按固定模型 tokenizer 的实际非 padding token 数稳定组批，推理 batch size 为 32；分词计数每次最多处理 256 个不同窗口，不保留全部 encoding。计数使用同一 tokenizer 的归一化与截断规则，原文和模型输入不改写。Linux 构建默认最多使用 4 个 affinity-visible 线程，Windows 等其他平台保持 2；查询线程仍为 2。向量写回原 vector ID，ANN 仍按原 ID 顺序构建，物理 occurrence 不去重；来源选区、模型及 ANN 参数不变。`build.json` 的 `timings_seconds` 分别记录 selection、embedding（含模型初始化及额外分词计数）、ANN 和 lexical 构建耗时。优化后的向量 SHA 和 ANN seal 仍须实测，不根据组批策略推断逐字节相同。
 
 同一次构建中，逐字相同的窗口只推理一次，归一化后分别写入每个原始 vector ID；匹配使用完整字符串相等，不仅比较 hash。所有来源身份、物理窗口和 metadata 行分别保留，复用集合不跨构建保存。`embedding_batching` 记录 `unique_inference_windows` 和 `reused_occurrence_windows`；这些计数描述计算复用，不表示物理证据被合并。独立 oracle 仍枚举并核对全部窗口。
 
@@ -28,7 +28,7 @@ hnswlib 的原生二进制保存、独立核验和运行时加载在 Windows 使
 
 完整命令见 [数据构建指南](building-dataset.md)，默认 `--stage all --model-cache data/model-cache` 包括向量阶段。明确不需要向量时使用 `--without-semantic`；缺模型或依赖会在大型构建前拒绝，而不是静默跳过。
 
-构建按文本字符长度稳定组批，减少无效 padding；写回时恢复原物理 vector ID，HNSW 仍按原顺序、单线程插入。相同文本不合并，来源窗口、模型和证据资格不改变。Linux 默认使用进程 CPU affinity 可见范围内最多 4 个 ONNX 线程，其他平台保持 2 个；CPU quota 较紧或需减少占用时可显式设置，例如：
+构建按实际 token 数稳定组批，写回时恢复原物理 vector ID，HNSW 仍按原顺序、单线程插入。相同文本不合并，来源窗口、模型和证据资格不改变。Linux 默认使用进程 CPU affinity 可见范围内最多 4 个 ONNX 线程，其他平台保持 2 个；CPU quota 较紧或需减少占用时可显式设置，例如：
 
 ```sh
 .venv/bin/python scripts/build.py --source data/AnimeGameData \

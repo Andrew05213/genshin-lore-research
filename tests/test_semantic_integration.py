@@ -20,6 +20,7 @@ def test_threads_reuse_unicode_transport_and_source_ids_compose(
 
     class Embedding(FixtureEmbedding):
         def __init__(self, **kwargs):
+            super().__init__(**kwargs)
             observed_threads.append(kwargs['threads'])
 
         def embed(self, texts, **kwargs):

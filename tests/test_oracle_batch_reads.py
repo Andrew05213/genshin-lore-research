@@ -87,22 +87,17 @@ def test_batch_size_is_bounded(size):
         SourceRows({},size)
 
 
-def test_owner_lookups_are_bounded_and_keep_connection_and_parameters():
+def test_source_column_order_nulls_and_blobs_survive_materialization():
     source,index=databases()
-    other=sqlite3.connect(':memory:');other.row_factory=sqlite3.Row
     try:
-        other.executescript("CREATE TABLE item(run,id,raw_text); INSERT INTO item VALUES('a','1','other artifact');")
-        reader=SourceRows({'source':source,'other':other})
-        query='SELECT * FROM item WHERE run=? AND id=?'
-        traces=[];source.set_trace_callback(traces.append)
-        for _ in range(3):
-            assert reader.one(source,query,('a','1'))['raw_text']=='synthetic a'
-        assert len(traces)==1
-        assert reader.one(source,query,('b','1'))['raw_text']=='synthetic b'
-        assert reader.one(other,query,('a','1'))['raw_text']=='other artifact'
-        for ordinal in range(4100):
-            assert reader.one(source,query,('missing',str(ordinal))) is None
-        assert len(reader.lookups)==4096
-        assert (source,query,('a','1')) not in reader.lookups
+        columns=[f'field_{i}' for i in range(40)]
+        source.execute('CREATE TABLE wide(id INTEGER PRIMARY KEY,'+','.join(columns)+',raw BLOB)')
+        source.execute('INSERT INTO wide VALUES('+','.join('?' for _ in range(42))+')',
+                       (1,*[None if i%2 else '合成 "text"\n'+str(i) for i in range(40)],b'\x00\xff'))
+        index.execute('INSERT INTO request VALUES(?,?,?,?)',('source','wide','id','1'))
+        expected=fetch(source,'wide','id','1')
+        actual=list(SourceRows({'source':source}).rows(index,'SELECT * FROM request'))[0][1]
+        assert actual==expected
+        assert list(actual)==list(expected)
     finally:
-        source.close();other.close();index.close()
+        source.close();index.close()
