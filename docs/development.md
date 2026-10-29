@@ -17,7 +17,7 @@ python3 -m venv .venv
 ## 无游戏数据测试
 
 ```sh
-.venv/bin/python -m pytest -q --cov=scripts.build --cov=scripts.build_support \
+.venv/bin/python -m pytest -q --cov=scripts.build --cov=scripts.build_workers --cov=scripts.build_support \
   --cov=scripts.runtime_config --cov=genshin_lore.mcp_transport \
   --cov=genshin_lore.dialogue --cov-report=term-missing --cov-report=xml
 .venv/bin/python -m compileall -q src scripts tests
