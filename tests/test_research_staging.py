@@ -61,6 +61,12 @@ def test_bulk_load_retains_unique_constraints_and_builds_identical_final_schema(
         result=original(src,out,*args,**kwargs)
         with pytest.raises(sqlite3.IntegrityError):
             out.execute('INSERT INTO research_text SELECT * FROM research_text')
+        # A fresh primary key must still fail the physical-occurrence UNIQUE
+        # constraint, while the ordinary query indexes are not yet present.
+        row=list(out.execute('SELECT * FROM research_text LIMIT 1').fetchone())
+        row[0]+=1_000_000
+        with pytest.raises(sqlite3.IntegrityError):
+            out.execute('INSERT INTO research_text VALUES('+','.join('?' for _ in row)+')',row)
         return result
     monkeypatch.setattr(builder,'project_component',project)
     run(inputs,tmp_path)
