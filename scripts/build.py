@@ -1481,7 +1481,7 @@ class Rebuild:
 
 
 def run_stages(job, selected, cache_mib, jobs):
-    """Overlap fixed independent R0/Quest chains; join before their consumers.
+    """Overlap fixed R0/Quest chains and ready Codex work within the job budget.
 
     Separate processes isolate SQLite writers, GC and input caches. All other
     stages retain their declared order and their independent qualification.
@@ -1497,32 +1497,34 @@ def run_stages(job, selected, cache_mib, jobs):
         'r0': ('r0',),
         'quest': ('quest_talk', 'quest_narrative', 'native_message',
                   'quest_review', 'quest_review_binding', 'talk_physical'),
+        'codex': ('codexquest',),
     }
+    def start_worker(stage):
+        token = str(time.time_ns())
+        entry = {'process': None, 'tree': None, 'streams': [], 'command': [],
+                 'record': job.output / f'{stage}-worker-{token}.json',
+                 'observed_finish_seconds': None}
+        workers[stage] = entry
+        log_paths = [job.output / f'{stage}-worker-{token}.{kind}.log'
+                     for kind in ('stdout', 'stderr')]
+        entry['paths'] = log_paths
+        for path in log_paths:
+            entry['streams'].append(path.open('x', encoding='utf-8'))
+        command = [sys.executable, str(ROOT / 'scripts/build.py'),
+                   '--source', str(job.source), '--output-root', str(job.output),
+                   '--stage', stage, '--jobs', '1', '--textmap-cache-mib', '0']
+        if job.history is not None:
+            command += ['--historical-source', str(job.history)]
+        entry['command'] = command
+        env = {**os.environ, 'PYTHONPATH': str(ROOT / 'src'), 'PYTHONUTF8': '1'}
+        tree = entry['tree'] = WorkerTree(command, cwd=ROOT, env=env,
+                                  stdout=entry['streams'][0], stderr=entry['streams'][1])
+        worker = entry['process'] = tree.process
+        print('STARTED independent worker', stage, worker.pid, flush=True)
     try:
         for stage in ('r0', 'quest')[:jobs - 1] if len(selected) > 1 else ():
-            if stage not in selected:
-                continue
-            token = str(time.time_ns())
-            entry = {'process': None, 'tree': None, 'streams': [], 'command': [],
-                     'record': job.output / f'{stage}-worker-{token}.json',
-                     'observed_finish_seconds': None}
-            workers[stage] = entry
-            log_paths = [job.output / f'{stage}-worker-{token}.{kind}.log'
-                         for kind in ('stdout', 'stderr')]
-            entry['paths'] = log_paths
-            for path in log_paths:
-                entry['streams'].append(path.open('x', encoding='utf-8'))
-            command = [sys.executable, str(ROOT / 'scripts/build.py'),
-                       '--source', str(job.source), '--output-root', str(job.output),
-                       '--stage', stage, '--jobs', '1', '--textmap-cache-mib', '0']
-            if job.history is not None:
-                command += ['--historical-source', str(job.history)]
-            entry['command'] = command
-            env = {**os.environ, 'PYTHONPATH': str(ROOT / 'src'), 'PYTHONUTF8': '1'}
-            tree = entry['tree'] = WorkerTree(command, cwd=ROOT, env=env,
-                                      stdout=entry['streams'][0], stderr=entry['streams'][1])
-            worker = entry['process'] = tree.process
-            print('STARTED independent worker', stage, worker.pid, flush=True)
+            if stage in selected:
+                start_worker(stage)
         for stage in selected:
             for entry in workers.values():
                 worker = entry['process']
@@ -1547,6 +1549,14 @@ def run_stages(job, selected, cache_mib, jobs):
             if stage == 'core':
                 print(json.dumps({'stage': 'textmap_input_cache', **{
                     k: cache[k] for k in ('limit', 'hits', 'misses', 'peak_bytes')}}), flush=True)
+            # Core publishes Codex's exact mapping and QuestCodex input. Reuse
+            # an idle slot while the parent builds Character/Dialog/small data;
+            # never add a fourth concurrent build or infer a dependency graph.
+            if (jobs > 1 and 'core' in selected and 'codex' in selected
+                    and stage in ('core', 'character', 'narrative', 'simple')
+                    and 'codex' not in workers
+                    and sum(e['process'].poll() is None for e in workers.values()) < jobs - 1):
+                start_worker('codex')
         completed = True
     finally:
         cleanup_errors = []

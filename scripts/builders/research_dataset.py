@@ -220,7 +220,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         diagnostic.record('staging_created', database=str(path), output=str(output),
             available_allocated_bytes=available_allocated_bytes)
         out = staging.connect(path, available_allocated_bytes)
-        out.executescript(old.SCHEMA)
+        out.executescript(old.TABLE_SCHEMA)
         diagnostic.record('connection_policy', cache_kib=staging.CACHE_KIB,
             temp_cache_kib=staging.TEMP_CACHE_KIB, temp_store='FILE', mmap_bytes=0,
             max_page_count=out.execute('PRAGMA max_page_count').fetchone()[0],
@@ -251,6 +251,11 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
                 seconds=component_seconds[key], containers=cs, texts=ts, relations=rs,
                 candidates=ks, database_bytes=staging.database_bytes(out))
         phase_seconds['projection_with_input_seal_checks']=time.perf_counter()-phase_started
+        phase = 'query_indexes'
+        phase_started=time.perf_counter()
+        out.executescript(old.QUERY_INDEX_SCHEMA)
+        phase_seconds['query_indexes']=time.perf_counter()-phase_started
+        diagnostic.record('query_indexes_complete', seconds=phase_seconds['query_indexes'])
         phase = 'fts'
         diagnostic.record('fts_start', database_bytes=staging.database_bytes(out))
         phase_started=time.perf_counter()

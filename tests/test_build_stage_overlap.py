@@ -170,3 +170,49 @@ def test_invalid_worker_budget_rejected_before_starting_anything(tmp_path,monkey
         build.run_stages(j,('core','r0','readable'),0,jobs)
     assert not events
     assert not list(tmp_path.glob('*-worker-*'))
+
+
+@pytest.mark.parametrize('jobs', [2, 3])
+def test_ready_codex_uses_freed_slot_and_is_qualified_before_consumer(tmp_path, monkeypatch, jobs):
+    events=[]; j=job(tmp_path,events); workers=[]
+    def spawn(*args, **kwargs):
+        stage=args[0][args[0].index('--stage')+1]
+        if stage=='codex':
+            assert 'core' in events
+        w=Worker(*args, **kwargs); workers.append(w); return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
+    def core():
+        events.append('core')
+        workers[0].returncode=0  # R0 has finished, freeing one slot.
+    j.core=core
+    j.character=lambda:events.append('character')
+    j.codex=lambda:pytest.fail('duplicate Codex execution')
+    j.dependency_inputs=lambda *names:events.extend('qualified '+n for n in names)
+    build.run_stages(j,('core','character','codex','r0','readable'),0,jobs)
+    assert events==['core','character','qualified codexquest','qualified r0','readable']
+    assert len(workers)==2
+    assert json.loads(next(tmp_path.glob('codex-worker-*.json')).read_text())['parent_completed']
+
+
+def test_codex_stays_serial_when_worker_slot_is_busy(tmp_path,monkeypatch):
+    events=[]; j=job(tmp_path,events)
+    monkeypatch.setattr(build,'WorkerTree',fake_tree)
+    j.codex=lambda:events.append('codex')
+    build.run_stages(j,('core','codex','r0','readable'),0,2)
+    assert events==['core','codex','qualified r0','readable']
+    assert not list(tmp_path.glob('codex-worker-*'))
+
+
+def test_codex_failed_qualification_stops_before_index(tmp_path,monkeypatch):
+    events=[]; j=job(tmp_path,events); workers=[]
+    def spawn(*args,**kwargs):
+        w=Worker(*args,**kwargs); workers.append(w); return Tree(w)
+    monkeypatch.setattr(build,'WorkerTree',spawn)
+    j.core=lambda:setattr(workers[0],'returncode',0)
+    def qualify(name):
+        if name=='codexquest':raise ValueError('Codex receipt drift')
+    j.dependency_inputs=qualify
+    j.index=lambda:pytest.fail('unqualified Codex reached index')
+    with pytest.raises(ValueError,match='Codex receipt drift'):
+        build.run_stages(j,('core','codex','r0','index'),0,2)
+    assert not json.loads(next(tmp_path.glob('codex-worker-*.json')).read_text())['parent_completed']
