@@ -1503,6 +1503,7 @@ def run_stages(job, selected, cache_mib, jobs):
         token = str(time.time_ns())
         entry = {'process': None, 'tree': None, 'streams': [], 'command': [],
                  'record': job.output / f'{stage}-worker-{token}.json',
+                 'started_seconds': time.monotonic() - started,
                  'observed_finish_seconds': None}
         workers[stage] = entry
         log_paths = [job.output / f'{stage}-worker-{token}.{kind}.log'
@@ -1581,6 +1582,7 @@ def run_stages(job, selected, cache_mib, jobs):
                 'worker_tree_shutdown_completed': entry['stopped'],
                 'worker_returncode': worker.returncode if worker else None,
                 'parent_elapsed_seconds': time.monotonic() - started,
+                'worker_started_seconds': entry['started_seconds'],
                 'worker_observed_finish_seconds': entry['observed_finish_seconds'],
                 'stdout': str(entry['paths'][0]), 'stderr': str(entry['paths'][1]),
                 'failure_outputs_retained': True,
