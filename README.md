@@ -14,6 +14,8 @@ Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的完整�
 
 ## 快速开始
 
+**Linux 完整安装：在仓库根目录运行 `bash setup.sh`。** 自动检查环境、准备依赖和固定来源/模型，调用原完整构建与验证流程，并配置项目级 Codex MCP。apt 环境可安装缺少的系统依赖，其他环境给出明确诊断；详见 [Linux 安装指南](docs/guides/linux.md)。
+
 **Windows 完整安装：下载并解压仓库（或 git clone），在仓库根目录双击 `setup.cmd`。**
 安装器准备 Python/Git（缺失时尝试 winget）、项目虚拟环境、固定上游与模型，执行包含向量的完整构建和对白 MCP 检查，最后添加项目级 Codex 连接。完成后在 Codex 打开并信任该目录，重启 MCP 连接即可。首次构建需要时间和磁盘空间，不是下载一个现成游戏数据库。
 
