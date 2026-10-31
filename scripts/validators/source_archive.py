@@ -155,6 +155,23 @@ def main() -> int:
         raise SystemExit("SQLite sidecars present")
     connection = sqlite3.connect(args.artifact.absolute().as_uri() + "?mode=ro&immutable=1", uri=True)
     metadata = {key: json.loads(value) for key, value in connection.execute("SELECT key,value FROM metadata")}
+    # Storage v2 inherits exact binding strings from the referenced file and
+    # decodes SHA-256 bytes. Independently check all backing rows, including
+    # any orphan that a JOIN view would otherwise hide from the source oracle.
+    version = connection.execute('PRAGMA user_version').fetchone()[0]
+    schema = metadata.get('schema_version')
+    if (version,schema) not in ((1,'batch-m3-r0-physical-occurrence-v1'),
+                               (2,'batch-m3-r0-physical-occurrence-storage-v2')):
+        raise SystemExit('R0 storage version mismatch')
+    if version == 2:
+        tables={r[0] for r in connection.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
+        if tables != {'source_file','physical_occurrence_data','metadata'}:
+            raise SystemExit('R0 storage table closure mismatch')
+        if connection.execute('PRAGMA foreign_key_check').fetchone() is not None:
+            raise SystemExit('R0 backing occurrence orphan')
+        n=connection.execute('SELECT COUNT(*) FROM physical_occurrence_data').fetchone()[0]
+        if connection.execute("SELECT 1 FROM physical_occurrence_data WHERE typeof(value_sha256_bytes)!='blob' OR length(value_sha256_bytes)!=32 LIMIT 1").fetchone():
+            raise SystemExit('R0 backing occurrence hash shape mismatch')
     if (metadata["snapshot_id"], metadata["parser_build_id"], metadata["ingest_run_id"]) != (SNAPSHOT, PARSER, RUN):
         raise SystemExit("R0 identity mismatch")
     file_rows = connection.execute("SELECT source_file_id,relative_path,root,source_sha256,size_bytes,parse_status,layout,record_status,occurrence_count FROM source_file ORDER BY source_file_id").fetchall()
@@ -186,6 +203,8 @@ def main() -> int:
     if connection.execute("PRAGMA integrity_check").fetchone()[0] != "ok" or connection.execute("PRAGMA foreign_key_check").fetchall():
         raise SystemExit("SQLite integrity")
     connection.close()
+    if version == 2 and records != n:
+        raise SystemExit('R0 backing occurrence closure mismatch')
     after = sha_file(args.artifact)
     if before != after or any(Path(str(args.artifact) + suffix).exists()
                               for suffix in ("-wal", "-shm", "-journal")):

@@ -26,7 +26,7 @@ def run(inputs, tmp_path, **kwargs):
     manifest, bindings, corpus = inputs
     return builder.build(manifest, bindings, tmp_path/'中文 output/artifact.sqlite',
         kwargs.pop('budget', 100_000_000), corpus_path=corpus,
-        reports_dir=tmp_path/'reports', **kwargs)
+        reports_dir=tmp_path/'reports', compact=kwargs.pop('compact',True), **kwargs)
 
 
 def retained(tmp_path):
@@ -271,3 +271,53 @@ def test_original_failure_survives_file_stat_and_close_diagnostic_errors(inputs,
     assert 'synthetic failed observation' in str(result.value.__notes__)
     assert 'synthetic close failure' in str(result.value.__notes__)
     assert retained(tmp_path).is_file()
+
+
+def test_default_no_vacuum_checks_new_readonly_final_connection(inputs,tmp_path,monkeypatch):
+    monkeypatch.setattr(staging,'compact',lambda _:pytest.fail('unexpected VACUUM'))
+    calls=[];original=builder.run_oracle
+    def checked(db,*args):
+        calls.append(db)
+        if len(calls)==2:
+            assert db is not calls[0]
+            assert db.execute('PRAGMA query_only').fetchone()[0]==1
+            with pytest.raises(sqlite3.OperationalError):db.execute('DELETE FROM research_text')
+        return original(db,*args)
+    monkeypatch.setattr(builder,'run_oracle',checked)
+    r=run(inputs,tmp_path,compact=False)
+    assert len(calls)==2 and r['storage_policy']=='verified-final-image-v2'
+    assert r['final_image_sha256']==seal(tmp_path/'中文 output/artifact.sqlite')['sha256']
+    assert not (tmp_path/'reports/index-post-vacuum-oracle-artifact.json').exists()
+    assert (tmp_path/'reports/index-final-image-oracle-artifact.json').is_file()
+
+
+@pytest.mark.parametrize('mutation',['bytes','sidecar','publication'])
+def test_final_image_drift_never_publishes_success(inputs,tmp_path,monkeypatch,mutation):
+    original=builder.run_oracle;calls=[]
+    if mutation=='publication':
+        publish=staging.publish
+        def drift(output,*args):
+            publish(output,*args)
+            with Path(output).open('ab') as f:f.write(b'synthetic published drift')
+        monkeypatch.setattr(staging,'publish',drift)
+    else:
+        def checked(db,*args):
+            calls.append(db);result=original(db,*args)
+            if len(calls)==2:
+                path=Path(db.execute('PRAGMA database_list').fetchone()[2])
+                if mutation=='bytes':
+                    with path.open('ab') as f:f.write(b'synthetic final image drift')
+                else:Path(str(path)+'-journal').write_bytes(b'synthetic journal')
+            return result
+        monkeypatch.setattr(builder,'run_oracle',checked)
+    with pytest.raises(ValueError,match='image (changed|differs)'):
+        run(inputs,tmp_path,compact=False)
+    assert json.loads((tmp_path/'reports/index-failure-artifact.json').read_text())['status']=='FAIL'
+
+
+def test_single_image_page_budget_is_explicit(tmp_path):
+    budget=100_000_000
+    db=staging.connect(tmp_path/'single.sqlite',budget,image_copies=1)
+    try:assert db.execute('PRAGMA max_page_count').fetchone()[0]==(budget-staging.RESERVE_BYTES)//4096
+    finally:db.close()
+    with pytest.raises(ValueError):staging.connect(tmp_path/'invalid.sqlite',budget,image_copies=True)

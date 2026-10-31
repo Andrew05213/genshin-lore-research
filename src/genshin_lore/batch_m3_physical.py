@@ -2,7 +2,7 @@
 
 This module is deliberately independent from the historical M3 coverage
 report.  It scans the five M0 source roots and stores only physical evidence:
-file bytes and one row for every top-level array element or object pair.  It
+source-file identities and one row for every top-level array element or object pair. It
 does not infer a family, join files, or de-duplicate equal values.
 """
 
@@ -38,6 +38,7 @@ from .batch_m0_baseline import (
 
 
 SCHEMA_VERSION = "batch-m3-r0-physical-occurrence-v1"
+COMPACT_SCHEMA_VERSION = "batch-m3-r0-physical-occurrence-storage-v2"
 PARSER_BUILD_ID = "pb-batch-m3-r0-physical:v1"
 INGEST_RUN_ID = "ir-batch-m3-r0-physical:v1"
 SNAPSHOT_ID = SOURCE_SNAPSHOT_ID
@@ -311,7 +312,7 @@ def _scan_file(relative_path: str, path: Path) -> tuple[dict[str, Any], Iterator
     return file_row, occurrences()
 
 
-def _create_schema(connection: sqlite3.Connection) -> None:
+def _create_schema(connection: sqlite3.Connection, *, compact_storage: bool = False) -> None:
     connection.executescript(
         """
         PRAGMA page_size=65536;
@@ -351,6 +352,25 @@ def _create_schema(connection: sqlite3.Connection) -> None:
         );
         """
     )
+    if compact_storage:
+        # File membership already carries these exact identities. Store it
+        # once per file, without merging or dropping any physical occurrence.
+        connection.executescript("""
+        DROP TABLE physical_occurrence;
+        PRAGMA user_version=2;
+        CREATE TABLE physical_occurrence_data (
+            occurrence_id INTEGER PRIMARY KEY,
+            source_file_id INTEGER NOT NULL REFERENCES source_file(source_file_id),
+            ordinal INTEGER NOT NULL CHECK(ordinal>=0),
+            pointer TEXT NOT NULL,
+            value_sha256_bytes BLOB NOT NULL
+                CHECK(typeof(value_sha256_bytes)='blob' AND length(value_sha256_bytes)=32)
+        );
+        CREATE VIEW physical_occurrence AS
+        SELECT p.occurrence_id,p.source_file_id,s.snapshot_id,s.parser_build_id,
+               s.ingest_run_id,p.ordinal,p.pointer,lower(hex(p.value_sha256_bytes)) AS value_sha256
+        FROM physical_occurrence_data p JOIN source_file s USING(source_file_id);
+        """)
 
 
 def _put_metadata(connection: sqlite3.Connection, values: Mapping[str, Any]) -> None:
@@ -399,6 +419,7 @@ def _write_artifact(
     parser_build_id: str,
     ingest_run_id: str,
     artifact_limit_bytes: int,
+    compact_storage: bool = False,
 ) -> dict[str, Any]:
     if staging.is_symlink() or (staging.exists() and not staging.is_file()):
         raise BatchM3PhysicalError(f"staging artifact must be a regular file: {staging}")
@@ -417,9 +438,9 @@ def _write_artifact(
     try:
         connection = sqlite3.connect(staging)
         connection.execute(f"PRAGMA max_page_count={artifact_limit_bytes // 65536}")
-        _create_schema(connection)
+        _create_schema(connection, compact_storage=compact_storage)
         _put_metadata(connection, {
-            "schema_version": SCHEMA_VERSION,
+            "schema_version": COMPACT_SCHEMA_VERSION if compact_storage else SCHEMA_VERSION,
             "snapshot_id": snapshot_id,
             "parser_build_id": parser_build_id,
             "ingest_run_id": ingest_run_id,
@@ -463,16 +484,20 @@ def _write_artifact(
                 occurrence_id += 1
                 occurrence_rows_inserted += 1
                 occurrence_batch.append(
+                    (occurrence_id, file_id, item["ordinal"], item["pointer"], bytes.fromhex(item["value_sha256"]))
+                    if compact_storage else
                     (occurrence_id, file_id, snapshot_id, parser_build_id, ingest_run_id,
                      item["ordinal"], item["pointer"], item["value_sha256"])
                 )
                 if len(occurrence_batch) >= 4096:
                     connection.executemany(
+                        "INSERT INTO physical_occurrence_data VALUES (?,?,?,?,?)" if compact_storage else
                         "INSERT INTO physical_occurrence VALUES (?,?,?,?,?,?,?,?)", occurrence_batch
                     )
                     occurrence_batch.clear()
             if occurrence_batch:
                 connection.executemany(
+                    "INSERT INTO physical_occurrence_data VALUES (?,?,?,?,?)" if compact_storage else
                     "INSERT INTO physical_occurrence VALUES (?,?,?,?,?,?,?,?)", occurrence_batch
                 )
             if occurrence_rows_inserted != int(file_row["occurrence_count"]):
@@ -483,7 +508,8 @@ def _write_artifact(
                     raise BatchM3PhysicalError("R0 artifact exceeds the explicit candidate limit")
         connection.commit()
         connection.execute("CREATE INDEX idx_source_file_relative_path ON source_file(relative_path)")
-        connection.execute("CREATE INDEX idx_physical_occurrence_file_ordinal ON physical_occurrence(source_file_id,ordinal)")
+        table = 'physical_occurrence_data' if compact_storage else 'physical_occurrence'
+        connection.execute(f"CREATE INDEX idx_physical_occurrence_file_ordinal ON {table}(source_file_id,ordinal)")
         denominator = record_denominator
         dynamic = {
             "file_denominator": files,
@@ -529,7 +555,9 @@ def summarize_r0_artifact(artifact_path: str | Path) -> dict[str, Any]:
         file_count, file_bytes = connection.execute(
             "SELECT COUNT(*),COALESCE(SUM(size_bytes),0) FROM source_file"
         ).fetchone()
-        record_count = connection.execute("SELECT COUNT(*) FROM physical_occurrence").fetchone()[0]
+        physical_table = ('physical_occurrence_data' if metadata.get('schema_version') == COMPACT_SCHEMA_VERSION
+                          else PHYSICAL_OCCURRENCE_TABLE)
+        record_count = connection.execute(f"SELECT COUNT(*) FROM {physical_table}").fetchone()[0]
         status_counts = dict(connection.execute(
             "SELECT record_status,COUNT(*) FROM source_file GROUP BY record_status ORDER BY record_status"
         ).fetchall())
@@ -585,11 +613,22 @@ def verify_r0_artifact(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
             )
         }
-        if table_names != {SOURCE_FILE_TABLE, PHYSICAL_OCCURRENCE_TABLE, METADATA_TABLE}:
-            raise BatchM3PhysicalError("R0 table closure mismatch")
         metadata = _metadata(connection)
+        compact = metadata.get('schema_version') == COMPACT_SCHEMA_VERSION
+        physical_table = 'physical_occurrence_data' if compact else PHYSICAL_OCCURRENCE_TABLE
+        if table_names != {SOURCE_FILE_TABLE, physical_table, METADATA_TABLE}:
+            raise BatchM3PhysicalError("R0 table closure mismatch")
+        if connection.execute('PRAGMA user_version').fetchone()[0] != (2 if compact else 1):
+            raise BatchM3PhysicalError('R0 storage version mismatch')
+        if compact:
+            if connection.execute('PRAGMA foreign_key_check').fetchone() is not None:
+                raise BatchM3PhysicalError('R0 compact source-file reference mismatch')
+            if connection.execute('SELECT COUNT(*) FROM physical_occurrence_data').fetchone()[0] != summary['record_numerator']:
+                raise BatchM3PhysicalError('R0 compact row closure mismatch')
+            if connection.execute("SELECT 1 FROM physical_occurrence_data WHERE typeof(value_sha256_bytes)!='blob' OR length(value_sha256_bytes)!=32 LIMIT 1").fetchone():
+                raise BatchM3PhysicalError('R0 compact hash shape mismatch')
         expected_metadata = {
-            "schema_version": SCHEMA_VERSION,
+            "schema_version": COMPACT_SCHEMA_VERSION if compact else SCHEMA_VERSION,
             "snapshot_id": snapshot_id,
             "parser_build_id": parser_build_id,
             "ingest_run_id": ingest_run_id,
@@ -713,6 +752,7 @@ def build_r0_artifact(
     parser_build_id: str = PARSER_BUILD_ID,
     ingest_run_id: str = INGEST_RUN_ID,
     artifact_limit_bytes: int = ARTIFACT_LIMIT_BYTES,
+    compact_storage: bool = False,
 ) -> dict[str, Any]:
     """Build and publish a deterministic standalone R0 artifact.
 
@@ -725,6 +765,8 @@ def build_r0_artifact(
 
     source = Path(source_root).resolve()
     output = Path(output_path).absolute()
+    if type(compact_storage) is not bool:
+        raise BatchM3PhysicalError('compact_storage must be a boolean')
     if artifact_limit_bytes < ARTIFACT_LIMIT_BYTES or artifact_limit_bytes % 65536:
         raise BatchM3PhysicalError("artifact limit must be at least the historical 4 GiB limit and page aligned")
     if selected_roots is not None and source_roots is not None and tuple(selected_roots) != tuple(source_roots):
@@ -758,6 +800,7 @@ def build_r0_artifact(
         staging, source, roots,
         snapshot_id=snapshot_id, parser_build_id=parser_build_id, ingest_run_id=ingest_run_id,
         artifact_limit_bytes=artifact_limit_bytes,
+        compact_storage=compact_storage,
     )
     gate.check("m3-r0-physical-prepublish", projected_bytes=0, cleanup=False)
     # Verify exact source bytes on the private inode before atomic publication.
@@ -796,6 +839,7 @@ __all__ = [
     "ARTIFACT_LIMIT_BYTES", "BatchM3PhysicalError", "COORDINATE_CONTRACT",
     "INGEST_RUN_ID", "PARSER_BUILD_ID", "PROJECT_SPACE_RESERVATION_BYTES",
     "SCHEMA_VERSION", "SNAPSHOT_ID", "SOURCE_ROOTS", "build_physical_artifact",
+    "COMPACT_SCHEMA_VERSION",
     "build_r0_artifact", "summarize_artifact", "summarize_r0_artifact",
     "verify_artifact", "verify_r0_artifact",
 ]

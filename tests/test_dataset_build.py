@@ -60,8 +60,10 @@ def test_index_capacity_fails_before_creating_outputs(tmp_path,monkeypatch):
     assert not output.exists()
 
 
-@pytest.mark.parametrize('without_semantic,budget',[(True,25_000_000_000),(False,27_000_000_000)])
-def test_full_capacity_rejects_superseded_peak_before_constructing_build(tmp_path,monkeypatch,without_semantic,budget):
+@pytest.mark.parametrize('compact,without_semantic,budget',[
+    (True,True,25_000_000_000),(True,False,27_000_000_000),
+    (False,True,19_999_999_999),(False,False,21_999_999_999)])
+def test_full_capacity_rejects_below_exact_image_policy(tmp_path,monkeypatch,compact,without_semantic,budget):
     from types import SimpleNamespace
     proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
     monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
@@ -71,14 +73,17 @@ def test_full_capacity_rejects_superseded_peak_before_constructing_build(tmp_pat
     output=tmp_path/'absent'
     args=['rebuild','--source','missing','--historical-source','synthetic-history',
           '--output-root',str(output),'--stage','all','--available-allocated-bytes',str(budget)]
+    if compact:args.append('--compact-index')
     if without_semantic:args.append('--without-semantic')
     monkeypatch.setattr(sys,'argv',args)
-    assert driver.FULL_BUILD_PEAK_BYTES==26_000_000_000
+    assert driver.VACUUM_FULL_PEAK_BYTES==26_000_000_000
+    assert driver.FULL_BUILD_PEAK_BYTES==20_000_000_000
     with pytest.raises(ValueError,match='headroom'):driver.main()
     assert not output.exists()
 
 
-def test_nonvector_full_capacity_accepts_26gb_boundary(tmp_path,monkeypatch):
+@pytest.mark.parametrize('compact,budget',[(False,20_000_000_000),(True,26_000_000_000)])
+def test_nonvector_full_capacity_accepts_exact_policy_boundary(tmp_path,monkeypatch,compact,budget):
     from types import SimpleNamespace
     proof=driver.load(ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json')
     monkeypatch.setattr(driver.subprocess,'check_output',lambda args,**kw:
@@ -87,9 +92,11 @@ def test_nonvector_full_capacity_accepts_26gb_boundary(tmp_path,monkeypatch):
     monkeypatch.setattr(driver,'allocated',lambda _:0)
     def admitted(*args):raise RuntimeError('admitted past capacity gate')
     monkeypatch.setattr(driver,'Rebuild',admitted)
-    monkeypatch.setattr(sys,'argv',['rebuild','--source','missing',
+    args=['rebuild','--source','missing',
         '--historical-source','synthetic-history','--output-root',str(tmp_path/'absent'),
-        '--stage','all','--without-semantic','--available-allocated-bytes','26000000000'])
+        '--stage','all','--without-semantic','--available-allocated-bytes',str(budget)]
+    if compact:args.append('--compact-index')
+    monkeypatch.setattr(sys,'argv',args)
     with pytest.raises(RuntimeError,match='admitted past capacity gate'):driver.main()
 
 

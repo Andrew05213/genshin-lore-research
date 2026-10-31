@@ -149,8 +149,8 @@ def test_actual_independent_r0_oracle_rejects_tampered_rows(real_job,monkeypatch
     real_job.job.r0()
     artifact=real_job.job.path('r0')
     with sqlite3.connect(artifact) as db:
-        if mutation=='hash':db.execute("UPDATE physical_occurrence SET value_sha256=? WHERE occurrence_id=1",('0'*64,))
-        else:db.execute('DELETE FROM physical_occurrence')
+        if mutation=='hash':db.execute("UPDATE physical_occurrence_data SET value_sha256_bytes=? WHERE occurrence_id=1",(bytes(32),))
+        else:db.execute('DELETE FROM physical_occurrence_data')
     report=real_job.job.output/'tamper-oracle.json'
     monkeypatch.setattr('sys.argv',['source_archive','--source',str(real_job.job.source),
         '--artifact',str(artifact),'--output',str(report)])
@@ -168,7 +168,7 @@ def test_independent_r0_oracle_rejects_entire_source_file_omission(real_job, mon
     artifact = real_job.job.path('r0')
     with sqlite3.connect(artifact) as db:
         last = db.execute('SELECT max(source_file_id) FROM source_file').fetchone()[0]
-        db.execute('DELETE FROM physical_occurrence WHERE source_file_id=?', (last,))
+        db.execute('DELETE FROM physical_occurrence_data WHERE source_file_id=?', (last,))
         db.execute('DELETE FROM source_file WHERE source_file_id=?', (last,))
         # Forged self-reported counts cannot define the source denominator.
         files = db.execute('SELECT count(*) FROM source_file').fetchone()[0]
@@ -209,3 +209,36 @@ def test_standalone_r0_oracle_rejects_changes_during_verification(real_job, monk
     with pytest.raises(SystemExit, match='artifact changed|sidecars'):
         oracle.main()
     assert not output.exists()
+
+
+def test_compact_storage_retains_every_logical_field_and_legacy_reader(real_job):
+    legacy=real_job.job.output/'legacy.sqlite'
+    r0.build_r0_artifact(real_job.job.source,legacy,repo_root=real_job.code,
+        snapshot_id=oracle.SNAPSHOT,parser_build_id=oracle.PARSER,ingest_run_id=oracle.RUN)
+    real_job.job.r0()
+    compact=real_job.job.path('r0')
+    with sqlite3.connect(legacy) as a, sqlite3.connect(compact) as b:
+        for table,order in [('source_file','source_file_id'),('physical_occurrence','occurrence_id')]:
+            assert a.execute(f'SELECT * FROM {table} ORDER BY {order}').fetchall()==b.execute(f'SELECT * FROM {table} ORDER BY {order}').fetchall()
+        assert a.execute('PRAGMA user_version').fetchone()[0]==1
+        assert b.execute('PRAGMA user_version').fetchone()[0]==2
+        assert b.execute('SELECT DISTINCT typeof(value_sha256_bytes),length(value_sha256_bytes) FROM physical_occurrence_data').fetchall()==[('blob',32)]
+        with pytest.raises(sqlite3.IntegrityError):
+            b.execute("INSERT INTO physical_occurrence_data VALUES(999,1,0,'/',?)",(bytes(31),))
+    assert json.loads((real_job.job.output/'r0/build.json').read_text())['metadata']['schema_version']==r0.COMPACT_SCHEMA_VERSION
+
+
+@pytest.mark.parametrize('mutation',['orphan','hidden','file_binding'])
+def test_compact_backing_tamper_cannot_hide_behind_read_view(real_job,monkeypatch,mutation):
+    real_job.job.r0();artifact=real_job.job.path('r0')
+    with sqlite3.connect(artifact) as db:
+        if mutation=='orphan':
+            db.execute("INSERT INTO physical_occurrence_data VALUES(999,999999,0,'/',?)",(bytes(32),))
+        elif mutation=='hidden':
+            db.execute('DROP VIEW physical_occurrence')
+            db.execute('CREATE VIEW physical_occurrence AS SELECT p.occurrence_id,p.source_file_id,s.snapshot_id,s.parser_build_id,s.ingest_run_id,p.ordinal,p.pointer,lower(hex(p.value_sha256_bytes)) AS value_sha256 FROM physical_occurrence_data p JOIN source_file s USING(source_file_id) WHERE p.occurrence_id!=1')
+        else:db.execute("UPDATE source_file SET parser_build_id='wrong' WHERE source_file_id=1")
+    report=real_job.job.output/'compact-rejected.json'
+    monkeypatch.setattr('sys.argv',['source_archive','--source',str(real_job.job.source),'--artifact',str(artifact),'--output',str(report)])
+    with pytest.raises(SystemExit):oracle.main()
+    assert not report.exists()
