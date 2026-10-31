@@ -203,7 +203,9 @@ def run_oracle(db, manifest, bindings):
     return runpy.run_path(str(ROOT/'scripts/validators/research_dataset.py'))['verify_connection'](db, manifest, bindings)
 
 
-def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, reports_dir):
+def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, reports_dir, compact=False):
+    if type(compact) is not bool:
+        raise ValueError('compact must be a boolean')
     output = Path(output).absolute()
     corpus_path = Path(corpus_path)
     reports_dir = Path(reports_dir)
@@ -219,7 +221,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         diagnostic = staging.Diagnostics(reports_dir, output.stem)
         diagnostic.record('staging_created', database=str(path), output=str(output),
             available_allocated_bytes=available_allocated_bytes)
-        out = staging.connect(path, available_allocated_bytes)
+        out = staging.connect(path, available_allocated_bytes, image_copies=2 if compact else 1)
         out.executescript(old.TABLE_SCHEMA)
         diagnostic.record('connection_policy', cache_kib=staging.CACHE_KIB,
             temp_cache_kib=staging.TEMP_CACHE_KIB, temp_store='FILE', mmap_bytes=0,
@@ -276,34 +278,53 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
         before_compaction=staging.database_bytes(out)
         diagnostic.record('oracle_complete', seconds=phase_seconds['independent_source_oracle'],
             database_bytes=before_compaction, status=oracle_result['status'])
-        phase = 'compaction_reservation'
-        reservation=staging.reserve_compaction(out, path, available_allocated_bytes)
-        staging.write_json(reports_dir/f'index-compaction-reservation-{output.stem}.json', reservation)
-        phase = 'vacuum'
-        diagnostic.record('vacuum_start', **reservation)
-        phase_started=time.perf_counter()
-        staging.compact(out)
-        phase_seconds['vacuum']=time.perf_counter()-phase_started
+        if compact:
+            phase = 'compaction_reservation'
+            reservation=staging.reserve_compaction(out, path, available_allocated_bytes)
+            staging.write_json(reports_dir/f'index-compaction-reservation-{output.stem}.json', reservation)
+            phase = 'vacuum'
+            diagnostic.record('vacuum_start', **reservation)
+            phase_started=time.perf_counter()
+            staging.compact(out)
+            phase_seconds['vacuum']=time.perf_counter()-phase_started
         exact_bytes=staging.database_bytes(out)
-        diagnostic.record('vacuum_complete', seconds=phase_seconds['vacuum'], database_bytes=exact_bytes)
-        capacity={'index_before_compaction_bytes':before_compaction,'index_after_compaction_bytes':exact_bytes,'available_allocated_bytes':available_allocated_bytes,'publication_reserve_bytes':staging.RESERVE_BYTES,'fits':exact_bytes+staging.RESERVE_BYTES<=available_allocated_bytes,'memory_only_before_gate':False}
+        if compact:
+            diagnostic.record('vacuum_complete', seconds=phase_seconds['vacuum'], database_bytes=exact_bytes)
+        capacity={'compaction_performed':compact,'index_before_compaction_bytes':before_compaction,'index_after_compaction_bytes':exact_bytes,'index_final_bytes':exact_bytes,'available_allocated_bytes':available_allocated_bytes,'publication_reserve_bytes':staging.RESERVE_BYTES,'fits':exact_bytes+staging.RESERVE_BYTES<=available_allocated_bytes,'memory_only_before_gate':False}
         staging.write_json(reports_dir/f'index-capacity-{output.stem}.json', capacity)
         if exact_bytes+16*1024**2>available_allocated_bytes:
             raise RuntimeError(f'hard storage gate: index {exact_bytes} B + 16 MiB publication reserve exceeds available {available_allocated_bytes} B')
-        # Re-run the same complete verifier on the compacted image; publishing
-        # is a rename of these bytes, not a second database construction.
-        phase = 'oracle_after_vacuum'
-        diagnostic.record('post_vacuum_oracle_start', database_bytes=exact_bytes)
-        phase_started=time.perf_counter()
-        compacted_oracle = run_oracle(out,manifest,bindings)
-        phase_seconds['post_vacuum_independent_oracle']=time.perf_counter()-phase_started
-        staging.write_json(reports_dir/f'index-post-vacuum-oracle-{output.stem}.json', compacted_oracle)
-        require_success(compacted_oracle)
+        # Verify the durable final image through a fresh read-only connection,
+        # including when no compaction is requested. No source checks skipped.
         out.close();out=None
+        staging.fsync_file(path)
+        image_sha=old.sha256_file(path)
+        if any(Path(str(path)+s).exists() for s in ('-wal','-shm','-journal')):
+            raise ValueError('final Research image has SQLite sidecars')
+        phase = 'final_image_oracle'
+        diagnostic.record('post_vacuum_oracle_start' if compact else 'final_image_oracle_start', database_bytes=exact_bytes)
+        phase_started=time.perf_counter()
+        final = sqlite3.connect(path.resolve().as_uri()+'?mode=ro&immutable=1',uri=True)
+        try:
+            final.execute('PRAGMA query_only=ON')
+            final_oracle = run_oracle(final,manifest,bindings)
+        finally:
+            final.close()
+        phase_seconds['final_image_independent_oracle']=time.perf_counter()-phase_started
+        require_success(final_oracle)
+        if old.sha256_file(path)!=image_sha or any(Path(str(path)+s).exists() for s in ('-wal','-shm','-journal')):
+            raise ValueError('final Research image changed during verification')
+        if final_oracle != oracle_result:
+            raise ValueError('final Research source rowsets differ from initial verification')
+        staging.write_json(reports_dir/f'index-final-image-oracle-{output.stem}.json', final_oracle)
+        if compact:
+            staging.write_json(reports_dir/f'index-post-vacuum-oracle-{output.stem}.json', final_oracle)
         phase = 'publication'
         diagnostic.record('publication_start', database_bytes=exact_bytes)
         phase_started=time.perf_counter()
         staging.publish(output, path, inputs)
+        if old.sha256_file(output)!=image_sha or any(Path(str(output)+s).exists() for s in ('-wal','-shm','-journal')):
+            raise ValueError('published Research image differs from verified final image')
         phase_seconds['exclusive_publication']=time.perf_counter()-phase_started
         diagnostic.record('published', output=str(output), database_bytes=output.stat().st_size)
     except BaseException as exc:
@@ -342,7 +363,7 @@ def build(manifest,bindings,output,available_allocated_bytes, *, corpus_path, re
                 if active_error is None:
                     raise
                 active_error.add_note('Diagnostic close also failed: '+repr(error))
-    return {"status":"BUILT_AWAITING_INDEPENDENT_ORACLE","corpus_ref":manifest["corpus_ref"],"size_bytes":output.stat().st_size,"sha256":old.sha256_file(output),"container_rows":cs,"text_rows":ts,"relation_rows":rs,"candidate_rows":ks,"phase_seconds":phase_seconds,"component_seconds":component_seconds,"seconds":time.perf_counter()-started}
+    return {"status":"BUILT_AWAITING_INDEPENDENT_ORACLE","storage_policy":"vacuum-v1" if compact else "verified-final-image-v2","final_image_sha256":image_sha,"corpus_ref":manifest["corpus_ref"],"size_bytes":output.stat().st_size,"sha256":old.sha256_file(output),"container_rows":cs,"text_rows":ts,"relation_rows":rs,"candidate_rows":ks,"phase_seconds":phase_seconds,"component_seconds":component_seconds,"seconds":time.perf_counter()-started}
 
 
 def main():

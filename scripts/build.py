@@ -45,10 +45,13 @@ STAGES = (
     "index",
     "semantic",
 )
-# The full-source run reserves about 25.78 GB at index compaction. Round up;
-# this is additional build headroom, not the project's hard storage limit.
-FULL_BUILD_PEAK_BYTES = 26_000_000_000
+# A single verified final image plus file-bound R0 removes the second index
+# image and repeated identities. These are additional build budgets; the real
+# source experiment must confirm them, not redefine the project hard limit.
+FULL_BUILD_PEAK_BYTES = 20_000_000_000
 INDEX_BUILD_PEAK_BYTES = 7_000_000_000
+VACUUM_FULL_PEAK_BYTES = 26_000_000_000
+VACUUM_INDEX_PEAK_BYTES = 14_000_000_000
 
 
 def load(path):
@@ -177,7 +180,8 @@ class Rebuild:
         remaining = self.available - max(
             0, allocated((ROOT, self.output)) - self.allocated_start
         )
-        if remaining < 7_000_000_000:
+        required = VACUUM_INDEX_PEAK_BYTES if getattr(self,'compact_index',False) else INDEX_BUILD_PEAK_BYTES
+        if remaining < required:
             raise ValueError(
                 "new stage allocations consumed required index peak headroom"
             )
@@ -668,6 +672,7 @@ class Rebuild:
                 parser_build_id=parser,
                 ingest_run_id=run,
                 artifact_limit_bytes=6 * 1024**3,
+                compact_storage=True,
             )
             # Adapt R0's native report; task still compares this declared seal
             # to actual bytes and requires the independent source verifier.
@@ -694,6 +699,7 @@ class Rebuild:
                 ),
                 p.parent / "source-oracle.json",
             ),
+            parameters={'r0_storage':'file-bound-sha256-bytes-v2'},
         )
 
     def readable(self):
@@ -1229,13 +1235,15 @@ class Rebuild:
         self.task(
             "research_index",
             lambda p: builder.build(
-                manifest, bindings, p, remaining, corpus_path=cp, reports_dir=reports
+                manifest, bindings, p, remaining, corpus_path=cp, reports_dir=reports,
+                compact=getattr(self,'compact_index',False),
             ),
-            lambda p, r: load(reports / ("index-post-vacuum-oracle-" + p.stem + ".json")),
+            lambda p, r: load(reports / ("index-final-image-oracle-" + p.stem + ".json")),
             inputs=self.dependency_inputs(
                 *[p.parent.name for p in map(Path, bindings["artifacts"].values())]
             )
             + [cp, self.output / "complete-bindings.json"],
+            parameters={'compact_index':getattr(self,'compact_index',False)},
         )
         index = self.path("research_index")
         with sqlite3.connect(index) as db:
@@ -1601,6 +1609,8 @@ def main():
     )
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--stage", choices=(*STAGES, "all"), required=True)
+    parser.add_argument('--compact-index',action='store_true',
+                        help='Explicit optional VACUUM; default qualifies the original final image without a copy')
     parser.add_argument(
         "--without-semantic",
         action="store_true",
@@ -1661,9 +1671,11 @@ def main():
         parser.error("--stage semantic cannot be combined with --without-semantic")
     if args.stage in ("all", "index", "semantic"):
         peak = FULL_BUILD_PEAK_BYTES if args.stage == "all" else INDEX_BUILD_PEAK_BYTES
+        if args.compact_index:
+            peak = VACUUM_FULL_PEAK_BYTES if args.stage == 'all' else VACUUM_INDEX_PEAK_BYTES
         if with_semantic:
             peak = (
-                FULL_BUILD_PEAK_BYTES + 2_000_000_000
+                peak + 2_000_000_000
                 if args.stage == "all"
                 else 2_000_000_000
             )
@@ -1692,6 +1704,7 @@ def main():
     job.with_semantic = with_semantic
     job.model_cache = args.model_cache.resolve() if args.model_cache else None
     job.embedding_threads = args.embedding_threads
+    job.compact_index = args.compact_index
     selected = (
         tuple(s for s in STAGES if s != "semantic" or with_semantic)
         if args.stage == "all"

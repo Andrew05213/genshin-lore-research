@@ -34,14 +34,16 @@ def write_json(path, value):
         os.fsync(stream.fileno())
 
 
-def connect(path, budget):
+def connect(path, budget, *, image_copies=2):
     if not isinstance(budget, int) or budget <= RESERVE_BYTES + 2 * 65536:
         raise ValueError('Research staging budget is insufficient')
+    if type(image_copies) is not int or image_copies not in (1,2):
+        raise ValueError('Research image reservation must be one or two copies')
     db = sqlite3.connect(path)
     try:
         db.row_factory = sqlite3.Row
         db.execute('PRAGMA page_size=4096')
-        db.execute(f'PRAGMA max_page_count={(budget-RESERVE_BYTES)//(2*4096)}')
+        db.execute(f'PRAGMA max_page_count={(budget-RESERVE_BYTES)//(image_copies*4096)}')
         db.execute(f'PRAGMA cache_size=-{CACHE_KIB}')
         db.execute('PRAGMA temp_store=FILE')
         db.execute(f'PRAGMA temp.cache_size=-{TEMP_CACHE_KIB}')
