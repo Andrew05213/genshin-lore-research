@@ -6,6 +6,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,4 +110,9 @@ def main():
 
 
 if __name__ == '__main__':
+    # A newly opened Windows MCP client does not inherit setup.cmd's temporary
+    # UTF-8 environment. Re-enter this runtime only; leave user settings alone.
+    if os.name == 'nt' and not sys.flags.utf8_mode:
+        raise SystemExit(subprocess.call([sys.executable, '-X', 'utf8',
+                                          str(Path(__file__).resolve()), *sys.argv[1:]]))
     main()
