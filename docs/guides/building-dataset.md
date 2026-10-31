@@ -19,7 +19,7 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
 
-默认含向量的全链路要求至少 28 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 26 GB。完整固定来源测量中的索引压缩峰值保留约为 25.78 GB，因此不再采用此前的 25 GB 基础预检值。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。并行模式须另核对实际内存与临时空间峰值；磁盘预检不等于 RAM 上限。
+默认含向量的全链路预检要求 22 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 20 GB。默认使用文件级身份归一化的 R0 storage v2，并省去索引 VACUUM 的第二份映像；显式 `--compact-index` 保留原压缩模式，预检分别为 28/26 GB。真实来源对照及峰值口径见 [存储布局记录](../compact-evidence-storage.md)。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。并行模式须另核对实际内存与临时空间峰值；磁盘预检不等于 RAM 上限。
 
 Character 构建器与独立 oracle 各自按关系一次读取候选行，保留空集合、多候选及所有物理身份核对；foundation 的独立来源核验仍在每次资格检查时重放。M3/special 的 TextMap 查找可以仅为所需 key 生成 lexical hash，但仍完整解析所有词条，检查类型、重复 key、分隔符与尾随内容；完整物理 TextMap 扫描保持原行为。
 
@@ -27,9 +27,9 @@ Character 构建器与独立 oracle 各自按关系一次读取候选行，保�
 
 Research 的适用父项和正文投影使用流式 `executemany`，按原顺序逐行消费来源，不累积整表待写列表；父项查询按最多 512 个来源行分批。每次批量写入完成后才检查 coverage 或运行后续投影，全部物理身份、候选、SQLite 约束和完整独立 oracle 保留。512 行限制不是进程总内存上限，单行正文大小仍影响内存。构建报告的 `phase_seconds` 分别记录投影、FTS、独立 oracle、压缩和发布耗时，`component_seconds` 记录各输入的投影及 seal 检查耗时。
 
-Research 在目标目录创建独占的 `.research-*.sqlite` 私有磁盘库；SQLite 主缓存为 16 MiB、临时库缓存为 8 MiB，关闭写库 mmap，临时工作使用文件。主库 `max_page_count` 根据本阶段剩余额度限制，为两个数据库镜像和 16 MiB reserve 留出压缩空间；压缩前再次核对页数及输出/系统临时卷空闲。保留原 `journal_mode=OFF` 与 `synchronous=FULL`，不引入未计入预算的全库回滚镜像。这些是 SQLite 缓存和页数限制，不是整个 Python 进程或独立 oracle 的 RAM 上限，仍需监测实际资源。
+Research 在目标目录创建独占的 `.research-*.sqlite` 私有磁盘库；SQLite 主缓存为 16 MiB、临时库缓存为 8 MiB，关闭写库 mmap，临时工作使用文件。主库 `max_page_count` 根据本阶段剩余额度限制，默认保留一个数据库映像和 16 MiB reserve；显式压缩模式为两个映像保留空间，压缩前再次核对页数及输出/系统临时卷空闲。保留原 `journal_mode=OFF` 与 `synchronous=FULL`，不引入未计入预算的全库回滚镜像。这些是 SQLite 缓存和页数限制，不是整个 Python 进程或独立 oracle 的 RAM 上限，仍需监测实际资源。
 
-投影边界、FTS、oracle、VACUUM 和发布事件逐条刷盘到 `index-oracles/index-staging-*.jsonl`。完整 oracle 首次返回后立即持久化；旧 `index-memory-oracle-*.json` 文件名保留兼容，但现在核验的是磁盘 staging。必需 VACUUM 完成后，再执行同一完整独立 oracle，将结果刷盘到 `index-post-vacuum-oracle-*.json`，关闭连接并刷盘后才以禁止覆盖的重命名发布。失败时保留已创建的私有/已发布数据库、现存 sidecar 和诊断，不以删除现场回滚；SQLite 关闭连接仍可能回滚未提交事务，失败字节不自动具备恢复或查询资格。
+投影边界、FTS、oracle、可选 VACUUM 和发布事件逐条刷盘到 `index-oracles/index-staging-*.jsonl`。完整 oracle 首次返回后立即持久化；旧 `index-memory-oracle-*.json` 文件名保留兼容，但现在核验的是磁盘 staging。随后关闭写连接并刷盘，以新的只读连接对最终映像再次执行相同完整 oracle，写入 `index-final-image-oracle-*.json`；两次结果必须一致，验证期间及发布后的字节 SHA 均须匹配。显式压缩模式还保留 `index-post-vacuum-oracle-*.json`。发布采用禁止覆盖的重命名。失败时保留已创建的私有/已发布数据库、现存 sidecar 和诊断，不以删除现场回滚；SQLite 关闭连接仍可能回滚未提交事务，失败字节不自动具备恢复或查询资格。
 
 ## 构建
 
@@ -66,7 +66,7 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
 
 仅需基础数据时显式加 `--without-semantic`，不需要模型参数。生成的依赖绑定只引用本次输出；来源读取失败、scope 漂移或 seal 错配时停止，不寻找其他部署的数据库。
 
-Research 独立 oracle 每批最多回读 256 个物理键，保持每个请求的身份、顺序及缺失/歧义检查；同一身份的重复请求不合并。容器和候选数量通过完整关联核对，压缩前后两次完整来源 oracle 均保留。批量读取不是抽样或整体内存硬上限，单行正文大小仍影响峰值。
+Research 独立 oracle 每批最多回读 256 个物理键，保持每个请求的身份、顺序及缺失/歧义检查；同一身份的重复请求不合并。容器和候选数量通过完整关联核对，初始及最终映像的两次完整来源 oracle 均保留。批量读取不是抽样或整体内存硬上限，单行正文大小仍影响峰值。
 
 每个阶段保留 `invocation.json`、`build.json`、`verify.json`、`verified.json` 与 artifact。只有明确成功的独立验证结果才能创建最后的成功回执；NOT_RUN、SKIPPED、PARTIAL、空结果、未知或冲突状态均拒绝。失败结果和诊断保留，不覆盖旧证据。
 
