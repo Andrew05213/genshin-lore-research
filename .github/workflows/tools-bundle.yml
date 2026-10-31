@@ -10,6 +10,7 @@ on:
       - 'requirements-wheel-build.*'
       - 'src/**'
       - 'scripts/**'
+      - 'setup.cmd'
       - 'recipes/**'
       - 'schemas/**'
       - 'migrations/**'

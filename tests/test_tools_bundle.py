@@ -65,6 +65,42 @@ def test_vendored_distribution_metadata_is_not_the_wheels_own_metadata(checkout,
     assert result['wheels'][0]['name'] == 'synthetic-dependency'
 
 
+def test_windows_bootstraps_are_packaged_with_exact_byte_seals(checkout, tmp_path):
+    root, wheels = checkout
+    wheel(wheels)
+    files = {'setup.cmd': b'@echo off\r\necho synthetic\r\n',
+             'scripts/setup_windows.ps1': b'Write-Host "synthetic"\r\n'}
+    for name, raw in files.items():
+        path = root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+    git(root, 'add', '.')
+    git(root, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+        'commit', '-m', 'synthetic bootstrap')
+    result = package(root, wheels, tmp_path / 'tools.zip')
+    with ZipFile(tmp_path / 'tools.zip') as archive:
+        for name, raw in files.items():
+            entry = 'source/' + name
+            assert archive.read(entry) == raw
+            assert result['files'][entry] == {
+                'size_bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
+
+
+@pytest.mark.parametrize('name', ['other.cmd', 'scripts/other.ps1', 'data.sqlite', 'model.onnx'])
+def test_bootstrap_exception_does_not_allow_other_tracked_files(checkout, tmp_path, name):
+    root, wheels = checkout
+    wheel(wheels)
+    path = root / name
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b'synthetic')
+    git(root, 'add', '.')
+    git(root, '-c', 'user.name=Fixture', '-c', 'user.email=fixture@example.invalid',
+        'commit', '-m', 'unsupported synthetic file')
+    with pytest.raises(ValueError, match='unsupported tracked source entry'):
+        package(root, wheels, tmp_path / 'tools.zip')
+    assert not (tmp_path / 'tools.zip').exists()
+
+
 def test_multiple_top_level_metadata_directories_are_rejected(checkout, tmp_path):
     root, wheels = checkout
     path = wheel(wheels)
