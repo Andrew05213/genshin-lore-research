@@ -6,21 +6,29 @@ from pathlib import Path
 from typing import Any
 from .research_adapters import CONTAINER_ONLY,DIRECT_TEXT,RELATIONS,ROW_FAMILIES,CORE_PROJECTED_PREFIXES,CORE_SPECIAL,QUEST_TALK,UNSUPPORTED_RELATION_TABLES,declared_relation_tables,relation_like_tables
 
-SCHEMA='''
+TABLE_SCHEMA='''
 PRAGMA journal_mode=OFF; PRAGMA synchronous=FULL;
 CREATE TABLE corpus_release(id INTEGER PRIMARY KEY CHECK(id=1),manifest_sha256 TEXT NOT NULL,corpus_ref TEXT NOT NULL,adapter_registry TEXT NOT NULL,built_at TEXT NOT NULL,source_count INTEGER NOT NULL,container_count INTEGER NOT NULL,text_count INTEGER NOT NULL,relation_count INTEGER NOT NULL,candidate_count INTEGER NOT NULL);
 CREATE TABLE source_artifact(source_key TEXT PRIMARY KEY,artifact_family TEXT NOT NULL,artifact_contract TEXT NOT NULL,artifact_parser TEXT NOT NULL,artifact_run TEXT NOT NULL,path TEXT NOT NULL,size_bytes INTEGER NOT NULL,sha256 TEXT NOT NULL) WITHOUT ROWID;
 CREATE TABLE adapter_coverage(source_key TEXT NOT NULL REFERENCES source_artifact(source_key),adapter_id TEXT NOT NULL,projection_kind TEXT NOT NULL,source_table TEXT NOT NULL,denominator INTEGER NOT NULL,indexed_count INTEGER NOT NULL,status TEXT NOT NULL CHECK(status IN ('complete','unsupported','not_declared','duplicate_projection')),detail TEXT NOT NULL,PRIMARY KEY(source_key,adapter_id,projection_kind,source_table)) WITHOUT ROWID;
 CREATE TABLE research_container(id INTEGER PRIMARY KEY,source_key TEXT NOT NULL REFERENCES source_artifact(source_key),adapter_id TEXT NOT NULL,evidence_family TEXT NOT NULL,evidence_contract TEXT NOT NULL,evidence_parser TEXT NOT NULL,evidence_run TEXT NOT NULL,occurrence_id TEXT NOT NULL,container_kind TEXT NOT NULL,source_table TEXT NOT NULL,pk_column TEXT NOT NULL,pk_value TEXT NOT NULL,source_path TEXT NOT NULL,source_pointer TEXT NOT NULL,source_file_sha256 TEXT NOT NULL,source_git_blob TEXT,ordinal INTEGER,ordering_basis TEXT,UNIQUE(source_key,source_table,pk_value),UNIQUE(source_key,evidence_family,evidence_contract,evidence_parser,evidence_run,occurrence_id));
-CREATE INDEX research_container_identity ON research_container(evidence_family,evidence_contract,evidence_run,occurrence_id); CREATE INDEX research_container_path ON research_container(source_key,source_path,source_pointer);
 CREATE TABLE research_text(id INTEGER PRIMARY KEY,container_id INTEGER NOT NULL REFERENCES research_container(id),source_key TEXT NOT NULL,adapter_id TEXT NOT NULL,evidence_family TEXT NOT NULL,evidence_contract TEXT NOT NULL,evidence_parser TEXT NOT NULL,evidence_run TEXT NOT NULL,occurrence_id TEXT NOT NULL,child_kind TEXT NOT NULL,child_id TEXT NOT NULL,source_table TEXT NOT NULL,pk_column TEXT NOT NULL,pk_value TEXT NOT NULL,text_column TEXT NOT NULL,locale TEXT,owner_field TEXT,ordinal INTEGER,pointer TEXT NOT NULL,text_source_path TEXT NOT NULL,text_source_pointer TEXT NOT NULL,text_source_file_sha256 TEXT NOT NULL,text_source_git_blob TEXT,physical_pair_ordinal INTEGER,raw_text TEXT NOT NULL,text_sha256 TEXT NOT NULL,UNIQUE(source_key,source_table,pk_value,text_column));
-CREATE INDEX research_text_scope ON research_text(evidence_family,evidence_run,id); CREATE INDEX research_text_container ON research_text(container_id,ordinal,id); CREATE INDEX research_text_locale ON research_text(locale,id);
 CREATE VIRTUAL TABLE research_text_fts USING fts5(raw_text,content='research_text',content_rowid='id',tokenize='trigram case_sensitive 1');
 CREATE TABLE research_relation(id INTEGER PRIMARY KEY,container_id INTEGER NOT NULL REFERENCES research_container(id),source_key TEXT NOT NULL,adapter_id TEXT NOT NULL,source_table TEXT NOT NULL,pk_column TEXT NOT NULL,pk_value TEXT NOT NULL,relation_kind TEXT NOT NULL,source_pointer TEXT NOT NULL,raw_locator TEXT,status TEXT NOT NULL,search_complete INTEGER NOT NULL,candidate_count INTEGER NOT NULL,candidate_namespace TEXT,UNIQUE(source_key,source_table,pk_value));
-CREATE INDEX research_relation_source ON research_relation(container_id,relation_kind,id);
 CREATE TABLE research_candidate(id INTEGER PRIMARY KEY,relation_id INTEGER NOT NULL REFERENCES research_relation(id),source_table TEXT NOT NULL,pk_column TEXT NOT NULL,pk_value TEXT NOT NULL,target_family TEXT,target_contract TEXT,target_parser TEXT,target_run TEXT,target_occurrence_id TEXT,target_source_path TEXT,target_pointer TEXT,raw_target TEXT,UNIQUE(relation_id,source_table,pk_value));
+'''
+QUERY_INDEX_SCHEMA='''
+CREATE INDEX research_container_identity ON research_container(evidence_family,evidence_contract,evidence_run,occurrence_id);
+CREATE INDEX research_container_path ON research_container(source_key,source_path,source_pointer);
+CREATE INDEX research_text_scope ON research_text(evidence_family,evidence_run,id);
+CREATE INDEX research_text_container ON research_text(container_id,ordinal,id);
+CREATE INDEX research_text_locale ON research_text(locale,id);
+CREATE INDEX research_relation_source ON research_relation(container_id,relation_kind,id);
 CREATE INDEX research_candidate_target ON research_candidate(target_family,target_contract,target_run,target_occurrence_id,id);
 '''
+# Existing callers retain the same final schema. Only the full dataset builder
+# defers these non-unique query indexes; UNIQUE/PK constraints stay active.
+SCHEMA=TABLE_SCHEMA+QUERY_INDEX_SCHEMA
 
 
 _CONTAINER_INSERT='insert into research_container values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'

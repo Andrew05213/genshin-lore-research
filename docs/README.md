@@ -10,6 +10,7 @@
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
 | [完整冷构建性能](cold-build-throughput.md) | 默认向量单命令对照、固定阶段重叠、token 调度、完整来源/向量核对与资源代价 |
+| [关键路径后续优化](build-critical-path.md) | 同期 33:54 → 32:27、Codex 有限重叠、批量查询索引与未达到的 30 分钟目标 |
 | [worker 后代退出修复](reviews/worker-tree-shutdown.md) | 父阶段失败、验证器后代、Linux/Windows 生命周期与定向回归范围 |
 | [Linux 构建性能](linux-build-performance.md) | 实际耗时、embedding 调度优化、等价验证及未采用的索引实验 |
 | [冷构建与阶段复用](build-reuse.md) | 进程内独立输入缓存、v3 回执、同条件耗时及未执行范围 |

@@ -1,0 +1,503 @@
+{
+  "comparison": {
+    "relative_reduction_percent": 4.281038832272949,
+    "seconds_saved": 87.0824281447567,
+    "under_30_minutes": false
+  },
+  "conditions": {
+    "cpus": 8,
+    "embedding_threads": 4,
+    "fresh_output_per_arm": true,
+    "full_repeats_per_arm": 1,
+    "jobs": 3,
+    "order": [
+      "baseline",
+      "candidate"
+    ],
+    "os_page_cache_purged": false,
+    "other_phase_heavy_jobs_during_full_timing": false,
+    "ram_bytes": 16762720256,
+    "stages_reused": 0,
+    "swap_bytes": 4294963200,
+    "textmap_cache_mib": 1024
+  },
+  "controlled_local_thread_diagnostic": {
+    "default_changed": false,
+    "full_six_thread_build": "NOT_RUN",
+    "measurements": [
+      {
+        "input_sha256": "56a1790ccbf90e2396aaf378d82524a5ebbef082c3a45e89a0920c5f90fea826",
+        "max_absolute_difference": 0.0,
+        "numeric_equal": true,
+        "ordinal": 0,
+        "reused_occurrence_windows": 99,
+        "seconds": 21.342799871228635,
+        "threads": 4,
+        "unique_inference_windows": 3997
+      },
+      {
+        "input_sha256": "56a1790ccbf90e2396aaf378d82524a5ebbef082c3a45e89a0920c5f90fea826",
+        "max_absolute_difference": 0.0,
+        "numeric_equal": true,
+        "ordinal": 1,
+        "reused_occurrence_windows": 99,
+        "seconds": 19.66379673499614,
+        "threads": 6,
+        "unique_inference_windows": 3997
+      },
+      {
+        "input_sha256": "56a1790ccbf90e2396aaf378d82524a5ebbef082c3a45e89a0920c5f90fea826",
+        "max_absolute_difference": 0.0,
+        "numeric_equal": true,
+        "ordinal": 2,
+        "reused_occurrence_windows": 99,
+        "seconds": 19.831346547231078,
+        "threads": 6,
+        "unique_inference_windows": 3997
+      },
+      {
+        "input_sha256": "56a1790ccbf90e2396aaf378d82524a5ebbef082c3a45e89a0920c5f90fea826",
+        "max_absolute_difference": 0.0,
+        "numeric_equal": true,
+        "ordinal": 3,
+        "reused_occurrence_windows": 99,
+        "seconds": 21.656414526049048,
+        "threads": 4,
+        "unique_inference_windows": 3997
+      }
+    ],
+    "median_seconds": {
+      "4": 21.49960719863884,
+      "6": 19.74757164111361
+    },
+    "plan": {
+      "batch": 32,
+      "order": [
+        4,
+        6,
+        6,
+        4
+      ],
+      "scope": "Warm model inference only, same input/order/precision, token counting included",
+      "windows": 4096
+    },
+    "relative_reduction_percent": 8.149151476758865
+  },
+  "date": "2026-10-30",
+  "default_release_changed": false,
+  "evidence_semantics_changed": false,
+  "full_builds": {
+    "baseline": {
+      "arm": "baseline",
+      "capture_completed": true,
+      "core_providers": 33,
+      "database_stages": 60,
+      "exact_inputs": 35,
+      "exit_code": 0,
+      "failed_outputs_retained": true,
+      "implementation": "60ce13c2fe89cd890904ea0adfb8c4908354fcec",
+      "index": {
+        "builder_seconds": 569.5534545951523,
+        "candidates": 446132,
+        "complete_relation_candidate_scopes": 84,
+        "containers": 921382,
+        "phase_seconds": {
+          "exclusive_publication": 4.085231887176633,
+          "fts_integrity_and_release": 85.70799966389313,
+          "independent_source_oracle": 154.3231451152824,
+          "post_vacuum_independent_oracle": 133.49384021991864,
+          "projection_with_input_seal_checks": 131.02601467398927,
+          "vacuum": 55.6228430592455
+        },
+        "post_oracle_report_sha256": "b6a5bb5280c9ea2749136ea5127740c64b1f0c8b20d24e815a946daaaa2d5593",
+        "relations": 663590,
+        "sha256": "a89309e30439dd13ae92ea682ebbdffac92085be021645c7edc2fb64d9c857df",
+        "size_bytes": 6570082304,
+        "source_oracles_equal_before_after_compaction": true,
+        "texts": 3761013
+      },
+      "max_observed_processes": 5,
+      "peak_observed_process_tree_rss_bytes": 6659158016,
+      "process_wall_seconds": 2034.1424489840865,
+      "rss_scope": "Sampled sum of the whole build process tree, including worker/oracle children; shared pages double counted, not a hard maximum.",
+      "runtime": [
+        "PASS_LOCAL_REBUILT_RUNTIME",
+        "PASS_LOCAL_REBUILT_RUNTIME"
+      ],
+      "semantic": {
+        "artifact_seals": {
+          "index.hnsw": {
+            "sha256": "3d8e0daabe58f556c8df2ddcc26441e80ebb8d9e0af38d50fbe7cef0a675ee40",
+            "size_bytes": 176155524
+          },
+          "lexicon.sqlite": {
+            "sha256": "e7fff47cdf50c06c6513a01957ad6f01c5941dd67e9bcdeaeaa1cde38cb226b3",
+            "size_bytes": 361365504
+          },
+          "metadata.sqlite": {
+            "sha256": "bb5f696b8128bfc93a638e57d726370606a1e76dbbb99ab349b46b44f6ac2245",
+            "size_bytes": 220737536
+          },
+          "vectors.npy": {
+            "sha256": "739a5daf66f3df357aeefd6b59096d9ae890b1295e936a85d67de33ce7713c20",
+            "size_bytes": 163720832
+          }
+        },
+        "builder_seconds": 415.25830938713625,
+        "timings_seconds": {
+          "ann": 18.419769743923098,
+          "embedding": 376.67587581276894,
+          "lexicon": 6.008025689981878,
+          "selection": 13.459534337278455
+        },
+        "verification": {
+          "ann_to_original_vector_max_absolute_difference": 1.043081283569336e-07,
+          "full_mapping_rows": 106589,
+          "input_rowset_sha256": "11fc2e66b6ebb48fc3a9af13599384891cb91a03eacf8e884661e3a6fb66f705",
+          "physical_occurrences": 105265,
+          "scope": "complete source selection, row/window/ref/coordinates, lexical rowset and stored vector binding; not relevance or logical identity",
+          "status": "PASS",
+          "vectors_sha256": "739a5daf66f3df357aeefd6b59096d9ae890b1295e936a85d67de33ce7713c20"
+        }
+      }
+    },
+    "candidate": {
+      "arm": "candidate",
+      "capture_completed": true,
+      "core_providers": 33,
+      "database_stages": 60,
+      "exact_inputs": 35,
+      "exit_code": 0,
+      "failed_outputs_retained": true,
+      "implementation": "36aea75c8ce0dadeba435bec69e953a7452f3053",
+      "index": {
+        "builder_seconds": 515.1243118559942,
+        "candidates": 446132,
+        "complete_relation_candidate_scopes": 84,
+        "containers": 921382,
+        "phase_seconds": {
+          "exclusive_publication": 4.07900111284107,
+          "fts_integrity_and_release": 76.52040203521028,
+          "independent_source_oracle": 136.96698976587504,
+          "post_vacuum_independent_oracle": 128.34877538168803,
+          "projection_with_input_seal_checks": 111.05083047877997,
+          "query_indexes": 11.485314842313528,
+          "vacuum": 41.29277332406491
+        },
+        "post_oracle_report_sha256": "e751868f2e1af186d6e9890bca3222014481de7eb1a7ed02f00260e0d5157051",
+        "relations": 663590,
+        "sha256": "73294cc3a04634a48bec6735f80d49ffbb0be4de646101dd47acda9962349d13",
+        "size_bytes": 6569873408,
+        "source_oracles_equal_before_after_compaction": true,
+        "texts": 3761013
+      },
+      "max_observed_processes": 6,
+      "peak_observed_process_tree_rss_bytes": 6712926208,
+      "process_wall_seconds": 1947.0600208393298,
+      "rss_scope": "Sampled sum of the whole build process tree, including worker/oracle children; shared pages double counted, not a hard maximum.",
+      "runtime": [
+        "PASS_LOCAL_REBUILT_RUNTIME",
+        "PASS_LOCAL_REBUILT_RUNTIME"
+      ],
+      "semantic": {
+        "artifact_seals": {
+          "index.hnsw": {
+            "sha256": "dc35c5cea66515b6770aa548df4ba5c46fbb6e381301f7d01c35b85d1932b307",
+            "size_bytes": 176155524
+          },
+          "lexicon.sqlite": {
+            "sha256": "91afb8449f751f7441205131dac400bc854700b77cb25dec06b1b4552f342932",
+            "size_bytes": 361033728
+          },
+          "metadata.sqlite": {
+            "sha256": "682d898cd4e498485131ba84d2f6411a019249c57cfc070c15f0bc6c4a3fb805",
+            "size_bytes": 220737536
+          },
+          "vectors.npy": {
+            "sha256": "4ba7bd49ddc5d2df9c7383fa836fc48b029160fdf0b110a71d57bad125899687",
+            "size_bytes": 163720832
+          }
+        },
+        "builder_seconds": 413.9292953661643,
+        "timings_seconds": {
+          "ann": 17.936101702973247,
+          "embedding": 376.43020612513646,
+          "lexicon": 5.872833549045026,
+          "selection": 13.039257723838091
+        },
+        "verification": {
+          "ann_to_original_vector_max_absolute_difference": 1.043081283569336e-07,
+          "full_mapping_rows": 106589,
+          "input_rowset_sha256": "bd44cbfb7d1ed58103f5fb0708934decc7207b1e1d466712aa9bc8cf33f90fdc",
+          "physical_occurrences": 105265,
+          "scope": "complete source selection, row/window/ref/coordinates, lexical rowset and stored vector binding; not relevance or logical identity",
+          "status": "PASS",
+          "vectors_sha256": "4ba7bd49ddc5d2df9c7383fa836fc48b029160fdf0b110a71d57bad125899687"
+        }
+      }
+    }
+  },
+  "limits": [
+    "One full run per arm; no variance or hardware-independent speed guarantee.",
+    "Different output-local parser/run/index/ref envelopes remain distinct. Physical-coordinate comparison is supplemental to each independent full source oracle.",
+    "Stage clocks do not sum to process wall. Sampled process-tree RSS can count shared pages twice.",
+    "Initial thread probe overlapped tests and is excluded. Only the separate post-build 4/6/6/4 diagnostic is reported.",
+    "Old-deployment/mismatched-oracle and wrong test filename diagnostics retained locally; not counted as full build failures.",
+    "Formal deployed release/current and other WIP were not changed. No game text, databases, vectors or model files are published."
+  ],
+  "mcp": {
+    "candidate-dialogue": {
+      "body_and_provenance_equivalence": true,
+      "cursor_mismatch_rejected": true,
+      "pages": 2,
+      "reading_extension_release_accepted": false,
+      "status": "PASS_DIALOGUE_MCP",
+      "tools": [
+        "describe_corpus",
+        "search_evidence",
+        "read_evidence",
+        "follow_evidence",
+        "inspect_evidence"
+      ]
+    },
+    "candidate-mcp": {
+      "checks": {
+        "book": {
+          "actual_coverage": [
+            {
+              "first_ordinal": 0,
+              "last_ordinal": 6,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 7,
+              "last_ordinal": 13,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 14,
+              "last_ordinal": 21,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 22,
+              "last_ordinal": 28,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 29,
+              "last_ordinal": 36,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 37,
+              "last_ordinal": 43,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 44,
+              "last_ordinal": 51,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 52,
+              "last_ordinal": 58,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 59,
+              "last_ordinal": 65,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 66,
+              "last_ordinal": 73,
+              "lines": 8,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 74,
+              "last_ordinal": 80,
+              "lines": 7,
+              "total_physical_lines": 85
+            },
+            {
+              "first_ordinal": 81,
+              "last_ordinal": 84,
+              "lines": 4,
+              "total_physical_lines": 85
+            }
+          ],
+          "continuation_pages": 12,
+          "inspection_completed": true,
+          "local_eof": true
+        },
+        "narrative": {
+          "tools": [
+            "query_research71_preview",
+            "inspect_research71_preview"
+          ]
+        },
+        "research": {
+          "all_five_called": true,
+          "tools": [
+            "describe_corpus",
+            "search_evidence",
+            "read_evidence",
+            "follow_evidence",
+            "inspect_evidence"
+          ]
+        },
+        "story": {
+          "actual_coverage": [
+            {
+              "end": 576,
+              "full_text_sha256": "d80e4b67ef06f9fe20bb40b418c974652874cd28040bb6a257c06b0ac4c8ab9a",
+              "segment_sha256": "92a05a40f347d63668acab79977833b608f72d25a45fae887ac10b6aed40693c",
+              "start": 400,
+              "total_chars": 576
+            }
+          ],
+          "continuation_pages": 1,
+          "inspection_completed": true,
+          "local_eof": true
+        }
+      },
+      "formal_release_accepted": false,
+      "model_autonomous_acceptance": false,
+      "status": "PASS_REBUILT_MCP_TRANSPORT_AND_CONTINUATION"
+    },
+    "candidate-modes-mcp": {
+      "calls": 17,
+      "default_literal_equal": true,
+      "formal_release_accepted": false,
+      "literal_pagination_nonrepeating": true,
+      "model_autonomous_acceptance": false,
+      "modes": {
+        "hybrid": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "lexical": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "literal": {
+          "hits": 3,
+          "read_inspect_pass": true
+        },
+        "semantic": {
+          "hits": 3,
+          "read_inspect_pass": true
+        }
+      },
+      "status": "PASS_FRESH_SEMANTIC_MCP_MODES",
+      "tools": [
+        "describe_corpus",
+        "search_evidence",
+        "read_evidence",
+        "follow_evidence",
+        "inspect_evidence"
+      ]
+    }
+  },
+  "physical_equivalence": {
+    "all_values_equal": true,
+    "bitwise_float_identity_claimed": false,
+    "duplicate_coordinate_occurrences_preserved": true,
+    "logical_identity_claimed": false,
+    "max_absolute_difference": 0.0,
+    "rows": 106589,
+    "same_vector_id_order": false,
+    "text_coordinate_value_multisets_equal": true,
+    "text_multiset_sha256": "264a597f3c616f0a4f3e37e68df895ac30c98b74d833288d2199162a46512f98",
+    "text_rows": 3761013
+  },
+  "schema_equivalence": {
+    "baseline": "60ce13c",
+    "definitions": 19,
+    "sqlite_master_definitions_equal": true,
+    "status": "PASS"
+  },
+  "source": {
+    "commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "fresh_network_acquisition": false,
+    "tree": "aa578c08c402af39b41f1ffc95124d10f5410272"
+  },
+  "status": "PASS_EXECUTED_CHECKS_GOAL_NOT_MET",
+  "storage": {
+    "baseline_retirement": {
+      "all_original_records_and_comparison_material_preserved": true,
+      "expected_unlinked_allocated_bytes": 19393929216,
+      "files": 62
+    },
+    "before": {
+      "allocated_bytes": 51899994112,
+      "hard_headroom_bytes": 38100005888,
+      "host_free_bytes": 165407739904,
+      "unknown": []
+    },
+    "before-candidate": {
+      "allocated_bytes": 52388786176,
+      "hard_headroom_bytes": 37611213824,
+      "host_free_bytes": 165753356288,
+      "unknown": []
+    },
+    "final": {
+      "allocated_bytes": 72194478080,
+      "hard_headroom_bytes": 17805521920,
+      "host_free_bytes": 145934856192,
+      "unknown": []
+    }
+  },
+  "tests": {
+    "ci_implementation": "36aea75c8ce0dadeba435bec69e953a7452f3053",
+    "ci_run": 41012414491,
+    "code_dependency_bundles_run": 41012414357,
+    "final_full": {
+      "errors": 0,
+      "failures": 0,
+      "seconds": 125.028,
+      "skipped": 0,
+      "state": "PASS",
+      "tests": 669
+    },
+    "final_targeted": {
+      "passed": 38,
+      "seconds": 3.02
+    },
+    "focused_coverage_percent": 77,
+    "initial_full": {
+      "passed": 669,
+      "seconds": 127.82
+    },
+    "native_hnsw": {
+      "passed": 7,
+      "seconds": 1.34
+    },
+    "native_windows_full_source": "NOT_RUN",
+    "new_autonomous_model_matrix": "NOT_RUN",
+    "prior_final_attempt": {
+      "failed": 1,
+      "passed": 668,
+      "reason": "new documentation linked the measured JSON before it was generated; original log retained, missing file supplied and full suite rerun"
+    },
+    "ubuntu": {
+      "passed": 669,
+      "seconds": 152.51
+    },
+    "windows": {
+      "passed": 669,
+      "seconds": 624.76
+    }
+  }
+}

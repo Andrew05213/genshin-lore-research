@@ -54,6 +54,30 @@ def test_real_disk_build_compacts_verifies_and_publishes(inputs, tmp_path):
     assert all(seal(Path(p)) == s for p, s in before.items())
 
 
+def test_bulk_load_retains_unique_constraints_and_builds_identical_final_schema(inputs,tmp_path,monkeypatch):
+    original=builder.project_component
+    def project(src,out,*args,**kwargs):
+        assert not out.execute("SELECT 1 FROM sqlite_master WHERE name='research_text_scope'").fetchone()
+        result=original(src,out,*args,**kwargs)
+        with pytest.raises(sqlite3.IntegrityError):
+            out.execute('INSERT INTO research_text SELECT * FROM research_text')
+        # A fresh primary key must still fail the physical-occurrence UNIQUE
+        # constraint, while the ordinary query indexes are not yet present.
+        row=list(out.execute('SELECT * FROM research_text LIMIT 1').fetchone())
+        row[0]+=1_000_000
+        with pytest.raises(sqlite3.IntegrityError):
+            out.execute('INSERT INTO research_text VALUES('+','.join('?' for _ in row)+')',row)
+        return result
+    monkeypatch.setattr(builder,'project_component',project)
+    run(inputs,tmp_path)
+    with sqlite3.connect(tmp_path/'中文 output/artifact.sqlite') as db, sqlite3.connect(':memory:') as expected:
+        expected.executescript(builder.old.SCHEMA)
+        query="SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name"
+        assert db.execute(query).fetchall()==expected.execute(query).fetchall()
+    phases=[v['phase'] for v in events(tmp_path)]
+    assert phases.index('query_indexes_complete')<phases.index('oracle_start')
+
+
 def test_vacuum_failure_keeps_oracle_phase_database_and_original_error(inputs, tmp_path, monkeypatch):
     def fail(db):
         assert db.execute('SELECT COUNT(*) FROM research_text').fetchone()[0] == 1
