@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'scripts/**'
       - 'setup.cmd'
+      - 'setup.sh'
       - 'recipes/**'
       - 'schemas/**'
       - 'migrations/**'
