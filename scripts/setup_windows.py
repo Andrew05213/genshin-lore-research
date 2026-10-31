@@ -114,8 +114,12 @@ def install(root, *, jobs=2):
     if not python.exists():
         run([sys.executable, '-m', 'venv', root / '.venv'])
     run([python, '-c', 'import sys; sys.exit(0 if sys.version_info[:2] == (3,12) else 1)'])
-    run([python, '-m', 'pip', 'install', 'setuptools>=77', 'wheel'])
-    run([python, '-m', 'pip', 'install', '--no-build-isolation', '-e', '.[semantic]'])
+    # hnswlib needs numpy/pybind11 at metadata/build time, before pip installs
+    # its resolved runtime dependencies. Use the same pinned order as bundle CI.
+    run([python, '-m', 'pip', 'install', '--require-hashes', '-r', 'requirements-wheel-build.lock'])
+    run([python, '-m', 'pip', 'install', '--no-build-isolation', '--require-hashes',
+         '-r', 'requirements-tools.lock'])
+    run([python, '-m', 'pip', 'install', '--no-deps', '--no-build-isolation', '-e', '.'])
     # Dispatch after dependencies are installed, without installing into the system Python.
     if Path(sys.executable).resolve() != python.resolve():
         run([python, root / 'scripts' / 'setup_windows.py', '--prepared', '--logged', '--jobs', jobs])

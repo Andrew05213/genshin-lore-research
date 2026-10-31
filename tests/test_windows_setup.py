@@ -137,6 +137,42 @@ def test_failed_command_is_not_ignored():
         setup.run([sys.executable, '-c', 'raise SystemExit(7)'])
 
 
+def test_clean_install_prepares_locked_native_dependencies_first(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.setattr(setup, 'run', lambda args: calls.append([str(a) for a in args]))
+    # install changes only the subprocess environment and cwd; restore both afterwards.
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv('PYTHONUTF8', '1')
+    monkeypatch.setenv('PYTHONPATH', '')
+    monkeypatch.setenv('PIP_CACHE_DIR', '')
+    setup.install(tmp_path, jobs=1)
+    installs = [args for args in calls if 'pip' in args]
+    assert len(installs) == 3
+    assert installs[0][-1] == 'requirements-wheel-build.lock'
+    assert '--require-hashes' in installs[0]
+    assert installs[1][-1] == 'requirements-tools.lock'
+    assert '--require-hashes' in installs[1]
+    assert '--no-build-isolation' in installs[1]
+    assert installs[2][-2:] == ['-e', '.']
+    assert '--no-deps' in installs[2]
+    assert calls[-1][-1] == '1'
+
+
+@pytest.mark.parametrize('failure', ['requirements-wheel-build.lock', 'requirements-tools.lock'])
+def test_native_dependency_install_failure_stops_before_build(monkeypatch, tmp_path, failure):
+    monkeypatch.chdir(tmp_path)
+    for key in ('PYTHONUTF8', 'PYTHONPATH', 'PIP_CACHE_DIR'):
+        monkeypatch.setenv(key, '')
+    def run(args):
+        if args[-1] == failure:
+            raise subprocess.CalledProcessError(1, args)
+        if '--prepared' in args:
+            pytest.fail('continued after dependency installation failed')
+    monkeypatch.setattr(setup, 'run', run)
+    with pytest.raises(subprocess.CalledProcessError):
+        setup.install(tmp_path)
+
+
 @pytest.mark.skipif(os.name != 'nt', reason='native PowerShell parser check runs in Windows CI')
 def test_bootstrap_powershell_parses():
     script = setup.ROOT / 'scripts' / 'setup_windows.ps1'
