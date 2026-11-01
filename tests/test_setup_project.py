@@ -9,7 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from scripts import setup_windows as setup
+from scripts import setup_project as setup
 
 
 def test_project_config_round_trip_backup_and_idempotence(tmp_path):

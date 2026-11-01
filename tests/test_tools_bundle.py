@@ -69,6 +69,7 @@ def test_windows_bootstraps_are_packaged_with_exact_byte_seals(checkout, tmp_pat
     root, wheels = checkout
     wheel(wheels)
     files = {'setup.cmd': b'@echo off\r\necho synthetic\r\n',
+             'setup.sh': b'#!/usr/bin/env bash\necho synthetic\n',
              'scripts/setup_windows.ps1': b'Write-Host "synthetic"\r\n'}
     for name, raw in files.items():
         path = root / name
@@ -86,7 +87,7 @@ def test_windows_bootstraps_are_packaged_with_exact_byte_seals(checkout, tmp_pat
                 'size_bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()}
 
 
-@pytest.mark.parametrize('name', ['other.cmd', 'scripts/other.ps1', 'data.sqlite', 'model.onnx'])
+@pytest.mark.parametrize('name', ['other.cmd', 'other.sh', 'scripts/other.ps1', 'data.sqlite', 'model.onnx'])
 def test_bootstrap_exception_does_not_allow_other_tracked_files(checkout, tmp_path, name):
     root, wheels = checkout
     wheel(wheels)

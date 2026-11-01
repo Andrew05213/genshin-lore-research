@@ -17,6 +17,7 @@
 | [冷构建与阶段复用](build-reuse.md) | 进程内独立输入缓存、v3 回执、同条件耗时及未执行范围 |
 | [非向量完整构建性能](nonvector-build-performance.md) | 两次新目录完整来源构建、保留/放弃的优化、完整核验与实际耗时 |
 | [Windows 源码使用](guides/windows.md) | PowerShell、平台边界和原生 CI |
+| [Linux 一键安装](guides/linux.md) | Bash 入口、环境准备、完整构建、项目级 MCP 和日志恢复 |
 | [工程维护范围](engineering-maintenance.md) | 当前重构边界、复杂度控制与验证层次 |
 | [工程整改交付（历史）](engineering-finalization.md) | 当时六个待审 PR、200 项测试、原生 CI、A/B、review 与执行范围 |
 | [后续审查修复](reviews/engineering-followup.md) | 两项 Windows 实际路径缺口、正式关系 oracle 完整性及新增 12 项测试 |
