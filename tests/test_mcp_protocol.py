@@ -139,6 +139,26 @@ def test_near_cap_search_keeps_exact_results_without_optional_panel_or_handles(t
     anyio.run(run)
 
 
+def test_oversized_first_speech_only_omits_preview_not_successful_search(tmp_path):
+    config = config_at(tmp_path/'oversized-first')
+    async def run():
+        async with fixture_client(config, '--large-search', '--search-body-padding', '160000') as client:
+            args = {'corpus_ref': 'synthetic-corpus', 'query': '合成角色甲', 'locale': 'CHS', 'limit': 1}
+            raw = payload(await client.call_tool('search_evidence', {**args, 'detail': 'full'}))
+            result = payload(await client.call_tool('search_evidence', args))
+            assert result['status'] == raw['status'] == 'ok'
+            assert result['data']['next_cursor'] == raw['data']['next_cursor'] and result['data']['next_cursor']
+            assert result['data']['items'][0]['evidence_ref'] == raw['data']['items'][0]['evidence_ref']
+            view = result['data']['reading_view']
+            assert view['body_previews'] == [] and view['next_actions'] and view['partial']
+            assert view['omission_reason'] == 'preview_read_byte_limit'
+            action = view['next_actions'][0]
+            assert action['tool'] == 'read_evidence' and action['arguments']['view'] == 'physical'
+            body = payload(await client.call_tool(action['tool'], action['arguments']))
+            assert body['status'] == 'ok' and len(body['data']['raw_text']) > 160_000
+    anyio.run(run)
+
+
 def test_real_mcp_stdio_from_two_isolated_configs(tmp_path):
     configs = [config_at(tmp_path/arm) for arm in ('a', 'b')]
 

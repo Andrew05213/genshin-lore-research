@@ -170,7 +170,7 @@ class CodexDialogue:
         return value
 
     def read(self, corpus, anchor, parent, text, limit, cursor, locale, detail='full'):
-        from .presentation import check_detail, page_item, READING_PAGE_BYTES
+        from .presentation import check_detail, page_item, READING_PAGE_BYTES, DialoguePageBudgetExceeded
         check_detail(detail)
         npc = parent['evidence_family'] == 'npc_archive'
         names = self.context._texts(parent, locale, {'nameTextMapHash'}) if npc else []
@@ -222,7 +222,8 @@ class CodexDialogue:
             if detail == 'reading': item, next_titles = page_item(item, titles)
             if len(json.dumps({'nodes': nodes+[item], 'name_candidates': names, 'source_titles': next_titles}, ensure_ascii=False).encode()) > byte_limit:
                 if not nodes:
-                    raise ValueError('one Codex dialogue record exceeds view budget; use ordinary exact reads')
+                    raise DialoguePageBudgetExceeded('one Codex dialogue record exceeds view budget; use ordinary exact reads',
+                        [t['evidence_ref'] for t in item.get('texts', [])])
                 byte_limited = True
                 break
             nodes.append(item)

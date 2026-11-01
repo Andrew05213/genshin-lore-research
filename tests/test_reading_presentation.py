@@ -260,3 +260,48 @@ def test_over_budget_handoff_does_not_commit_handles_or_receipts(tmp_path):
     assert result['citation_handoff']['request'] == 'R1'
     assert len(list(tmp_path.iterdir())) == 1
     assert handoff.resolve(result['data']['citation_handle'])['evidence_ref'] == 'exact-synthetic'
+
+
+def test_compact_neighbour_locator_requires_actual_body_read_not_just_inspect(tmp_path):
+    q, _, ref = populated_fixture()
+    h = CitationHandoff(tmp_path)
+    page = h.attach({'status': 'ok', 'data': q.read(q.corpus_ref, ref, view='dialogue', limit=1, detail='reading')}, 'read', compact=True)
+    locator = page['data']['nodes'][0]['source_context']['after'][0]['texts'][0]
+    handle = locator['citation_handle']; record = h.resolve(handle); exact = record['evidence_ref']
+    assert locator['locator_only'] and record['quoted_text'] is None and not record['material_read']
+    inspected = h.attach({'status': 'ok', 'data': q.inspect(q.corpus_ref, exact)}, 'inspect', inspected_ref=exact)
+    calls = [{'result': out, 'status': 'completed', 'item_id': str(i), 'server': 'fixture', 'tool': tool}
+             for i, (out, tool) in enumerate(((page, 'read_evidence'), (inspected, 'inspect_evidence')))]
+    def bound():
+        return bind_capture({'tool_calls': calls, 'stdout_sha256': 'fixture'}, tmp_path)
+    assert render_answer('合成陈述。'+handle, bound())['status'] == 'DELIVERY_FAILED'
+    body = h.attach({'status': 'ok', 'data': q.read(q.corpus_ref, exact)}, 'read')
+    calls.append({'result': body, 'status': 'completed', 'item_id': 'body', 'server': 'fixture', 'tool': 'read_evidence'})
+    body_handle = body['data']['citation_handle']
+    assert h.resolve(body_handle)['quoted_text'] == '合成发言1'
+    assert render_answer('合成发言1。'+body_handle, bound())['status'] == 'DELIVERED'
+    # The existing ledger permits a locator citation after THIS exact target
+    # has actually been read and inspected, without rewriting its record.
+    assert render_answer('合成陈述。'+handle, bound())['status'] == 'DELIVERED'
+    assert not h.resolve(handle)['material_read']
+
+
+@pytest.mark.parametrize('operation', ['read', 'query'])
+def test_navigation_targets_are_unread_locators_even_inside_read_or_query(operation):
+    h = CitationHandoff()
+    out = h.attach({'status': 'ok', 'data': {'edges': [{'target_evidence_ref': 'synthetic-target'}]}}, operation)
+    record = h.resolve(out['data']['edges'][0]['target_citation_handle'])
+    assert record['source_result']['locator_only'] and not record['material_read']
+    assert not record['qualified_by_inspect']
+
+
+def test_optional_preview_never_hides_source_integrity_failure(monkeypatch):
+    from genshin_lore.dialogue.context import DialogueContext
+    q, _, ref = populated_fixture()
+    def drift(*args, **kwargs):
+        raise ValueError('Codex source bytes SHA drift')
+    monkeypatch.setattr(DialogueContext, 'read', drift)
+    result = {'items': [{'evidence_ref': ref, 'family': 'npc_archive',
+                        'owner_field': 'nameTextMapHash', 'snippet': '合成角色甲'}]}
+    with pytest.raises(ValueError, match='source bytes SHA drift'):
+        search_reading(q, result, '合成角色甲', 'CHS')

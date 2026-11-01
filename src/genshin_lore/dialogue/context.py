@@ -346,7 +346,7 @@ class DialogueContext:
         return texts, edges
 
     def read(self, corpus, evidence_ref, limit=8, cursor=None, locale='CHS', detail='full'):
-        from .presentation import check_detail, reading_card, READING_PAGE_BYTES
+        from .presentation import check_detail, reading_card, READING_PAGE_BYTES, DialoguePageBudgetExceeded
         check_detail(detail)
         self.q._require(corpus)
         if type(limit) is not int or not 1 <= limit <= 20:
@@ -403,7 +403,8 @@ class DialogueContext:
             if len(json.dumps({'nodes': nodes + [item], 'source_context': card}, ensure_ascii=False).encode()) > byte_limit:
                 frontier.insert(0, current)
                 if not nodes:
-                    raise ValueError('one dialogue node exceeds view budget; use ordinary read or character-range continuation')
+                    raise DialoguePageBudgetExceeded('one dialogue node exceeds view budget; use ordinary read or character-range continuation',
+                        [t['evidence_ref'] for t in item['texts']])
                 byte_limited = True
                 break
             nodes.append(item); visited.append(current)

@@ -108,6 +108,10 @@ MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用�
 
 搜索面板的 `text_groups` 同样只提供 `representative.preview_index` 与 occurrence 下标，正文、独立 ref 和 proof 在对应 `body_previews` 中。完整搜索 envelope（包括引用元数据）在交付前检查字节上限；放不下时从末尾减少可选预览并标记 `omission_reason="response_byte_limit"`，不截断保留的原文、不改变原始命中或 cursor。极接近上限时可以省略整个面板及可选句柄元数据，使用原始 exact refs 继续 read/inspect；不把可选展示超限变成无结果，也不留下未交付的句柄或回执。
 
+首条发言本身超过对白视图预算时，仅省略可选预览，标记 `preview_read_byte_limit`，保留成功搜索及 cursor，并提供已核验正文的普通物理读取入口；不是“没有发言”。只有专门的视图预算异常允许这样处理，来源 SHA、scope 或其他资格错误仍正常拒绝。
+
+紧凑邻居及导航目标标记为 `locator_only`：可以定位并 inspect，但仅 inspect 不表示正文已交付。必须实际读取同一 exact ref，才能满足现有 read-and-inspect 交付条件；优先引用实际正文读取返回的句柄。定位器原记录仍保持未读，不由程序改写成正文或自动更换引用。
+
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
 
 人物到任务档案发言的修复、真实 MCP/Sol 检查与保留失败见 [案例验证](../reviews/npc-dialogue-discovery.md)。

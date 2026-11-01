@@ -18,13 +18,14 @@ def main():
     parser.add_argument('--large-dialogue', action='store_true')
     parser.add_argument('--domain-npc', action='store_true')
     parser.add_argument('--large-search', action='store_true')
+    parser.add_argument('--search-body-padding', type=int, default=45_000)
     parser.add_argument('--search-padding', type=int, default=0)
     parser.add_argument('--search-target-bytes', type=int, default=0)
     args = parser.parse_args()
     paths = load_runtime_paths(args.config)
     if args.domain_npc or args.large_search:
         from test_codex_dialogue import populated_fixture
-        query, _, anchor = populated_fixture(body_padding=45_000 if args.large_search else 0)
+        query, _, anchor = populated_fixture(body_padding=args.search_body_padding if args.large_search else 0)
         literal_search = query.search
         def search(corpus, keyword, locale, families, prefix, limit, cursor, mode, domain, story_release):
             # Exercise the server's resolved-domain boundary, not ANN ranking.

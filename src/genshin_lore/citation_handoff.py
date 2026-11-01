@@ -78,8 +78,8 @@ class CitationHandoff:
                               'quoted_text': body, 'quoted_text_sha256': hashlib.sha256(body.encode()).hexdigest() if body is not None else None,
                               'citation_label': node.get('citation_label'),
                               'source_result': copy.deepcopy(node),
-                              'material_read': operation in ('read', 'query') or (operation == 'inspect' and body is not None),
-                              'qualified_by_inspect': operation in ('query', 'inspect'),
+                              'material_read': not node.get('locator_only', False) and (operation in ('read', 'query') or (operation == 'inspect' and body is not None)),
+                              'qualified_by_inspect': not node.get('locator_only', False) and operation in ('query', 'inspect'),
                               'proof_semantics': 'unchanged source result; handles do not establish ownership or identity'}
                     records.append(record)
                     node['citation_handle'] = handle
@@ -89,7 +89,7 @@ class CitationHandoff:
                     if link: node['source_link'] = link
                 # Navigation locators are addressable, not inspected material.
                 if isinstance(node.get('target_evidence_ref'), str):
-                    locator = {'evidence_ref': node['target_evidence_ref']}
+                    locator = {'evidence_ref': node['target_evidence_ref'], 'locator_only': True}
                     visit(locator)
                     node['target_citation_handle'] = locator['citation_handle']
                 for key, child in list(node.items()):

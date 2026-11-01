@@ -6,6 +6,15 @@ import re
 from urllib.parse import quote
 
 READING_PAGE_BYTES = 160_000  # leaves room for scoped citation metadata under MCP's 256 KiB cap
+
+
+class DialoguePageBudgetExceeded(ValueError):
+    """A single qualified node cannot fit this bounded reading view."""
+    def __init__(self, message, text_refs=()):
+        super().__init__(message)
+        self.text_refs = tuple(text_refs)
+
+
 # Existing Character decoder fields, not inferred roles for unknown fields.
 CHARACTER_BODY_FIELDS = {'descTextMapHash', 'avatarDetailTextMapHash', 'storyContextTextMapHash',
                          'storyContext2TextMapHash', 'voiceFileTextTextMapHash'}
@@ -73,7 +82,7 @@ def page_item(card, titles):
     if indexes: context['title_indexes'] = indexes
     for direction in ('before', 'after'):
         if direction in context:
-            context[direction] = [{'node': n['node'], 'texts': [{'evidence_ref': t['evidence_ref']} for t in n.get('texts', [])],
+            context[direction] = [{'node': n['node'], 'texts': [{'evidence_ref': t['evidence_ref'], 'locator_only': True} for t in n.get('texts', [])],
                 'speaker_label': n.get('speaker', {}).get('display_name'),
                 'speaker_status': n.get('speaker', {}).get('status')} for n in context[direction]]
     context['neighbour_delivery'] = 'locators only; read a returned text ref with detail=full for surrounding bodies'
@@ -169,6 +178,7 @@ def search_reading(service, result, query, locale, *, filters=False):
     helper = DialogueContext(service)
     names, bodies, actions = [], [], []
     seen = set()
+    preview_omission = None
     body_indexes, titles, other = [], [], []
     for index, item in enumerate(result.get('items', [])):
         field = item.get('owner_field')
@@ -196,7 +206,17 @@ def search_reading(service, result, query, locale, *, filters=False):
             name = item.get('snippet')
             if name == query and name not in seen and not filters:
                 seen.add(name)
-                page = helper.read(service.corpus_ref, ref, limit=3, locale=action['arguments']['locale'], detail='reading')
+                try:
+                    page = helper.read(service.corpus_ref, ref, limit=3, locale=action['arguments']['locale'], detail='reading')
+                except DialoguePageBudgetExceeded as exc:
+                    # The name search is valid. Only this optional view failed;
+                    # never hide integrity/scope failures under a broad ValueError.
+                    preview_omission = 'preview_read_byte_limit'
+                    page = {'nodes': []}
+                    if exc.text_refs:
+                        action = {'tool': 'read_evidence', 'arguments': {'corpus_ref': service.corpus_ref,
+                            'evidence_ref': exc.text_refs[0], 'view': 'physical'},
+                            'reason': 'qualified body locator only; preview exceeded page budget, read body then inspect'}
                 for node in page['nodes']:
                     for text in node.get('texts', []):
                         bodies.append({**text, 'source_title': node.get('source_context', {}).get('display_title'),
@@ -210,6 +230,7 @@ def search_reading(service, result, query, locale, *, filters=False):
         actions = character_actions + actions
     return {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names,
             'title_matches': titles, 'other_matches': other, 'text_groups': text_groups(bodies),
+            **({'omission_reason': preview_omission} if preview_omission else {}),
             'next_actions': actions[:3], 'preview_scope': 'current search page; unfiltered exact name: at most three speech nodes plus two Character navigation targets. Not exhaustive; follow scopes differ from search hits.',
             'partial': True, 'logical_identity_proven': False,
             'original_items_and_cursor_unchanged': True}
