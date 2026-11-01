@@ -25,6 +25,9 @@ def shell_environment(tmp_path):
     root = tmp_path / '中文 project'
     root.mkdir()
     shutil.copyfile(setup.ROOT / 'setup.sh', root / 'setup.sh')
+    skill = root / '.agents/skills/genshin-lore-research/SKILL.md'
+    skill.parent.mkdir(parents=True)
+    shutil.copyfile(setup.ROOT / skill.relative_to(root), skill)
     tools = tmp_path / 'tools'
     tools.mkdir()
     for name in ('uname', 'mkdir', 'date', 'tee', 'dirname'):
@@ -58,6 +61,42 @@ def test_shell_handoff_logs_args_and_preserves_failure(shell_environment, exit_c
     assert 'scripts/setup_project.py --jobs 1' in raw
     assert 'synthetic stderr retained' in raw
     assert sentinel.read_bytes() == b'prior failure evidence'
+    assert ('$genshin-lore-research' in result.stdout) is (exit_code == 0)
+
+
+@pytest.mark.parametrize('empty', [False, True])
+def test_shell_missing_skill_stops_before_python(shell_environment, empty):
+    root, _, _, env = shell_environment
+    skill = root / '.agents/skills/genshin-lore-research/SKILL.md'
+    if empty:
+        skill.write_bytes(b'')
+    else:
+        skill.unlink()
+    result = subprocess.run(['/bin/bash', str(root / 'setup.sh')], env=env,
+                            capture_output=True, text=True, timeout=15)
+    assert result.returncode == 1
+    assert 'research skill missing or empty' in result.stdout
+    assert 'synthetic invocation' not in result.stdout
+    assert not (root / '.codex').exists()
+
+
+@pytest.mark.skipif(os.name != 'nt', reason='native PowerShell execution runs in Windows CI')
+@pytest.mark.parametrize('empty', [False, True])
+def test_windows_missing_skill_stops_before_tool_installation(tmp_path, empty):
+    root = tmp_path / '中文 project'
+    script = root / 'scripts/setup_windows.ps1'
+    script.parent.mkdir(parents=True)
+    shutil.copyfile(setup.ROOT / 'scripts/setup_windows.ps1', script)
+    if empty:
+        skill = root / '.agents/skills/genshin-lore-research/SKILL.md'
+        skill.parent.mkdir(parents=True)
+        skill.write_bytes(b'')
+    result = subprocess.run(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(script)],
+                            capture_output=True, text=True, timeout=15)
+    assert result.returncode == 1
+    assert 'research skill missing or empty' in result.stdout
+    assert 'SETUP COMPLETE' not in result.stdout
+    assert not (root / '.codex').exists()
 
 
 def test_shell_dependency_failure_never_enters_installer(shell_environment):

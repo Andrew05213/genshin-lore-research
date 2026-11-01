@@ -70,7 +70,9 @@ def test_windows_bootstraps_are_packaged_with_exact_byte_seals(checkout, tmp_pat
     wheel(wheels)
     files = {'setup.cmd': b'@echo off\r\necho synthetic\r\n',
              'setup.sh': b'#!/usr/bin/env bash\necho synthetic\n',
-             'scripts/setup_windows.ps1': b'Write-Host "synthetic"\r\n'}
+             'scripts/setup_windows.ps1': b'Write-Host "synthetic"\r\n',
+             '.agents/skills/synthetic-research/SKILL.md':
+                 b'---\nname: synthetic-research\ndescription: Synthetic research fixture.\n---\n'}
     for name, raw in files.items():
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)

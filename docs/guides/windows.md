@@ -13,6 +13,8 @@
 4. 运行完整35输入构建及默认向量，通过已有阶段回执决定复用；随后执行对白服务启动和真实 MCP 程序化检查。
 5. 写入 `.codex/config.toml` 的 `genshin-lore-research71` 连接；保留其他配置、备份旧文件，同名冲突拒绝覆盖。安装器不改用户级配置。
 
+安装器在开始数据准备前检查随源码提供的 [研究 Skill](../../.agents/skills/genshin-lore-research/SKILL.md)。它位于仓库 `.agents/skills/`，由 Codex 在该项目内自动发现，无需写用户全局目录。安装完成会显示其路径；研究时可显式使用 `$genshin-lore-research`。Skill 提供研究方法，不代替 MCP 配置或数据库。
+
 成功后在 Codex 打开并信任该项目，重启 MCP 连接，以 `/mcp` 确认五工具可见。
 这仍需客户端正常的信任操作；脚本不替用户关闭权限保护，也不把程序化检查称为模型答案验收。
 原生 Codex 不自动获得项目专用 citation renderer。

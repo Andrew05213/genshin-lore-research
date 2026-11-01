@@ -31,6 +31,10 @@ function Find-Python312 {
 }
 
 try {
+    $skill = Join-Path (Get-Location) '.agents\skills\genshin-lore-research\SKILL.md'
+    if (-not (Test-Path -LiteralPath $skill -PathType Leaf) -or (Get-Item -LiteralPath $skill).Length -eq 0) {
+        throw "Repository research skill missing or empty: $skill. Obtain a complete source checkout."
+    }
     Require-Tool 'git' 'Git.Git'
     $python = Find-Python312
     if (-not $python) {
@@ -56,7 +60,12 @@ try {
         if (-not $compiler) { throw 'C++ toolchain is not ready. Complete installation/restart and retry setup.cmd.' }
     }
     & $python (Join-Path $PSScriptRoot 'setup_windows.py') @args
-    exit $LASTEXITCODE
+    $result = $LASTEXITCODE
+    if ($result -eq 0) {
+        Write-Host "Research skill: $skill"
+        Write-Host 'Available in this Codex project; invoke $genshin-lore-research or let Codex select it for lore research.'
+    }
+    exit $result
 } catch {
     Write-Host $_ -ForegroundColor Red
     exit 1

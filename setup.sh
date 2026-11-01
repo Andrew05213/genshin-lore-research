@@ -16,6 +16,11 @@ log="data/setup-logs/linux-bootstrap-$(date -u +%Y%m%dT%H%M%S)-$$.log"
 echo "Installer log: $log"
 
 main() {
+    local skill='.agents/skills/genshin-lore-research/SKILL.md'
+    if [[ ! -f "$skill" || ! -s "$skill" ]]; then
+        echo "Repository research skill missing or empty: $skill. Obtain a complete source checkout." >&2
+        return 1
+    fi
     local python='' candidate
     for candidate in python3.12 python3; do
         if command -v "$candidate" >/dev/null && "$candidate" -c 'import sys; sys.exit(sys.version_info[:2] != (3,12))'; then
@@ -43,6 +48,8 @@ main() {
     fi
     export PYTHONUTF8=1
     "$python" scripts/setup_project.py "$@"
+    echo "Research skill: $PWD/$skill"
+    echo 'Available in this Codex project; invoke $genshin-lore-research or let Codex select it for lore research.'
 }
 
 # Keep the actual installer exit code through tee, including dependency failures.

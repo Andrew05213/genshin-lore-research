@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - '.agents/skills/**'
       - '.github/workflows/tools-bundle.yml'
       - 'scripts/maintenance/package_tools.py'
       - 'requirements-tools.lock'
