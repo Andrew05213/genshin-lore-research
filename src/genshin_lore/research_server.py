@@ -24,7 +24,7 @@ def create_server(service:ResearchQuery)->MCPServer:
    if handoff and fn.__name__ in ('read','follow','inspect'):args[1]=handoff.resolve(args[1])['evidence_ref']
    out={"status":"ok","corpus_ref":service.corpus_ref,"data":fn(*args,**kw)}
    if fn.__name__=='search' and detail=='reading':
-    out['data']={'reading_view':search_reading(service,out['data'],args[1],args[2],filters=bool(args[3] or args[4] or args[9])),**out['data']}
+    out['data']={'reading_view':search_reading(service,out['data'],args[1],args[2],filters=bool(args[3] or args[4] or args[8] or args[9]) or out['data'].get('domain_filter') is not None),**out['data']}
    if fn.__name__=='read' and out['data'].get('view')=='dialogue' and out['data'].get('detail')=='reading':
     out['data']['display_groups']=page_groups(out['data']['nodes'])
    if handoff:out=handoff.attach(out,fn.__name__,inspected_ref=args[1] if fn.__name__=='inspect' else None,

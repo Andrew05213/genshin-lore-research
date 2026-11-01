@@ -10,6 +10,15 @@ READING_PAGE_BYTES = 160_000  # leaves room for scoped citation metadata under M
 CHARACTER_BODY_FIELDS = {'descTextMapHash', 'avatarDetailTextMapHash', 'storyContextTextMapHash',
                          'storyContext2TextMapHash', 'voiceFileTextTextMapHash'}
 CHARACTER_TITLE_FIELDS = {'storyTitleTextMapHash', 'storyTitle2TextMapHash', 'voiceTitleTextMapHash'}
+# Display hints for fields already declared by the source adapters/readers.
+# Unknown fields stay unclassified; these labels never upgrade source proof.
+NAME_FIELDS = {'nameTextMapHash', 'avatarName', 'name', 'Name', 'SpeakerKnown'}
+TITLE_FIELDS = CHARACTER_TITLE_FIELDS | {'MainQuestTitle', 'SubQuestTitle', 'ChapterTitle',
+    'titleTextMapHash', 'title', 'Title', 'storyTitleLockedTextMapHash', 'voiceTitleLockedTextMapHash'}
+BODY_FIELDS = CHARACTER_BODY_FIELDS | {'body', 'talkContentTextMapHash', 'contentTextMapHash',
+    'stepDescTextMapHash', 'MainQuestDesp', 'reviewTextMapHash', 'markDescTextMapHash',
+    'voiceDescTextMapHash', 'markTipContentTextMapHash', 'cgDesTextMapHash', 'newsTextTextMapHash',
+    'talkContent/0', 'talkContent/1'}
 
 
 def check_detail(detail):
@@ -39,7 +48,7 @@ def page_groups(nodes):
     for i, node in enumerate(nodes):
         for j, text in enumerate(node.get('texts', [])):
             key = text.get('locale'), text['raw_text']
-            group = groups.setdefault(key, {'text': text['raw_text'], 'locale': text.get('locale'),
+            group = groups.setdefault(key, {'representative': {'node_index': i, 'text_index': j}, 'locale': text.get('locale'),
                 'occurrences': [], 'display_group_only': True, 'logical_identity_proven': False})
             group['occurrences'].append({'node_index': i, 'text_index': j})
     return list(groups.values())
@@ -141,14 +150,24 @@ def character_reading(service, query, locale):
 def search_reading(service, result, query, locale, *, filters=False):
     """An additive bounded reading panel; literal items and cursor stay untouched."""
     from .context import DialogueContext
+    from .codex import BODY_LABELS
     helper = DialogueContext(service)
     names, bodies, actions = [], [], []
     seen = set()
-    body_indexes = []
+    body_indexes, titles, other = [], [], []
     for index, item in enumerate(result.get('items', [])):
-        is_name = item.get('owner_field') in {'nameTextMapHash', 'avatarName', 'name', 'Name'}
-        if not is_name:
+        field = item.get('owner_field')
+        if field in TITLE_FIELDS:
+            titles.append({'item_index': index, 'title': item.get('snippet'), 'family': item.get('family')})
+            actions.append({'tool': 'read_evidence', 'arguments': {'corpus_ref': service.corpus_ref,
+                'evidence_ref': item.get('container_ref') or item['evidence_ref'], 'limit': 20},
+                'reason': 'read the returned physical container; a title match is not body evidence'})
+            continue
+        if field in BODY_FIELDS or field in BODY_LABELS:
             body_indexes.append(index)
+            continue
+        if field not in NAME_FIELDS:
+            other.append({'item_index': index, 'owner_field': field, 'field_role': 'unclassified'})
             continue
         names.append({'item_index': index, 'name': item.get('snippet'), 'family': item.get('family')})
         ref = item['evidence_ref']
@@ -174,7 +193,8 @@ def search_reading(service, result, query, locale, *, filters=False):
         character_bodies, character_actions = character_reading(service, query, locale or 'CHS')
         bodies = character_bodies + bodies
         actions = character_actions + actions
-    return {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names, 'text_groups': text_groups(bodies),
+    return {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names,
+            'title_matches': titles, 'other_matches': other, 'text_groups': text_groups(bodies),
             'next_actions': actions[:3], 'preview_scope': 'current search page; unfiltered exact name: at most three speech nodes plus two Character navigation targets. Not exhaustive; follow scopes differ from search hits.',
             'partial': True, 'logical_identity_proven': False,
             'original_items_and_cursor_unchanged': True}

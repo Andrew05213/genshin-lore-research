@@ -94,15 +94,15 @@ tool_timeout_sec = 60
 
 每个连接默认提供短句柄，如 `[H…:R1:E3]`，以及便于显示的 `citation_number`。reading 对白中的正文、姓名、标题和邻居定位使用 `citation_handle` 字段，不让模型复写长 ref。将完整句柄原样传入 read/follow/inspect 的 `evidence_ref` 参数；inspect 和 full 读取返回原 exact ref 与完整来源。单独的 `R1:E3` 只是显示编号，不是定位器。句柄仅在原连接有效，过期、损坏或其他连接的句柄明确失败，不猜测恢复。重启后应使用保存的 exact ref 重新读取。
 
-有固定快照身份及合格来源路径时返回真实上游文件链接；它定位文件，不承诺网页能直接打开某一 observation 或范围。没有依据时不生成伪链接。来源标题与角色标签是来源观察，不证明唯一人物身份。`display_groups` 将同文展示关联到各 node/text 位置，所有物理 occurrence 保持独立，不能将展示分组理解为合并人物或台词身份。
+有固定快照身份及合格来源路径时返回真实上游文件链接；它定位文件，不承诺网页能直接打开某一 observation 或范围。没有依据时不生成伪链接。来源标题与角色标签是来源观察，不证明唯一人物身份。`display_groups` 的 `representative` 和 `occurrences` 指向本页 node/text 位置，正文只从 nodes 读取，不在分组中重复传递。所有物理 occurrence 保持独立，不能将展示分组理解为合并人物或台词身份。
 
 默认句柄保存在连接内存中；`--citation-receipts <private-directory>` 另外保存私有不可覆盖回执，供现有 capture/project renderer 确定性展开 exact ref。模型仍选择引用并 inspect，程序不改事实、不补引、不替换材料。原生 Codex TUI/Desktop 不自动获得项目 renderer；仅有短句柄不等于最终答案已获得完整引用交付保障。
 
 ## 人物搜索与调用方展示
 
-`search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、正文命中的原始 item 下标、单独姓名字段命中及可直接执行的下一步。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、原始 items、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
+`search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、原始 items、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
 
-带 family、source 或历史版本范围的查询不自动补取范围外预览；下一步动作仍可显式选择。`detail="full"` 省略预览面板，保持原始检索路径。正文预览必须继续 read/inspect 后才能用于最终引用。材料已足够就回答，证据不足则说明 partial，避免反复改写同义关键词。
+带 family、source、历史版本或 domain 范围的查询不自动补取范围外预览；hybrid 自动解析得到的 `domain_filter` 同样受此规则约束。下一步动作仍可显式选择。`detail="full"` 省略预览面板，保持原始检索路径。正文预览必须继续 read/inspect 后才能用于最终引用。材料已足够就回答，证据不足则说明 partial，避免反复改写同义关键词。
 
 MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用方应优先消费存在的结构化结果，否则解析文本，不能把两份都展示。项目检查脚本已按此处理；其他客户端的重复展示及模型的无效搜索仍需由各自调用方控制。
 

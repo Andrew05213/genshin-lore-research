@@ -65,6 +65,8 @@ def test_display_groups_keep_equal_text_at_separate_physical_occurrences():
     assert len(groups) == 1 and len(groups[0]['occurrences']) == 2
     assert page['nodes'][0]['texts'][0]['evidence_ref'] != page['nodes'][1]['texts'][0]['evidence_ref']
     assert groups[0]['logical_identity_proven'] is False
+    assert 'text' not in groups[0]  # display references must not duplicate large bodies
+    assert groups[0]['representative'] == {'node_index': 0, 'text_index': 0}
 
 
 def test_links_are_only_real_pinned_source_file_links_not_fake_exact_anchors():
@@ -205,3 +207,32 @@ def test_compact_byte_boundary_has_resumable_exact_coverage(monkeypatch):
         assert page['page_info']['stop_reason'] == 'response_byte_limit'
         assert page['page_info']['returned_nodes'] < 20
     assert nodes == ['node-'+str(i) for i in range(0, 13, 2)]
+
+
+@pytest.mark.parametrize('keyword', ['标题', '合成任务标题'])
+def test_title_only_search_never_advertises_prose_or_dialogue(keyword):
+    q, _, _ = populated_fixture()
+    q.unavailable = []
+    q.db.execute("INSERT INTO research_text_fts(research_text_fts) VALUES('rebuild')")
+    result = q.search(q.corpus_ref, keyword, 'CHS', limit=20)
+    original = copy.deepcopy(result)
+    assert result['items'] and all('Title' in h['owner_field'] for h in result['items'])
+    view = search_reading(q, result, keyword, 'CHS')
+    assert view['body_item_indexes'] == [] and view['body_previews'] == []
+    assert [t['item_index'] for t in view['title_matches']] == list(range(len(result['items'])))
+    assert view['next_actions'] and view['next_actions'][0]['tool'] == 'read_evidence'
+    assert result == original
+
+
+def test_body_and_unclassified_metadata_keep_separate_display_indexes():
+    q, _, _ = populated_fixture()
+    result = {'items': [
+        {'evidence_ref': 'body', 'owner_field': 'DialogNormal', 'snippet': '合成对白'},
+        {'evidence_ref': 'title', 'owner_field': 'MainQuestTitle', 'snippet': '合成标题'},
+        {'evidence_ref': 'opaque', 'owner_field': 'unmapped_slot', 'snippet': '未知角色'},
+        {'evidence_ref': 'label', 'owner_field': 'SpeakerKnown', 'snippet': '合成角色'}]}
+    view = search_reading(q, result, '合成', 'CHS')
+    assert view['body_item_indexes'] == [0]
+    assert [v['item_index'] for v in view['title_matches']] == [1]
+    assert [v['item_index'] for v in view['other_matches']] == [2]
+    assert [v['item_index'] for v in view['name_matches']] == [3]

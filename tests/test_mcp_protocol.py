@@ -1,5 +1,6 @@
 """Exercise actual stdio, SDK registration and cursor/citation boundaries."""
 import json
+from contextlib import asynccontextmanager
 import os
 from pathlib import Path
 import sys
@@ -25,6 +26,63 @@ def config_at(output):
     config = output/'runtime-config.json'
     config.write_text(json.dumps(values))
     return config
+
+
+@asynccontextmanager
+async def fixture_client(config, *flags):
+    params = StdioServerParameters(command=sys.executable,
+        args=[str(ROOT/'tests/mcp_fixture_server.py'), '--config', str(config), *flags],
+        env={**os.environ, 'PYTHONPATH': os.pathsep.join([str(ROOT), str(ROOT/'src'), str(ROOT/'tests')])})
+    with anyio.fail_after(25):
+        async with stdio_client(params) as (read, write):
+            async with ClientSession(read, write) as client:
+                await client.initialize()
+                yield client
+
+
+def test_large_distinct_dialogue_bodies_fit_final_wire_and_continue(tmp_path):
+    config = config_at(tmp_path/'large')
+    async def run():
+        async with fixture_client(config, '--large-dialogue') as client:
+            async def call(name, **args):
+                out = payload(await client.call_tool(name, {'corpus_ref': 'synthetic-corpus', **args}))
+                assert out['status'] == 'ok', out
+                assert len(json.dumps(out, ensure_ascii=False, separators=(',', ':')).encode()) < 262144
+                return out['data']
+            anchor = (await call('describe_corpus'))['anchor']
+            whole = await call('read_evidence', evidence_ref=anchor, view='dialogue', limit=20)
+            assert whole['delivered_count'] == 3
+            assert len(whole['display_groups']) == 3
+            for group in whole['display_groups']:
+                assert 'text' not in group
+                pos = group['representative']
+                text = whole['nodes'][pos['node_index']]['texts'][pos['text_index']]
+                assert len(text['raw_text']) > 45_000
+                assert (await call('inspect_evidence', evidence_ref=text['citation_handle']))['evidence_ref']
+            first = await call('read_evidence', evidence_ref=anchor, view='dialogue', limit=2)
+            assert first['next_cursor'] and first['delivered_count'] == 2
+            last = await call('read_evidence', evidence_ref=anchor, view='dialogue', limit=2, cursor=first['next_cursor'])
+            combined = first['nodes'] + last['nodes']
+            assert len({node['node'] for node in combined}) == 3 and last['next_cursor'] is None
+            assert [n['texts'][0]['raw_text'] for n in combined] == [n['texts'][0]['raw_text'] for n in whole['nodes']]
+    anyio.run(run)
+
+
+@pytest.mark.parametrize('explicit_domain', [None, 'fixture_npc'])
+def test_reading_previews_honor_explicit_and_automatically_resolved_domain(tmp_path, explicit_domain):
+    config = config_at(tmp_path/'domain')
+    async def run():
+        async with fixture_client(config, '--domain-npc') as client:
+            result = payload(await client.call_tool('search_evidence', {
+                'corpus_ref': 'synthetic-corpus', 'query': '合成角色甲',
+                'locale': 'CHS', 'mode': 'hybrid', 'domain': explicit_domain}))
+            assert result['status'] == 'ok'
+            data = result['data']
+            assert data['domain_filter'] == ['npc_archive']
+            assert data['items'] and all(h['family'] == 'npc_archive' for h in data['items'])
+            assert data['reading_view']['body_previews'] == []
+            assert data['reading_view']['name_matches'] and data['reading_view']['next_actions']
+    anyio.run(run)
 
 
 def test_real_mcp_stdio_from_two_isolated_configs(tmp_path):
