@@ -106,6 +106,8 @@ tool_timeout_sec = 60
 
 MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用方应优先消费存在的结构化结果，否则解析文本，不能把两份都展示。项目检查脚本已按此处理；其他客户端的重复展示及模型的无效搜索仍需由各自调用方控制。
 
+搜索面板的 `text_groups` 同样只提供 `representative.preview_index` 与 occurrence 下标，正文、独立 ref 和 proof 在对应 `body_previews` 中。完整搜索 envelope（包括引用元数据）在交付前检查字节上限；放不下时从末尾减少可选预览并标记 `omission_reason="response_byte_limit"`，不截断保留的原文、不改变原始命中或 cursor。极接近上限时可以省略整个面板及可选句柄元数据，使用原始 exact refs 继续 read/inspect；不把可选展示超限变成无结果，也不留下未交付的句柄或回执。
+
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
 
 人物到任务档案发言的修复、真实 MCP/Sol 检查与保留失败见 [案例验证](../reviews/npc-dialogue-discovery.md)。

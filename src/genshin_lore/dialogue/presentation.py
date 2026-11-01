@@ -101,18 +101,33 @@ def source_link(item):
 
 
 def text_groups(items):
-    """Group display text, retaining every physical occurrence and proof state."""
+    """Index-only display groups; identities and proof remain on each preview."""
     groups = {}
-    for item in items:
+    for index, item in enumerate(items):
         body = item.get('raw_text', item.get('snippet'))
         if not isinstance(body, str): continue
         key = (item.get('locale'), body)
-        group = groups.setdefault(key, {'text': body, 'locale': item.get('locale'),
+        group = groups.setdefault(key, {'representative': {'preview_index': index}, 'locale': item.get('locale'),
             'occurrences': [], 'display_group_only': True, 'logical_identity_proven': False})
-        group['occurrences'].append({k:item[k] for k in (
-            'evidence_ref', 'citation_handle', 'citation_number', 'citation_label',
-            'source_locator', 'source_path', 'physical_pointer', 'text_proof', 'match_span') if k in item})
+        group['occurrences'].append({'preview_index': index})
     return list(groups.values())
+
+
+def trim_search_reading(data):
+    """Reduce optional display data only; never change hits, refs or cursor."""
+    panel = data.get('reading_view')
+    if panel is None: return False
+    if panel.get('body_previews'):
+        panel['body_previews'].pop()
+        panel['text_groups'] = text_groups(panel['body_previews'])
+        panel['omitted_preview_count'] = panel.get('omitted_preview_count', 0) + 1
+        panel['omission_reason'] = 'response_byte_limit'
+    elif 'body_previews' in panel:
+        data['reading_view'] = {'omission_reason': 'response_byte_limit', 'partial': True,
+                                'original_items_and_cursor_unchanged': True}
+    else:
+        del data['reading_view']
+    return True
 
 
 def character_reading(service, query, locale):

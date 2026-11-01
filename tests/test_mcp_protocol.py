@@ -11,6 +11,7 @@ from mcp.client.stdio import stdio_client
 import pytest
 
 from scripts.check import payload
+from genshin_lore.citation_handoff import bind_capture
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ['describe_corpus', 'search_evidence', 'read_evidence', 'follow_evidence', 'inspect_evidence']
@@ -82,6 +83,59 @@ def test_reading_previews_honor_explicit_and_automatically_resolved_domain(tmp_p
             assert data['items'] and all(h['family'] == 'npc_archive' for h in data['items'])
             assert data['reading_view']['body_previews'] == []
             assert data['reading_view']['name_matches'] and data['reading_view']['next_actions']
+    anyio.run(run)
+
+
+@pytest.mark.parametrize('padding', [0, 180_000, 245_000])
+def test_large_search_previews_preserve_hits_cursor_actions_and_final_receipt(tmp_path, padding):
+    config = config_at(tmp_path/'search')
+    async def run():
+        async with fixture_client(config, '--large-search', '--search-padding', str(padding)) as client:
+            args = {'corpus_ref': 'synthetic-corpus', 'query': '合成角色甲', 'locale': 'CHS', 'limit': 1}
+            raw = payload(await client.call_tool('search_evidence', {**args, 'detail': 'full'}))
+            result = payload(await client.call_tool('search_evidence', args))
+            assert raw['status'] == result['status'] == 'ok'
+            assert len(json.dumps(result, ensure_ascii=False, separators=(',', ':')).encode()) < 262144
+            data = result['data']; view = data['reading_view']
+            assert data['next_cursor'] == raw['data']['next_cursor'] and data['next_cursor']
+            assert view['next_actions'] and view['partial']
+            for old, new in zip(raw['data']['items'], data['items']):
+                for key in ('evidence_ref', 'container_ref', 'snippet', 'owner_field', 'family', 'ranking_basis'):
+                    assert old[key] == new[key]
+            if padding:
+                assert len(view['body_previews']) < 3 and view['omission_reason'] == 'response_byte_limit'
+            else:
+                assert len(view['body_previews']) == 3
+            for group in view['text_groups']:
+                assert 'text' not in group
+                assert group['representative']['preview_index'] < len(view['body_previews'])
+            calls = [{'result': out, 'status': 'completed', 'item_id': str(i),
+                      'server': 'fixture', 'tool': 'search_evidence'} for i, out in enumerate((raw, result))]
+            bound = bind_capture({'tool_calls': calls, 'stdout_sha256': 'fixture'}, config.parent/'handoff')
+            assert bound['mappings'] and len(list((config.parent/'handoff').glob('*.json'))) == 2
+            for body in view['body_previews']:
+                inspected = payload(await client.call_tool('inspect_evidence', {
+                    'corpus_ref': 'synthetic-corpus', 'evidence_ref': body['citation_handle']}))
+                assert inspected['status'] == 'ok'
+                assert inspected['data']['evidence_ref'] == body['evidence_ref']
+    anyio.run(run)
+
+
+def test_near_cap_search_keeps_exact_results_without_optional_panel_or_handles(tmp_path):
+    config = config_at(tmp_path/'near-cap')
+    async def run():
+        async with fixture_client(config, '--large-search', '--search-target-bytes', '261900') as client:
+            args = {'corpus_ref': 'synthetic-corpus', 'query': '合成角色甲', 'locale': 'CHS', 'limit': 1}
+            raw = payload(await client.call_tool('search_evidence', {**args, 'detail': 'full'}))
+            result = payload(await client.call_tool('search_evidence', args))
+            assert result == raw and result['status'] == 'ok'
+            assert len(json.dumps(result, ensure_ascii=False, separators=(',', ':')).encode()) == 261900
+            assert result['data']['next_cursor'] and 'reading_view' not in result['data']
+            assert 'citation_handoff' not in result and not list((config.parent/'handoff').glob('*.json'))
+            exact = result['data']['items'][0]['evidence_ref']
+            inspected = payload(await client.call_tool('inspect_evidence', {'corpus_ref': 'synthetic-corpus', 'evidence_ref': exact}))
+            assert inspected['status'] == 'ok' and inspected['data']['evidence_ref'] == exact
+            assert inspected['citation_handoff']['request'] == 'R1'
     anyio.run(run)
 
 

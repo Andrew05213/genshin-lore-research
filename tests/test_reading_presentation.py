@@ -5,7 +5,7 @@ import json
 import pytest
 
 from test_codex_dialogue import populated_fixture
-from genshin_lore.dialogue.presentation import reading_card, page_groups, search_reading, source_link, character_reading
+from genshin_lore.dialogue.presentation import reading_card, page_groups, search_reading, source_link, character_reading, text_groups
 from genshin_lore.citation_handoff import CitationHandoff, bind_capture, render_answer
 
 
@@ -236,3 +236,27 @@ def test_body_and_unclassified_metadata_keep_separate_display_indexes():
     assert [v['item_index'] for v in view['title_matches']] == [1]
     assert [v['item_index'] for v in view['other_matches']] == [2]
     assert [v['item_index'] for v in view['name_matches']] == [3]
+
+
+def test_search_groups_reference_previews_without_copying_bodies_or_merging_refs():
+    previews = [{'raw_text': '合成同文'*10_000, 'locale': 'CHS', 'evidence_ref': ref}
+                for ref in ('physical-a', 'physical-b')]
+    groups = text_groups(previews)
+    assert len(groups) == 1 and groups[0]['representative'] == {'preview_index': 0}
+    assert groups[0]['occurrences'] == [{'preview_index': 0}, {'preview_index': 1}]
+    assert 'text' not in groups[0] and len(json.dumps(groups).encode()) < 1000
+    assert not groups[0]['logical_identity_proven']
+    assert previews[0]['evidence_ref'] != previews[1]['evidence_ref']
+
+
+def test_over_budget_handoff_does_not_commit_handles_or_receipts(tmp_path):
+    handoff = CitationHandoff(tmp_path)
+    value = {'status': 'ok', 'data': {'evidence_ref': 'exact-synthetic', 'raw_text': 'x'*200}}
+    original = copy.deepcopy(value)
+    assert handoff.attach(value, 'search', max_bytes=100) is None
+    assert handoff.counter == 0 and not handoff._records and not list(tmp_path.iterdir())
+    assert value == original
+    result = handoff.attach(value, 'search', max_bytes=10_000)
+    assert result['citation_handoff']['request'] == 'R1'
+    assert len(list(tmp_path.iterdir())) == 1
+    assert handoff.resolve(result['data']['citation_handle'])['evidence_ref'] == 'exact-synthetic'

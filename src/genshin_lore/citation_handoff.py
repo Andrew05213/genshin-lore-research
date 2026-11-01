@@ -41,11 +41,12 @@ class CitationHandoff:
             return json.loads(self._records[value])
         return {'evidence_ref': value, 'observation_index': None, 'range': None}
 
-    def attach(self, payload, operation, *, inspected_ref=None, compact=False):
+    def attach(self, payload, operation, *, inspected_ref=None, compact=False, max_bytes=None):
+        """Return None if a bounded result will not fit; commit no state or I/O."""
         if payload.get('status') != 'ok':
             return payload
-        self.counter += 1
-        request = 'R' + str(self.counter)
+        next_counter = self.counter + 1
+        request = 'R' + str(next_counter)
         result = copy.deepcopy(payload)
         records = []
 
@@ -81,7 +82,6 @@ class CitationHandoff:
                               'qualified_by_inspect': operation in ('query', 'inspect'),
                               'proof_semantics': 'unchanged source result; handles do not establish ownership or identity'}
                     records.append(record)
-                    self._records[handle] = canonical(record)
                     node['citation_handle'] = handle
                     node['citation_number'] = request + ':E' + str(len(records))
                     from .dialogue.presentation import source_link
@@ -112,15 +112,19 @@ class CitationHandoff:
                    'operation': operation, 'result_sha256': digest(result),
                    'inspected_ref': inspected_ref, 'records': records}
         blob = canonical(receipt)
+        result['citation_handoff'] = {'contract': CONTRACT, 'session': self.session,
+                                     'request': request, 'receipt_sha256': hashlib.sha256(blob).hexdigest(),
+                                     'delivery': 'explicit post-capture renderer; raw native answer retained' if self.directory else 'connection-memory handles; inspect resolves exact identity; native renderer unchanged',
+                                     'instruction': 'Use supplied [H...:R...:E...] handles near claims. Inspect final material handles. No long-ref copying or invented mapping.'}
+        if max_bytes is not None and len(canonical(result)) >= max_bytes:
+            return None
         if self.directory is not None:
             self.directory.mkdir(parents=True, exist_ok=True)
             path = self.directory / f'{self.session}-{request}.json'
             with path.open('xb') as stream:
                 stream.write(blob)
-        result['citation_handoff'] = {'contract': CONTRACT, 'session': self.session,
-                                     'request': request, 'receipt_sha256': hashlib.sha256(blob).hexdigest(),
-                                     'delivery': 'explicit post-capture renderer; raw native answer retained' if self.directory else 'connection-memory handles; inspect resolves exact identity; native renderer unchanged',
-                                     'instruction': 'Use supplied [H...:R...:E...] handles near claims. Inspect final material handles. No long-ref copying or invented mapping.'}
+        self._records.update({r['handle']: canonical(r) for r in records})
+        self.counter = next_counter
         return result
 
 

@@ -10,7 +10,7 @@ from mcp.types import ToolAnnotations
 from .research_query import ResearchNotFound,ResearchQuery,ResearchUnavailable
 from .mcp_transport import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
 from .citation_handoff import CitationHandoff
-from .dialogue.presentation import check_detail, search_reading, page_groups
+from .dialogue.presentation import check_detail, search_reading, page_groups, trim_search_reading
 
 READONLY=ToolAnnotations(readOnlyHint=True,destructiveHint=False,idempotentHint=True,openWorldHint=False)
 
@@ -27,8 +27,17 @@ def create_server(service:ResearchQuery)->MCPServer:
     out['data']={'reading_view':search_reading(service,out['data'],args[1],args[2],filters=bool(args[3] or args[4] or args[8] or args[9]) or out['data'].get('domain_filter') is not None),**out['data']}
    if fn.__name__=='read' and out['data'].get('view')=='dialogue' and out['data'].get('detail')=='reading':
     out['data']['display_groups']=page_groups(out['data']['nodes'])
-   if handoff:out=handoff.attach(out,fn.__name__,inspected_ref=args[1] if fn.__name__=='inspect' else None,
-      compact=fn.__name__=='read' and out['data'].get('detail')=='reading')
+   if handoff:
+    while True:
+     delivered=handoff.attach(out,fn.__name__,inspected_ref=args[1] if fn.__name__=='inspect' else None,
+        compact=fn.__name__=='read' and out['data'].get('detail')=='reading',
+        max_bytes=262144 if fn.__name__=='search' else None)
+     if delivered is not None:
+      out=delivered;break
+     if fn.__name__!='search' or not trim_search_reading(out['data']):
+      # Optional handoff/display metadata cannot invalidate an otherwise valid
+      # exact-ref result. The original envelope still passes the size guard below.
+      break
   except ResearchNotFound as e:out={"status":"not_found","corpus_ref":service.corpus_ref,"error":str(e)}
   except ResearchUnavailable as e:out={"status":"unavailable","corpus_ref":service.corpus_ref,"partial":True,"error":str(e)}
   except (ValueError,KeyError) as e:out={"status":"invalid_request","corpus_ref":service.corpus_ref,"error":str(e)}
