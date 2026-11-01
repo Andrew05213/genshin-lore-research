@@ -91,17 +91,23 @@ def main():
         import anyio
         if a.released_runtime_root:
             import importlib.util
-            spec = importlib.util.spec_from_file_location('genshin_lore.dialogue_server_extension',
-                ROOT/'src/genshin_lore/research_server.py')
-            module = importlib.util.module_from_spec(spec); sys.modules[spec.name] = module
-            spec.loader.exec_module(module)
-            create_server = module.create_server
+            extensions = {}
+            for name in ('citation_handoff', 'research_server'):
+                spec = importlib.util.spec_from_file_location('genshin_lore.dialogue_'+name+'_extension',
+                    ROOT/'src/genshin_lore'/f'{name}.py')
+                module = importlib.util.module_from_spec(spec); sys.modules[spec.name] = module
+                spec.loader.exec_module(module)
+                extensions[name] = module
+            create_server = extensions['research_server'].create_server
+            handoff_type = extensions['citation_handoff'].CitationHandoff
         else:
             from genshin_lore.research_server import create_server
-        from genshin_lore.mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
-        if a.citation_receipts:
             from genshin_lore.citation_handoff import CitationHandoff
-            query.citation_handoff = CitationHandoff(a.citation_receipts)
+            handoff_type = CitationHandoff
+        from genshin_lore.mcp_transport import _avoid_broken_anyio_worker_threads, _run_pipe_stdio
+        # Explicitly use this extension's handoff AFTER the retained runtime has
+        # qualified. Never patch its imported modules or immutable release code.
+        query.citation_handoff = handoff_type(a.citation_receipts)
         server = create_server(query)
         _avoid_broken_anyio_worker_threads(server)
         anyio.run(_run_pipe_stdio, server)

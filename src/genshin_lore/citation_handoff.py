@@ -41,7 +41,7 @@ class CitationHandoff:
             return json.loads(self._records[value])
         return {'evidence_ref': value, 'observation_index': None, 'range': None}
 
-    def attach(self, payload, operation, *, inspected_ref=None):
+    def attach(self, payload, operation, *, inspected_ref=None, compact=False):
         if payload.get('status') != 'ok':
             return payload
         self.counter += 1
@@ -83,6 +83,10 @@ class CitationHandoff:
                     records.append(record)
                     self._records[handle] = canonical(record)
                     node['citation_handle'] = handle
+                    node['citation_number'] = request + ':E' + str(len(records))
+                    from .dialogue.presentation import source_link
+                    link = source_link(record['source_result'])
+                    if link: node['source_link'] = link
                 # Navigation locators are addressable, not inspected material.
                 if isinstance(node.get('target_evidence_ref'), str):
                     locator = {'evidence_ref': node['target_evidence_ref']}
@@ -93,6 +97,17 @@ class CitationHandoff:
                         visit(child, inherited)
 
         visit(result, result.get('provenance', {}).get('evidence_ref'))
+        if compact:
+            def shorten(node):
+                if isinstance(node, list):
+                    for child in node: shorten(child)
+                elif isinstance(node, dict):
+                    # Never redefine evidence_ref. Reading material uses a separate
+                    # scoped handle; inspect/full reads return its original exact ref.
+                    if node.get('citation_handle') and node.get('view') != 'dialogue':
+                        node.pop('evidence_ref', None)
+                    for child in node.values(): shorten(child)
+            shorten(result)
         receipt = {'contract': CONTRACT, 'session': self.session, 'request': request,
                    'operation': operation, 'result_sha256': digest(result),
                    'inspected_ref': inspected_ref, 'records': records}
@@ -104,7 +119,7 @@ class CitationHandoff:
                 stream.write(blob)
         result['citation_handoff'] = {'contract': CONTRACT, 'session': self.session,
                                      'request': request, 'receipt_sha256': hashlib.sha256(blob).hexdigest(),
-                                     'delivery': 'explicit post-capture renderer; raw native answer retained',
+                                     'delivery': 'explicit post-capture renderer; raw native answer retained' if self.directory else 'connection-memory handles; inspect resolves exact identity; native renderer unchanged',
                                      'instruction': 'Use supplied [H...:R...:E...] handles near claims. Inspect final material handles. No long-ref copying or invented mapping.'}
         return result
 

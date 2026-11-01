@@ -25,6 +25,7 @@
 | [完整重建机器记录](history/full-rebuild.json) | 数据规模、artifact seals、MCP 覆盖与原始日志摘要身份 |
 | [架构说明](architecture.md) | 数据流程、代码目录、Research 工具与证据语义 |
 | [对白阅读](guides/reading-dialogue.md) | 来源角色、局部对白图、前驱、续读与任务标题候选 |
+| [Research 阅读展示](reviews/research-reading-experience.md) | 正文优先面板、紧凑对白分页、短引用与实际来源核对范围 |
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |

@@ -16,7 +16,7 @@ sys.path[:0]=[str(ROOT/'src'),str(ROOT)]
 
 def payload(result):
     if result.is_error:raise ValueError('MCP call failed')
-    if result.structured_content:return result.structured_content
+    if result.structured_content is not None:return result.structured_content
     return json.loads(next(b.text for b in result.content if b.type=='text'))
 
 

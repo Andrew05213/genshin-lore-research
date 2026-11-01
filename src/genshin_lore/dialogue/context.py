@@ -38,12 +38,12 @@ class DialogueReadAdapter:
         return result
 
     def read(self, corpus_ref, evidence_ref, before=0, after=0, limit=50, cursor=None,
-             view='physical', locale='CHS'):
+             view='physical', locale='CHS', detail='full'):
         helper = DialogueContext(self)
         if view == 'dialogue':
             if before or after:
                 raise ValueError('dialogue view uses source connections, not before/after windows')
-            return helper.read(corpus_ref, evidence_ref, limit, cursor, locale)
+            return helper.read(corpus_ref, evidence_ref, limit, cursor, locale, detail)
         if view != 'physical':
             raise ValueError('read view must be physical or dialogue')
         result = self.query.read(corpus_ref, evidence_ref, before, after, limit, cursor)
@@ -345,7 +345,9 @@ class DialogueContext:
                           'source_pointer': node['pointer'], 'logical_identity_proven': False})
         return texts, edges
 
-    def read(self, corpus, evidence_ref, limit=8, cursor=None, locale='CHS'):
+    def read(self, corpus, evidence_ref, limit=8, cursor=None, locale='CHS', detail='full'):
+        from .presentation import check_detail, reading_card, READING_PAGE_BYTES
+        check_detail(detail)
         self.q._require(corpus)
         if type(limit) is not int or not 1 <= limit <= 20:
             raise ValueError('dialogue view limit must be 1..20')
@@ -354,10 +356,11 @@ class DialogueContext:
         parent, text = self._container(evidence_ref)
         if self._mode(parent) == 'codexquest_archive' or parent['evidence_family'] == 'npc_archive':
             from .codex import CodexDialogue
-            return CodexDialogue(self).read(corpus, evidence_ref, parent, text, limit, cursor, locale)
+            return CodexDialogue(self).read(corpus, evidence_ref, parent, text, limit, cursor, locale, detail)
         if not self.supports(parent):
             raise ValueError('dialogue view requires a declared Dialog or Quest/Talk projection')
         scope = {'op': 'dialogue-view-v1', 'anchor': evidence_ref, 'limit': limit, 'locale': locale}
+        if detail != 'full': scope['detail'] = detail
         state = self.q._after(cursor, scope)
         anchor = self._node(parent, text, locale)
         if state == 0:
@@ -367,8 +370,10 @@ class DialogueContext:
         if any(not isinstance(state[k], list) or len(state[k]) > MAX_VISITED for k in state):
             raise ValueError('dialogue continuation exceeds bounded state')
         frontier, visited = list(state['frontier']), list(state['visited'])
-        nodes = []; unresolved = False
+        nodes = []; unresolved = False; byte_limited = False
+        byte_limit = READING_PAGE_BYTES if detail == 'reading' else MAX_PAGE_BYTES
         card = self.card(parent, locale)
+        if detail == 'reading': card = reading_card(card)
         while frontier and len(nodes) < limit and len(visited) < MAX_VISITED:
             current = frontier.pop(0)
             if current in visited:
@@ -394,10 +399,12 @@ class DialogueContext:
                     'container_ref': self.q._container_ref(current_parent),
                     'texts': texts, 'speaker': speaker, 'edges': edges,
                     'body_status': 'available' if texts else 'no_resolved_body_in_locale'}
-            if len(json.dumps({'nodes': nodes + [item], 'source_context': card}, ensure_ascii=False).encode()) > MAX_PAGE_BYTES:
+            if detail == 'reading': item = reading_card(item)
+            if len(json.dumps({'nodes': nodes + [item], 'source_context': card}, ensure_ascii=False).encode()) > byte_limit:
                 frontier.insert(0, current)
                 if not nodes:
                     raise ValueError('one dialogue node exceeds view budget; use ordinary read or character-range continuation')
+                byte_limited = True
                 break
             nodes.append(item); visited.append(current)
             unresolved |= not texts or any(e['status'] not in {'resolved_unique', 'terminal_empty', 'local'} for e in edges)
@@ -407,6 +414,10 @@ class DialogueContext:
         frontier = [n for n in frontier if n not in visited]
         cap = bool(frontier) and len(visited) >= MAX_VISITED
         return {'evidence_ref': evidence_ref, 'view': 'dialogue', 'nodes': nodes,
+                'detail': detail,
+                'page_info': {'requested_nodes': limit, 'returned_nodes': len(nodes),
+                    'returned_text_entries': sum(len(n['texts']) for n in nodes), 'byte_limit': byte_limit,
+                    'stop_reason': 'response_byte_limit' if byte_limited else 'traversal_limit' if cap else 'requested_node_limit' if frontier else 'reachable_scope_exhausted'},
                 'source_context': card, 'delivered_count': len(nodes),
                 'next_cursor': self.q._cursor(scope, {'frontier': frontier, 'visited': visited}) if frontier and not cap else None,
                 'continuation_available': bool(frontier) and not cap,

@@ -47,7 +47,7 @@ def test_real_mcp_stdio_from_two_isolated_configs(tmp_path):
                     ref = described['data']['anchor']
                     hit = await call('search_evidence', query='合', locale='CHS', limit=1)
                     assert hit['status'] == 'ok' and hit['data']['items']
-                    page = await call('read_evidence', evidence_ref=ref, view='dialogue', limit=1)
+                    page = await call('read_evidence', evidence_ref=ref, view='dialogue', limit=1, detail='full')
                     assert page['status'] == 'ok'
                     data = page['data']
                     assert data['next_cursor']
@@ -55,12 +55,23 @@ def test_real_mcp_stdio_from_two_isolated_configs(tmp_path):
                     inspected = await call('inspect_evidence', evidence_ref=handle)
                     assert inspected['status'] == 'ok'
                     assert inspected['data']['evidence_ref'] == data['nodes'][0]['texts'][0]['evidence_ref']
+                    compact = await call('read_evidence', evidence_ref=ref, view='dialogue', limit=1)
+                    body = compact['data']['nodes'][0]['texts'][0]
+                    assert 'evidence_ref' not in body
+                    assert body['raw_text'] == data['nodes'][0]['texts'][0]['raw_text']
+                    resolved = await call('inspect_evidence', evidence_ref=body['citation_handle'])
+                    assert resolved['data']['evidence_ref'] == inspected['data']['evidence_ref']
+                    discovery = payload(await client.call_tool('describe_corpus', {}))
+                    assert discovery['status'] == 'ok' and discovery['corpus_ref'] == 'synthetic-corpus'
+                    invalid = await call('read_evidence', evidence_ref=ref, detail='unknown')
+                    assert invalid['status'] == 'invalid_request'
+                    assert invalid['recovery']['corpus_ref'] == 'synthetic-corpus'
                     continued = await call('read_evidence', evidence_ref=ref, view='dialogue',
-                                           limit=1, cursor=data['next_cursor'])
+                                           limit=1, cursor=data['next_cursor'], detail='full')
                     assert continued['status'] == 'ok'
                     assert continued['data']['nodes'][0]['node'] != data['nodes'][0]['node']
                     wrong = await call('read_evidence', evidence_ref=ref, view='dialogue',
-                                       limit=2, cursor=data['next_cursor'])
+                                       limit=2, cursor=data['next_cursor'], detail='full')
                     assert wrong['status'] == 'invalid_request'
                     bad = await call('inspect_evidence', evidence_ref='[H0000000000000000:R1:E1]')
                     assert bad['status'] == 'invalid_request'
