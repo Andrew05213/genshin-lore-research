@@ -223,13 +223,17 @@ def pipeline(output):
     return job, manifest, bindings, config
 
 
-def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path):
-    outputs = [pipeline(tmp_path/arm) for arm in ('a','b')]
+@pytest.mark.parametrize('utf8_mode', ['1', '0'])
+def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf8_mode):
+    work = tmp_path / '中文 space'
+    work.mkdir()
+    outputs = [pipeline(work/arm) for arm in ('a','b')]
 
     async def check(config, corpus, arm):
         params = StdioServerParameters(command=sys.executable,
             args=[str(ROOT/'scripts/serve_dialogue.py'),'--config',str(config)],
-            cwd=str(tmp_path),env={**os.environ,'PYTHONPATH':str(ROOT/'src')})
+            cwd=str(tmp_path),env={**os.environ,'PYTHONPATH':str(ROOT/'src'),
+                                   'PYTHONUTF8':utf8_mode})
         with anyio.fail_after(25):
             async with stdio_client(params) as (read,write_stream):
                 async with ClientSession(read,write_stream) as client:

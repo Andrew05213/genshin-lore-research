@@ -14,6 +14,11 @@ Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的完整�
 
 ## 快速开始
 
+**Windows 完整安装：下载并解压仓库（或 git clone），在仓库根目录双击 `setup.cmd`。**
+安装器准备 Python/Git（缺失时尝试 winget）、项目虚拟环境、固定上游与模型，执行包含向量的完整构建和对白 MCP 检查，最后添加项目级 Codex 连接。完成后在 Codex 打开并信任该目录，重启 MCP 连接即可。首次构建需要时间和磁盘空间，不是下载一个现成游戏数据库。
+
+日志保存在 `data/setup-logs/`；重复运行仍经过现有构建回执核验，不覆盖失败现场或全局 Codex 设置。资源要求、MSVC 前置条件及配置恢复见 [Windows 安装指南](docs/guides/windows.md)。
+
 环境要求：Python 3.12+、Git；Linux 与原生 Windows 的源码检查由 CI 分别执行。Windows 安装见 [PowerShell 指南](docs/guides/windows.md)。以下命令在仓库根目录执行：
 
 ```sh

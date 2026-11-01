@@ -33,10 +33,12 @@ def package(root, wheelhouse, output):
     tracked = subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z']).decode().split('\0')
     entries = {}
     allowed = {'.py', '.sql', '.json', '.md', '.toml', '.txt', '.lock', '.yml', '.yaml', '.ini'}
+    # Explicit public bootstraps, not permission to bundle arbitrary shell files.
+    allowed_names = {'LICENSE', 'NOTICE', '.gitignore', 'setup.cmd', 'scripts/setup_windows.ps1'}
     for name in filter(None, tracked):
         path = root/name
         if (path.is_symlink() or not path.is_file()
-                or (path.suffix not in allowed and name not in {'LICENSE', 'NOTICE', '.gitignore'})):
+                or (path.suffix not in allowed and name not in allowed_names)):
             raise ValueError('unsupported tracked source entry: '+name)
         entries['source/'+name] = path.read_bytes()
     pins = {}
