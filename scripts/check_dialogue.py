@@ -40,7 +40,7 @@ async def check(config, released_runtime_root=None):
             search = await call('search_evidence', {'corpus_ref':corpus, 'query':'向着星辰',
                                 'locale':'CHS','families':['dialog_archive'],'limit':1})
             ref = search['items'][0]['evidence_ref']
-            args = {'corpus_ref':corpus,'evidence_ref':ref,'view':'dialogue','limit':1}
+            args = {'corpus_ref':corpus,'evidence_ref':ref,'view':'dialogue','limit':1,'detail':'full'}
             first = await call('read_evidence', args)
             second = await call('read_evidence', {**args,'cursor':first['next_cursor']})
             if first['nodes'][0]['node'] == second['nodes'][0]['node']:

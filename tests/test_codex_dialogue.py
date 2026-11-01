@@ -13,7 +13,7 @@ def digest(value):
     return hashlib.sha256(value).hexdigest()
 
 
-def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False, item_type=None):
+def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False, item_type=None, body_padding=0):
     q, _, _ = fixture()
     src = sqlite3.connect(':memory:'); src.row_factory = sqlite3.Row
     src.executescript((ROOT/'schemas/codexquest-7.1-v1.sql').read_text())
@@ -35,8 +35,8 @@ def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=Fal
         raw['sections'][0]['nodes'].append({
             'itemType': item_type,
             'speaker': atom(pointer+'/speaker', 'SpeakerKnown', '合成角色甲' if i%2 == 0 else '合成角色乙'),
-            'body': atom(pointer+'/body', 'DialogNormal', '合成角色甲' if body_mentions_name and i == 1
-                         else '相同合成发言' if equal_bodies else '合成发言'+str(i))})
+            'body': atom(pointer+'/body', 'DialogNormal', ('合成角色甲' if body_mentions_name and i == 1
+                         else '相同合成发言' if equal_bodies else '合成发言'+str(i)) + 'x'*body_padding)})
     encoded = json.dumps(raw, ensure_ascii=False).encode()
     seal = digest(encoded);q.r0_provenance['Codex.json'] = seal
     src.execute('INSERT INTO codex_root VALUES(?,?,?,?,?,?,?,?,?,?,?,?)',

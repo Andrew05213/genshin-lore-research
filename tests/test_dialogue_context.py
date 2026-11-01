@@ -22,7 +22,7 @@ def insert(db, table, values):
                [defaults[k] for k in columns])
 
 
-def fixture():
+def fixture(dialog_bodies=None):
     q = object.__new__(CandidateResearch71)
     q.db = sqlite3.connect(':memory:'); q.db.row_factory = sqlite3.Row
     q.db.executescript(SCHEMA)
@@ -85,7 +85,8 @@ def fixture():
         role = {'id': '7', 'type': 'TALK_ROLE_NPC'}
         p = physical('dialog', ordinal, 10+ordinal, {'id': 10+ordinal, 'nextDialogs': successors, 'talkRole': role})
         parents.append(p)
-        text('dialog', p, ordinal, 'talkContentTextMapHash', ['合成问题？', '合成回答。', '合成回答。'][ordinal])
+        bodies = dialog_bodies if dialog_bodies is not None else ['合成问题？', '合成回答。', '合成回答。']
+        text('dialog', p, ordinal, 'talkContentTextMapHash', bodies[ordinal])
         src = sources['dialog']
         src.execute('INSERT INTO locator VALUES(?,?,?,?,?,?,?)', (ordinal, 'talkRole', 0, json.dumps(role), 'npc', 'resolved_unique', 1))
         src.execute('INSERT INTO physical_candidate VALUES(?,?,?,?,?,?)', (ordinal, 'talkRole', 0, 0, 'Npc.json', '/0'))

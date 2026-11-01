@@ -26,3 +26,4 @@
 - 已配置研究服务时，研究 Agent 通过 MCP 读取并检查引用。构建器与独立验证器可以直接读取上游源码。
 - 允许互联网研究、文学解释与预测，分别标明来源、依据和假设。
 - 对白研究先取得必要前后文和来源角色标注，再解释内容；使用声明的 `read_evidence(view="dialogue")` 与续读 cursor，前驱由 `follow_evidence(relation_kind="dialogue_predecessor")` 取得。来源引用解析与唯一剧情人物身份分别判断，不能把遍历顺序写成播放顺序。具体支持范围见 [对白阅读](docs/guides/reading-dialogue.md)。
+- 人物搜索先用 reading_view 的正文与下一步入口，姓名字段命中不是研究终点。对白默认 reading 视图提供 scoped citation_handle，inspect 还原 exact ref；full 显式取得完整上下文。续页须保持 detail/anchor/locale/limit；同文展示分组不合并证据身份。普通问题以约 20 次调用为软目标，已有足够材料就停止搜索，不重复检查同一引用。原生客户端没有自动获得项目 citation renderer。

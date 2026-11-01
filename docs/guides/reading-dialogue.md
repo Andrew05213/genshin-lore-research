@@ -81,7 +81,9 @@ tool_timeout_sec = 60
 - Quest/Talk 当前投影没有正式的 speaker decoder；扩展不猜说话者。阅读卡目前不解析场景名，`scene_display_name` 为空；这不表示来源完全没有标题字段，Dialog 的 `talkTitleTextMapHash` 尚未在本扩展展示。
 - Dialog 展开明确的 `nextDialogs`；Talk 仅沿已投影、同物理容器的 local successors 展开。外部候选和 dangling 保留在边信息，不自动跨容器追踪。
 - Dialog/Talk 图读取采用广度优先遍历，保留各边的位置与分支，遇到循环不重复节点。Codex 读取则沿已声明的姓名 occurrence 或同物理 section 分页；这些展示顺序均不是游戏播放顺序或叙事时间顺序。
-- 每页限制 80,000 序列化字节，Dialog/Talk 连续图视图最多访问 128 个节点。达到限制时明确 partial；仍可选择已返回的分支 ref 单独读取。超大单节点明确拒绝，不偷偷截断原文。
+- MCP 的对白读取默认 `detail="reading"`：正文、来源角色标注、标题及定位信息优先；完整重复 provenance 改由 `inspect_evidence` 展开。Codex 页面用 `source_titles` 与 `title_indexes` 复用同一 exact title；前后节点提供可继续读取的定位信息。需要完整前后文或旧响应形式时显式指定 `detail="full"`。直接调用 Python library 仍默认 full。
+- reading 页面最多 160,000 序列化字节，full 保留 80,000 字节上限；最终 MCP envelope 另受 262,144 字节限制。`limit` 是请求主节点数，不是包含翻译、姓名、标题和邻居后的条数。`page_info` 返回请求数、实际主节点数、文本条数、字节限制及停止原因；`requested_node_limit`、`response_byte_limit` 与范围耗尽分别报告。Dialog/Talk 连续图视图最多访问 128 个节点。超大单节点明确拒绝，不偷偷截断原文。
+- cursor 必须沿用相同的 anchor、limit、locale 和 detail；不能把 reading cursor 用于 full。按返回的 `next_cursor` 续读，不能用实际交付条数猜下一页。
 - `reachable_local_graph_exhausted` 只表示当前可达局部图已遍历；不表示整个任务、其他分支来源或全 corpus 完整。
 
 ## 回答与引用
@@ -90,7 +92,25 @@ tool_timeout_sec = 60
 
 内部 ID 与路径留在来源详情。未解析标题不得改写成虚构章节名。来源角色标注与剧情说话者的确定性要分别表述，不重复用笼统免责声明替代已取得的信息。
 
-`--citation-receipts <private-directory>` 可复用现有 scoped handle transport。模型仍选择引用并 inspect，程序只做 exact ref 映射；原生 Codex TUI/Desktop 不自动获得项目 renderer。未选择或未检查的引用不能由程序补齐。
+每个连接默认提供短句柄，如 `[H…:R1:E3]`，以及便于显示的 `citation_number`。reading 对白中的正文、姓名、标题和邻居定位使用 `citation_handle` 字段，不让模型复写长 ref。将完整句柄原样传入 read/follow/inspect 的 `evidence_ref` 参数；inspect 和 full 读取返回原 exact ref 与完整来源。单独的 `R1:E3` 只是显示编号，不是定位器。句柄仅在原连接有效，过期、损坏或其他连接的句柄明确失败，不猜测恢复。重启后应使用保存的 exact ref 重新读取。
+
+有固定快照身份及合格来源路径时返回真实上游文件链接；它定位文件，不承诺网页能直接打开某一 observation 或范围。没有依据时不生成伪链接。来源标题与角色标签是来源观察，不证明唯一人物身份。`display_groups` 的 `representative` 和 `occurrences` 指向本页 node/text 位置，正文只从 nodes 读取，不在分组中重复传递。所有物理 occurrence 保持独立，不能将展示分组理解为合并人物或台词身份。
+
+默认句柄保存在连接内存中；`--citation-receipts <private-directory>` 另外保存私有不可覆盖回执，供现有 capture/project renderer 确定性展开 exact ref。模型仍选择引用并 inspect，程序不改事实、不补引、不替换材料。原生 Codex TUI/Desktop 不自动获得项目 renderer；仅有短句柄不等于最终答案已获得完整引用交付保障。
+
+## 人物搜索与调用方展示
+
+`search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、原始 items、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
+
+带 family、source、历史版本或 domain 范围的查询不自动补取范围外预览；hybrid 自动解析得到的 `domain_filter` 同样受此规则约束。下一步动作仍可显式选择。`detail="full"` 省略预览面板，保持原始检索路径。正文预览必须继续 read/inspect 后才能用于最终引用。材料已足够就回答，证据不足则说明 partial，避免反复改写同义关键词。
+
+MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用方应优先消费存在的结构化结果，否则解析文本，不能把两份都展示。项目检查脚本已按此处理；其他客户端的重复展示及模型的无效搜索仍需由各自调用方控制。
+
+搜索面板的 `text_groups` 同样只提供 `representative.preview_index` 与 occurrence 下标，正文、独立 ref 和 proof 在对应 `body_previews` 中。完整搜索 envelope（包括引用元数据）在交付前检查字节上限；放不下时从末尾减少可选预览并标记 `omission_reason="response_byte_limit"`，不截断保留的原文、不改变原始命中或 cursor。极接近上限时可以省略整个面板及可选句柄元数据，使用原始 exact refs 继续 read/inspect；不把可选展示超限变成无结果，也不留下未交付的句柄或回执。
+
+首条发言本身超过对白视图预算时，仅省略可选预览，标记 `preview_read_byte_limit`，保留成功搜索及 cursor，并提供已核验正文的普通物理读取入口；不是“没有发言”。只有专门的视图预算异常允许这样处理，来源 SHA、scope 或其他资格错误仍正常拒绝。
+
+紧凑邻居及导航目标标记为 `locator_only`：可以定位并 inspect，但仅 inspect 不表示正文已交付。必须实际读取同一 exact ref，才能满足现有 read-and-inspect 交付条件；优先引用实际正文读取返回的句柄。定位器原记录仍保持未读，不由程序改写成正文或自动更换引用。
 
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
 

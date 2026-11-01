@@ -169,15 +169,21 @@ class CodexDialogue:
                 item['citation_label'] = label
         return value
 
-    def read(self, corpus, anchor, parent, text, limit, cursor, locale):
+    def read(self, corpus, anchor, parent, text, limit, cursor, locale, detail='full'):
+        from .presentation import check_detail, page_item, READING_PAGE_BYTES, DialoguePageBudgetExceeded
+        check_detail(detail)
         npc = parent['evidence_family'] == 'npc_archive'
         names = self.context._texts(parent, locale, {'nameTextMapHash'}) if npc else []
         scope = {'op': 'codex-source-dialogue-v1', 'anchor': anchor, 'locale': locale,
                  'limit': limit, 'names': [n['evidence_ref'] for n in names]}
+        if detail != 'full': scope['detail'] = detail
         state = self.q._after(cursor, scope)
         if type(state) is not int or state < 0:
             raise ValueError('Codex dialogue cursor mismatch')
         nodes, position, unresolved = [], state, None
+        byte_limited = False
+        titles = []
+        byte_limit = READING_PAGE_BYTES if detail == 'reading' else MAX_BYTES
         if npc:
             keys = self.context._keys('codexquest_archive')
             values = list(dict.fromkeys(n['raw_text'] for n in names))  # search strings only; records stay separate
@@ -212,15 +218,25 @@ class CodexDialogue:
                 'container_ref': self.q._container_ref(root)}
             if matched is not None:
                 item['matched_speaker_ref'] = matched
-            if len(json.dumps({'nodes': nodes+[item], 'name_candidates': names}, ensure_ascii=False).encode()) > MAX_BYTES:
+            next_titles = titles
+            if detail == 'reading': item, next_titles = page_item(item, titles)
+            if len(json.dumps({'nodes': nodes+[item], 'name_candidates': names, 'source_titles': next_titles}, ensure_ascii=False).encode()) > byte_limit:
                 if not nodes:
-                    raise ValueError('one Codex dialogue record exceeds view budget; use ordinary exact reads')
+                    raise DialoguePageBudgetExceeded('one Codex dialogue record exceeds view budget; use ordinary exact reads',
+                        [t['evidence_ref'] for t in item.get('texts', [])])
+                byte_limited = True
                 break
             nodes.append(item)
+            titles = next_titles
             position = identity
         more = len(selected) > len(nodes)
         return {'evidence_ref': anchor, 'view': 'dialogue', 'nodes': nodes,
+                'detail': detail,
+                'page_info': {'requested_nodes': limit, 'returned_nodes': len(nodes),
+                    'returned_text_entries': sum(len(n.get('texts', [])) for n in nodes), 'byte_limit': byte_limit,
+                    'stop_reason': 'response_byte_limit' if byte_limited else 'source_unresolved' if unresolved else 'requested_node_limit' if more else 'matching_scope_exhausted'},
                 'name_candidates': names, 'match_basis': 'exact source speaker label/name candidate' if npc else 'exact physical node',
+                'source_titles': titles,
                 'delivered_count': len(nodes),
                 'next_cursor': self.q._cursor(scope, position) if more else None,
                 'continuation_available': more, 'scope_complete': not more and unresolved is None,

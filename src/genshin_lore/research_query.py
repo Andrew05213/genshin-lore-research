@@ -2186,6 +2186,7 @@ class ResearchQuery:
         cursor=None,
         view="physical",
         locale="CHS",
+        detail="full",
     ):
         if view == "dialogue":
             if before or after:
@@ -2195,7 +2196,7 @@ class ResearchQuery:
             from .dialogue import DialogueContext
 
             return DialogueContext(self).read(
-                corpus_ref, evidence_ref, limit, cursor, locale
+                corpus_ref, evidence_ref, limit, cursor, locale, detail
             )
         if view != "physical":
             raise ValueError("read view must be physical or dialogue")
