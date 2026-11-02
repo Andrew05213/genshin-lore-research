@@ -228,6 +228,50 @@ def test_character_near_name_is_not_promoted_to_an_exact_subject():
     assert character_reading(service, '合成角色', 'CHS') == ([], [])
 
 
+def test_profile_hit_without_a_name_on_this_page_still_offers_character_material(monkeypatch):
+    from genshin_lore.dialogue import presentation
+    q, _, ref = populated_fixture()
+    calls=[]
+    def character(service, query, locale):
+        calls.append((query,locale))
+        return ([{'evidence_ref':'synthetic:story','raw_text':'合成故事正文',
+                  'material_type':'character_story_or_profile','discovery_basis':'Character navigation'}],[])
+    monkeypatch.setattr(presentation,'character_reading',character)
+    result={'items':[{'evidence_ref':ref,'owner_field':'descTextMapHash','snippet':'合成人物介绍'}]}
+    view=search_reading(q,result,'合成人物','CHS')
+    assert calls==[('合成人物','CHS')]
+    assert view['body_previews'][0]['raw_text']=='合成故事正文'
+    assert view['groups']['by_material_type'][0]['material_type']=='character_story_or_profile'
+    calls.clear()
+    assert not search_reading(q,result,'合成人物','CHS',filters=True)['body_previews']
+    assert not calls
+
+
+def test_compact_physical_read_keeps_body_once_and_receipt_exact(tmp_path):
+    q, _, ref=populated_fixture()
+    page=q.read(q.corpus_ref,ref,view='dialogue',limit=1)
+    exact=page['nodes'][0]['texts'][0]['evidence_ref']
+    raw=q.read(q.corpus_ref,exact)
+    original=copy.deepcopy(raw)
+    h=CitationHandoff(tmp_path)
+    out=h.attach({'status':'ok','data':raw},'read',compact=True)
+    assert raw==original
+    assert out['data']['raw_text']==original['raw_text']
+    assert 'provenance' not in out['data']
+    matched=[c for c in out['data']['context'] if c.get('body_in_anchor')]
+    assert matched and all('raw_text' not in c for c in matched)
+    record=h.resolve(out['data']['citation_handle'])
+    assert record['source_result']==original and record['evidence_ref']==exact
+    assert record['quoted_text']==original['raw_text']
+
+
+def test_compact_anchor_does_not_hide_another_observation_of_the_same_ref():
+    data={'evidence_ref':'synthetic:shared','raw_text':'合成正文','observation_index':0,
+          'context':[{'evidence_ref':'synthetic:shared','raw_text':'合成正文','observation_index':1}]}
+    delivered=CitationHandoff().attach({'status':'ok','data':data},'read',compact=True)
+    assert delivered['data']['context'][0]['raw_text']=='合成正文'
+
+
 def test_compact_byte_boundary_has_resumable_exact_coverage(monkeypatch):
     from genshin_lore.dialogue import presentation
     q, _, ref = populated_fixture()

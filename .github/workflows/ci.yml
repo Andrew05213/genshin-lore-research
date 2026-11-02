@@ -20,7 +20,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    # Windows' full source checks plus packaging/cleanup can exceed 15 minutes.
+    timeout-minutes: ${{ matrix.os == 'windows-latest' && 20 || 15 }}
     env:
       PYTHONUTF8: '1'
       PYTHONPATH: src

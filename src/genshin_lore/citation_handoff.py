@@ -41,6 +41,17 @@ class CitationHandoff:
         from .source_cards import save_card
         return save_card(self.source_cards, self.resolve(handle), inspection, corpus_ref)
 
+    def save_sources(self, selections, corpus_ref):
+        if self.source_cards is None:
+            raise ValueError('source card delivery is not configured on this server')
+        from .source_cards import save_collection
+        records = []
+        for handle, inspection in selections:
+            if not isinstance(handle, str) or not HANDLE.fullmatch(handle):
+                raise ValueError('save_source requires supplied scoped read handles')
+            records.append((self.resolve(handle), inspection))
+        return save_collection(self.source_cards, records, corpus_ref)
+
     def resolve(self, value):
         if not isinstance(value, str):
             raise ValueError('citation reference must be a string')
@@ -50,7 +61,8 @@ class CitationHandoff:
             return json.loads(self._records[value])
         return {'evidence_ref': value, 'observation_index': None, 'range': None}
 
-    def attach(self, payload, operation, *, inspected_ref=None, compact=False, max_bytes=None):
+    def attach(self, payload, operation, *, inspected_ref=None, inspected_refs=(), compact=False, max_bytes=None,
+               read_arguments=None):
         """Return None if a bounded result will not fit; commit no state or I/O."""
         if payload.get('status') != 'ok':
             return payload
@@ -81,8 +93,11 @@ class CitationHandoff:
                 if isinstance(speaker, dict):
                     context['speaker'] = {k: speaker[k] for k in
                         ('display_name', 'status', 'basis', 'logical_identity_proven') if k in speaker}
-                source_context = node.get('source_context') or {}
+                source_context = node.get('source_context') or (node.get('dialogue_source') or {}).get('source_context') or {}
                 if isinstance(source_context, dict):
+                    for key in ('display_title','display_subtitle'):
+                        if key in source_context:
+                            context[key] = copy.deepcopy(source_context[key])
                     if 'titles' in source_context:
                         context['titles'] = copy.deepcopy(source_context['titles'])
                     if catalog is not None and 'title_indexes' in source_context:
@@ -130,11 +145,57 @@ class CitationHandoff:
                         visit(child, inherited, context, catalog)
 
         visit(result, result.get('provenance', {}).get('evidence_ref'))
+        data = result.get('data', {})
+        if read_arguments is not None and data.get('view') == 'dialogue':
+            arguments = {**read_arguments, 'evidence_ref': data['citation_handle']}
+            data['reading_actions'] = []
+            if data.get('next_cursor'):
+                data['reading_actions'].append({'action': 'next_page', 'tool': 'read_evidence',
+                    'arguments': {**arguments, 'cursor': data['next_cursor']}})
+            for node in data.get('nodes', []):
+                texts = node.get('texts', [])
+                if texts:
+                    embedded = 'before' in node.get('source_context', {}) or 'after' in node.get('source_context', {})
+                    node['context_action'] = {'tool': 'read_evidence', 'arguments': {
+                        **arguments, 'evidence_ref': texts[0]['citation_handle'], 'cursor': None,
+                        'detail': 'full', 'limit': 1 if embedded else 3},
+                        'scope': ('same-section neighbours' if embedded else 'anchor and bounded local successors')
+                                 + '; not narrative chronology'}
+                    if not embedded:
+                        node['predecessor_action'] = {'tool': 'follow_evidence', 'arguments': {
+                            'corpus_ref': read_arguments['corpus_ref'],
+                            'evidence_ref': texts[0]['citation_handle'],
+                            'relation_kind': 'dialogue_predecessor', 'limit': 3},
+                            'scope': 'checked incoming links; read supplied targets for earlier bodies'}
         if compact:
+            context = data.get('source_context', {})
+            nodes = data.get('nodes', [])
+            if context.get('speaker') and nodes and context['speaker'] == nodes[0].get('speaker'):
+                context.pop('speaker')
+                context['speaker_in_node'] = 0
+            # The physical anchor is also listed in its context. Elide only
+            # that exact duplicate display, never equal text from another ref.
+            if isinstance(data.get('raw_text'), str):
+                for item in data.get('context', []):
+                    if (item.get('evidence_ref') == data.get('evidence_ref')
+                            and all(item.get(k) == data.get(k) for k in
+                                    ('observation_index','text_range','start','end'))
+                            and item.get('raw_text') == data['raw_text']):
+                        item.pop('raw_text')
+                        item['body_in_anchor'] = True
             def shorten(node):
                 if isinstance(node, list):
                     for child in node: shorten(child)
                 elif isinstance(node, dict):
+                    # Full records were captured above, before view-only trimming.
+                    # Keep proof/partial/range/navigation; expand technical details
+                    # through inspect or detail=full, never reconstruct them here.
+                    for key in ('provenance', 'text_provenance', 'container_provenance',
+                                'source_locator', 'source_link', 'source_pointer', 'raw_text_sha256',
+                                'text_sha256', 'role_references', 'role_record_ref', 'physical_source'):
+                        node.pop(key, None)
+                    if node.get('container_ref') == node.get('node'):
+                        node.pop('container_ref', None)
                     # Never redefine evidence_ref. Reading material uses a separate
                     # scoped handle; inspect/full reads return its original exact ref.
                     if node.get('citation_handle') and node.get('view') != 'dialogue':
@@ -144,6 +205,8 @@ class CitationHandoff:
         receipt = {'contract': CONTRACT, 'session': self.session, 'request': request,
                    'operation': operation, 'result_sha256': digest(result),
                    'inspected_ref': inspected_ref, 'records': records}
+        if inspected_refs:
+            receipt['inspected_refs'] = list(inspected_refs)
         blob = canonical(receipt)
         result['citation_handoff'] = {'contract': CONTRACT, 'session': self.session,
                                      'request': request, 'receipt_sha256': hashlib.sha256(blob).hexdigest(),
@@ -183,6 +246,7 @@ def bind_capture(trace, directory):
             raise ValueError('handoff not bound to actual MCP result')
         if receipt['inspected_ref']:
             inspections.add(receipt['inspected_ref'])
+        inspections.update(receipt.get('inspected_refs', []))
         for record in receipt['records']:
             if record['handle'] in mappings:
                 raise ValueError('duplicate immutable handle namespace')
