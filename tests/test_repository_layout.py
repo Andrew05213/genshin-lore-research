@@ -19,6 +19,18 @@ def test_checkout_skill_has_codex_discovery_metadata():
     assert fields['description'].strip()
 
 
+@pytest.mark.parametrize('filename', ['synthetic.md', '合成 引用.md'])
+def test_generated_source_cards_are_ignored_but_delivery_code_is_not(filename):
+    paths = [f'source-cards/{filename}', 'data/rebuilt/source-cards/synthetic.json',
+             'src/genshin_lore/source_cards.py']
+    # Git's NUL-delimited byte protocol avoids Windows text-pipe CRLF
+    # conversion and pathname quoting. Compare exact paths, not stripped output.
+    encoded = [path.encode('utf-8') for path in paths]
+    result = subprocess.run(['git', 'check-ignore', '--no-index', '-z', '--stdin'], cwd=ROOT,
+                            input=b'\0'.join(encoded) + b'\0', capture_output=True, check=True)
+    assert result.stdout == b'\0'.join(encoded[:2]) + b'\0'
+
+
 def test_project_name_and_license_are_consistent():
     project = tomllib.loads((ROOT/'pyproject.toml').read_text())['project']
     assert project['name'] == 'genshin-lore-research'

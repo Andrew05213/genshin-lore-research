@@ -129,6 +129,7 @@ def trim_search_reading(data):
     if panel.get('body_previews'):
         panel['body_previews'].pop()
         panel['text_groups'] = text_groups(panel['body_previews'])
+        panel['groups'] = search_groups(panel)
         panel['omitted_preview_count'] = panel.get('omitted_preview_count', 0) + 1
         panel['omission_reason'] = 'response_byte_limit'
     elif 'body_previews' in panel:
@@ -137,6 +138,60 @@ def trim_search_reading(data):
     else:
         del data['reading_view']
     return True
+
+
+def corpus_overview(result):
+    """Compact discovery only; the underlying full description stays available."""
+    if not isinstance(result.get('components'), list) or 'search_semantics' not in result:
+        return result
+    value = {k: copy.deepcopy(v) for k, v in result.items()
+             if k not in ('components', 'discovery_domains', 'frozen_evidence_input_bundle')}
+    components = result['components']
+    value['component_summary'] = {
+        'count': len(components),
+        'unavailable': [c['artifact_source_key'] for c in components if not c.get('available', True)],
+        'partial_projection_count': sum(not c.get('overall_projection_complete', False) for c in components),
+        'partial_projection_sources': [c['artifact_source_key'] for c in components
+                                       if not c.get('overall_projection_complete', False)],
+        'counts_are_not_game_coverage': True}
+    semantics = value['search_semantics']
+    if 'semantic_coverage' in semantics:
+        coverage = semantics.pop('semantic_coverage')
+        semantics['semantic_overlay_present'] = coverage is not None
+        semantics['semantic_scope'] = 'bounded discovery; exact scope available with detail=full'
+    domains = result.get('discovery_domains')
+    if isinstance(domains, dict):
+        value['discovery_domain_names'] = sorted(domains.get('domains', {}))
+    value['detail'] = 'reading'
+    value['details_action'] = {'tool': 'describe_corpus', 'arguments': {
+        'corpus_ref': result['corpus_ref'], 'detail': 'full'}}
+    return value
+
+
+def search_groups(panel):
+    """Pointers into unchanged hits/previews, never an entity or speaker join."""
+    groups = {'character_material_candidates': [], 'source_labelled_speech_candidates': [],
+              'other_body_previews': [],
+              'keyword_body_matches': [{'item_index': i} for i in panel['body_item_indexes']],
+              'name_matches': [{'item_index': n['item_index']} for n in panel['name_matches']],
+              'unclassified_matches': [{'item_index': n['item_index']} for n in panel['other_matches']]}
+    by_title = {}
+    for index, body in enumerate(panel['body_previews']):
+        basis = body.get('discovery_basis', '')
+        kind = ('character_material_candidates' if 'Character' in basis else
+                'source_labelled_speech_candidates' if 'source-labelled' in basis else 'other_body_previews')
+        pointer = {'preview_index': index}
+        groups[kind].append(pointer)
+        titles = ([body['source_title']] if body.get('source_title') else
+                  [t['raw_text'] for t in body.get('source_title_candidates', []) if t.get('raw_text')])
+        for title in titles:
+            by_title.setdefault(title, []).append(pointer)
+    for title in panel['title_matches']:
+        by_title.setdefault(title['title'], []).append({'item_index': title['item_index']})
+    return {'categories': groups,
+            'by_source_title': [{'title': title, 'matches': pointers} for title, pointers in by_title.items()],
+            'scope': 'current page only; keyword mentions do not establish a speaker',
+            'display_group_only': True, 'logical_identity_proven': False}
 
 
 def character_reading(service, query, locale):
@@ -228,9 +283,11 @@ def search_reading(service, result, query, locale, *, filters=False):
         character_bodies, character_actions = character_reading(service, query, locale or 'CHS')
         bodies = character_bodies + bodies
         actions = character_actions + actions
-    return {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names,
+    panel = {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names,
             'title_matches': titles, 'other_matches': other, 'text_groups': text_groups(bodies),
             **({'omission_reason': preview_omission} if preview_omission else {}),
             'next_actions': actions[:3], 'preview_scope': 'current search page; unfiltered exact name: at most three speech nodes plus two Character navigation targets. Not exhaustive; follow scopes differ from search hits.',
             'partial': True, 'logical_identity_proven': False,
             'original_items_and_cursor_unchanged': True}
+    panel['groups'] = search_groups(panel)
+    return panel

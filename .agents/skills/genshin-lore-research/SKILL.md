@@ -38,6 +38,7 @@ description: Research Genshin Impact lore with the configured evidence MCP and w
 
 - 正文先解释发生了什么、人物说了什么及其意义，使用已核实的任务/书籍/片段标题；Talk 编号、路径、合同和原始坐标放来源详情。标题未解析时准确说明，不虚构一个好听的剧情名称。
 - 最终引用使用实际读过并 inspect 的正文材料。将工具返回的完整 `citation_handle` 原样交给 `inspect_evidence.evidence_ref`；不能自行简写成 `E1` 或拼接长 ref。姓名、标题或 container 证据不能代替正文支持剧情事实。
+- `describe_corpus` 默认提供简明发现信息，只有需要具体覆盖表时才取 `detail="full"`。若它声明 `source_card_delivery.available=true`，对最终选用的已读正文 handle 调用 `inspect_evidence(..., save_source=true)`，并在相应陈述旁使用返回的真实 `source_card.markdown_link`。卡片保存该次原文、范围、exact ref 和检查状态；程序不验证 claim，不替换所选材料。保存失败必须说明，不把临时 handle 冒充持久链接。
 - handle 只在原 MCP 连接有效；过期或跨连接时使用已保存的 exact ref 重新读取，不猜测修复。原生 Codex 不自动展开最终答案中的 handle；只有配置了项目 renderer 的路径才保证 exact ref 展开。需要可长期回查的来源时保留 inspect 返回的 exact ref；可读标题/编号不能替代该身份。
 - 每条引用支持紧邻陈述，长总结需要相应范围和多条材料。来源只支持局部时缩窄表述，说明实际读到的部分；不要用一句对白证明整段因果、身份或结局。
 - 保留原文的否定、“可能”“据说”、角色自述和转述限定。区分来源事实、人物主张、文学解释和预测。candidate、ambiguous、unresolved 和 partial 不因回答流畅而消失；EOF 不是全角色发言或 corpus 完整。

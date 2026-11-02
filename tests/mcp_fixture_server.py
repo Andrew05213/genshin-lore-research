@@ -59,7 +59,7 @@ def main():
     query.unavailable = []
     query.db.execute("INSERT INTO research_text_fts(research_text_fts) VALUES('rebuild')")
     query.citation_handoff = CitationHandoff(args.config.parent/'handoff')
-    server = create_server(query)
+    server = create_server(query, source_cards=args.config.parent/'source-cards')
     _avoid_broken_anyio_worker_threads(server)
     try:
         anyio.run(_run_pipe_stdio, server)

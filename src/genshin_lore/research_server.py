@@ -10,19 +10,28 @@ from mcp.types import ToolAnnotations
 from .research_query import ResearchNotFound,ResearchQuery,ResearchUnavailable
 from .mcp_transport import _avoid_broken_anyio_worker_threads,_run_pipe_stdio
 from .citation_handoff import CitationHandoff
-from .dialogue.presentation import check_detail, search_reading, page_groups, trim_search_reading
+from .dialogue.presentation import check_detail, search_reading, page_groups, trim_search_reading, corpus_overview
 
 READONLY=ToolAnnotations(readOnlyHint=True,destructiveHint=False,idempotentHint=True,openWorldHint=False)
 
-def create_server(service:ResearchQuery)->MCPServer:
+def create_server(service:ResearchQuery, *, source_cards=None)->MCPServer:
  handoff=getattr(service,'citation_handoff',None) or CitationHandoff()
- server=MCPServer(name="genshin-lore-research",version="1.0.0",instructions="Frozen evidence research profile; no latest/default run selection. Search literal subject keywords, not whole questions. Use reading_view body previews/actions before repeating name searches; previews are bounded candidates and require read/inspect. For dialogue investigations use read_evidence view='dialogue'; default detail='reading' delivers bodies, title indexes, speaker labels and neighbour locators. Use detail='full' for full surrounding bodies/provenance. Follow supplied cursors with the same anchor/limit/locale/detail. Source-role labels are not proof of a unique story actor; branch connections do not prove playback order. Keep source facts, character statements, interpretation and prediction separate. Missing titles are not permission to invent a scene. Cite inspected body handles, not name/root handles, near supported claims. Display readable titles/speakers and citation_number; use the full supplied scoped handle for tool inputs and citations. Source links open files, not exact observations. Handles expire with this connection; inspect restores exact refs. Native client rendering is unchanged; persistent receipt rendering requires the explicit project delivery path. Stop when evidence answers the question; aim for <=20 calls for ordinary tasks and explain further investigation. Do not repeat equivalent searches or inspect the same material needlessly.")
+ if source_cards is not None:handoff.source_cards=Path(source_cards)
+ server=MCPServer(name="genshin-lore-research",version="1.0.0",instructions="Frozen evidence research profile; no latest/default run selection. Search literal subject keywords, not whole questions. Use reading_view body previews/actions before repeating name searches; previews are bounded candidates and require read/inspect. For dialogue investigations use read_evidence view='dialogue'; default detail='reading' delivers bodies, title indexes, speaker labels and neighbour locators. Use detail='full' for full surrounding bodies/provenance. Follow supplied cursors with the same anchor/limit/locale/detail. Source-role labels are not proof of a unique story actor; branch connections do not prove playback order. Keep source facts, character statements, interpretation and prediction separate. Missing titles are not permission to invent a scene. Cite inspected body handles, not name/root handles, near supported claims. Display readable titles/speakers and citation_number; use the full supplied scoped handle for tool inputs and citations. Source links open files, not exact observations. Handles expire with this connection; inspect restores exact refs. When source_card_delivery is available, inspect selected read handles with save_source=true and place the returned real source-card links near supported claims. Cards preserve selected material after restart; never relabel an expired handle. Native answer rendering remains unchanged; automatic handle expansion still requires the explicit project renderer. Stop when evidence answers the question; aim for <=20 calls for ordinary tasks and explain further investigation. Do not repeat equivalent searches or inspect the same material needlessly.")
  def wrap(fn,*a,**kw):
   try:
    detail=kw.pop('_detail','full');check_detail(detail)
+   save_source=kw.pop('_save_source',False);describe_request=kw.pop('_describe',False)
    args=list(a)
+   requested_ref=args[1] if len(args)>1 else None
    if handoff and fn.__name__ in ('read','follow','inspect'):args[1]=handoff.resolve(args[1])['evidence_ref']
    out={"status":"ok","corpus_ref":service.corpus_ref,"data":fn(*args,**kw)}
+   if describe_request:
+    if detail=='reading':out['data']=corpus_overview(out['data'])
+    out['data']['source_card_delivery']={'available':handoff.source_cards is not None,'usage':'inspect_evidence on a read body handle with save_source=true; local files, no native renderer interception'}
+   if save_source:
+    try:out['data']['source_card']=handoff.save_source(requested_ref,out['data'],service.corpus_ref)
+    except OSError as e:raise ResearchUnavailable('local source card I/O failed: '+str(e)) from e
    if fn.__name__=='search' and detail=='reading':
     out['data']={'reading_view':search_reading(service,out['data'],args[1],args[2],filters=bool(args[3] or args[4] or args[8] or args[9]) or out['data'].get('domain_filter') is not None),**out['data']}
    if fn.__name__=='read' and out['data'].get('view')=='dialogue' and out['data'].get('detail')=='reading':
@@ -46,16 +55,17 @@ def create_server(service:ResearchQuery)->MCPServer:
                     'guidance':'Use returned refs/cursors; dialogue limit is 1..20, locale CHS/EN/JP. Inspect a supplied handle for its exact identity; never guess refs.'}
   if len(json.dumps(out,ensure_ascii=False,separators=(",",":" )).encode())>=262144:return {"status":"response_too_large","corpus_ref":service.corpus_ref,"error":"reduce limit or context window"}
   return out
- @server.tool(name="describe_corpus",description="Describe this connection's frozen corpus. Omit corpus_ref to discover its valid value; this never selects a different dataset.",annotations=READONLY)
- def describe_corpus(corpus_ref:str='',detail:str|None=None)->dict[str,Any]:return wrap(service.describe,corpus_ref or service.corpus_ref,detail)
+ @server.tool(name="describe_corpus",description="Compact discovery by default: frozen corpus, available modes, limitations and reading entry points. detail='full' returns complete component/coverage metadata. Omit corpus_ref to discover this connection's value; never selects a different dataset.",annotations=READONLY)
+ def describe_corpus(corpus_ref:str='',detail:str|None='reading')->dict[str,Any]:
+  return wrap(service.describe,corpus_ref or service.corpus_ref,detail,_detail=detail or 'reading',_describe=True)
  @server.tool(name="search_evidence",description="Literal subject-keyword search by default; lexical/semantic/hybrid remain explicit. Default detail='reading' adds bounded body previews and source-bound next actions ahead of separate name matches; raw items/order/cursor are unchanged. Filters apply to original hits; filtered requests do not auto-expand previews beyond scope. detail='full' omits the reading panel.",annotations=READONLY)
  def search_evidence(corpus_ref:str,query:str,locale:str|None=None,families:list[str]|None=None,source_prefix:str|None=None,limit:int=20,cursor:str|None=None,mode:str="literal",domain:str|None=None,story_release:str|None=None,detail:str='reading')->dict[str,Any]:return wrap(service.search,corpus_ref,query,locale,families,source_prefix,limit,cursor,mode,domain,story_release,_detail=detail)
  @server.tool(name="read_evidence",description="Read an exact ref or this connection's scoped handle. Physical view keeps existing same-container before/after. view='dialogue' pages NPC/name speech candidates or source-connected Dialog/Talk nodes. Default detail='reading' compacts repeated provenance and returns scoped body/title/context handles; source_titles and title_indexes share titles, display_groups group equal text without merging identities. detail='full' retains exact refs and full context. page_info states actual nodes/text entries/byte limit/stop reason. limit requests main nodes, not neighbour/translation entries. Reuse cursor with identical anchor/limit/locale/detail. Scope exhaustion/EOF never means all dialogue or corpus complete. Inspect body handles before citation; full provenance is always available through inspect.",annotations=READONLY)
  def read_evidence(corpus_ref:str,evidence_ref:str,before:int=0,after:int=0,limit:int=20,cursor:str|None=None,view:str='physical',locale:str='CHS',detail:str='reading')->dict[str,Any]:return wrap(service.read,corpus_ref,evidence_ref,before,after,limit,cursor,view=view,locale=locale,detail=detail,_detail=detail)
  @server.tool(name="follow_evidence",description="Follow only source-authored evidence relations. For Dialog/Talk, relation_kind='dialogue_predecessor' finds checked local incoming links to read earlier context; it is not narrative chronology.",annotations=READONLY)
  def follow_evidence(corpus_ref:str,evidence_ref:str,relation_kind:str|None=None,limit:int=20,cursor:str|None=None,resolve_targets:bool=True)->dict[str,Any]:return wrap(service.follow,corpus_ref,evidence_ref,relation_kind,limit,cursor,resolve_targets)
- @server.tool(name="inspect_evidence",description="Return citation-grade physical provenance for exact evidence.",annotations=READONLY)
- def inspect_evidence(corpus_ref:str,evidence_ref:str)->dict[str,Any]:return wrap(service.inspect,corpus_ref,evidence_ref)
+ @server.tool(name="inspect_evidence",description="Return citation-grade physical provenance for exact evidence. Optional save_source=true saves a local Markdown/JSON source card for the supplied actually-read text handle, returning a real file link. Search snippets/locators and bare refs cannot select a read range. Saving preserves the exact ref, original text/range and limitations; it neither verifies claims nor changes the native renderer.",annotations=READONLY)
+ def inspect_evidence(corpus_ref:str,evidence_ref:str,save_source:bool=False)->dict[str,Any]:return wrap(service.inspect,corpus_ref,evidence_ref,_save_source=save_source)
  return server
 
 def main(argv=None):

@@ -193,6 +193,16 @@ def test_real_mcp_stdio_from_two_isolated_configs(tmp_path):
                     assert body['raw_text'] == data['nodes'][0]['texts'][0]['raw_text']
                     resolved = await call('inspect_evidence', evidence_ref=body['citation_handle'])
                     assert resolved['data']['evidence_ref'] == inspected['data']['evidence_ref']
+                    saved = await call('inspect_evidence', evidence_ref=body['citation_handle'], save_source=True)
+                    assert saved['status'] == 'ok'
+                    card = saved['data']['source_card']
+                    assert card['status'] == 'SAVED'
+                    stored = json.loads(Path(card['metadata_path']).read_bytes())
+                    assert stored['evidence_ref'] == inspected['data']['evidence_ref']
+                    assert stored['quoted_text'] == body['raw_text']
+                    assert Path(card['markdown_path']).is_relative_to(config.parent)
+                    wrong_save = await call('inspect_evidence', evidence_ref=stored['evidence_ref'], save_source=True)
+                    assert wrong_save['status'] == 'invalid_request'
                     discovery = payload(await client.call_tool('describe_corpus', {}))
                     assert discovery['status'] == 'ok' and discovery['corpus_ref'] == 'synthetic-corpus'
                     invalid = await call('read_evidence', evidence_ref=ref, detail='unknown')
@@ -218,6 +228,25 @@ def test_unsupported_sdk_version_fails_clearly(monkeypatch):
     monkeypatch.setattr(mcp_transport, 'version', lambda _: 'unsupported')
     with pytest.raises(RuntimeError, match='mcp==2.1.1'):
         mcp_transport._check_sdk()
+
+
+def test_source_card_save_failure_is_explicit_without_breaking_plain_inspection(tmp_path):
+    config = config_at(tmp_path/'cards-io-failure')
+    (config.parent/'source-cards').write_text('synthetic conflicting file')
+    async def run():
+        async with fixture_client(config) as client:
+            async def call(name, **args):
+                return payload(await client.call_tool(name, {'corpus_ref': 'synthetic-corpus', **args}))
+            anchor = (await call('describe_corpus'))['data']['anchor']
+            page = (await call('read_evidence', evidence_ref=anchor, view='dialogue', limit=1))['data']
+            handle = page['nodes'][0]['texts'][0]['citation_handle']
+            failure = await call('inspect_evidence', evidence_ref=handle, save_source=True)
+            assert failure['status'] == 'unavailable' and failure['partial']
+            assert 'I/O failed' in failure['error']
+            plain = await call('inspect_evidence', evidence_ref=handle)
+            assert plain['status'] == 'ok'
+            assert (config.parent/'source-cards').read_text() == 'synthetic conflicting file'
+    anyio.run(run)
 
 
 def test_research_transport_no_longer_imports_legacy_service():

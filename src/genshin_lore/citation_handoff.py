@@ -26,11 +26,20 @@ def digest(value):
 
 
 class CitationHandoff:
-    def __init__(self, directory=None):
+    def __init__(self, directory=None, *, source_cards=None):
         self.session = secrets.token_hex(8)
         self.directory = Path(directory) if directory else None
         self.counter = 0
         self._records = {}  # canonical bytes, not caller-owned mutable mappings
+        self.source_cards = Path(source_cards) if source_cards is not None else None
+
+    def save_source(self, handle, inspection, corpus_ref):
+        if self.source_cards is None:
+            raise ValueError('source card delivery is not configured on this server')
+        if not isinstance(handle, str) or not HANDLE.fullmatch(handle):
+            raise ValueError('save_source requires the supplied scoped read handle; exact ref alone has no selected view')
+        from .source_cards import save_card
+        return save_card(self.source_cards, self.resolve(handle), inspection, corpus_ref)
 
     def resolve(self, value):
         if not isinstance(value, str):
@@ -50,11 +59,34 @@ class CitationHandoff:
         result = copy.deepcopy(payload)
         records = []
 
-        def visit(node, inherited=None):
+        def visit(node, inherited=None, context=None, catalog=None):
             if isinstance(node, list):
                 for child in node:
-                    visit(child, inherited)
+                    visit(child, inherited, context, catalog)
             elif isinstance(node, dict):
+                context = dict(context or {})
+                catalog = node.get('source_titles', catalog)
+                for key in ('view', 'partial', 'scope_complete', 'corpus_complete', 'page_info',
+                            'end_reached', 'file_end_reached', 'locale', 'context_scope',
+                            'context_truncated', 'ordering_basis', 'reachable_local_graph_exhausted'):
+                    if key in node:
+                        context[key] = copy.deepcopy(node[key])
+                # Physical read puts the anchor locale in its same-ref context
+                # entry. Copy that explicit observation, never infer from a path.
+                if 'raw_text' in node and 'locale' not in node:
+                    matches = [t for t in node.get('context', []) if t.get('evidence_ref') == node.get('evidence_ref')]
+                    locales = {t['locale'] for t in matches if t.get('locale')}
+                    if len(locales) == 1:context['locale'] = next(iter(locales))
+                speaker = node.get('speaker') or (node.get('dialogue_source') or {}).get('speaker')
+                if isinstance(speaker, dict):
+                    context['speaker'] = {k: speaker[k] for k in
+                        ('display_name', 'status', 'basis', 'logical_identity_proven') if k in speaker}
+                source_context = node.get('source_context') or {}
+                if isinstance(source_context, dict):
+                    if 'titles' in source_context:
+                        context['titles'] = copy.deepcopy(source_context['titles'])
+                    if catalog is not None and 'title_indexes' in source_context:
+                        context['titles'] = [copy.deepcopy(catalog[i]) for i in source_context['title_indexes']]
                 inherited = node.get('evidence_ref', inherited)
                 # Preview inspection's observation has its ref on the envelope.
                 ref = node.get('evidence_ref') or (inherited if 'observation_index' in node else None)
@@ -78,6 +110,7 @@ class CitationHandoff:
                               'quoted_text': body, 'quoted_text_sha256': hashlib.sha256(body.encode()).hexdigest() if body is not None else None,
                               'citation_label': node.get('citation_label'),
                               'source_result': copy.deepcopy(node),
+                              'reading_context': copy.deepcopy(context),
                               'material_read': not node.get('locator_only', False) and (operation in ('read', 'query') or (operation == 'inspect' and body is not None)),
                               'qualified_by_inspect': not node.get('locator_only', False) and operation in ('query', 'inspect'),
                               'proof_semantics': 'unchanged source result; handles do not establish ownership or identity'}
@@ -90,11 +123,11 @@ class CitationHandoff:
                 # Navigation locators are addressable, not inspected material.
                 if isinstance(node.get('target_evidence_ref'), str):
                     locator = {'evidence_ref': node['target_evidence_ref'], 'locator_only': True}
-                    visit(locator)
+                    visit(locator, context=context, catalog=catalog)
                     node['target_citation_handle'] = locator['citation_handle']
                 for key, child in list(node.items()):
                     if key not in ('citation_handle', 'target_citation_handle'):
-                        visit(child, inherited)
+                        visit(child, inherited, context, catalog)
 
         visit(result, result.get('provenance', {}).get('evidence_ref'))
         if compact:

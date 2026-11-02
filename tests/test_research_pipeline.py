@@ -243,7 +243,11 @@ def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf
                         result = payload(await client.call_tool(name, {'corpus_ref':corpus,**args}))
                         assert result['status'] == 'ok', result
                         return result['data']
-                    description = await call('describe_corpus')
+                    summary = await call('describe_corpus')
+                    assert summary['component_summary']['count'] == 2
+                    assert summary['component_summary']['partial_projection_sources'] == ['core']
+                    assert summary['details_action']['arguments'] == {'corpus_ref': corpus, 'detail': 'full'}
+                    description = await call('describe_corpus', detail='full')
                     core = next(c for c in description['components'] if c['artifact_source_key']=='core')
                     assert core['unsupported_relation_tables'] == ['candidate_scope_proof','comparison_scope_proof']
                     assert core['relation_coverage_complete'] is False
@@ -258,6 +262,11 @@ def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf
                         assert inspected['evidence_ref'] == ref
                         assert body['provenance'] == inspected['text_provenance']
                         assert body['text_proof']['logical_identity_proven'] is False
+                        saved = (await call('inspect_evidence',evidence_ref=body['citation_handle'],save_source=True))['source_card']
+                        assert saved['status'] == 'SAVED'
+                        assert Path(saved['metadata_path']).parent == config.parent/'source-cards'
+                        card = json.loads(Path(saved['metadata_path']).read_bytes())
+                        assert card['evidence_ref'] == ref and card['quoted_text'] == body['raw_text']
                     await call('follow_evidence',evidence_ref=a)
 
     for job, manifest, bindings, config in outputs:

@@ -47,6 +47,8 @@ def main():
     p.add_argument('--config',type=Path,required=True)
     p.add_argument('--check',action='store_true')
     p.add_argument('--surface',choices=('research','narrative'),default='research')
+    p.add_argument('--source-cards',type=Path,
+                   help='private selected source cards; default <config directory>/source-cards')
     a=p.parse_args()
     if a.check:
         print(json.dumps(smoke(a.config),ensure_ascii=False));return
@@ -56,7 +58,7 @@ def main():
     try:
         if a.surface=='research':
             from genshin_lore.research_server import create_server
-            server=create_server(runtime.query)
+            server=create_server(runtime.query,source_cards=a.source_cards or a.config.resolve().parent/'source-cards')
         else:
             from genshin_lore.narrative_assistant_7_1 import NarrativeAssistant71
             from genshin_lore.research71_preview_server import create_server

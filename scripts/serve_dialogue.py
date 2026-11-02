@@ -84,6 +84,8 @@ def main():
     p.add_argument('--citation-receipts', type=Path,
                    default=os.environ.get('GENSHIN_CITATION_HANDOFF_DIR'),
                    help='optional existing scoped-handle transport; private receipts remain local')
+    p.add_argument('--source-cards', type=Path,
+                   help='private selected source cards; default <config directory>/source-cards (created on save only)')
     a = p.parse_args(); query = open_query(a.config, a.released_runtime_root)
     try:
         if a.check:
@@ -108,7 +110,7 @@ def main():
         # Explicitly use this extension's handoff AFTER the retained runtime has
         # qualified. Never patch its imported modules or immutable release code.
         query.citation_handoff = handoff_type(a.citation_receipts)
-        server = create_server(query)
+        server = create_server(query, source_cards=a.source_cards or a.config.resolve().parent/'source-cards')
         _avoid_broken_anyio_worker_threads(server)
         anyio.run(_run_pipe_stdio, server)
     finally:
