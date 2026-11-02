@@ -11,7 +11,7 @@ from mcp.client.stdio import stdio_client
 import pytest
 
 from scripts.check import payload
-from genshin_lore.citation_handoff import bind_capture
+from genshin_lore.citation_handoff import bind_capture, render_answer
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ['describe_corpus', 'search_evidence', 'read_evidence', 'follow_evidence', 'inspect_evidence']
@@ -246,6 +246,67 @@ def test_source_card_save_failure_is_explicit_without_breaking_plain_inspection(
             plain = await call('inspect_evidence', evidence_ref=handle)
             assert plain['status'] == 'ok'
             assert (config.parent/'source-cards').read_text() == 'synthetic conflicting file'
+    anyio.run(run)
+
+
+def test_batch_save_progress_and_supplied_read_actions_over_real_stdio(tmp_path):
+    config = config_at(tmp_path/'batch')
+    async def run():
+        async with fixture_client(config) as client:
+            tools = (await client.list_tools()).tools
+            assert [t.name for t in tools] == TOOLS
+            assert all('ctx' not in t.input_schema.get('properties', {}) for t in tools)
+            events = []
+            async def progress(value, total, message):
+                events.append((value,total,message))
+            async def call(name, **args):
+                return payload(await client.call_tool(name, {'corpus_ref':'synthetic-corpus',**args},
+                                                     progress_callback=progress))
+            anchor = (await call('describe_corpus'))['data']['anchor']
+            first = await call('read_evidence',evidence_ref=anchor,view='dialogue',limit=1)
+            action = first['data']['reading_actions'][0]
+            second = payload(await client.call_tool(action['tool'], action['arguments']))
+            assert second['status']=='ok'
+            assert first['data']['nodes'][0]['node'] != second['data']['nodes'][0]['node']
+            context = first['data']['nodes'][0]['context_action']
+            expanded = payload(await client.call_tool(context['tool'],context['arguments']))
+            assert expanded['status']=='ok' and expanded['data']['detail']=='full'
+            pages = (first,second)
+            bodies = [p['data']['nodes'][0]['texts'][0] for p in pages]
+            handles = [b['citation_handle'] for b in bodies]
+            saved = await call('inspect_evidence', evidence_refs=handles, save_source=True)
+            assert saved['status']=='ok' and not saved['data']['partial']
+            assert all(r['status']=='ok' for r in saved['data']['results'])
+            card = saved['data']['source_card']
+            metadata = json.loads(Path(card['metadata_path']).read_bytes())
+            assert [e['quoted_text'] for e in metadata['entries']] == [b['raw_text'] for b in bodies]
+            for entry in metadata['entries']:
+                full = await call('inspect_evidence',evidence_ref=entry['evidence_ref'])
+                assert full['data']['text_provenance']==entry['inspection']['text_provenance']
+            bound = bind_capture({'tool_calls':[{'result':p,'status':'completed','item_id':str(i),
+                'server':'fixture','tool':'fixture'} for i,p in enumerate((*pages,saved))],
+                'stdout_sha256':'fixture'},config.parent/'handoff')
+            assert set(bound['inspected_refs'])=={e['evidence_ref'] for e in metadata['entries']}
+            delivery=render_answer('合成摘录 '+ ' '.join(handles),bound)
+            assert delivery['status']=='DELIVERED'
+            assert [r['evidence_ref'] for r in delivery['citation_resolution']]==[e['evidence_ref'] for e in metadata['entries']]
+            assert events and any(total==2 and value==1 for value,total,_ in events)
+            assert events[-1][:2] == (2,2)
+            before = set((config.parent/'source-cards').iterdir())
+            failed = await call('inspect_evidence', evidence_refs=[handles[0],'[H0000000000000000:R1:E1]'],save_source=True)
+            assert failed['data']['partial'] and failed['data']['results'][0]['status']=='ok'
+            assert failed['data']['results'][1]['status']=='failed'
+            assert failed['data']['source_card']['status']=='NOT_SAVED'
+            assert set((config.parent/'source-cards').iterdir())==before
+            duplicate = await call('inspect_evidence', evidence_refs=[handles[0]]*2,save_source=True)
+            assert duplicate['status']=='invalid_request'
+            for args in ({'evidence_refs':[]},{'evidence_refs':handles*17},
+                         {'evidence_ref':handles[0],'evidence_refs':handles}):
+                assert (await call('inspect_evidence',**args))['status']=='invalid_request'
+            exacts=[entry['evidence_ref'] for entry in metadata['entries']]
+            not_read=await call('inspect_evidence',evidence_refs=exacts,save_source=True)
+            assert not_read['data']['partial'] and not_read['data']['source_card']['status']=='NOT_SAVED'
+            assert set((config.parent/'source-cards').iterdir())==before
     anyio.run(run)
 
 

@@ -108,7 +108,17 @@ tool_timeout_sec = 60
 
 模型先 read 实际正文，保留该次读取返回的完整 scoped handle，再调用现有 `inspect_evidence`，附加 `save_source=true`。原 `inspect_evidence(corpus_ref, evidence_ref)` 用法保持；保存操作需要 read handle，因为 bare exact ref 不能说明选择的是哪次 observation/range。搜索摘要、未读 locator、inspect 自己生成的 handle 和过期 handle 不能代替已读材料。
 
-成功时 `data.source_card` 返回 `markdown_link`、`markdown_path` 和 `metadata_path`。最终答案将真实卡片链接放在它实际支持的陈述旁；不需要原生客户端自动展开临时 handle，也不拦截或改写模型答案。打开卡片可查看已交付原文、来源标题/角色标注、固定快照、精确位置、实际读取范围、read/inspect 状态及候选限制。文件级上游链接仍不冒充精确段落链接。
+成功时 `data.source_card` 返回 `markdown_link`、`markdown_path` 和 `metadata_path`。最终答案将真实卡片链接放在它实际支持的陈述旁；不需要原生客户端自动展开临时 handle，也不拦截或改写模型答案。Markdown 仅展示标题、正文和必要的来源角色标注；路径、哈希、引用 ID、解析状态及限制保留在独立 JSON，不混入面向人的阅读卡。文件级上游链接仍不冒充精确段落链接。
+
+连续对白可一次选择多个实际读过的句柄：
+
+```json
+{"corpus_ref":"<已返回的corpus_ref>","evidence_refs":["<第一条已读handle>","<第二条已读handle>"],"save_source":true}
+```
+
+`evidence_refs` 与单条 `evidence_ref` 二选一，每批1–32个不同句柄；同一 ref 的不同 observation/range 可分别选中。不需要逐句生成卡片。每项独立 inspect，任一选择失败则不生成集合卡，返回 `partial` 和 `NOT_SAVED`；成功项和失败原因仍分别可见。材料按明确选择顺序展示，不自动跨来源拼成连续发言、不认定人物相同；集合 JSON 的 `entries` 保留每条独立身份、原文、范围和正式检查结果。相同文字来自不同记录时不删除证据。
+
+批量/保存默认返回精简结果，避免再传一遍全部 provenance；`detail="full"` 可显式展开。原单条普通 inspect 默认仍为完整信息。Markdown 使用新阅读视图文件名，不覆盖已交付的旧卡片；机器记录仍保留完整原文与证据链。
 
 JSON 保留原始字符、SHA、原 read mapping 和本次正式 inspect 结果；Markdown 为其阅读视图，缺少末尾换行时只补显示换行。不同 physical occurrence、observation 或范围分别保存；相同内容不合并身份。重复保存同一结果可复用相同字节，已有文件若发生漂移则拒绝覆盖。保存失败不会返回 `SAVED`。
 
@@ -129,6 +139,10 @@ MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用�
 首条发言本身超过对白视图预算时，仅省略可选预览，标记 `preview_read_byte_limit`，保留成功搜索及 cursor，并提供已核验正文的普通物理读取入口；不是“没有发言”。只有专门的视图预算异常允许这样处理，来源 SHA、scope 或其他资格错误仍正常拒绝。
 
 紧凑邻居及导航目标标记为 `locator_only`：可以定位并 inspect，但仅 inspect 不表示正文已交付。必须实际读取同一 exact ref，才能满足现有 read-and-inspect 交付条件；优先引用实际正文读取返回的句柄。定位器原记录仍保持未读，不由程序改写成正文或自动更换引用。
+
+默认 reading 进一步省略重复的路径、哈希及 provenance，保留正文、标题、来源角色标注、候选限制和分页状态。普通物理读取中，同一 exact anchor 在 context 内重复出现时只省略其重复正文并标 `body_in_anchor`；其他记录即使文字相同也不删除。完整响应仍由 `detail="full"` 获取。`reading_actions` 给出保留全部分页参数的下一页调用；`nodes[].context_action` 给出该节点的完整前后文读取调用，避免猜 anchor 或重搜姓名。
+
+搜索和读取发送标准 MCP 进度通知，批量核验还逐项报告已处理数量；只有请求进度且支持展示的客户端才会看到。通知报告实际阶段，未实现正文逐条流式交付、单次 SQL 中途取消或原生 Codex UI 改造，不承诺查询提速。独立查询可由客户端分别展示，不应把 `content` 与 `structuredContent` 重复输出。
 
 验证记录见 [对白阅读验证](../history/dialogue-reading.md)。
 

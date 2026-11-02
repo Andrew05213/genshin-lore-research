@@ -2,6 +2,8 @@
 
 ## 可执行入口
 
+阅读卡支持多句一次保存，Markdown 只显示标题和正文，完整证据另存 JSON。默认 reading 去掉重复技术结构，提供明确的续页/上下文动作；人物预览按材料类型组织。标准进度通知由支持它的客户端展示，未改原生 Codex renderer。实际 stdio 核对、体积测量、初轮失败与验证边界见 [阅读卡验证](reviews/reading-card-usability.md)。不自动切换已部署客户端或发布身份。
+
 Research 源码入口新增正文优先 reading 面板、紧凑对白分页与连接内短引用，full 视图和完整 inspect 保留。固定来源实测同一 `limit=20` 首屏由 3 个主节点变为 17 个；没有改变搜索排序或将候选升级为身份。接口和未执行范围见 [阅读展示验证](reviews/research-reading-experience.md)，部署参数见 [对白阅读指南](guides/reading-dialogue.md)。已有封存 release 和客户端配置不自动切换。
 
 最新 Linux 固定来源对照对应 `5495c0d`：R0 storage v2 与默认取消索引 VACUUM，35 输入、33 个 core providers、60 个数据库阶段及默认向量完整新目录构建通过。同期 `e231872` 控制组 37:50.51，候选为 35:38.49（各一次），减少 5.81%；观测构建峰值 25.53 → 16.49 GB，完整输出 19.81 → 16.49 GB。全部 R0 字段、正文物理坐标和向量数值对照通过，两次完整索引 oracle 与实际 MCP 续读/引用均通过。30 分钟目标尚未达到；原生 Windows 完整来源计时未运行。取舍、采样空档、资格范围和原始记录摘要见 [构建存储优化](compact-evidence-storage.md)。

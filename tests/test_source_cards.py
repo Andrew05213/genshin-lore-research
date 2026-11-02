@@ -50,6 +50,9 @@ def test_selected_source_card_preserves_text_titles_states_and_exact_ref(tmp_pat
     assert card['read_record']['reading_context']['speaker']['status'] == 'ambiguous'
     assert card['read_record']['reading_context']['partial'] is True
     assert '合成篇章' in rendered and '合成人物' in rendered
+    for technical in ('synthetic:exact', 'synthetic-snapshot', 'source_pointer',
+                      'sha256', 'physical_candidate', 'inspect', '.json'):
+        assert technical not in rendered
     assert '````\n' in rendered  # body backticks cannot close its display fence
     assert card['read_completed'] and card['inspect_completed']
     assert handoff.resolve(handle) == original  # subsequent inspect does not rewrite the read receipt
@@ -150,3 +153,25 @@ def test_physical_read_card_uses_only_its_exact_anchor_locale(tmp_path):
     out = handoff.attach({'status': 'ok', 'data': raw}, 'read')
     saved = handoff.save_source(out['data']['citation_handle'], q.inspect(q.corpus_ref, exact), q.corpus_ref)
     assert json.loads(Path(saved['metadata_path']).read_bytes())['locale'] == 'CHS'
+
+
+def test_collection_keeps_selected_order_ranges_and_independent_identity(tmp_path):
+    handoff = CitationHandoff(source_cards=tmp_path)
+    selections = [material(handoff, ref=ref, observation=i, start=i*400)
+                  for i, ref in enumerate(('synthetic:a', 'synthetic:b', 'synthetic:a'))]
+    saved = handoff.save_sources([(h, inspection) for h, _, inspection in selections], 'synthetic-corpus')
+    value = json.loads(Path(saved['metadata_path']).read_bytes())
+    assert [e['evidence_ref'] for e in value['entries']] == ['synthetic:a', 'synthetic:b', 'synthetic:a']
+    assert [e['range']['start'] for e in value['entries']] == [0, 400, 800]
+    assert all(e['inspection']['text_proof']['relation_status']=='physical_candidate' for e in value['entries'])
+    rendered = Path(saved['markdown_path']).read_text(encoding='utf-8')
+    assert rendered.count(selections[0][1]['raw_text']) == 3  # equal text is not identity deduplication
+    assert len(list(tmp_path.glob('*.md'))) == len(list(tmp_path.glob('*.json'))) == 1
+
+
+def test_collection_validates_every_selection_before_writing(tmp_path):
+    handoff = CitationHandoff(source_cards=tmp_path/'cards')
+    handle, _, inspection = material(handoff)
+    with pytest.raises(ValueError, match='mismatch'):
+        handoff.save_sources([(handle, inspection), (handle, {**inspection,'evidence_ref':'wrong'})], 'synthetic-corpus')
+    assert not (tmp_path/'cards').exists()

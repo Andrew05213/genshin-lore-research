@@ -32,7 +32,7 @@ BODY_FIELDS = CHARACTER_BODY_FIELDS | {'body', 'talkContentTextMapHash', 'conten
 
 def check_detail(detail):
     if detail not in ('reading', 'full'):
-        raise ValueError('detail must be reading or full; inspect_evidence always returns full provenance')
+        raise ValueError('detail must be reading or full; use inspect detail=full for full provenance')
 
 
 def reading_card(card):
@@ -176,12 +176,14 @@ def search_groups(panel):
               'name_matches': [{'item_index': n['item_index']} for n in panel['name_matches']],
               'unclassified_matches': [{'item_index': n['item_index']} for n in panel['other_matches']]}
     by_title = {}
+    by_material = {}
     for index, body in enumerate(panel['body_previews']):
         basis = body.get('discovery_basis', '')
         kind = ('character_material_candidates' if 'Character' in basis else
                 'source_labelled_speech_candidates' if 'source-labelled' in basis else 'other_body_previews')
         pointer = {'preview_index': index}
         groups[kind].append(pointer)
+        by_material.setdefault(body.get('material_type', 'dialogue_or_other_body'), []).append(pointer)
         titles = ([body['source_title']] if body.get('source_title') else
                   [t['raw_text'] for t in body.get('source_title_candidates', []) if t.get('raw_text')])
         for title in titles:
@@ -189,6 +191,8 @@ def search_groups(panel):
     for title in panel['title_matches']:
         by_title.setdefault(title['title'], []).append({'item_index': title['item_index']})
     return {'categories': groups,
+            'by_material_type': [{'material_type': kind, 'matches': pointers}
+                                 for kind, pointers in by_material.items()],
             'by_source_title': [{'title': title, 'matches': pointers} for title, pointers in by_title.items()],
             'scope': 'current page only; keyword mentions do not establish a speaker',
             'display_group_only': True, 'logical_identity_proven': False}
@@ -219,6 +223,7 @@ def character_reading(service, query, locale):
             for text in material.get('context', []):
                 if text.get('locale') == locale and text.get('owner_field') in CHARACTER_BODY_FIELDS and delivered < 2:
                     bodies.append({**text, 'discovery_basis': 'source-authored Character navigation; physical_candidate',
+                        'material_type': 'voice' if text['owner_field']=='voiceFileTextTextMapHash' else 'character_story_or_profile',
                         'source_title_candidates': titles,
                         'relation_status': edge['status'], 'logical_identity_proven': False,
                         'requires_read_and_inspect': True})
@@ -279,7 +284,10 @@ def search_reading(service, result, query, locale, *, filters=False):
                             'discovery_basis': 'source-labelled name candidate; not unique NPC ownership',
                             'requires_read_and_inspect': True})
         actions.append(action)
-    if names and not filters:
+    # Name rows may be below the first search page, while a profile/body hit
+    # already matched. One bounded exact-name lookup still finds the existing
+    # Character navigation; no name inference or ranking/filter change.
+    if not filters and 0 < len(query.strip()) <= 64:
         character_bodies, character_actions = character_reading(service, query, locale or 'CHS')
         bodies = character_bodies + bodies
         actions = character_actions + actions

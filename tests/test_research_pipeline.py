@@ -257,16 +257,20 @@ def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf
                     assert a != b
                     for ref in (a,b):
                         body = await call('read_evidence',evidence_ref=ref)
+                        full_body = await call('read_evidence',evidence_ref=ref,detail='full')
                         inspected = await call('inspect_evidence',evidence_ref=ref)
                         assert '合成原文 '+arm in body['raw_text']
                         assert inspected['evidence_ref'] == ref
-                        assert body['provenance'] == inspected['text_provenance']
+                        assert 'provenance' not in body
+                        assert body['raw_text'] == full_body['raw_text']
+                        assert full_body['provenance'] == inspected['text_provenance']
                         assert body['text_proof']['logical_identity_proven'] is False
                         saved = (await call('inspect_evidence',evidence_ref=body['citation_handle'],save_source=True))['source_card']
                         assert saved['status'] == 'SAVED'
                         assert Path(saved['metadata_path']).parent == config.parent/'source-cards'
                         card = json.loads(Path(saved['metadata_path']).read_bytes())
                         assert card['evidence_ref'] == ref and card['quoted_text'] == body['raw_text']
+                        assert card['inspection']['text_provenance'] == inspected['text_provenance']
                     await call('follow_evidence',evidence_ref=a)
 
     for job, manifest, bindings, config in outputs:
