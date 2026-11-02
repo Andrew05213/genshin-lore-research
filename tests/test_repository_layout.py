@@ -11,6 +11,14 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_checkout_skill_has_codex_discovery_metadata():
+    skill = ROOT / '.agents/skills/genshin-lore-research/SKILL.md'
+    frontmatter = skill.read_text(encoding='utf-8').split('---', 2)[1]
+    fields = dict(line.split(':', 1) for line in frontmatter.strip().splitlines())
+    assert fields['name'].strip() == skill.parent.name == 'genshin-lore-research'
+    assert fields['description'].strip()
+
+
 def test_project_name_and_license_are_consistent():
     project = tomllib.loads((ROOT/'pyproject.toml').read_text())['project']
     assert project['name'] == 'genshin-lore-research'
@@ -34,6 +42,7 @@ def test_public_command_help(command):
 
 def test_markdown_local_links_resolve():
     files = [ROOT/'README.md', ROOT/'AGENTS.md', *(ROOT/'docs').rglob('*.md'),
+             *(ROOT/'.agents/skills').rglob('*.md'),
              ROOT/'src/genshin_lore/README.md']
     for path in files:
         for target in re.findall(r'\]\(([^)]+)\)', path.read_text()):

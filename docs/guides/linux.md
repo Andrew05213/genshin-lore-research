@@ -23,6 +23,8 @@ bash setup.sh
 3. 调用现有 `scripts/build.py --stage all` 完成35输入、统一索引和默认向量，仍由原有回执和独立验证决定资格及阶段复用。
 4. 执行对白 MCP 启动和请求检查，通过后才写项目级 `.codex/config.toml`。
 
+安装器在开始数据准备前检查随源码提供的 [研究 Skill](../../.agents/skills/genshin-lore-research/SKILL.md)。它位于仓库 `.agents/skills/`，由 Codex 在该项目内自动发现，无需写用户全局目录。安装完成会显示其路径；研究时可显式使用 `$genshin-lore-research`。Skill 提供研究方法，不代替 MCP 配置或数据库。
+
 来源、模型和构建输出在 `data/`，pip 下载缓存在 `cache/pip/`；这些内容不提交 Git。
 不读取其他部署作为 fallback，不修改全局 Codex 配置。已有项目配置先备份，保留其他服务器，同名连接冲突拒绝覆盖。
 完成后在 Codex 打开并信任该目录、重启 MCP，以 `/mcp` 核对五工具。

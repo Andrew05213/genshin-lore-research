@@ -21,6 +21,8 @@ Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的完整�
 
 日志保存在 `data/setup-logs/`；重复运行仍经过现有构建回执核验，不覆盖失败现场或全局 Codex 设置。资源要求、MSVC 前置条件及配置恢复见 [Windows 安装指南](docs/guides/windows.md)。
 
+仓库随附 [研究 Skill](.agents/skills/genshin-lore-research/SKILL.md)，位于 Codex 自动发现的 `.agents/skills/`；两端安装器都会检查并报告它的位置，不复制到全局目录。在 Codex 中打开该仓库后，可用 `$genshin-lore-research` 开始调查，例如“调查这位人物的相关对白和所在剧情”。Skill 指导关键词搜索、正文与上下文续读、引用核对，以及事实、解释和预测的区分；MCP 仍须安装配置成功。仅构建数据不会替其他项目或客户端安装 Skill。
+
 环境要求：Python 3.12+、Git；Linux 与原生 Windows 的源码检查由 CI 分别执行。Windows 安装见 [PowerShell 指南](docs/guides/windows.md)。以下命令在仓库根目录执行：
 
 ```sh

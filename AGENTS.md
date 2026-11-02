@@ -19,6 +19,8 @@
 
 ## 研究证据
 
+剧情调查使用仓库级 [genshin-lore-research Skill](.agents/skills/genshin-lore-research/SKILL.md)。它随源码提供，指导关键词发现、上下文与续读、引用回查、互联网资料和预测分析；不适用于数据库构建或代码维护。已配置 MCP 才能读取游戏证据，Skill 本身不提供数据或额外权限。
+
 - `Raw Evidence Identity != Logical Identity`：相同 ID、名字或文本不自动合并身份。
 - 保留 candidate、ambiguous、unresolved 和 partial；物理顺序不等于剧情时间顺序，EOF 只属于当前文件或观察。
 - Semantic 仅用于候选发现，分数不是置信度，也不证明关系。
