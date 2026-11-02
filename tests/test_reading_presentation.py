@@ -9,6 +9,45 @@ from genshin_lore.dialogue.presentation import reading_card, page_groups, search
 from genshin_lore.citation_handoff import CitationHandoff, bind_capture, render_answer
 
 
+def test_compact_corpus_description_keeps_authority_and_exposes_full_details():
+    from genshin_lore.dialogue.presentation import corpus_overview
+    full = {'corpus_ref': 'synthetic-corpus', 'snapshot': {'id': 'synthetic-snapshot'},
+        'status': 'accepted_bounded', 'historical_contract_gaps': 8,
+        'outer_corpus_complete': False, 'terminal_unresolved': ['synthetic gap'],
+        'search_semantics': {'default_mode': 'literal', 'modes': ['literal', 'semantic'],
+                             'semantic_coverage': {'large_scope': ['synthetic scope'] * 500}},
+        'components': [{'artifact_source_key': str(i), 'overall_projection_complete': i % 2 == 0,
+                        'available': i != 3, 'searchable_tables': ['synthetic table'] * 100} for i in range(35)]}
+    before = copy.deepcopy(full)
+    overview = corpus_overview(full)
+    assert full == before
+    for key in ('corpus_ref', 'snapshot', 'status', 'historical_contract_gaps', 'outer_corpus_complete', 'terminal_unresolved'):
+        assert overview[key] == full[key]
+    assert overview['component_summary']['count'] == 35
+    assert overview['component_summary']['unavailable'] == ['3']
+    assert overview['component_summary']['partial_projection_count'] == 17
+    assert overview['search_semantics']['default_mode'] == 'literal'
+    assert overview['details_action']['arguments'] == {'corpus_ref': 'synthetic-corpus', 'detail': 'full'}
+    assert len(json.dumps(overview)) < len(json.dumps(full)) / 4
+
+
+def test_person_display_groups_separate_mentions_from_source_labelled_speech():
+    q, _, ref = populated_fixture()
+    result = {'items': [
+        {'evidence_ref': ref, 'family': 'npc_archive', 'owner_field': 'nameTextMapHash', 'snippet': '合成角色甲'},
+        {'evidence_ref': 'synthetic:mention', 'owner_field': 'DialogNormal', 'snippet': '合成角色甲被提到'},
+        {'evidence_ref': 'synthetic:title', 'owner_field': 'MainQuestTitle', 'snippet': '合成任务标题'}]}
+    original = copy.deepcopy(result)
+    view = search_reading(q, result, '合成角色甲', 'CHS')
+    groups = view['groups']
+    assert groups['categories']['keyword_body_matches'] == [{'item_index': 1}]
+    assert groups['categories']['name_matches'] == [{'item_index': 0}]
+    assert groups['categories']['source_labelled_speech_candidates']
+    assert groups['by_source_title']
+    assert not groups['logical_identity_proven']
+    assert result == original
+
+
 def test_reading_page_is_smaller_and_preserves_full_text_refs_and_proof():
     q, _, ref = populated_fixture()
     full = q.read(q.corpus_ref, ref, view='dialogue', limit=2)

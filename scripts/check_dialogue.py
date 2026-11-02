@@ -14,7 +14,7 @@ sys.path[:0] = [str(ROOT)]
 from scripts.check import payload
 
 
-async def check(config, released_runtime_root=None):
+async def check(config, released_runtime_root=None, source_cards=None):
     from scripts.runtime_config import load_runtime_paths
     config = Path(config).resolve()
     profile = json.loads(load_runtime_paths(config)['profile'].read_text())
@@ -22,6 +22,8 @@ async def check(config, released_runtime_root=None):
     args = [str(ROOT/'scripts/serve_dialogue.py'), '--config', str(config)]
     if released_runtime_root:
         args += ['--released-runtime-root', str(released_runtime_root)]
+    if source_cards:
+        args += ['--source-cards', str(source_cards)]
     server = StdioServerParameters(command=sys.executable,
         args=args,
         env={**os.environ, 'PYTHONPATH':str(ROOT/'src')})
@@ -52,6 +54,15 @@ async def check(config, released_runtime_root=None):
                         inspected = await call('inspect_evidence', {'corpus_ref':corpus,'evidence_ref':text['evidence_ref']})
                         if ordinary['raw_text'] != text['raw_text'] or inspected['text_provenance'] != text['provenance']:
                             raise ValueError('MCP read/inspect differs from dialogue view')
+                        saved = await call('inspect_evidence', {'corpus_ref':corpus,
+                            'evidence_ref':ordinary['citation_handle'], 'save_source':True})
+                        card = saved['source_card']
+                        metadata = json.loads(Path(card['metadata_path']).read_bytes())
+                        if (card['status'] != 'SAVED' or not Path(card['markdown_path']).is_file()
+                                or metadata['quoted_text'] != text['raw_text']
+                                or metadata['evidence_ref'] != text['evidence_ref']
+                                or metadata['inspection']['text_provenance'] != inspected['text_provenance']):
+                            raise ValueError('saved source card differs from formal read/inspect')
             await call('follow_evidence', {'corpus_ref':corpus,'evidence_ref':ref,
                        'relation_kind':'dialogue_predecessor','limit':2})
             invalid = payload(await client.call_tool('read_evidence', {**args,'limit':2,'cursor':first['next_cursor']}))
@@ -59,10 +70,12 @@ async def check(config, released_runtime_root=None):
                 raise ValueError('MCP accepted a cursor with the wrong page limit')
             return {'status':'PASS_DIALOGUE_MCP', 'tools':names, 'pages':2,
                     'body_and_provenance_equivalence':True,'cursor_mismatch_rejected':True,
+                    'source_cards_readback_verified':True,
                     'reading_extension_release_accepted':False}
 
 
 if __name__ == '__main__':
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('--config',type=Path,required=True)
     p.add_argument('--released-runtime-root',type=Path)
-    a=p.parse_args();print(json.dumps(anyio.run(check,a.config,a.released_runtime_root),ensure_ascii=False))
+    p.add_argument('--source-cards',type=Path,help='optional writable private card directory; same option as serve_dialogue')
+    a=p.parse_args();print(json.dumps(anyio.run(check,a.config,a.released_runtime_root,a.source_cards),ensure_ascii=False))

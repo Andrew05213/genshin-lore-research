@@ -19,6 +19,13 @@ def test_checkout_skill_has_codex_discovery_metadata():
     assert fields['description'].strip()
 
 
+def test_generated_source_cards_are_ignored_but_delivery_code_is_not():
+    paths = 'source-cards/synthetic.md\ndata/rebuilt/source-cards/synthetic.json\nsrc/genshin_lore/source_cards.py\n'
+    result = subprocess.run(['git', 'check-ignore', '--no-index', '--stdin'], cwd=ROOT,
+                            input=paths, text=True, capture_output=True, check=True)
+    assert result.stdout.splitlines() == paths.splitlines()[:2]
+
+
 def test_project_name_and_license_are_consistent():
     project = tomllib.loads((ROOT/'pyproject.toml').read_text())['project']
     assert project['name'] == 'genshin-lore-research'

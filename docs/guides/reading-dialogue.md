@@ -12,6 +12,8 @@
 
 工具仍为 `describe_corpus`、`search_evidence`、`read_evidence`、`follow_evidence`、`inspect_evidence`。连接参数指向该脚本与实际生成的配置；不得用文件名推测其他数据实例。启动仍核验 bundle、profile、输入 artifact、索引与来源绑定，`prepublication` 状态不表示正式发布接受。
 
+`describe_corpus` 默认只返回简明语料身份、模式、范围限制及组件摘要；`detail="full"` 返回原完整覆盖信息。这里只精简交付，不改变资格验证或检索范围。参数错误、缺失依赖及 partial 仍明确返回。
+
 Codex 的单个项目连接示意如下，替换全部占位符后使用；不要覆盖其他服务器或全局设置：
 
 ```toml
@@ -97,6 +99,22 @@ tool_timeout_sec = 60
 有固定快照身份及合格来源路径时返回真实上游文件链接；它定位文件，不承诺网页能直接打开某一 observation 或范围。没有依据时不生成伪链接。来源标题与角色标签是来源观察，不证明唯一人物身份。`display_groups` 的 `representative` 和 `occurrences` 指向本页 node/text 位置，正文只从 nodes 读取，不在分组中重复传递。所有物理 occurrence 保持独立，不能将展示分组理解为合并人物或台词身份。
 
 默认句柄保存在连接内存中；`--citation-receipts <private-directory>` 另外保存私有不可覆盖回执，供现有 capture/project renderer 确定性展开 exact ref。模型仍选择引用并 inspect，程序不改事实、不补引、不替换材料。原生 Codex TUI/Desktop 不自动获得项目 renderer；仅有短句柄不等于最终答案已获得完整引用交付保障。
+
+### 保存可回查的来源卡
+
+`scripts/serve_dialogue.py` 和 `scripts/serve.py` 的五工具 surface 默认将来源卡放在运行配置同目录的 `source-cards/`，仅实际保存时创建。可用 `--source-cards <private-directory>` 指定稳定的本地目录，不复制数据库或修改用户全局配置。直接使用库或其他启动路径时，以 `describe_corpus.source_card_delivery.available` 为准；不可用时显式报错。
+
+`scripts/check_dialogue.py` 也会保存少量检查样本并核对卡片原文/provenance；配置目录只读时，同样传 `--source-cards <writable-private-directory>`。权限不足明确失败，不提升权限或把未保存写成成功。
+
+模型先 read 实际正文，保留该次读取返回的完整 scoped handle，再调用现有 `inspect_evidence`，附加 `save_source=true`。原 `inspect_evidence(corpus_ref, evidence_ref)` 用法保持；保存操作需要 read handle，因为 bare exact ref 不能说明选择的是哪次 observation/range。搜索摘要、未读 locator、inspect 自己生成的 handle 和过期 handle 不能代替已读材料。
+
+成功时 `data.source_card` 返回 `markdown_link`、`markdown_path` 和 `metadata_path`。最终答案将真实卡片链接放在它实际支持的陈述旁；不需要原生客户端自动展开临时 handle，也不拦截或改写模型答案。打开卡片可查看已交付原文、来源标题/角色标注、固定快照、精确位置、实际读取范围、read/inspect 状态及候选限制。文件级上游链接仍不冒充精确段落链接。
+
+JSON 保留原始字符、SHA、原 read mapping 和本次正式 inspect 结果；Markdown 为其阅读视图，缺少末尾换行时只补显示换行。不同 physical occurrence、observation 或范围分别保存；相同内容不合并身份。重复保存同一结果可复用相同字节，已有文件若发生漂移则拒绝覆盖。保存失败不会返回 `SAVED`。
+
+重启 MCP 后卡片仍是普通本地文件；旧 handle 不恢复为新连接的定位器，重新核验使用卡片中的 exact ref。卡片只保存当时已读范围，不获得更多剧情、speaker 或顺序证明，也不自动检查邻近 claim。可以阅读已生成的引用卡；查新材料或重新验证仍通过 MCP。卡片含游戏文本，保留在私有输出目录，不提交 Git 或打入公开代码包；使用临时目录时须自行保留需要长期引用的卡片。已交付引用所依赖的卡片不当作普通可重建缓存删除。
+
+人物阅读面板另有 `groups`：角色材料候选、来源标注的发言候选、正文关键词命中、姓名及未分类结果分别提供指向原 items/previews 的下标，并可按已返回的来源标题组织。它只组织当前页，不改变排名、过滤、cursor 或物理身份；正文关键词命中不证明该人物是说话者。
 
 ## 人物搜索与调用方展示
 

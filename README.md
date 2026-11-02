@@ -56,6 +56,7 @@ git -C data/AnimeGameData checkout --detach 9587d1afbd9ab0419cdd00dc05ecd114b9e3
 - **关系保留限制**：同名、相同 ID 或相似文本不自动证明同一人物、说话者、归属或剧情顺序。
 - **按需读取**：实现包含 Book/Story 有界续读和引用检查，不以少量摘录冒充完整正文。
 - **对白上下文**：显式对白阅读路径保留来源角色标注、分支、续读与可核验的任务标题候选；不按编号或相同台词猜说话者和任务归属。启动与限制见 [对白阅读指南](docs/guides/reading-dialogue.md)。
+- **可回查的来源卡**：对选中的已读文本执行 `inspect_evidence(..., save_source=true)`，可保存含原文、范围、精确引用和来源状态的本地 Markdown/JSON，并将真实卡片链接用于回答。卡片不自动验证结论，原生 Codex renderer 保持不变；默认发现信息精简，完整覆盖可用 `describe_corpus(detail="full")` 查看。详见 [来源卡使用](docs/guides/reading-dialogue.md#保存可回查的来源卡)。
 
 完整入口生成本次数据的 bundle、profile 和运行配置；单个组件成功不等于整库可用。`--stage all` 默认包含固定本地模型的向量索引，须先按 [向量构建说明](docs/guides/building-semantic.md) 取得模型并安装 semantic 依赖。`--without-semantic` 明确选择仅构建基础数据；不将跳过向量写成完整向量验收。**默认搜索仍为 literal**，semantic/hybrid 仅显式选择。生成数据不自动继承原部署的正式 release 身份，也不声明全游戏覆盖。详见 [架构说明](docs/architecture.md)。
 
