@@ -18,6 +18,8 @@ Linux 合成回归：**764 passed / 3 platform-specific skipped**。随后对检
 
 初轮全量为 760 passed / 2 failed / 3 skipped：两处完整覆盖核对仍索取默认 describe 的 components。现在显式请求 full，原 unsupported-table/coverage 断言全部保留，并新增默认摘要检查；没有删除或放宽验证。
 
+PR 首轮 CI 的 Linux 源码检查及双端代码/依赖包检查通过。Windows 为 758 passed / 1 failed / 8 skipped，唯一失败是 Git ignore 测试的文本 stdin 在 Windows 被转成 CRLF，Git 因而把末尾 `\r` 视为路径内容并加引号。后续补丁只将该测试改成 `git check-ignore -z --stdin` 的 NUL 分隔字节协议，继续精确比较完整路径，并增加中文/空格文件名；不修改产品实现、忽略范围或失败门槛。原始 CI 失败记录保留。
+
 实际封存 v1.1 数据通过新代码的 stdio MCP 程序化调用核对，未运行外发模型或完整数据重建：
 
 | 范围 | 本次观察 |
