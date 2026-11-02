@@ -95,6 +95,9 @@ class CitationHandoff:
                         ('display_name', 'status', 'basis', 'logical_identity_proven') if k in speaker}
                 source_context = node.get('source_context') or (node.get('dialogue_source') or {}).get('source_context') or {}
                 if isinstance(source_context, dict):
+                    for key in ('display_title','display_subtitle'):
+                        if key in source_context:
+                            context[key] = copy.deepcopy(source_context[key])
                     if 'titles' in source_context:
                         context['titles'] = copy.deepcopy(source_context['titles'])
                     if catalog is not None and 'title_indexes' in source_context:
@@ -152,10 +155,18 @@ class CitationHandoff:
             for node in data.get('nodes', []):
                 texts = node.get('texts', [])
                 if texts:
+                    embedded = 'before' in node.get('source_context', {}) or 'after' in node.get('source_context', {})
                     node['context_action'] = {'tool': 'read_evidence', 'arguments': {
                         **arguments, 'evidence_ref': texts[0]['citation_handle'], 'cursor': None,
-                        'detail': 'full', 'limit': 1},
-                        'scope': 'source-connected neighbours, not narrative chronology'}
+                        'detail': 'full', 'limit': 1 if embedded else 3},
+                        'scope': ('same-section neighbours' if embedded else 'anchor and bounded local successors')
+                                 + '; not narrative chronology'}
+                    if not embedded:
+                        node['predecessor_action'] = {'tool': 'follow_evidence', 'arguments': {
+                            'corpus_ref': read_arguments['corpus_ref'],
+                            'evidence_ref': texts[0]['citation_handle'],
+                            'relation_kind': 'dialogue_predecessor', 'limit': 3},
+                            'scope': 'checked incoming links; read supplied targets for earlier bodies'}
         if compact:
             context = data.get('source_context', {})
             nodes = data.get('nodes', [])

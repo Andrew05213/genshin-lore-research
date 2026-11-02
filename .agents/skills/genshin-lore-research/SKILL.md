@@ -21,7 +21,7 @@ description: Research Genshin Impact lore with the configured evidence MCP and w
 - 人物/NPC 姓名命中可用 `read_evidence(view="dialogue", locale="CHS")` 查来源标注的发言候选；正文再用同一 view 进入所在物理片段。区分“提到了此人”和“来源将此人标为说话者”。同节点姓名标注仍不证明唯一逻辑人物。
 - 对白默认 `detail="reading"` 提供正文、标题、说话者标注及邻居定位。需要邻居正文时实际读取其 locator，或显式用 `detail="full"` 取得完整视图；只看 locator 或 inspect 不等于读过正文。
 - 用返回的 `next_cursor` 续页，保持相同 anchor/ref、limit、locale、detail。`limit` 请求的是主节点，按 `page_info` 判断实际交付量和停止原因，不自行计算下一页。
-- 若返回 `reading_actions`，直接使用其中的下一页参数；`nodes[].context_action` 可展开该节点的来源前后文。无需再次搜索同一个名字。进度通知是否可见取决于客户端；通知不表示正文已返回。
+- 若返回 `reading_actions`，直接使用其中的下一页参数。Codex 的 `nodes[].context_action` 读取同section前后文；Dialog/Talk 的该动作读取当前及有界后继，`predecessor_action` 查前驱后再选目标读前文。无需再次搜索同一个名字。进度通知是否可见取决于客户端；通知不表示正文已返回。
 - `dialogue_predecessor` 仅适用于声明支持的 Dialog/Talk 来源，不用于 NPC 姓名或 Codex 正文。Codex 依其来源 section 和续页入口读取；图遍历、分支连接或物理排列均不证明剧情播放顺序。
 - Book/Story 长正文沿当前接口返回的 cursor、continuation 或范围定位按需读取；不同接口参数不可混用。分别记录读过的篇章、物理行/字符范围及是否到达当前文件/记录 EOF，不能由一篇读完推断全部故事或整库完整。
 

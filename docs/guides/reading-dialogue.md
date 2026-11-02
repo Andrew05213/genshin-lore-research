@@ -140,7 +140,7 @@ MCP SDK 可同时提供兼容文本 `content` 和 `structuredContent`；调用�
 
 紧凑邻居及导航目标标记为 `locator_only`：可以定位并 inspect，但仅 inspect 不表示正文已交付。必须实际读取同一 exact ref，才能满足现有 read-and-inspect 交付条件；优先引用实际正文读取返回的句柄。定位器原记录仍保持未读，不由程序改写成正文或自动更换引用。
 
-默认 reading 进一步省略重复的路径、哈希及 provenance，保留正文、标题、来源角色标注、候选限制和分页状态。普通物理读取中，同一 exact anchor 在 context 内重复出现时只省略其重复正文并标 `body_in_anchor`；其他记录即使文字相同也不删除。完整响应仍由 `detail="full"` 获取。`reading_actions` 给出保留全部分页参数的下一页调用；`nodes[].context_action` 给出该节点的完整前后文读取调用，避免猜 anchor 或重搜姓名。
+默认 reading 进一步省略重复的路径、哈希及 provenance，保留正文、标题、来源角色标注、候选限制和分页状态。普通物理读取中，同一 exact anchor 在 context 内重复出现时只省略其重复正文并标 `body_in_anchor`；其他记录即使文字相同也不删除。完整响应仍由 `detail="full"` 获取。`reading_actions` 给出保留全部分页参数的下一页调用。Codex 的 `nodes[].context_action` 以 full 单节点读取同 section 前后文；Dialog/Talk 则读取当前节点及有界局部后继（请求3节点，仍受字节预算限制），其 `predecessor_action` 返回已核验前驱定位，选择返回目标再读取前文。两种来源的上下文合同不同，均不证明剧情顺序，不需要猜 anchor 或重搜姓名。
 
 搜索和读取发送标准 MCP 进度通知，批量核验还逐项报告已处理数量；只有请求进度且支持展示的客户端才会看到。通知报告实际阶段，未实现正文逐条流式交付、单次 SQL 中途取消或原生 Codex UI 改造，不承诺查询提速。独立查询可由客户端分别展示，不应把 `content` 与 `structuredContent` 重复输出。
 

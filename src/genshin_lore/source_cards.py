@@ -57,10 +57,14 @@ def _reading_body(value):
     text = value['quoted_text']
     context = record.get('reading_context', {})
     source = record['source_result']
-    title = source.get('source_title')
+    display = source.get('source_context') or {}
+    title = source.get('source_title') or context.get('display_title') or display.get('display_title')
+    subtitle = context.get('display_subtitle') or display.get('display_subtitle')
     titles = context.get('titles', source.get('source_title_candidates', []))
     if not title and titles:
         title = ' / '.join(t['raw_text'] for t in titles if isinstance(t.get('raw_text'), str))
+    if subtitle and subtitle != title:
+        title = (title + ' · ' + subtitle) if title else subtitle
     speaker = context.get('speaker', {})
     label = source.get('source_speaker_label') or source.get('speaker_label') or speaker.get('display_name')
     # A fence preserves the displayed source, including Markdown/backticks in it.

@@ -271,6 +271,10 @@ def test_batch_save_progress_and_supplied_read_actions_over_real_stdio(tmp_path)
             context = first['data']['nodes'][0]['context_action']
             expanded = payload(await client.call_tool(context['tool'],context['arguments']))
             assert expanded['status']=='ok' and expanded['data']['detail']=='full'
+            assert len(expanded['data']['nodes'])>1  # actual linked bodies, not just extra metadata
+            earlier=first['data']['nodes'][0]['predecessor_action']
+            previous=payload(await client.call_tool(earlier['tool'],earlier['arguments']))
+            assert previous['status']=='ok' and previous['data']['items']
             pages = (first,second)
             bodies = [p['data']['nodes'][0]['texts'][0] for p in pages]
             handles = [b['citation_handle'] for b in bodies]
@@ -307,6 +311,27 @@ def test_batch_save_progress_and_supplied_read_actions_over_real_stdio(tmp_path)
             not_read=await call('inspect_evidence',evidence_refs=exacts,save_source=True)
             assert not_read['data']['partial'] and not_read['data']['source_card']['status']=='NOT_SAVED'
             assert set((config.parent/'source-cards').iterdir())==before
+    anyio.run(run)
+
+
+def test_codex_context_action_reads_embedded_neighbour_bodies(tmp_path):
+    config=config_at(tmp_path/'codex-context')
+    async def run():
+        async with fixture_client(config,'--domain-npc') as client:
+            async def call(name, **args):
+                out=payload(await client.call_tool(name,{'corpus_ref':'synthetic-corpus',**args}))
+                assert out['status']=='ok',out
+                return out['data']
+            anchor=(await call('describe_corpus'))['anchor']
+            page=await call('read_evidence',evidence_ref=anchor,view='dialogue',limit=1)
+            node=page['nodes'][0]
+            assert 'predecessor_action' not in node
+            action=node['context_action']
+            assert action['arguments']['limit']==1
+            full=payload(await client.call_tool(action['tool'],action['arguments']))['data']
+            context=full['nodes'][0]['source_context']
+            neighbours=context['before']+context['after']
+            assert neighbours and any(n['texts'] for n in neighbours)
     anyio.run(run)
 
 

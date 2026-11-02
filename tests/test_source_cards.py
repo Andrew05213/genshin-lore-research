@@ -175,3 +175,30 @@ def test_collection_validates_every_selection_before_writing(tmp_path):
     with pytest.raises(ValueError, match='mismatch'):
         handoff.save_sources([(handle, inspection), (handle, {**inspection,'evidence_ref':'wrong'})], 'synthetic-corpus')
     assert not (tmp_path/'cards').exists()
+
+
+@pytest.mark.parametrize('placement', ['source_result', 'reading_context'])
+def test_resolved_book_and_document_display_titles_survive_in_cards(tmp_path, placement):
+    h=CitationHandoff(source_cards=tmp_path)
+    handle, _, inspection=material(h)
+    record=h.resolve(handle)
+    context={'display_title':'合成书籍标题','display_subtitle':'合成章节',
+             'source_file':'private/source.json'}
+    if placement=='source_result':record['source_result']['source_context']=context
+    else:record['reading_context'].update(context)
+    from genshin_lore.source_cards import save_card
+    result=save_card(tmp_path,record,inspection,'synthetic-corpus')
+    rendered=Path(result['markdown_path']).read_text(encoding='utf-8')
+    assert '合成书籍标题' in rendered and '合成章节' in rendered
+    assert 'private/source.json' not in rendered
+
+
+def test_read_mapping_inherits_resolved_titles_without_technical_label_fallback(tmp_path):
+    h=CitationHandoff(source_cards=tmp_path)
+    _, body, inspection=material(h)
+    out=h.attach({'status':'ok','data':{'source_context':{
+        'display_title':'合成卷名','display_subtitle':'合成章节'},'context':[body]}},'read',compact=True)
+    handle=out['data']['context'][0]['citation_handle']
+    saved=h.save_source(handle,inspection,'synthetic-corpus')
+    rendered=Path(saved['markdown_path']).read_text(encoding='utf-8')
+    assert '合成卷名 · 合成章节' in rendered
