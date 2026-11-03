@@ -272,6 +272,70 @@ def test_compact_anchor_does_not_hide_another_observation_of_the_same_ref():
     assert delivered['data']['context'][0]['raw_text']=='合成正文'
 
 
+def test_compact_search_preserves_hits_and_binds_repeated_locators_without_read_credit(tmp_path):
+    exact, container = 'synthetic:text:' + 't'*900, 'synthetic:container:' + 'c'*900
+    item = {'evidence_ref': exact, 'provenance_ref': exact, 'container_ref': container,
+            'snippet': '合成摘录', 'text_proof': {'owner': 'ambiguous'}, 'locale': 'CHS'}
+    data = {'items': [item], 'next_cursor': 'opaque-cursor', 'partial': True,
+            'reading_view': {'body_previews': [{**item, 'raw_text': '合成正文'}],
+                'next_actions': [{'tool': 'read_evidence', 'arguments': {
+                    'corpus_ref': 'synthetic', 'evidence_ref': container, 'limit': 2}}]}}
+    original = copy.deepcopy(data)
+    handoff = CitationHandoff(tmp_path)
+    out = handoff.attach({'status': 'ok', 'data': data}, 'search', compact=True)
+    view = out['data']
+    assert data == original
+    assert view['next_cursor'] == data['next_cursor'] and view['partial']
+    assert view['reading_view']['hit_identity_order_and_cursor_unchanged']
+    assert not view['reading_view']['original_items_and_cursor_unchanged']
+    assert view['items'][0]['evidence_ref'] == exact
+    assert view['items'][0]['snippet'] == item['snippet']
+    assert view['items'][0]['text_proof'] == item['text_proof']
+    for key, expected in [('container_handle', container), ('provenance_handle', exact)]:
+        record = handoff.resolve(view['items'][0][key])
+        assert record['evidence_ref'] == expected and not record['material_read']
+    action = view['reading_view']['next_actions'][0]['arguments']
+    assert set(action) == {'corpus_ref', 'evidence_ref', 'limit'}
+    assert handoff.resolve(action['evidence_ref'])['evidence_ref'] == container
+    preview = view['reading_view']['body_previews'][0]
+    assert 'evidence_ref' not in preview
+    assert handoff.resolve(preview['citation_handle'])['source_result']['raw_text'] == '合成正文'
+    assert not handoff.resolve(preview['citation_handle'])['material_read']
+    assert len(json.dumps(view)) < len(json.dumps(original))
+
+
+def test_compact_navigation_preserves_order_status_and_original_proof():
+    data = {'items': [{'source_evidence_ref': 'synthetic:source', 'status': 'physical_candidate',
+        'target_refs': ['synthetic:b', 'synthetic:a', 'synthetic:b'],
+        'candidates': [{'target_evidence_ref': 'synthetic:c', 'status': 'ambiguous'}],
+        'logical_identity_proven': False}], 'next_cursor': 'opaque', 'partial': True}
+    original = copy.deepcopy(data)
+    h = CitationHandoff()
+    out = h.attach({'status': 'ok', 'data': data}, 'follow', compact=True)['data']
+    item = out['items'][0]
+    assert data == original
+    assert [h.resolve(t)['evidence_ref'] for t in item['target_handles']] == original['items'][0]['target_refs']
+    assert item['target_handles'][0] == item['target_handles'][2]  # same locator, no body/observation merge
+    assert item['status'] == 'physical_candidate' and not item['logical_identity_proven']
+    candidate = item['candidates'][0]
+    assert candidate['status'] == 'ambiguous'
+    record = h.resolve(candidate['target_citation_handle'])
+    assert record['evidence_ref'] == 'synthetic:c' and not record['material_read']
+    assert out['next_cursor'] == 'opaque' and out['partial']
+
+
+def test_compact_locators_do_not_reuse_a_body_observation_handle():
+    h = CitationHandoff()
+    out = h.attach({'status': 'ok', 'data': {'context': [
+        {'evidence_ref': 'synthetic:shared', 'raw_text': '片段甲', 'observation_index': 1},
+        {'evidence_ref': 'synthetic:shared', 'raw_text': '片段乙', 'observation_index': 2}],
+        'container_ref': 'synthetic:shared'}}, 'read', compact=True)['data']
+    handles = [x['citation_handle'] for x in out['context']] + [out['container_handle']]
+    assert len(set(handles)) == 3
+    assert [h.resolve(t)['observation_index'] for t in handles] == [1, 2, None]
+    assert h.resolve(handles[-1])['material_read'] is False
+
+
 def test_compact_byte_boundary_has_resumable_exact_coverage(monkeypatch):
     from genshin_lore.dialogue import presentation
     q, _, ref = populated_fixture()
