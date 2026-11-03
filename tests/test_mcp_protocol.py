@@ -100,7 +100,7 @@ def test_large_search_previews_preserve_hits_cursor_actions_and_final_receipt(tm
             assert data['next_cursor'] == raw['data']['next_cursor'] and data['next_cursor']
             assert view['next_actions'] and view['partial']
             for old, new in zip(raw['data']['items'], data['items']):
-                for key in ('evidence_ref', 'container_ref', 'snippet', 'owner_field', 'family', 'ranking_basis'):
+                for key in ('evidence_ref', 'snippet', 'owner_field', 'family', 'ranking_basis', 'text_proof'):
                     assert old[key] == new[key]
             if padding:
                 assert len(view['body_previews']) < 3 and view['omission_reason'] == 'response_byte_limit'
@@ -113,11 +113,22 @@ def test_large_search_previews_preserve_hits_cursor_actions_and_final_receipt(tm
                       'server': 'fixture', 'tool': 'search_evidence'} for i, out in enumerate((raw, result))]
             bound = bind_capture({'tool_calls': calls, 'stdout_sha256': 'fixture'}, config.parent/'handoff')
             assert bound['mappings'] and len(list((config.parent/'handoff').glob('*.json'))) == 2
+            for old, new in zip(raw['data']['items'], data['items']):
+                container = payload(await client.call_tool('inspect_evidence', {
+                    'corpus_ref': 'synthetic-corpus', 'evidence_ref': new['container_handle']}))
+                assert container['data']['evidence_ref'] == old['container_ref']
+            if not padding:
+                action = view['next_actions'][0]
+                action_result = payload(await client.call_tool(action['tool'], action['arguments']))
+                assert action_result['status'] == 'ok' and action_result['data']['nodes']
             for body in view['body_previews']:
                 inspected = payload(await client.call_tool('inspect_evidence', {
                     'corpus_ref': 'synthetic-corpus', 'evidence_ref': body['citation_handle']}))
                 assert inspected['status'] == 'ok'
-                assert inspected['data']['evidence_ref'] == body['evidence_ref']
+                assert inspected['data']['evidence_ref'] == bound['mappings'][body['citation_handle']]['evidence_ref']
+                read = payload(await client.call_tool('read_evidence', {
+                    'corpus_ref': 'synthetic-corpus', 'evidence_ref': body['citation_handle']}))
+                assert read['data']['raw_text'] == body['raw_text']
     anyio.run(run)
 
 
@@ -332,6 +343,40 @@ def test_codex_context_action_reads_embedded_neighbour_bodies(tmp_path):
             context=full['nodes'][0]['source_context']
             neighbours=context['before']+context['after']
             assert neighbours and any(n['texts'] for n in neighbours)
+    anyio.run(run)
+
+
+def test_compact_follow_rechecks_supplied_locators_and_preserves_formal_results(tmp_path):
+    config = config_at(tmp_path/'compact-follow')
+    async def run():
+        async with fixture_client(config) as client:
+            async def call(name, **args):
+                value = payload(await client.call_tool(name, {'corpus_ref': 'synthetic-corpus', **args}))
+                assert value['status'] == 'ok', value
+                return value['data']
+            anchor = (await call('describe_corpus'))['anchor']
+            args = {'evidence_ref': anchor, 'relation_kind': 'dialogue_predecessor', 'limit': 1}
+            full = await call('follow_evidence', **args)
+            reading = await call('follow_evidence', **args, detail='reading')
+            assert full['items'] and len(full['items']) == len(reading['items'])
+            assert full['next_cursor'] == reading['next_cursor']
+            assert full['partial'] == reading['partial']
+            for old, new in zip(full['items'], reading['items']):
+                assert old['status'] == new['status']
+                if 'logical_identity_proven' in new:
+                    assert not new['logical_identity_proven']
+                source = await call('inspect_evidence', evidence_ref=new['source_citation_handle'])
+                assert source['evidence_ref'] == old['source_evidence_ref']
+                for before, after in zip(old['candidates'], new['candidates']):
+                    target = after['target_citation_handle']
+                    inspected = await call('inspect_evidence', evidence_ref=target)
+                    assert inspected['evidence_ref'] == before['target_evidence_ref']
+                    read = await call('read_evidence', evidence_ref=target, view='dialogue', limit=1)
+                    assert read['nodes'][0]['texts']
+            invalid = payload(await client.call_tool('follow_evidence', {
+                'corpus_ref': 'synthetic-corpus', **args, 'detail': 'invented'}))
+            assert invalid['status'] == 'invalid_request'
+            assert len(json.dumps(reading)) < len(json.dumps(full))
     anyio.run(run)
 
 

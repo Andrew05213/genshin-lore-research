@@ -132,7 +132,11 @@ JSON 保留原始字符、SHA、原 read mapping 和本次正式 inspect 结果�
 
 新 cursor 绑定排序版本及 rank/repeat/id。旧顺序 cursor 明确拒绝，需重新搜索；不可拼接两种顺序。semantic/lexical/hybrid 沿既有发现路径，未增加查询模式、实体识别或新的关系。正文命中附直接读取动作；来源已有 display title 时进入标题分组。没有姓名行的首页仍可有界定位精确人物姓名锚点，供已声明 Character/NPC 导航使用；带过滤的请求不自动扩出范围。
 
-`search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、原始 items、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
+`search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、命中身份、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
+
+reading 视图中，每个原始搜索命中仍保留一个完整 `evidence_ref`，重复的 `container_ref`、`provenance_ref` 分别以 `container_handle`、`provenance_handle` 交付；正文预览使用自己的 `citation_handle`。对白边的 `source_evidence_ref`、`target_refs` 分别交付为 `source_citation_handle`、`target_handles`；候选的目标使用 `target_citation_handle`。这些都是工具返回的连接内定位器，可以原样传入 read/follow/inspect 的 `evidence_ref`，不是永久身份，也不表示正文已读或关系已确认。`next_actions[].arguments` 已含可执行参数，不额外添加或拼接 ref。
+
+`follow_evidence(detail="reading")` 可精简关系导航的重复定位与技术信息；原默认仍为 full。单条核验只需确认身份与状态时使用 `inspect_evidence(detail="reading")`；一次核验多条已读材料用 `evidence_refs`，默认即精简。需要来源细节或保留原技术响应时显式 `detail="full"`。完整原始结果与 exact 映射在连接记录中保存，配置了 citation receipts 时另有私有回执；省略展示字段不省略正式回读或来源验证。定位 handle、正文 handle、不同 observation/range 不因 ref 或文字相同而互换。
 
 带 family、source、历史版本或 domain 范围的查询不自动补取范围外预览；hybrid 自动解析得到的 `domain_filter` 同样受此规则约束。下一步动作仍可显式选择。`detail="full"` 省略预览面板，保持原始检索路径。正文预览必须继续 read/inspect 后才能用于最终引用。材料已足够就回答，证据不足则说明 partial，避免反复改写同义关键词。
 

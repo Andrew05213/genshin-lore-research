@@ -168,6 +168,24 @@ class CitationHandoff:
                             'relation_kind': 'dialogue_predecessor', 'limit': 3},
                             'scope': 'checked incoming links; read supplied targets for earlier bodies'}
         if compact:
+            # Search keeps one exact ref per hit for existing callers. Repeated
+            # locators and preview identities use this connection's handles;
+            # full results and the private records above retain original bytes.
+            search_hits = {id(item) for item in data.get('items', [])} if operation == 'search' else set()
+            locator_handles = {}
+            if operation == 'search' and isinstance(data.get('reading_view'), dict):
+                panel = data['reading_view']
+                panel['original_items_and_cursor_unchanged'] = False
+                panel['hit_identity_order_and_cursor_unchanged'] = True
+                panel['item_metadata_view'] = 'reading; full technical hit fields available with detail=full'
+
+            def locator_handle(ref):
+                if ref not in locator_handles:
+                    locator = {'evidence_ref': ref, 'locator_only': True}
+                    visit(locator)
+                    locator_handles[ref] = locator['citation_handle']
+                return locator_handles[ref]
+
             context = data.get('source_context', {})
             nodes = data.get('nodes', [])
             if context.get('speaker') and nodes and context['speaker'] == nodes[0].get('speaker'):
@@ -183,7 +201,7 @@ class CitationHandoff:
                             and item.get('raw_text') == data['raw_text']):
                         item.pop('raw_text')
                         item['body_in_anchor'] = True
-            def shorten(node):
+            def shorten(node, *, arguments=False):
                 if isinstance(node, list):
                     for child in node: shorten(child)
                 elif isinstance(node, dict):
@@ -196,11 +214,25 @@ class CitationHandoff:
                         node.pop(key, None)
                     if node.get('container_ref') == node.get('node'):
                         node.pop('container_ref', None)
+                    for key, alias in (('container_ref', 'container_handle'),
+                                       ('provenance_ref', 'provenance_handle'),
+                                       ('source_evidence_ref', 'source_citation_handle')):
+                        if isinstance(node.get(key), str):
+                            node[alias] = locator_handle(node.pop(key))
+                    if isinstance(node.get('target_refs'), list) and all(isinstance(ref, str) for ref in node['target_refs']):
+                        node['target_handles'] = [locator_handle(ref) for ref in node.pop('target_refs')]
+                    if node.get('target_citation_handle'):
+                        node.pop('target_evidence_ref', None)
                     # Never redefine evidence_ref. Reading material uses a separate
                     # scoped handle; inspect/full reads return its original exact ref.
-                    if node.get('citation_handle') and node.get('view') != 'dialogue':
-                        node.pop('evidence_ref', None)
-                    for child in node.values(): shorten(child)
+                    if node.get('citation_handle'):
+                        if arguments:
+                            node['evidence_ref'] = node.pop('citation_handle')
+                            node.pop('citation_number', None)
+                        elif node.get('view') != 'dialogue' and id(node) not in search_hits:
+                            node.pop('evidence_ref', None)
+                    for key, child in node.items():
+                        shorten(child, arguments=key == 'arguments')
             shorten(result)
         receipt = {'contract': CONTRACT, 'session': self.session, 'request': request,
                    'operation': operation, 'result_sha256': digest(result),

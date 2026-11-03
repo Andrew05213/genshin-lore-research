@@ -1,6 +1,6 @@
 # 正文优先排序试用
 
-独立于 PR #23，从 main `5cf589079b9ae926546a10c09e72da5ff030737d` 开发；不自动部署或切换本机入口。
+从 main `5cf589079b9ae926546a10c09e72da5ff030737d` 开发；期间主线合并 PR #23，随后同步 `7156c217551c6d2716dad730da3e7a873f4c1dc5`，保留短定位精简与排序两者。对照测量在同步前执行，其排序不变；不自动部署或切换本机入口。
 
 ## 行为与实现
 
@@ -41,4 +41,4 @@ literal 在取页前采用 `body-first-v1`：精确的已声明标题、已声�
 
 本机保留封存 release 的部署可显式加 `--released-runtime-root <qualified-release-root>`，先正常核验原数据，再使用本分支排序/阅读 adapter。不要以该参数绑定其他 checkout 或关闭 seal 检查。将试用连接与现有默认连接区分；不要同时让同名工具的两份连接混淆研究来源。原入口不随分支 push 自动变化。
 
-开始新搜索，不复用旧排序 cursor。先试人物名、任务标题和宽主题，再按 [对白阅读](../guides/reading-dialogue.md) 使用返回动作和 inspect。该试用不含 PR #23 的额外精简，也不改变来源卡及 citation renderer 的既有边界。
+开始新搜索，不复用旧排序 cursor。先试人物名、任务标题和宽主题，再按 [对白阅读](../guides/reading-dialogue.md) 使用返回动作和 inspect。本分支现包含已合并 PR #23 的精简；来源卡及 citation renderer 的既有边界保留。

@@ -29,6 +29,7 @@
 | [Research 阅读展示](reviews/research-reading-experience.md) | 正文优先面板、紧凑对白分页、短引用与实际来源核对范围 |
 | [正文优先排序试用](reviews/body-first-search.md) | 取页前排序、同文延后、版本绑定 cursor 和八词实际 MCP 对照 |
 | [持久来源卡](reviews/persistent-research-sources.md) | 私有 Markdown/JSON 引用交付、默认发现减载、人物分组和实际验证边界 |
+| [Research 响应精简](reviews/compact-research-context.md) | 搜索/导航短定位、实际正文与引用等价、响应字节对照及客户端边界 |
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |
