@@ -37,6 +37,12 @@ def main():
             if args.search_padding:
                 result['fixture_scope_note'] = 'x'*args.search_padding
             if args.search_target_bytes:
+                # An irreducible near-cap result must still take the exact-ref
+                # fallback when optional handles/panels cannot fit. Redundant
+                # locators are deliberately absent in this boundary fixture.
+                for item in result['items']:
+                    item.pop('container_ref', None)
+                    item.pop('provenance_ref', None)
                 result['fixture_scope_note'] = ''
                 size = len(json.dumps({'status': 'ok', 'corpus_ref': corpus, 'data': result},
                     ensure_ascii=False, separators=(',', ':')).encode())
