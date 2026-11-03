@@ -192,9 +192,11 @@ def test_unavailable_optional_link_metadata_has_no_invented_url(provenance):
     assert source_link({'provenance': provenance}) is None
 
 
-def test_character_preview_uses_declared_family_and_bounded_source_navigation():
+def test_character_preview_uses_declared_family_and_bounded_source_navigation(monkeypatch):
     from types import SimpleNamespace
     calls = []
+    monkeypatch.setattr('genshin_lore.research_literal.literal_search',
+        lambda svc, query, locale, families, *a, **kw: svc.search(svc.corpus_ref, query, locale, families, limit=3))
     def search(corpus, query, locale, families, *, limit):
         calls.append(('search', query, families, limit))
         return {'items': [{'snippet': query, 'owner_field': 'nameTextMapHash', 'evidence_ref': 'exact-anchor'}]}
@@ -220,8 +222,10 @@ def test_character_preview_uses_declared_family_and_bounded_source_navigation():
     assert actions[0]['arguments']['evidence_ref'] == 'exact-anchor'
 
 
-def test_character_near_name_is_not_promoted_to_an_exact_subject():
+def test_character_near_name_is_not_promoted_to_an_exact_subject(monkeypatch):
     from types import SimpleNamespace
+    monkeypatch.setattr('genshin_lore.research_literal.literal_search',
+        lambda svc, query, locale, families, *a, **kw: svc.search(svc.corpus_ref, query, locale, families, limit=3))
     service = SimpleNamespace(corpus_ref='fixture', components={
         'qualified': {'adapter': 'character_text', 'family': 'declared'}},
         search=lambda *a, **k: {'items': [{'snippet': '合成角色的同名近似项', 'owner_field': 'nameTextMapHash'}]})

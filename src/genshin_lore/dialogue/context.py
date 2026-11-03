@@ -26,6 +26,19 @@ class DialogueReadAdapter:
     def __getattr__(self, name):
         return getattr(self.query, name)
 
+    def search(self, corpus_ref, query, locale=None, families=None, source_prefix=None,
+               limit=20, cursor=None, mode='literal', domain=None, story_release=None):
+        if mode != 'literal' or story_release is not None:
+            return self.query.search(corpus_ref, query, locale, families, source_prefix,
+                                     limit, cursor, mode, domain, story_release)
+        self.query._require(corpus_ref)
+        if not isinstance(query, str) or not query:
+            raise ValueError('query required')
+        if domain is not None:
+            raise ValueError('domain is supported only for sparse-first hybrid discovery')
+        from ..research_literal import literal_search
+        return literal_search(self.query, query, locale, families, source_prefix, limit, cursor)
+
     def describe(self, *args, **kwargs):
         result = dict(self.query.describe(*args, **kwargs))
         result['dialogue_reading_extension'] = {

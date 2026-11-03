@@ -128,6 +128,10 @@ JSON 保留原始字符、SHA、原 read mapping 和本次正式 inspect 结果�
 
 ## 人物搜索与调用方展示
 
+本分支的 literal 采用 `body-first-v1`：精确的已声明标题优先，其后是已声明正文（包括 Readable 行）、其他标题、未分类文本和姓名定位。相同等级内先展示各个同文组的首条，再交付其余物理 occurrence；同文分组按 locale 区分，不合并证据或人物。未知字段不排除。该排序在取页前执行，分页仍包含全部匹配记录，不是只重排第一页。
+
+新 cursor 绑定排序版本及 rank/repeat/id。旧顺序 cursor 明确拒绝，需重新搜索；不可拼接两种顺序。semantic/lexical/hybrid 沿既有发现路径，未增加查询模式、实体识别或新的关系。正文命中附直接读取动作；来源已有 display title 时进入标题分组。没有姓名行的首页仍可有界定位精确人物姓名锚点，供已声明 Character/NPC 导航使用；带过滤的请求不自动扩出范围。
+
 `search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、原始 items、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
 
 带 family、source、历史版本或 domain 范围的查询不自动补取范围外预览；hybrid 自动解析得到的 `domain_filter` 同样受此规则约束。下一步动作仍可显式选择。`detail="full"` 省略预览面板，保持原始检索路径。正文预览必须继续 read/inspect 后才能用于最终引用。材料已足够就回答，证据不足则说明 partial，避免反复改写同义关键词。
