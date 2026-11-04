@@ -103,7 +103,8 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
         raise ValueError("7.1 R0 dependency seal")
     if document_report["artifact"] != {"size_bytes": document_artifact.stat().st_size, "sha256": file_sha(document_artifact)}:
         raise ValueError("7.1 Document dependency seal")
-    if document_report["snapshot_id"] != SNAPSHOT or document_report["contract"] != f"document-{version}-evidence-v1":
+    document_contract = 'document-7.2-evidence-v2' if version == '7.2' else 'document-7.1-evidence-v1'
+    if document_report["snapshot_id"] != SNAPSHOT or document_report["contract"] != document_contract:
         raise ValueError("7.1 Document dependency snapshot")
     r0 = sqlite3.connect("file:" + str(r0_artifact) + "?mode=ro&immutable=1", uri=True)
     r0_rows = r0.execute("SELECT relative_path,source_file_id,source_sha256,snapshot_id,ingest_run_id FROM source_file WHERE root='Readable'").fetchall()

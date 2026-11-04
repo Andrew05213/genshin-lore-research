@@ -87,7 +87,8 @@ def verify(source_root, scope_path, artifact_path, r0_artifact, document_artifac
     require((r0_artifact.stat().st_size, file_digest(r0_artifact)) ==
             (scope["r0_dependency"]["size_bytes"], scope["r0_dependency"]["sha256"]), "7.1 R0 exact dependency")
     require(document_report["artifact"] == {"size_bytes": document_artifact.stat().st_size, "sha256": file_digest(document_artifact)}, "7.1 Document exact dependency")
-    require(document_report["snapshot_id"] == SNAPSHOT and document_report["contract"] == f"document-{version}-evidence-v1", "Document snapshot/contract")
+    document_contract = 'document-7.2-evidence-v2' if version == '7.2' else 'document-7.1-evidence-v1'
+    require(document_report["snapshot_id"] == SNAPSHOT and document_report["contract"] == document_contract, "Document snapshot/contract")
     implementation = {path: file_digest(ROOT / path) for path in CODE}
     parser_id = identity("readable71-parser", implementation)
     run_id = identity("readable71-run", SNAPSHOT, parser_id, digest(scope_raw), document_report["artifact"]["sha256"], scope["r0_dependency"]["sha256"])
