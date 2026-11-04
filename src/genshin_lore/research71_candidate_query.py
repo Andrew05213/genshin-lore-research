@@ -213,8 +213,28 @@ class CandidateResearch71(ResearchQuery):
                 self._recheck_container(rows[0]);return self._container_ref(rows[0])
         return None
 
+    def _document_readable_targets(self, raw_target):
+        """Read source-exported paths on a checked candidate; never resolve its namespace."""
+        row = json.loads(raw_target)
+        seal = json.loads(row.get('target_seal_json', '{}'))
+        result = []
+        for locator in seal.get('candidate_readable_targets', []):
+            target = locator['target']
+            parents = self.db.execute(
+                'SELECT * FROM research_container WHERE source_key=? AND source_path=? AND source_file_sha256=? LIMIT 2',
+                (self.source_version + '-readable_archive', target['path'], target['sha256'])).fetchall()
+            if len(parents) != 1:
+                raise ResearchUnavailable('sealed candidate Readable path missing or ambiguous in its exact source scope')
+            self._recheck_container(parents[0])
+            result.append({'target_evidence_ref': self._container_ref(parents[0]),
+                'status': 'physical_candidate', 'locale': locator['locale'],
+                'source_locator': locator, 'namespace_proven': False,
+                'limitation': 'exported path on an unresolved Localization candidate; book ownership is not proven'})
+        return result
+
     def follow(self,*args,**kwargs):
         result=super().follow(*args,**kwargs)
+        resolve_targets = kwargs.get('resolve_targets', args[5] if len(args) > 5 else True)
         ref=kwargs.get('evidence_ref',args[1] if len(args)>1 else None)
         decoded=decode_ref(ref)
         if decoded['kind']=='text':
@@ -222,6 +242,14 @@ class CandidateResearch71(ResearchQuery):
             container=self.db.execute('SELECT * FROM research_container WHERE id=?',(text['container_id'],)).fetchone()
         else:container=self._container_for(decoded)
         mode=self.components[container['source_key']]['adapter']
+        if container['evidence_family'] == 'document_archive' and resolve_targets:
+            for relation in result.get('items', []):
+                for candidate in relation.get('candidates', []):
+                    paths = self._document_readable_targets(candidate['raw_target'])
+                    if paths:
+                        candidate['candidate_readable_targets'] = paths
+                        result['partial'] = True
+                        result['scope_complete'] = False
         if mode in {'event_physical_16','event_physical_18','native_successor_physical','native_high_value_physical','talk_physical'}:
             raw=dict(self._recheck_container(container))
             prefix='reuse_' if mode in {'native_successor_physical','native_high_value_physical'} else 'target_'
@@ -229,7 +257,7 @@ class CandidateResearch71(ResearchQuery):
             if occurrence is not None:
                 candidate={name:raw.get(prefix+name.removeprefix('target_')) for name in ('target_family','target_contract','target_parser','target_run','target_occurrence_id')}
                 candidate.update(target_source_path=raw['source_path'],target_pointer=raw.get('pointer',raw.get('source_pointer',container['source_pointer'])))
-                target=self._target_ref(candidate) if kwargs.get('resolve_targets',True) else None
+                target=self._target_ref(candidate) if resolve_targets else None
                 # A one-edge, source-authored reuse observation is separate
                 # from the stored relation pages. It is never a logical join.
                 result['physical_reuse_observations']=[{**candidate,'target_evidence_ref':target,'status':'physical_candidate','raw_sha256':raw.get('raw_sha256'),'source_file_sha256':container['source_file_sha256'],'relation_kind':'exact_projection_reuse','source_occurrence':container['occurrence_id']}]
@@ -241,7 +269,7 @@ class CandidateResearch71(ResearchQuery):
         result['target_coordinate_decoders']=['accepted narrative trio namespaces; original locators preserved','Document empty file-root locator -> Readable file-root view /']
         result['logical_identity_proven']=False
         result['product_accepted']=False
-        unresolved_targets=sum(c.get('target_evidence_ref') is None for r in result.get('items',[]) for c in r.get('candidates',[])) if kwargs.get('resolve_targets',True) else None
+        unresolved_targets=sum(c.get('target_evidence_ref') is None for r in result.get('items',[]) for c in r.get('candidates',[])) if resolve_targets else None
         result['unresolved_target_count']=unresolved_targets
         if unresolved_targets:
             result['partial']=True;result['scope_complete']=False

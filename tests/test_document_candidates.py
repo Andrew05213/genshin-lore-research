@@ -1,6 +1,7 @@
 """A candidate exported path permits reading, never confirmed book ownership."""
 import json
 import sqlite3
+import pytest
 
 from genshin_lore.research_source_context import ResearchSourceContext, title_state
 
@@ -66,3 +67,30 @@ def test_reading_card_keeps_candidate_title_qualification():
         'source_result': {'source_context': {'display_title': '合成书名', 'title_resolution_status': 'candidate'}},
         'reading_context': {}}})
     assert body in rendered and '候选书名' in rendered and '未证实' in rendered
+
+
+def test_five_tool_candidate_path_resolves_only_exact_source_and_file_seal():
+    from genshin_lore.research71_candidate_query import CandidateResearch71
+    from genshin_lore.research_query import ResearchUnavailable
+    q = object.__new__(CandidateResearch71)
+    q.source_version = '7.2'
+    q.db = sqlite3.connect(':memory:')
+    q.db.row_factory = sqlite3.Row
+    q.db.executescript('CREATE TABLE research_container(id,source_key,source_path,source_file_sha256);'
+                      "INSERT INTO research_container VALUES(1,'7.2-readable_archive','Synthetic.txt','body-sha');"
+                      "INSERT INTO research_container VALUES(2,'7.1-readable_archive','Synthetic.txt','body-sha');")
+    checked = []
+    q._recheck_container = lambda row: checked.append(row['id'])
+    q._container_ref = lambda row: 'supplied-ref-' + str(row['id'])
+    locator = {'target': {'path': 'Synthetic.txt', 'sha256': 'body-sha'}, 'locale': 'CHS'}
+    raw = json.dumps({'target_seal_json': json.dumps({'candidate_readable_targets': [locator, locator]})})
+    result = q._document_readable_targets(raw)
+    assert [r['target_evidence_ref'] for r in result] == ['supplied-ref-1', 'supplied-ref-1']
+    assert checked == [1, 1]  # Two physical locator observations, not an identity deduplication.
+    assert all(r['status'] == 'physical_candidate' and not r['namespace_proven'] for r in result)
+    locator['target']['sha256'] = 'wrong'
+    raw = json.dumps({'target_seal_json': json.dumps({'candidate_readable_targets': [locator]})})
+    with pytest.raises(ResearchUnavailable, match='exact source scope'):
+        q._document_readable_targets(raw)
+    assert q._document_readable_targets('{}') == []
+    q.db.close()
