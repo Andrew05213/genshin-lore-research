@@ -213,10 +213,9 @@ class CandidateResearch71(ResearchQuery):
                 self._recheck_container(rows[0]);return self._container_ref(rows[0])
         return None
 
-    def _document_readable_targets(self, raw_target):
+    def _document_readable_targets(self, candidate_row):
         """Read source-exported paths on a checked candidate; never resolve its namespace."""
-        row = json.loads(raw_target)
-        seal = json.loads(row.get('target_seal_json', '{}'))
+        seal = json.loads(candidate_row.get('target_seal_json', '{}'))
         result = []
         for locator in seal.get('candidate_readable_targets', []):
             target = locator['target']
@@ -245,7 +244,20 @@ class CandidateResearch71(ResearchQuery):
         if container['evidence_family'] == 'document_archive' and resolve_targets:
             for relation in result.get('items', []):
                 for candidate in relation.get('candidates', []):
-                    paths = self._document_readable_targets(candidate['raw_target'])
+                    # The formal adapter stores typed coordinates, with a legal
+                    # NULL raw_target. Read additional metadata from the exact
+                    # sealed source row, never infer it from display text.
+                    rows = self._source(container['source_key']).execute(
+                        'SELECT c.* FROM document_candidate c '
+                        'JOIN document_relation r ON r.id=c.relation_id '
+                        'WHERE r.row_id=? AND r.origin_pointer=? AND r.kind=? '
+                        'AND c.target_source_path=? AND c.target_pointer=? LIMIT 2',
+                        (container['occurrence_id'], relation['proof_source_pointer'],
+                         relation['relation_kind'], candidate['target_source_path'],
+                         candidate['target_pointer'])).fetchall()
+                    if len(rows) != 1:
+                        raise ResearchUnavailable('Document candidate source coordinates missing or ambiguous')
+                    paths = self._document_readable_targets(dict(rows[0]))
                     if paths:
                         candidate['candidate_readable_targets'] = paths
                         result['partial'] = True

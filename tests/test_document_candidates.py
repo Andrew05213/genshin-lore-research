@@ -83,14 +83,73 @@ def test_five_tool_candidate_path_resolves_only_exact_source_and_file_seal():
     q._recheck_container = lambda row: checked.append(row['id'])
     q._container_ref = lambda row: 'supplied-ref-' + str(row['id'])
     locator = {'target': {'path': 'Synthetic.txt', 'sha256': 'body-sha'}, 'locale': 'CHS'}
-    raw = json.dumps({'target_seal_json': json.dumps({'candidate_readable_targets': [locator, locator]})})
+    raw = {'target_seal_json': json.dumps({'candidate_readable_targets': [locator, locator]})}
     result = q._document_readable_targets(raw)
     assert [r['target_evidence_ref'] for r in result] == ['supplied-ref-1', 'supplied-ref-1']
     assert checked == [1, 1]  # Two physical locator observations, not an identity deduplication.
     assert all(r['status'] == 'physical_candidate' and not r['namespace_proven'] for r in result)
     locator['target']['sha256'] = 'wrong'
-    raw = json.dumps({'target_seal_json': json.dumps({'candidate_readable_targets': [locator]})})
+    raw = {'target_seal_json': json.dumps({'candidate_readable_targets': [locator]})}
     with pytest.raises(ResearchUnavailable, match='exact source scope'):
         q._document_readable_targets(raw)
-    assert q._document_readable_targets('{}') == []
+    assert q._document_readable_targets({}) == []
     q.db.close()
+
+
+@pytest.mark.parametrize('case', ['typed_null', 'wrong_pointer', 'ambiguous', 'disabled'])
+def test_document_follow_reads_exact_source_candidate_with_nullable_raw_target(monkeypatch, case):
+    from copy import deepcopy
+    from genshin_lore import research71_candidate_query as module
+    from genshin_lore.research_query import ResearchQuery, ResearchUnavailable
+
+    q = object.__new__(module.CandidateResearch71)
+    q.source_version = '7.2'
+    q.db = sqlite3.connect(':memory:')
+    q.db.row_factory = sqlite3.Row
+    q.db.executescript('CREATE TABLE research_container(id,source_key,source_path,source_file_sha256);'
+                      "INSERT INTO research_container VALUES(1,'7.2-readable_archive','Synthetic.txt','body-sha');")
+    source = sqlite3.connect(':memory:')
+    source.row_factory = sqlite3.Row
+    source.executescript('CREATE TABLE document_relation(id,row_id,origin_pointer,kind);'
+                        'CREATE TABLE document_candidate(id,relation_id,target_source_path,target_pointer,target_seal_json);'
+                        "INSERT INTO document_relation VALUES('r','document-row','/0/opaque/0','document_localization');")
+    locator = {'target': {'path': 'Synthetic.txt', 'sha256': 'body-sha'}, 'locale': 'CHS'}
+    metadata = json.dumps({'candidate_readable_targets': [locator]})
+    source.execute("INSERT INTO document_candidate VALUES('c','r','SyntheticLocalization.json','/4',?)", (metadata,))
+    result = {'items': [{'relation_kind': 'document_localization', 'status': 'mapping_unresolved',
+                         'proof_source_pointer': '/0/opaque/0', 'candidates': [{
+                             'target_evidence_ref': None, 'target_source_path': 'SyntheticLocalization.json',
+                             'target_pointer': '/4', 'raw_target': None}]}],
+              'partial': True, 'scope_complete': False}
+    if case == 'wrong_pointer':
+        result['items'][0]['candidates'][0]['target_pointer'] = '/5'
+    elif case == 'ambiguous':
+        source.execute("INSERT INTO document_relation VALUES('r2','document-row','/0/opaque/0','document_localization')")
+        source.execute("INSERT INTO document_candidate VALUES('c2','r2','SyntheticLocalization.json','/4',?)", (metadata,))
+    monkeypatch.setattr(ResearchQuery, 'follow', lambda *a, **kw: deepcopy(result))
+    monkeypatch.setattr(module, 'decode_ref', lambda _: {'kind': 'container'})
+    q._container_for = lambda _: {'source_key': 'document-source', 'evidence_family': 'document_archive',
+                                  'occurrence_id': 'document-row'}
+    q.components = {'document-source': {'adapter': 'document_archive'}}
+    reads = []
+    q._source = lambda key: (reads.append(key), source)[1]
+    q._recheck_container = lambda row: None
+    q._container_ref = lambda row: 'supplied-body-ref'
+    try:
+        if case in ('wrong_pointer', 'ambiguous'):
+            with pytest.raises(ResearchUnavailable, match='source coordinates'):
+                q.follow('corpus', 'source-ref')
+        else:
+            value = q.follow('corpus', 'source-ref', None, 20, None, case != 'disabled')
+            candidate = value['items'][0]['candidates'][0]
+            assert candidate['raw_target'] is None  # Original projection is preserved.
+            if case == 'disabled':
+                assert not reads and 'candidate_readable_targets' not in candidate
+            else:
+                assert reads == ['document-source']
+                assert candidate['candidate_readable_targets'][0]['target_evidence_ref'] == 'supplied-body-ref'
+                assert candidate['candidate_readable_targets'][0]['namespace_proven'] is False
+                assert value['partial'] and not value['scope_complete']
+    finally:
+        source.close()
+        q.db.close()
