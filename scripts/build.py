@@ -138,6 +138,24 @@ def script_verify(name, arguments, result):
     return load(result)
 
 
+def capability_descriptions(caps, version):
+    """Keep executable proof ceilings, never copy old artifact/run acceptance."""
+    statuses = {
+        'ACCEPTED_EXACT_REPLACEMENT': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'ACCEPTED_STANDALONE_CANDIDATE': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'ACCEPTED_BOUNDED_CAPABILITY': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'PHYSICAL_TEXT_STANDALONE_CANDIDATE_ACCEPTED': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'PHYSICAL_CAPABILITY_ACCEPTED': 'SOURCE_VERIFIED_PHYSICAL_CAPABILITY',
+        'RAW_ONLY_ACCEPTED': 'SOURCE_VERIFIED_RAW_CAPABILITY',
+    }
+    descriptions = []
+    for cap in caps['capabilities']:
+        item = {k: cap[k] for k in ('capability_id', 'family', 'limitations', 'supported_operations')}
+        item['status'] = cap['status'] if version == '7.1' else statuses[cap['status']]
+        descriptions.append(item)
+    return descriptions
+
+
 class Rebuild:
     def __init__(self, source, output, history, *, source_version="7.1"):
         self.source = source.resolve()
@@ -1328,7 +1346,11 @@ class Rebuild:
             "manifests/research/candidate-7.1-complete-profile-v1.json"
         )
         write(pp, profile)
-        self.bind("manifests/research-7.1/7.1-capability-registry-v1.json", {"snapshot": self.snapshot, "capabilities": [{k: v for k, v in cap.items() if k in ("capability_id", "family", "limitations", "supported_operations")} for cap in caps["capabilities"]]})
+        self.bind("manifests/research-7.1/7.1-capability-registry-v1.json", {
+            "snapshot": self.snapshot,
+            "capabilities": capability_descriptions(caps, self.version),
+            "qualification": "local source-oracle verified inputs; not formal product/release acceptance",
+        })
         paths = (
             "src/genshin_lore/narrative_assistant_7_1.py",
             "src/genshin_lore/research71_preview_server.py",

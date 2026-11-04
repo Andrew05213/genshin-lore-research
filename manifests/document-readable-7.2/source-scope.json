@@ -82,7 +82,7 @@
     "enPath",
     "jpPath"
   ],
-  "opaque_document_array_policy": "PLOJOMIPJGH is an uninterpreted numeric candidate observation; no namespace or historical role inferred",
+  "opaque_document_array_policy": "PLOJOMIPJGH and questIDList are physical Localization candidates only; exported Readable paths may be delivered as candidates, never confirmed title/file ownership",
   "product_accepted": false,
   "r0_dependency": {
     "ingest_run_id": null,

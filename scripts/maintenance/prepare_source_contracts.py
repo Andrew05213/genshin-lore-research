@@ -319,7 +319,9 @@ def prepare_text_scope(source, version, output, kind):
         result.pop('locator_fields_7_1',None);result.pop('old_chs_locator_fields_absent',None)
         result['locator_fields']=['BFDDHOKGBOH','OKIHBKFCDND','enPath','jpPath'] if version=='7.2' else ['MBOPLLJEHCJ','FCNGPFLCLFA','enPath','jpPath']
         result['r0_dependency']={'ingest_run_id':None,'sha256':None,'size_bytes':None,'status':'unbound_until_fresh_r0_qualification'}
-        result['opaque_document_array_policy']='PLOJOMIPJGH is an uninterpreted numeric candidate observation; no namespace or historical role inferred'
+        result['opaque_document_array_policy']=(
+            'PLOJOMIPJGH and questIDList are physical Localization candidates only; exported Readable paths may be delivered as candidates, never confirmed title/file ownership'
+            if version == '7.2' else 'contentLocalizedId is an equality observation; its namespace remains unresolved')
     elif kind=='gcg':
         result['primary_rows']=[len(physical['ExcelBinOutput/'+name+'ExcelConfigData.json']) for name in ('GCGDeckCard','GCGCardFace')]
         result['corpus_complete']='two declared primary files and six pinned TextMaps only'

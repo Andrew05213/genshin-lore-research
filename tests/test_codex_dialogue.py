@@ -13,8 +13,9 @@ def digest(value):
     return hashlib.sha256(value).hexdigest()
 
 
-def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False, item_type=None, body_padding=0):
+def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=False, item_type=None, body_padding=0, source_version='7.1'):
     q, _, _ = fixture()
+    q.source_version = source_version
     src = sqlite3.connect(':memory:'); src.row_factory = sqlite3.Row
     src.executescript((ROOT/'schemas/codexquest-7.1-v1.sql').read_text())
     q.sources['codex'] = src
@@ -27,7 +28,8 @@ def codex_fixture(body_mentions_name=False, equal_bodies=False, legacy_atoms=Fal
     def atom(pointer, label, text):
         number = len(slots)+1
         slots.append((pointer, label, text, number))
-        return {'BNJEGIAOKGM': number, 'JOBGILDNLEL': label} if legacy_atoms else {'textId': number, 'DFKLAEHPOBE': label}
+        return {'BNJEGIAOKGM': number, 'JOBGILDNLEL': label} if legacy_atoms else {
+            'textId': number, 'textType' if source_version == '7.2' else 'DFKLAEHPOBE': label}
     raw['title'] = atom('/title', 'MainQuestTitle', '合成任务标题')
     raw['sections'][0]['title'] = atom('/sections/0/title', 'SubQuestTitle', '合成片段标题')
     for i in range(13):
@@ -90,6 +92,17 @@ def test_npc_to_source_labelled_speeches_with_titles_and_neighbours():
     assert node['source_context']['display_title'] == '合成任务标题'
     assert node['source_context']['after'][0]['texts'][0]['raw_text'] == '合成发言1'
     assert result['partial'] and not result['corpus_complete']
+
+
+def test_authored_text_type_is_read_without_relabelling_old_source_slots():
+    q, _, ref = populated_fixture(source_version='7.2')
+    page = q.read(q.corpus_ref, ref, view='dialogue', limit=2)
+    assert page['nodes'][0]['texts'][0]['raw_text'] == '合成发言0'
+    assert page['nodes'][0]['speaker']['display_name'] == '合成角色甲'
+    assert page['nodes'][0]['speaker']['logical_identity_proven'] is False
+    q.source_version = '7.1'
+    with pytest.raises(ValueError, match='source label/hash'):
+        q.read(q.corpus_ref, ref, view='dialogue', limit=2)
 
 
 def test_speaker_pages_cover_each_physical_occurrence_and_eof():

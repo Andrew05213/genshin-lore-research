@@ -77,6 +77,27 @@ questions. The checker now derives its question version from the exact corpus
 snapshot. The interrupted output is not qualified; the next attempt uses a
 new output directory and freshly computed stage identities.
 
+A later `e1b6d70` full command built and independently verified all 35 inputs
+and the 6,649,974,784-byte index, including both complete index oracles, but
+**exited 1** at runtime smoke after 32:17.34. It did not build the semantic
+overlay. Its registry omitted the executable proof-ceiling status, and the
+Codex reading view still checked the former masked label instead of 7.2
+`textType`. The original execution/failure reports remain local; this is not
+recorded as a successful full command.
+
+The retry restores explicit local source-verified capability statuses without
+copying old artifact/run acceptance, preserving the physical/raw proof ceiling.
+Codex checks its actual source-version label key. Native 7.1 behavior is retained.
+
+Document 7.2 now uses `document-7.2-evidence-v2`: unresolved Localization
+candidates carry independently checked, source-exported Readable paths. The
+relation remains `mapping_unresolved`; this is not confirmation of a book's
+logical ownership. Reading context and saved cards label the title as a
+candidate, while the text and ranges retain exact file identity. This closes
+the body-delivery gap without interpreting the opaque array as an authored
+namespace. A real source build/oracle and a target-omission negative probe
+passed. The final full rebuild must use this updated contract.
+
 ## Remaining work
 
 - Build the complete unified Research index and new semantic overlay.

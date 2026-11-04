@@ -11,6 +11,24 @@ from scripts.build import Rebuild
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_capability_description_preserves_proof_ceiling_without_old_acceptance():
+    from scripts.build import capability_descriptions
+    from genshin_lore.narrative_assistant_7_1 import PHYSICAL_STATUSES
+    caps = json.loads((ROOT / 'recipes/capability-names.json').read_text())
+    old = capability_descriptions(caps, '7.1')
+    new = capability_descriptions(caps, '7.2')
+    assert len(old) == len(new) == 30
+    for original, retained, migrated in zip(caps['capabilities'], old, new):
+        assert retained['status'] == original['status']
+        assert (migrated['status'] in PHYSICAL_STATUSES) == (original['status'] in PHYSICAL_STATUSES)
+        assert migrated['status'].startswith('SOURCE_VERIFIED_')
+        assert 'ACCEPTED' not in migrated['status']
+        assert not set(migrated) & {'parser', 'run', 'contract', 'snapshot', 'artifact'}
+    caps['capabilities'][0]['status'] = 'UNKNOWN'
+    with pytest.raises(KeyError):
+        capability_descriptions(caps, '7.2')
+
+
 def test_scope_commit_and_tree_are_not_accepted_from_a_snapshot_label():
     commit, tree = PINS['7.2']
     scope = {'snapshot_id': f'anime-game-data:7.2:{commit}', 'source_commit': commit, 'source_tree': tree}

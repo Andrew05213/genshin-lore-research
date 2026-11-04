@@ -285,9 +285,7 @@ class Research71Unified:
             rows=list(rows)
             # Source-authored Document title -> sealed physical Readable file.
             # Reuse the accepted title adapter, never filename guessing.
-            doc=self.query._source(f'{self.version}-document_archive')
-            paths=doc.execute("SELECT DISTINCT c.target_source_path FROM document_text t JOIN document_slot s ON s.id=t.slot_id JOIN document_relation r ON r.row_id=s.row_id JOIN document_candidate c ON c.relation_id=r.id WHERE s.field='titleTextMapHash' AND s.locale='CHS' AND instr(t.raw_text,?)>0 AND r.kind='localization_readable'",(query,)).fetchall()
-            for (path,) in paths:
+            for path in self.labels.readable_paths_for_title(query):
                 parents=self.query.db.execute("SELECT * FROM research_container WHERE source_key=? AND source_path=?",(key,path)).fetchall()
                 for parent in parents:
                     self.query._recheck_container(parent)

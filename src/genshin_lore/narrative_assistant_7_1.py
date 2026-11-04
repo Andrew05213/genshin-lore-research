@@ -42,7 +42,8 @@ CAPABILITY_GROUPS = {
 }
 
 TITLE_FIELDS = {"titleTextMapHash", "nameTextMapHash", "storyTitleTextMapHash", "voiceTitleTextMapHash"}
-PHYSICAL_STATUSES = {"PHYSICAL_CAPABILITY_ACCEPTED", "RAW_ONLY_ACCEPTED"}
+PHYSICAL_STATUSES = {"PHYSICAL_CAPABILITY_ACCEPTED", "RAW_ONLY_ACCEPTED",
+                     "SOURCE_VERIFIED_PHYSICAL_CAPABILITY", "SOURCE_VERIFIED_RAW_CAPABILITY"}
 DIRECT_TEXT_STATES = {"source_exact", "resolved_unique", "resolved_main", "resolved_medium",
                       "unique_main", "unique_medium"}
 FORBIDDEN_CLAIM_RE = re.compile(r"(首次实装|\d+\.\d+新增|语义顺序|剧情发生顺序|唯一拥有|同一个逻辑实体)")
@@ -444,6 +445,8 @@ class NarrativeAssistant71:
         context = read["source_context"]
         relation_scope = {"direct": "direct_occurrence", "seed": "seeded_unverified_context",
                           "follow": "physical_candidate_navigation"}[origin]
+        if context.get('title_resolution_status') == 'candidate':
+            relation_scope = 'physical_candidate_navigation'
         proof_record = {"capability_status": entry["status"], "relation_scope_status": relation_scope}
         for index, item in enumerate(texts):
             item["observation_index"] = index

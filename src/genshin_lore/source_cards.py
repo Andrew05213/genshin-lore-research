@@ -65,6 +65,9 @@ def _reading_body(value):
         title = ' / '.join(t['raw_text'] for t in titles if isinstance(t.get('raw_text'), str))
     if subtitle and subtitle != title:
         title = (title + ' · ' + subtitle) if title else subtitle
+    if title and (context.get('title_resolution_status') == 'candidate'
+                  or display.get('title_resolution_status') == 'candidate'):
+        title = '候选书名：' + title + '（与正文的关系未证实）'
     speaker = context.get('speaker', {})
     label = source.get('source_speaker_label') or source.get('speaker_label') or speaker.get('display_name')
     # A fence preserves the displayed source, including Markdown/backticks in it.

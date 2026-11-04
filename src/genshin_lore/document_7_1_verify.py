@@ -126,7 +126,8 @@ def verify(source_root, scope_path, artifact_path, report):
         require(len(releases) == 1 and releases[0][0] == 1, "single release")
         release = json.loads(releases[0][1])
         require(release == {key: value for key, value in report.items() if key not in ("artifact", "build_seconds")}, "release/report binding")
-        require(release["contract"] == f"document-{version}-evidence-v1" and release["snapshot_id"] == SNAPSHOT, "release identity")
+        expected_contract = 'document-7.2-evidence-v2' if version == '7.2' else 'document-7.1-evidence-v1'
+        require(release["contract"] == expected_contract and release["snapshot_id"] == SNAPSHOT, "release identity")
         rows, slots, texts, relations, candidates = [], [], [], [], []
         title_states = Counter()
         relation_states = defaultdict(Counter)
@@ -166,8 +167,27 @@ def verify(source_root, scope_path, artifact_path, report):
                 for j, value in enumerate(row.get(field, [])):
                     origin = f"/{ordinal}/{field}/{j}"
                     matches = index.get(value, [])
-                    complete = field != content_field
-                    targets = [(LOCALIZATION, f"/{k}", {**document_sources[LOCALIZATION], "native_id": loc["id"]}) for k, loc in matches]
+                    complete = field == 'questContentLocalizedId' if version == '7.2' else field != content_field
+                    targets = []
+                    for k, loc in matches:
+                        seal = {**document_sources[LOCALIZATION], "native_id": loc['id']}
+                        if version == '7.2' and not complete:
+                            paths = []
+                            for key, locale in tuple((f, 'CHS') for f in chs_fields) + (('enPath', 'EN'), ('jpPath', 'JP')):
+                                if key not in loc:
+                                    continue
+                                raw_locator = loc[key]
+                                prefix = f'ART/UI/Readable/{locale}/'
+                                suffix = raw_locator[len(prefix):] if raw_locator.startswith(prefix) else None
+                                if not suffix or any(part in ('', '.', '..') for part in suffix.split('/')):
+                                    continue
+                                target = source_target('Readable/' + raw_locator[len('ART/UI/Readable/'):] + '.txt')
+                                if target is not None:
+                                    paths.append({'target': target, 'locale': locale,
+                                        'source_path': LOCALIZATION, 'source_pointer': f'/{k}/{key}',
+                                        'raw_locator': raw_locator})
+                            seal['candidate_readable_targets'] = paths
+                        targets.append((LOCALIZATION, f'/{k}', seal))
                     add_relation(row_id, origin, "document_localization", PRIMARY, origin, value,
                                  "all physical Localization rows; " + ("explicit/project locator contract" if complete else "equality observations only; namespace unresolved"), complete, targets)
                     if not complete:

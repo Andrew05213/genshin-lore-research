@@ -97,7 +97,7 @@ def build(source_root, scope_path, output):
     from .source_versions import source_pin
     SNAPSHOT = scope["snapshot_id"]
     version, _, _ = source_pin(SNAPSHOT)
-    CONTRACT = f"document-{version}-evidence-v1"
+    CONTRACT = f"document-{version}-evidence-v2" if version == '7.2' else "document-7.1-evidence-v1"
     content_field = "PLOJOMIPJGH" if version == "7.2" else "contentLocalizedId"
     output = Path(output).resolve()
     if output.exists() or output.is_symlink() or any(Path(str(output) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
@@ -186,8 +186,20 @@ def build(source_root, scope_path, output):
                 for element, value in enumerate(row.get(field, [])):
                     origin = f"/{ordinal}/{field}/{element}"
                     matches = lookup.get(value, [])
-                    complete = field != content_field
-                    targets = [(LOCALIZATION, f"/{loc_ordinal}", {**declared[LOCALIZATION], "native_id": loc_row["id"]}) for loc_ordinal, loc_row in matches]
+                    complete = field == 'questContentLocalizedId' if version == '7.2' else field != content_field
+                    targets = []
+                    for loc_ordinal, loc_row in matches:
+                        seal = {**declared[LOCALIZATION], "native_id": loc_row["id"]}
+                        if version == '7.2' and not complete:
+                            paths = []
+                            for locator in localization_readable_locators(loc_row, loc_ordinal, source_version=version):
+                                target = target_seal(locator['target_path'])
+                                if target is not None:
+                                    paths.append({'target': target, 'locale': locator['locale'],
+                                        'source_path': LOCALIZATION, 'source_pointer': locator['pointer'],
+                                        'raw_locator': locator['raw_locator']})
+                            seal['candidate_readable_targets'] = paths
+                        targets.append((LOCALIZATION, f"/{loc_ordinal}", seal))
                     relation(row_id, origin, "document_localization", PRIMARY, origin, value,
                              "all physical Localization rows; " + ("explicit/project locator contract" if complete else "equality observations only; namespace unresolved"), complete, targets)
                     if not complete:
