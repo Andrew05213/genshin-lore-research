@@ -11,6 +11,8 @@ description: Research Genshin Impact lore with the configured evidence MCP and w
 
 - 首次需要确认语料或参数时用 `describe_corpus`；支持时省略 `corpus_ref` 发现当前值，此后复用实际返回值。不要猜 corpus、family、路径、人物 ID 或 ref。
 - 模型先理解问题，拆出人物、作品、任务及主题关键词。`search_evidence.query` 传短关键词，不传整句问题。多主体分别搜；引号里的标题不能吞掉句子中另一位人物的名字。
+- 优先使用五工具按关键词研究；独立的 `query_research71_preview` 是有界便利接口，不是通用问句解析器。它未识别主体或返回 `NO_EVIDENCE` 时，检查实际检索词，再用 `search_evidence` 搜原问题中的主体，沿返回动作 read/follow/inspect；不要反复把同一句话交给便利接口，也不要据此判断来源缺失。
+- 例如“凯瑟琳有哪些相关对白？”先搜索 `凯瑟琳`，再从人物命中进入 `view="dialogue"` 读取发言与上下文；“钟离关于璃月历史说过什么？”先定位 `钟离`，按需另搜 `璃月` 或 `历史`，保留两类材料各自的主体与归属限制。
 - literal 默认匹配连续子串，不是关键词 AND。姓名和主题线索可分别查询，再用已声明过滤或导航缩小范围；不要拼成原文中不存在的长短语。模糊线索可显式使用 lexical/semantic/hybrid；相似度只用于发现候选，不证明身份或关系。
 - 人物搜索先看 `reading_view` 的正文预览、`groups.by_material_type`、正文命中和 `next_actions`。姓名字段只用于定位，不能据此回答人物经历。跨角色资料、Story/Voice、任务档案和对白寻找线索，不只查人物介绍；预览仍需实际 read/inspect 后引用。
 - 中文研究优先读 CHS 原文并核对专名，不把自行音译写成官方中文名。别名或同名对象分别保留来源，不能自动合并。
