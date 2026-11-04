@@ -1,5 +1,6 @@
 """Synthetic fidelity and rejection tests for bounded build optimizations."""
 import importlib
+import json
 import sqlite3
 
 import pytest
@@ -173,14 +174,15 @@ def test_batched_lore_oracle_still_derives_complete_candidates(mutation):
         out.execute("UPDATE lore_avatar_candidate SET avatar_row_id='forged-physical-target' WHERE row_id='story-0' AND avatar_row_id='avatar-0'")
     queries = []
     foundation.set_trace_callback(queries.append)
+    scope = json.loads((character.ROOT / "manifests/character-7.1-physical-foundation/source-scope.json").read_text())
     try:
         if mutation is None:
-            result = character._verify_lore(out, foundation, text)
+            result = character._verify_lore(out, foundation, text, scope)
             assert result["record_counts"] == {"avatar": 167, "fetter_info": 124, "story": 974}
             assert result["avatar_candidates"] == (124 + 973) * 2
         else:
             with pytest.raises(ValueError, match="Lore/Story"):
-                character._verify_lore(out, foundation, text)
+                character._verify_lore(out, foundation, text, scope)
         candidate_reads = [query for query in queries if "FROM foundation_candidate" in query]
         assert len(candidate_reads) == 1
     finally:

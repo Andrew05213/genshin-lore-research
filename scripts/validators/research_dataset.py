@@ -395,7 +395,7 @@ def verify_connection(index,manifest,bindings):
             parent,field,locale=owner(src,r['source_table'],got,reader)
             if r['__container_id'] is None:raise ValueError('independent text container missing')
             container={'pk_value':r['__container_pk'],'occurrence_id':r['__container_occurrence'],'source_path':r['__container_path']}
-            expected_parent=container['pk_value'] if r['source_key'].startswith('7.1-narrative_') else container['occurrence_id']
+            expected_parent=container['pk_value'] if r['source_key'].split('-',1)[-1].startswith('narrative_') else container['occurrence_id']
             if str(parent)!=expected_parent or field!=r['owner_field'] or (locale is not None and locale!=r['locale']):raise ValueError('independent owner/container/locale mismatch')
             path=got.get('source_path',got.get('relative_path'));ptr=got.get('pointer',got.get('source_pointer'));pair=got.get('pair_ordinal')
             if path is None and 'source_file_id' in got:

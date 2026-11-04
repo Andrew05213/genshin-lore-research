@@ -48,11 +48,11 @@ def verify(source: Path, scope_path: Path, artifact: Path, report: dict) -> dict
             owners = [x for x in declaration['text_owners'] if x['field'] == 'GLPIOOHJNFF']
             if len(owners) != 1 or owners[0]['owner_role_status'] != 'mapping_unresolved':
                 raise ValueError('Native Message old mapping-unresolved owner')
-            owners[0].update({'historical_field': 'GLPIOOHJNFF', 'field': 'DDBKODKACJA',
+            owners[0].update({'historical_field': 'GLPIOOHJNFF', 'field': ('DDBKODKACJA' if scope['snapshot_id'].split(':')[1]=='7.1' else 'DNIFECBKEJB'),
                               'field_continuity_status': 'full_20_row_raw_value_alignment;semantic_role_unresolved'})
     selected = {item['path'] for item in declarations}
     selected.update(old['textmaps'][loc][tier] for loc in old['languages'] for tier in ('main', 'medium'))
-    if (scope['contract'] != 'native-message-7.1-exact-source-scope-v1'
+    if (scope['contract'] != 'native-message-7.1-exact-source-scope-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or scope['historical_selection_sha256'] != sha(historical_path)
             or declarations != scope['sources'] or old['languages'] != scope['languages']
             or old['textmaps'] != scope['textmaps'] or selected != {x['path'] for x in scope['files']}):

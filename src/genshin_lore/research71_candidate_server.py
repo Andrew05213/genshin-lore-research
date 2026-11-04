@@ -14,7 +14,7 @@ def main():
     for name in ('corpus','profile','bindings','index'):
         p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--candidate',action='store_true',required=True,
-                   help='Explicit prepublication 7.1 candidate; never current production')
+                   help='Explicit source-qualified candidate; never current production')
     a=p.parse_args()
     q=CandidateResearch71(a.corpus,a.bindings,a.index,a.profile,allow_prepublication_profile=True)
     try:

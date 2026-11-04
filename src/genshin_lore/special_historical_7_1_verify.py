@@ -105,7 +105,7 @@ def _text_status(matches: list[tuple]) -> str:
     return "resolved_candidate_set"
 
 
-def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> dict:
+def verify(source_root: str | Path, family: str, artifact_path: str | Path, *, contract_path=INPUT, rules_path=RULES) -> dict:
     if family not in ("world_archive", "quest_codex_archive"):
         raise ValueError("family is not historical special")
     root = Path(source_root).resolve()
@@ -114,8 +114,12 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
         raise ValueError("artifact unavailable")
     if any(Path(str(artifact) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("SQLite sidecar present")
-    frozen_raw, rules_raw = INPUT.read_bytes(), RULES.read_bytes()
+    frozen_raw, rules_raw = Path(contract_path).read_bytes(), Path(rules_path).read_bytes()
     frozen, rules = json.loads(frozen_raw), json.loads(rules_raw)
+    from .source_versions import source_pin
+    game_version, commit, tree = source_pin(frozen['source_snapshot'])
+    if (frozen['source_commit'],frozen['source_tree']) != (commit,tree) or rules['source_snapshot'] != frozen['source_snapshot']:
+        raise ValueError('source contract pin mismatch')
     boundary = next(item for item in frozen["contracts"] if item["family"] == family)
     source_rules = rules[family]
     if boundary["provider_contract"] != source_rules["provider_contract"]:
@@ -196,11 +200,11 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
         for rule in relation_rules:
             indexes[(rule["target"], rule["target_field"])] = _index(
                 rows_by_path[rule["target"]], rule["target_field"])
-    parser = "historical-special-71-parser:" + _id(
+    parser = "historical-special-" + game_version.replace(".", "") + "-parser:" + _id(
         family, boundary["provider_contract"], _file_sha(BUILDER), _file_sha(SCHEMA),
         _sha(frozen_raw), _sha(rules_raw))
     seals = [(path, frozen["source_files"][path]["sha256"]) for path in paths]
-    run = "historical-special-71-run:" + _id(frozen["source_snapshot"], parser, seals)
+    run = "historical-special-" + game_version.replace(".", "") + "-run:" + _id(frozen["source_snapshot"], parser, seals)
     counts: Counter[str] = Counter()
     def observe(row_id: str, kind: str, pointer: str, field: str, state: str, payload: Any) -> str:
         key = "historical71-obs:" + _id(run, row_id, kind, pointer, field)

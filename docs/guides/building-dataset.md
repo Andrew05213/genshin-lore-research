@@ -15,6 +15,20 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 两个 checkout 都须保持干净。历史源码不是旧版数据库，不参与当前游戏文本查询；不能用 7.1 源码替代它而跳过原校验。
 
+### 显式构建 7.2
+
+`--source-version 7.2` 选择独立的固定合同，来源 commit 为
+`d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1`，tree 为
+`5b334e711319726c504da95dbfe6ebb26baaa7d3`。
+将该 commit checkout 到单独目录，在下方完整命令中指定该 `--source`、
+追加 `--source-version 7.2`，并选择新的 `--output-root`。
+历史 oracle 来源和模型准备要求保持不变。不会从旧数据库 patch 出新版本。
+
+版本选择绑定所有输入、动态 manifest、Research corpus 和新向量；
+缺失或错配会报错，不寻找相邻版本。默认参数和两端安装器仍为固定 7.1，
+7.2 是显式源码构建路径，不自动部署、切换 Codex 或取得正式 release 身份。
+执行范围及来源差异见 [7.2 迁移记录](../reviews/migration-7.2.md)。
+
 ## 容量
 
 先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
@@ -110,7 +124,7 @@ data/rebuilt/
 
 默认 surface 复用原五工具：describe/search/read/follow/inspect。加 `--surface narrative` 复用独立 query/inspect 便利接口及 Book/Story 续读。客户端通过上述 stdio 命令连接；源码安装和数据构建不自动修改个人 Codex 配置。
 
-五工具请求使用生成 profile 中的 `corpus_ref`。此来源核验入口尚未晋级为正式 release；便利接口的自然问题应明确写出 `7.1`，如“7.1这本《终北祷歌·上》讲什么？”。它不提供其他版本，也不继承原部署的日常默认配置。
+五工具请求使用生成 profile 中的 `corpus_ref`。此来源核验入口尚未晋级为正式 release；便利接口的自然问题应明确写出本次构建的版本，如“7.2这本《终北祷歌·上》讲什么？”。单个配置只读取其固定版本，不继承原部署的日常默认配置。
 
 生成配置绑定本次 exact artifacts、parser/run、来源归档和索引。其 `accepted` 历史字段仅满足已有 prepublication 协议，`product_accepted=false`，不是正式 release 晋级，也不是复制原部署的 acceptance。
 
@@ -125,7 +139,7 @@ data/rebuilt/
 
 ## 范围
 
-- 重建的是固定 7.1 的有界数据产品及 literal Research 服务，不是全部游戏数据。
+- 重建的是显式固定 snapshot 的有界数据产品及 literal Research 服务，不是全部游戏数据；未指定 `--source-version` 时仍为 7.1。
 - 8 项 historical contract gaps 和 12 条 component gap records 不因重建消失；候选、未判明关系及有限 Event 范围保留。
 - 默认完整入口包括独立 semantic overlay。`--without-semantic` 或单独 `--stage index` 仅构建基础数据；不能将 literal 启动成功写成 semantic 已验证。向量失败时保留基础数据配置，但不交付一个冒充完整向量构建的默认配置。
 - 新来源绑定和代码会产生新的 parser/run 与 seal。完整来源正文和坐标核验，比复写旧数据库 SHA 更重要；不声称跨目录、跨 Python/SQLite 版本的数据库字节完全相同。

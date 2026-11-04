@@ -41,6 +41,9 @@ def guards():
 
 
 def check_source(root, scope):
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot"]
+    _, COMMIT, TREE = source_pin(SNAPSHOT)
     root = Path(root)
     if subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() != [COMMIT, TREE]:
         raise ValueError("exact 7.1 checkout required")
@@ -62,5 +65,6 @@ def no_sidecars(path):
             raise ValueError("SQLite sidecar: " + str(path) + suffix)
 
 
-def ref(family, run, ordinal):
+def ref(family, run, ordinal, *, snapshot_id=SNAPSHOT):
+    SNAPSHOT = snapshot_id
     return "narrative71:" + canonical([SNAPSHOT, family, run, ordinal])

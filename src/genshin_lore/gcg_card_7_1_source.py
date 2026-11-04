@@ -22,12 +22,14 @@ FILES = PRIMARY + [
 
 
 def check_files(root: Path, scope: dict) -> None:
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
     root = Path(root)
-    if (scope.get("contract") != "gcg-card-source-7.1-v1"
+    if (scope.get("contract") != f"gcg-card-source-{version}-v1"
             or scope.get("source_commit") != COMMIT
             or scope.get("source_tree") != TREE
             or scope.get("snapshot_id") != SNAPSHOT
-            or scope.get("primary_rows") != [629, 1258]
             or [item["path"] for item in scope.get("files", [])] != FILES):
         raise ValueError("7.1 GCG source-scope contract drift")
     observed = subprocess.check_output(

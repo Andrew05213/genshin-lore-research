@@ -51,7 +51,7 @@ def npc(tmp_path, monkeypatch):
     scope_path = code/'scope.json'
     scope_path.write_text(json.dumps({'snapshot': contract.SNAPSHOT, 'source_tree': contract.TREE,
         'files': files, 'textmap_policy': 'synthetic main/medium with duplicate pairs',
-        'families': {'npc': {'field_types': {'id': {'int': 3}, 'nameTextMapHash': {'int': 3}}}}}))
+        'families': {'npc': {'physical_rows': 3, 'field_types': {'id': {'int': 3}, 'nameTextMapHash': {'int': 3}}}}}))
     specs = {'npc': (row_path, 3, 'id', {'nameTextMapHash': 'source_authored_name'})}
     for module in (builder, oracle):
         monkeypatch.setattr(module, 'ROOT', code)

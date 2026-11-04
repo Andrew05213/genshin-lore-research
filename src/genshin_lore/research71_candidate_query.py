@@ -1,7 +1,7 @@
-"""Prepublication 7.1 read-through adapters on the existing Research API.
+"""Snapshot-bound read-through adapters on the existing Research API.
 
-Production qualification still uses current accepted 7.0. This subclass only
-handles declared 7.1 storage keys and exposes the original proof restrictions.
+Local candidate qualification is separate from deployed release acceptance.
+Every delivered occurrence retains its explicit source/parser/run binding.
 """
 from __future__ import annotations
 
@@ -21,12 +21,14 @@ class CandidateResearch71(ResearchQuery):
         super().__init__(*args, **kwargs)
         profile_path=kwargs.get('profile_path',args[3] if len(args)>3 else None)
         profile=json.loads(Path(profile_path).read_text())
-        if not kwargs.get('allow_prepublication_profile') or profile.get('qualification_scope')!='local_7.1_candidate_only' or profile.get('product_accepted') is not False:
+        from .source_versions import source_pin
+        self.source_version, _, _ = source_pin(self.manifest["snapshot"]["id"])
+        if not kwargs.get('allow_prepublication_profile') or profile.get('qualification_scope')!=f'local_{self.source_version}_candidate_only' or profile.get('product_accepted') is not False:
             self.close();raise ResearchUnavailable('candidate is not a production/accepted Research profile')
         if profile.get('candidate_runtime_sha256')!=sha256_file(Path(__file__)):
             self.close();raise ResearchUnavailable('candidate runtime implementation drift')
-        if self.manifest.get('candidate_adapter_revision')!='research71-explicit-physical-adapters-v1' or self.manifest['snapshot']['version']!='7.1':
-            self.close();raise ResearchUnavailable('explicit 7.1 candidate adapter revision required')
+        if self.manifest.get('candidate_adapter_revision')!='research71-explicit-physical-adapters-v1' or self.manifest['snapshot']['version']!=self.source_version:
+            self.close();raise ResearchUnavailable(f'explicit {self.source_version} candidate adapter revision required')
         if self.unavailable:
             self.close();raise ResearchUnavailable('candidate exact dependencies unavailable: '+','.join(self.unavailable))
         for name,seal in self.manifest['adapter_implementation_sha256'].items():
@@ -181,10 +183,10 @@ class CandidateResearch71(ResearchQuery):
         if c.get('source_table')=='physical_candidate' and c.get('relation_id') is not None:
             relation=self.db.execute('SELECT source_key,raw_locator FROM research_relation WHERE id=?',(c['relation_id'],)).fetchone()
             role={'npc_archive':'npc','dialog_archive':'dialog','reminder_archive':'reminder'}.get(family)
-            if role and relation and relation['source_key'].startswith('7.1-narrative_'):
+            if role and relation and relation['source_key'].startswith(self.source_version+'-narrative_'):
                 raw=json.loads(relation['raw_locator'])
                 if raw.get('target_family')!=role:return None
-                namespace=self.components['7.1-narrative_'+role]
+                namespace=self.components[self.source_version+'-narrative_'+role]
                 for field,key in [('target_contract','contract'),('target_parser','parser'),('target_run','run')]:
                     if c.get(field) is not None and c[field]!=namespace[key]:return None
                     c[field]=namespace[key]

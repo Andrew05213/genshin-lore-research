@@ -12,16 +12,20 @@ def check_artifact(path,identity):
 def relation_values(row,spec):
  value=row.get(spec['field']);shape=spec.get('shape','scalar')
  if shape in ('scalar','scalar_optional'):return [] if value is None else [(spec['field'],value)]
- if shape=='array' and isinstance(value,list):return [(f"{spec['field']}/{i}",x) for i,x in enumerate(value) if x is not None]
+ if shape=='array' and isinstance(value,list):
+  if any(x is not None and type(x) is not int for x in value):raise ValueError('declared array locator must be integer or null')
+  return [(f"{spec['field']}/{i}",x) for i,x in enumerate(value) if x is not None]
  if value is not None:raise ValueError('declared relation shape mismatch')
  return []
-def dependency_manifests(metadata_root=None):
+def dependency_manifests(metadata_root=None, source_version="7.1"):
  base=Path(metadata_root) if metadata_root is not None else ROOT
- return base/'manifests/quest-derived-7.1/standalone-candidates-v1.json',base/'manifests/native-archive-7.1/bulk-runtime.json'
-def expected_external(source_root,quest_artifact,bulk_artifact,*,metadata_root=None):
- qn_manifest,bulk_manifest=dependency_manifests(metadata_root)
+ return base/f'manifests/quest-derived-{source_version}/standalone-candidates-v1.json',base/f'manifests/native-archive-{source_version}/bulk-runtime.json'
+def expected_external(source_root,quest_artifact,bulk_artifact,*,metadata_root=None,source_version="7.1"):
+ from .source_versions import PINS
+ snapshot=f"anime-game-data:{source_version}:{PINS[source_version][0]}"
+ qn_manifest,bulk_manifest=dependency_manifests(metadata_root,source_version)
  qn=json.loads(qn_manifest.read_text())['components']['quest_narrative_archive'];bulk=json.loads(bulk_manifest.read_text())
- if qn['source_snapshot']!=SNAPSHOT or bulk['source_snapshot']!=SNAPSHOT:raise ValueError('cross-snapshot target dependency')
+ if qn['source_snapshot']!=snapshot or bulk['source_snapshot']!=snapshot:raise ValueError('cross-snapshot target dependency')
  check_artifact(quest_artifact,qn['artifact']);check_artifact(bulk_artifact,bulk['artifact']);out=[];cache={}
  def exact(path,pointer,native,raw_sha,field):
   if path not in cache:cache[path]=list(array_records(Path(source_root)/path))
@@ -39,21 +43,21 @@ def expected_external(source_root,quest_artifact,bulk_artifact,*,metadata_root=N
   exact(row['source_path'],row['pointer'],row['native_id'],row['raw_sha256'],'id')
   out.append({'namespace':'gcg_rule_detail','raw_locator':row['native_id'],'target_source_path':row['source_path'],'target_source_pointer':row['pointer'],'target_native_id':row['native_id'],'target_raw_sha256':row['raw_sha256'],'target_family':'native_archive','target_contract':bulk['family_contract_version'],'target_parser':bulk['parser_build_id'],'target_run':row['run_id'],'target_occurrence_id':row['id']})
  b.close()
- if len(out)!=4417+17814+85:raise ValueError('external target denominator')
+ if len(out)!=(4417+17814+85 if source_version=='7.1' else sum(len(json.loads((Path(source_root)/p).read_bytes())) for p in ('ExcelBinOutput/MainQuestExcelConfigData.json','ExcelBinOutput/QuestExcelConfigData.json','ExcelBinOutput/GCGRuleTextDetailExcelConfigData.json'))):raise ValueError('external target denominator')
  out.sort(key=lambda x:(x['namespace'],str(x['raw_locator']),x['target_source_path'],x['target_source_pointer'],x['target_occurrence_id']))
- return out,{'quest_narrative':{'manifest':'manifests/quest-derived-7.1/standalone-candidates-v1.json','manifest_sha256':sha(qn_manifest),'artifact':{'path':str(Path(quest_artifact).resolve()),'size_bytes':qn['artifact']['size_bytes'],'sha256':qn['artifact']['sha256']},'contract':qn['contract'],'parser':qn['parser_build_id'],'run':qn['ingest_run_id'],'required_capabilities':['mainquest_exact_rows','quest_excel_exact_rows']},'native_bulk':{'manifest':'manifests/native-archive-7.1/bulk-runtime.json','manifest_sha256':sha(bulk_manifest),'artifact':{'path':str(Path(bulk_artifact).resolve()),'size_bytes':bulk['artifact']['size_bytes'],'sha256':bulk['artifact']['sha256']},'contract':bulk['family_contract_version'],'parser':bulk['parser_build_id'],'run':bulk['ingest_run_id']}}
-def verify(source_root,scope_path,artifact,quest_artifact,bulk_artifact,runtime_manifest_path=None,*,metadata_root=None):
+ return out,{'quest_narrative':{'manifest':f'manifests/quest-derived-{source_version}/standalone-candidates-v1.json','manifest_sha256':sha(qn_manifest),'artifact':{'path':str(Path(quest_artifact).resolve()),'size_bytes':qn['artifact']['size_bytes'],'sha256':qn['artifact']['sha256']},'contract':qn['contract'],'parser':qn['parser_build_id'],'run':qn['ingest_run_id'],'required_capabilities':['mainquest_exact_rows','quest_excel_exact_rows']},'native_bulk':{'manifest':f'manifests/native-archive-{source_version}/bulk-runtime.json','manifest_sha256':sha(bulk_manifest),'artifact':{'path':str(Path(bulk_artifact).resolve()),'size_bytes':bulk['artifact']['size_bytes'],'sha256':bulk['artifact']['sha256']},'contract':bulk['family_contract_version'],'parser':bulk['parser_build_id'],'run':bulk['ingest_run_id']}}
+def verify(source_root,scope_path,artifact,quest_artifact,bulk_artifact,runtime_manifest_path=None,*,metadata_root=None,source_version="7.1"):
  start=time.perf_counter();scope=json.loads(Path(scope_path).read_text());selection_path=ROOT/scope.get('selection_manifest','');selection=json.loads(selection_path.read_text())
- if scope.get('selection_manifest')!=SELECTION or sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('selection mismatch')
+ if scope.get('selection_manifest')!=SELECTION.replace('7.1',scope['snapshot_id'].split(':')[1]) or sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('selection mismatch')
  selected={x['path'] for x in selection['sources']}|{x for locale in selection['textmaps'].values() for x in locale.values()}
  if {x['path'] for x in scope['files']}!=selected:raise ValueError('scope file denominator mismatch')
  check_files(source_root,scope)
- external_rows,dependencies=expected_external(source_root,quest_artifact,bulk_artifact,metadata_root=metadata_root)
+ external_rows,dependencies=expected_external(source_root,quest_artifact,bulk_artifact,metadata_root=metadata_root,source_version=scope['snapshot_id'].split(':')[1])
  main_quest_proof={'status':'same_snapshot_exact_physical_capability_reuse','source_path':'ExcelBinOutput/MainQuestExcelConfigData.json','physical_rows':sum(x['namespace']=='quest_main' for x in external_rows),'accepted_parser':dependencies['quest_narrative']['parser'],'accepted_run':dependencies['quest_narrative']['run']}
  if scope.get('main_quest_reconciliation')!=main_quest_proof:raise ValueError('MainQuest capability declaration mismatch')
  if scope['external_candidates']!=external_rows:raise ValueError('external candidate namespace mismatch')
  if scope['dependencies']!=dependencies:raise ValueError('accepted dependency manifests/artifacts mismatch')
- impl={p:sha(ROOT/p) for p in ('src/genshin_lore/native_aux_quest_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-aux-quest-7.1-v1.sql',SELECTION)};parser='naq71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='naq71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];seals={x['path']:x for x in scope['files']};records={};wanted=set()
+ impl={p:sha(ROOT/p) for p in ('src/genshin_lore/native_aux_quest_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-aux-quest-7.1-v1.sql',scope['selection_manifest'])};parser='naq71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='naq71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];seals={x['path']:x for x in scope['files']};records={};wanted=set()
  for spec in scope['sources']:
   rows=list(array_records(Path(source_root)/spec['path']));records[spec['path']]=rows
   for ordinal,row,raw in rows:
@@ -62,7 +66,7 @@ def verify(source_root,scope_path,artifact,quest_artifact,bulk_artifact,runtime_
     value=row.get(owner['field'])
     if value is not None and type(value) is not int:raise ValueError('declared owner shape mismatch')
     if type(value) is int:wanted.add(str(value))
- bulk_scope=json.loads((ROOT/'manifests/native-archive-7.1/bulk-scope.json').read_text());overlap={s['path'] for s in scope['sources']} & {s['path'] for s in bulk_scope['sources']}
+ bulk_scope=json.loads((ROOT/('manifests/native-archive-7.1/bulk-scope.json'.replace('7.1',scope['snapshot_id'].split(':')[1]))).read_text());overlap={s['path'] for s in scope['sources']} & {s['path'] for s in bulk_scope['sources']}
  if overlap:raise ValueError('same-snapshot Native Bulk physical overlap '+json.dumps(sorted(overlap)))
  maps={}
  for locale in scope['languages']:

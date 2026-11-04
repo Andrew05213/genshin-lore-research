@@ -16,7 +16,7 @@ from .db import Database
 from .m3_7_1_provider_integration import historical_status
 from .research_index import sha256_file
 from .schema20_7_1_guards import install as install_guards, CONTRACT as GUARD_CONTRACT
-from .schema20_7_1_special import assemble as assemble_special, MAPPINGS as SPECIAL_MAPPINGS
+from .schema20_7_1_special import assemble as assemble_special
 
 ROOT = Path(__file__).resolve().parents[2]
 MAPPINGS = ROOT / "manifests/m3-7.1-provider/accepted-exact-mappings-v1.json"
@@ -40,7 +40,9 @@ def readonly(path):
     return db
 
 
-def qualify_source(source):
+def qualify_source(source, snapshot_id=SNAPSHOT):
+    from .source_versions import source_pin
+    _, COMMIT, TREE = source_pin(snapshot_id)
     def git(*args):
         return subprocess.check_output(["git", "--no-optional-locks", "-C", str(source), *args], text=True).strip()
     if git("rev-parse", "HEAD") != COMMIT or git("rev-parse", "HEAD^{tree}") != TREE:
@@ -49,12 +51,17 @@ def qualify_source(source):
         raise ValueError("source checkout must be clean")
 
 
-def build(source: Path, output: Path, *, include_special=False, metadata_root=None):
-    qualify_source(source)
+def build(source: Path, output: Path, *, include_special=False, metadata_root=None, snapshot_id=SNAPSHOT):
+    from .source_versions import source_pin
+    SNAPSHOT = snapshot_id
+    game_version, COMMIT, TREE = source_pin(snapshot_id)
+    mapping_path = ROOT / f"manifests/m3-{game_version}-provider/accepted-exact-mappings-v1.json"
+    special_path = ROOT / f"manifests/special-core-{game_version}/accepted-exact-mappings-v1.json"
+    qualify_source(source, snapshot_id)
     if output.exists() or any(Path(str(output) + s).exists() for s in ("-wal", "-shm", "-journal")):
         raise FileExistsError(output)
-    mappings = Path(metadata_root) / MAPPINGS.relative_to(ROOT) if metadata_root is not None else MAPPINGS
-    special_mappings = Path(metadata_root) / SPECIAL_MAPPINGS.relative_to(ROOT) if metadata_root is not None else SPECIAL_MAPPINGS
+    mappings = Path(metadata_root) / mapping_path.relative_to(ROOT) if metadata_root is not None else mapping_path
+    special_mappings = Path(metadata_root) / special_path.relative_to(ROOT) if metadata_root is not None else special_path
     items = json.loads(mappings.read_text())["mappings"]
     if len(items) != 20 or len({x["family"] for x in items}) != 10:
         raise ValueError("frozen M3 denominator changed")
@@ -104,7 +111,7 @@ def build(source: Path, output: Path, *, include_special=False, metadata_root=No
             conn.execute("UPDATE schema_migration SET applied_at=?", (STAMP,))
             conn.execute("INSERT INTO source_catalog VALUES(?,?,?,?)", ("anime-game-data", "primary", "https://github.com/Dimbreath/AnimeGameData", "upstream source evidence"))
             conn.execute('INSERT INTO source_snapshot VALUES(?,?,?,?,?,?,?,?,?,?,?)',
-                         (SNAPSHOT, "anime-game-data", "7.1", "7.1", COMMIT, TREE, STAMP, "source-only", "source-only", "staged", canonical({"root_path": str(source), "product_accepted": False})))
+                         (SNAPSHOT, "anime-game-data", game_version, game_version, COMMIT, TREE, STAMP, "source-only", "source-only", "staged", canonical({"root_path": str(source), "product_accepted": False})))
             for path, entry in sorted(files.items()):
                 conn.execute("INSERT INTO source_file VALUES(?,?,?,?,?,?,?,?)", (identity(SNAPSHOT, path), SNAPSHOT, path, entry["git_blob_oid"], entry["sha256"], entry["size_bytes"], "json", str(source),))
             counts = []
@@ -133,7 +140,7 @@ def build(source: Path, output: Path, *, include_special=False, metadata_root=No
                             conn.execute("INSERT INTO source_record VALUES(?,?,?,?,?,?,?)", (record_id, identity(SNAPSHOT, r["source_path"]), r["source_pointer"], "physical_json_array_row", None, r["raw_record_sha256"], r["raw_record_json"]))
                             source_records.add(record_id)
                         keys = r["raw_key_observations_json"] if version == "v1" else "[]"
-                        conn.execute(f"INSERT INTO {row_table} VALUES({','.join('?' for _ in range(15))})", (r["occurrence_id"], family, item["provider_contract"], run, SNAPSHOT, parser, r["source_path"], record_id, r["source_pointer"], r["source_ordinal"], r["raw_record_json"], r["raw_record_sha256"], keys, "raw_text_fields_observed", canonical({"coverage": "qualified_exact_7_1_mapping", "logical_identity_created": False})))
+                        conn.execute(f"INSERT INTO {row_table} VALUES({','.join('?' for _ in range(15))})", (r["occurrence_id"], family, item["provider_contract"], run, SNAPSHOT, parser, r["source_path"], record_id, r["source_pointer"], r["source_ordinal"], r["raw_record_json"], r["raw_record_sha256"], keys, "raw_text_fields_observed", canonical({"coverage": "qualified_exact_" + game_version.replace(".", "_") + "_mapping", "logical_identity_created": False})))
                     if version == "v2":
                         conn.executemany(f"INSERT INTO {family}_text_owner_occurrence VALUES(?,?,?,?,?,?,?,?)", ((r["owner_id"], run, r["row_occurrence_id"], r["field_name"], r["field_pair_ordinal"], r["raw_hash_text"], historical_status(r["overall_resolution_state"]), r["candidate_count"]) for r in src.execute("SELECT * FROM v2_owner ORDER BY owner_id")))
                         conn.executemany(f"INSERT INTO {family}_text_resolution_occurrence VALUES(?,?,?,?,?,?)", ((r["resolution_id"], run, r["owner_id"], r["locale"], historical_status(r["state"]), r["candidate_count"]) for r in src.execute("SELECT * FROM v2_resolution ORDER BY resolution_id")))
@@ -147,7 +154,7 @@ def build(source: Path, output: Path, *, include_special=False, metadata_root=No
                             return head + (provenance if columns == 18 else ()) + body
                         conn.executemany(f"INSERT INTO {family}_text_candidate_occurrence VALUES({','.join('?' for _ in range(columns))})", (candidate(r) for r in src.execute("SELECT * FROM v2_candidate ORDER BY candidate_id")))
                     counts.append({"family": family, "contract": item["provider_contract"], "parser": parser, "run": run, "rows": len(rows)})
-            counts.extend(assemble_special(conn, source, special))
+            counts.extend(assemble_special(conn, source, special, snapshot_id=snapshot_id))
             conn.commit()
             if conn.execute("PRAGMA foreign_key_check").fetchall():
                 raise ValueError("foreign key failure")

@@ -36,7 +36,7 @@ def verify(source_root, historical_source, scope_path, artifact, build_report=No
     historical = json.loads(HISTORICAL.read_text())
     check_files(source_root, scope)
     check_historical(historical_source, historical)
-    if (scope['contract'] != 'event-successor-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-successor-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope'] != HISTORICAL.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or scope['family_contract_version'] != historical['family_contract_version']

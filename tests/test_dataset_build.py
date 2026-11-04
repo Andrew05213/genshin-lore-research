@@ -90,7 +90,7 @@ def test_nonvector_full_capacity_accepts_exact_policy_boundary(tmp_path,monkeypa
                         proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
     monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
     monkeypatch.setattr(driver,'allocated',lambda _:0)
-    def admitted(*args):raise RuntimeError('admitted past capacity gate')
+    def admitted(*args, **kwargs):raise RuntimeError('admitted past capacity gate')
     monkeypatch.setattr(driver,'Rebuild',admitted)
     args=['rebuild','--source','missing',
         '--historical-source','synthetic-history','--output-root',str(tmp_path/'absent'),

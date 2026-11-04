@@ -13,16 +13,20 @@ MANIFEST = "manifests/character-7.1-physical-foundation/immutable-runtime.json"
 
 
 def qualify_local_foundation(path, manifest_path, manifest):
+    from .source_versions import source_pin
+    version, _, _ = source_pin(manifest["source_snapshot"])
+    manifest_relative = f"manifests/character-{version}-physical-foundation/immutable-runtime.json"
+    recipe_path = "recipes/character-foundation.json" if version == "7.1" else f"recipes/character-{version}-foundation.json"
     artifact = Path(path).resolve()
     output = artifact.parent.parent
     if (artifact != output / "character_foundation/artifact.sqlite"
-            or Path(manifest_path).resolve() != output / "metadata" / MANIFEST):
+            or Path(manifest_path).resolve() != output / "metadata" / manifest_relative):
         raise ValueError("local foundation must bind its own output")
     qualification = manifest.get("local_rebuild", {})
     if (not isinstance(qualification, dict) or set(qualification) != {"contract", "receipt"}
             or qualification["contract"] != "local-character-foundation-v1"):
         raise ValueError("unknown local foundation qualification contract")
-    recipe = load_object(ROOT / "recipes/character-foundation.json")
+    recipe = load_object(ROOT / recipe_path)
     dynamic = {"artifact", "local_rebuild", "parser_build_id", "ingest_run_id"}
     if {k: v for k, v in manifest.items() if k not in dynamic} != {k: v for k, v in recipe.items() if k not in dynamic}:
         raise ValueError("local foundation source/recipe identity")

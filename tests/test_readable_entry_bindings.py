@@ -79,7 +79,7 @@ def chain(real_job, monkeypatch, request):
                 "sha256": readable.sha(raw), "blob": blob(raw)}
 
     subtitle_scope = code / "manifests/direct-text-7.1/subtitle-scope.json"
-    write(subtitle_scope, {"files": [entry(p) for p in paths("Subtitle")],
+    write(subtitle_scope, {"snapshot_id":readable.SNAPSHOT,"source_commit":readable.COMMIT,"source_tree":readable.TREE,"files": [entry(p) for p in paths("Subtitle")],
         "file_denominator": len(paths("Subtitle")),
         "lookup_sources": [entry(source / "ExcelBinOutput/LocalizationExcelConfigData.json")],
         "r0_dependency": {"artifact_size_bytes": 4711841792, "artifact_sha256": "0" * 64,

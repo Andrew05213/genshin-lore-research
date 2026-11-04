@@ -28,6 +28,9 @@ def implementation() -> dict[str, str]:
 
 
 def source_check(root: Path, manifest: dict) -> None:
+    from .source_versions import source_pin
+    SNAPSHOT = manifest["source_snapshot"]
+    _, _, TREE = source_pin(SNAPSHOT)
     if manifest['source_snapshot'] != SNAPSHOT or manifest['source_tree'] != TREE:
         raise ValueError('Mail 7.1 scope pin')
     if subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip() != SNAPSHOT.rsplit(':', 1)[1]:
@@ -48,6 +51,9 @@ def source_check(root: Path, manifest: dict) -> None:
 def build(root: Path, scope: Path, output: Path) -> dict:
     root, scope, output = Path(root), Path(scope), Path(output)
     manifest = json.loads(scope.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = manifest["source_snapshot"]
+    version, _, _ = source_pin(SNAPSHOT)
     source_check(root, manifest)
     impl = implementation()
     parser = ident('parser', impl, manifest['contract'])
@@ -130,7 +136,7 @@ def build(root: Path, scope: Path, output: Path) -> dict:
                               rel, ids['mail_template', target_ordinal], target_path, target_ordinal,
                               '/' + str(target_ordinal), raw_sha))
         counts = {table: conn.execute('SELECT count(*) FROM ' + table).fetchone()[0] for table in TABLES}
-        release = {'contract': 'mail-narrative-7.1-versioned-evidence-v2', 'run_id': run,
+        release = {'contract': f'mail-narrative-{version}-versioned-evidence-v2', 'run_id': run,
                    'parser_build_id': parser, 'scope_sha256': sha(scope), 'implementation': impl,
                    'snapshot_id': SNAPSHOT, 'counts': counts,
                    'text_state_counts': dict(sorted(states.items())),

@@ -96,16 +96,16 @@ def mutation_cases(artifact):
 
 def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
     metadata = Path(metadata_root) if metadata_root is not None else ROOT
-    event_manifest = metadata / EVENT.relative_to(ROOT)
-    talk_manifest = metadata / TALK.relative_to(ROOT)
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
+    event_manifest = metadata / str(EVENT.relative_to(ROOT)).replace('7.1',scope['snapshot_id'].split(':')[1])
+    talk_manifest = metadata / str(TALK.relative_to(ROOT)).replace('7.1',scope['snapshot_id'].split(':')[1])
     check_files(root, scope)
     old = json.loads(HISTORY.read_text())
     source_paths = [declaration['path'] for declaration in old['sources']]
     expected_file_paths = source_paths + [old['textmaps'][language][tier]
                                           for language in old['languages'] for tier in ('main', 'medium')]
-    if (scope['contract'] != 'native26-7.1-physical-projection-scope-v1'
+    if (scope['contract'] != 'native26-7.1-physical-projection-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or sha(HISTORY) != scope['historical_selection_sha256']
             or len(scope['sources']) != 91 or len(scope['files']) != 97
             or [row['path'] for row in scope['sources']] != source_paths
@@ -128,6 +128,8 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
         raise ValueError('Native26 SQLite sidecar')
     event = json.loads(event_manifest.read_text())
     talk = json.loads(talk_manifest.read_text())
+    if scope['snapshot_id'].split(':')[1]=='7.2' and (event.get('source_snapshot')!=scope['snapshot_id'] or talk.get('source_snapshot')!=scope['snapshot_id']):
+        raise ValueError('Native26 oracle cross-snapshot dependency')
     event_path = Path(event['artifact']['path_machine_local'])
     talk_path = Path(talk['local_artifact_path'])
     for path, seal in ((event_path, event['artifact']), (talk_path, talk['artifact'])):
@@ -137,7 +139,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
         raise ValueError('Native26 oracle Event16 binding seal')
     code_hashes = {path.relative_to(ROOT).as_posix(): sha(path) for path in (
         ROOT / 'src/genshin_lore/native26_7_1_physical.py', SCHEMA, HISTORY)}
-    code_hashes.update({path.relative_to(ROOT).as_posix(): sha(metadata / path.relative_to(ROOT)) for path in (EVENT, TALK)})
+    code_hashes.update({path.relative_to(ROOT).as_posix(): sha(metadata / str(path.relative_to(ROOT)).replace('7.1',scope['snapshot_id'].split(':')[1])) for path in (EVENT, TALK)})
     parser = key('parser', code_hashes)
     run = key('run', parser, sha(scope_path), scope['snapshot_id'])
     source = []
@@ -180,7 +182,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
             if relation['resolution'] == 'local':
                 for target_path in relation['target_sources']:
                     target_specs[(target_path, relation['target_key'])].add(relation['relation_kind'])
-    if len(source) != scope['raw_physical_row_denominator'] or len(source) != 107323:
+    if len(source) != scope['raw_physical_row_denominator'] or (scope['snapshot_id'].split(':')[1]=='7.1' and len(source) != 107323):
         raise ValueError('Native26 source denominator')
     if sorted(missing_owner_specs) != sorted((row['source_path'], row['historical_owner_path'])
                                            for row in scope['missing_historical_owner_specs']):
@@ -303,7 +305,7 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
                 for target in candidates:
                     insert('relation_candidate', (key(run, ref, target), ref, *target))
     release = {
-        'contract': 'native26-7.1-physical-text-candidate-v1',
+        'contract': 'native26-7.1-physical-text-candidate-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]),
         'snapshot': scope['snapshot_id'], 'scope_sha256': sha(scope_path),
         'parser_build_id': parser, 'ingest_run_id': run, 'implementation': code_hashes,
         'counts': {table: counts[table] for table in TABLES},

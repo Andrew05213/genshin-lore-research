@@ -12,19 +12,19 @@ SNAPSHOT = 'anime-game-data:7.1:' + COMMIT
 
 
 def check_files(root: Path, scope: dict) -> None:
+    from .source_versions import scope_pin
+    version, commit, tree = scope_pin(scope)
     root = Path(root).resolve()
-    if (scope['source_commit'], scope['source_tree'], scope['snapshot_id']) != (COMMIT, TREE, SNAPSHOT):
-        raise ValueError('Event 7.1 source scope pin')
-    if subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip() != COMMIT:
+    if subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD'], text=True).strip() != commit:
         raise ValueError('Event 7.1 checkout commit')
-    if subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD^{tree}'], text=True).strip() != TREE:
+    if subprocess.check_output(['git', '-C', str(root), 'rev-parse', 'HEAD^{tree}'], text=True).strip() != tree:
         raise ValueError('Event 7.1 checkout tree')
     if subprocess.check_output(['git', '-C', str(root), 'status', '--porcelain'], text=True).strip():
         raise ValueError('Event 7.1 source checkout dirty')
     for entry in scope['files']:
         path = root / entry['path']
         blob = subprocess.check_output(['git', '-C', str(root), 'rev-parse',
-                                        COMMIT + ':' + entry['path']], text=True).strip()
+                                        commit + ':' + entry['path']], text=True).strip()
         if (path.stat().st_size != entry['size_bytes'] or sha(path) != entry['sha256']
                 or git_blob(path) != entry['blob'] or blob != entry['blob']):
             raise ValueError('Event 7.1 source bytes mismatch: ' + entry['path'])

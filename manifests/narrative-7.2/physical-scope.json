@@ -1,0 +1,311 @@
+{
+  "contract": "npc-dialog-reminder-7.2-physical-scope-v1",
+  "families": {
+    "dialog": {
+      "field_types": {
+        "GFLDJMJKIKE": {
+          "int": 203908
+        },
+        "actionAfter": {
+          "str": 203908
+        },
+        "actionBefore": {
+          "str": 203908
+        },
+        "actionWhile": {
+          "str": 203908
+        },
+        "groupId": {
+          "int": 3437
+        },
+        "nextDialogs": {
+          "list": 203908
+        },
+        "optionIcon": {
+          "str": 203908
+        },
+        "showDuration": {
+          "float": 207
+        },
+        "talkAssetPath": {
+          "str": 203908
+        },
+        "talkAssetPathAlter": {
+          "str": 203908
+        },
+        "talkAudioName": {
+          "str": 203908
+        },
+        "talkContentTextMapHash": {
+          "int": 203908
+        },
+        "talkRole": {
+          "dict": 203908
+        },
+        "talkRoleNameTextMapHash": {
+          "int": 203908
+        },
+        "talkShowType": {
+          "str": 23483
+        },
+        "talkTitleTextMapHash": {
+          "int": 203908
+        }
+      },
+      "local_key": "GFLDJMJKIKE",
+      "physical_rows": 203908,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": false,
+      "source_path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "text_fields": {
+        "talkContentTextMapHash": "source_authored_content",
+        "talkRoleNameTextMapHash": "source_authored_role_name",
+        "talkTitleTextMapHash": "source_authored_title"
+      }
+    },
+    "npc": {
+      "field_types": {
+        "BABEPNGBFEA": {
+          "int": 54
+        },
+        "BDPNKMEBPID": {
+          "bool": 936
+        },
+        "BMFBIOPJHGJ": {
+          "bool": 41
+        },
+        "NOHLLFCHDLO": {
+          "bool": 8969
+        },
+        "OGKGKMCOLMM": {
+          "int": 2
+        },
+        "actionIdList": {
+          "list": 411
+        },
+        "alias": {
+          "str": 14930
+        },
+        "animatorConfigPathHash": {
+          "int": 10296
+        },
+        "avatarID": {
+          "int": 421
+        },
+        "billboardIcon": {
+          "str": 153
+        },
+        "billboardType": {
+          "str": 294
+        },
+        "bodyType": {
+          "str": 8294
+        },
+        "campID": {
+          "int": 15494
+        },
+        "deformationMeshPathHash": {
+          "int": 7016
+        },
+        "disableShowName": {
+          "bool": 7551
+        },
+        "elementType": {
+          "str": 2
+        },
+        "featureTagGroupId": {
+          "int": 9857
+        },
+        "firstMetId": {
+          "int": 498
+        },
+        "hasAudio": {
+          "bool": 13568
+        },
+        "hasCombat": {
+          "bool": 1
+        },
+        "hasMove": {
+          "bool": 13198
+        },
+        "id": {
+          "int": 15494
+        },
+        "invisiable": {
+          "bool": 2270
+        },
+        "isActivityDailyNpc": {
+          "bool": 882
+        },
+        "isDaily": {
+          "bool": 4904
+        },
+        "jsonName": {
+          "str": 3185
+        },
+        "jsonPathHash": {
+          "int": 13235
+        },
+        "luaDataIndex": {
+          "int": 4
+        },
+        "luaDataPath": {
+          "str": 14805
+        },
+        "nameTextMapHash": {
+          "int": 15494
+        },
+        "prefabPathHash": {
+          "int": 15494
+        },
+        "scriptDataPath": {
+          "str": 15494
+        },
+        "skipInitClosetToGround": {
+          "bool": 42
+        },
+        "specialType": {
+          "str": 198
+        },
+        "templateEmotionPath": {
+          "str": 22
+        },
+        "uniqueBodyId": {
+          "int": 15338
+        },
+        "useDynBone": {
+          "bool": 1405
+        }
+      },
+      "local_key": "id",
+      "physical_rows": 15494,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": false,
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "text_fields": {
+        "nameTextMapHash": "source_authored_name"
+      }
+    },
+    "reminder": {
+      "field_types": {
+        "BLAPENMBNIM": {
+          "str": 1468
+        },
+        "CGEHAJJEKPP": {
+          "int": 3
+        },
+        "DHIEFLFEPJG": {
+          "int": 101
+        },
+        "IMGGNNLMKPJ": {
+          "bool": 400
+        },
+        "JOACIKLODCK": {
+          "str": 14
+        },
+        "LBFFONMECBP": {
+          "int": 3
+        },
+        "LJLFFBADBIB": {
+          "str": 485
+        },
+        "MFGDBNJMBEG": {
+          "bool": 58
+        },
+        "NPNICKBAFMJ": {
+          "str": 13
+        },
+        "contentTextMapHash": {
+          "int": 19364
+        },
+        "delay": {
+          "float": 1912
+        },
+        "hasAudio": {
+          "bool": 4545
+        },
+        "id": {
+          "int": 19364
+        },
+        "nextReminderId": {
+          "int": 6102
+        },
+        "showTime": {
+          "float": 19105
+        },
+        "speakerTextMapHash": {
+          "int": 19364
+        },
+        "style": {
+          "str": 4941
+        }
+      },
+      "local_key": "id",
+      "physical_rows": 19364,
+      "raw_fields_preserved": true,
+      "semantic_owner_mapping_unresolved": true,
+      "source_path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "text_fields": {}
+    }
+  },
+  "files": [
+    {
+      "git_blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+      "size_bytes": 93248673
+    },
+    {
+      "git_blob": "2fbafe717742da7647499d57bd4c905d83ce2397",
+      "path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "sha256": "f2288db07452c3ae95da33c56da03db50760e9b321ce6e997933993c5595d32c",
+      "size_bytes": 7726862
+    },
+    {
+      "git_blob": "84abdc53291fdd66112259e3c2cee55398b9ebc8",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "sha256": "95424862e31babbd7e338ae4f7ed825085e1683f2b5b8f5645d23c8ba5fbbeac",
+      "size_bytes": 3047753
+    },
+    {
+      "git_blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "git_blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "git_blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "git_blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "git_blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "git_blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "reminder_numeric_policy": "all_top_level_integer_scalars_except_id_and_nextReminderId_are_uninterpreted_numeric_TextMap_candidate_observations; not_semantic_text_owners",
+  "snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "textmap_policy": "retain_all_main_and_medium_physical_candidates; no_cross_snapshot_fallback"
+}

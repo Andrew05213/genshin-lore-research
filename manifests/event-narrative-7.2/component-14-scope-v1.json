@@ -1,0 +1,471 @@
+{
+  "boundaries": [
+    "tps_glasses_chat"
+  ],
+  "contract": "event-tps-7.2-versioned-scope-v1",
+  "corpus_complete": true,
+  "coverage": "complete TpsGlasses Overall/PushTips and TpsGlassesChat Character/Topic/Option/Message physical rows, declared text owners, and source-local graph references",
+  "family_contract_version": "event-narrative-evidence-v3",
+  "field_continuity": {
+    "tps_character": {
+      "added_physical_rows": 0,
+      "aligned_rows": 4,
+      "injective_raw_anchors": [
+        [
+          "IIKFHLPPBHC",
+          "AMPOJAAMOBL"
+        ],
+        [
+          "characterId",
+          "characterId"
+        ]
+      ],
+      "mapping": {
+        "IIKFHLPPBHC": "AMPOJAAMOBL"
+      },
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    },
+    "tps_message": {
+      "added_physical_rows": 41,
+      "aligned_rows": 421,
+      "injective_raw_anchors": [
+        [
+          "DJJEFALFHCA",
+          "CHDGFMBOPPP"
+        ],
+        [
+          "EBCKPCKHIHC",
+          "HNEAFCKDCMA"
+        ],
+        [
+          "EENOBEALCHF",
+          "JCAHMOFECFE"
+        ],
+        [
+          "MDMOGGBPANG",
+          "AHDCIPDCMFP"
+        ]
+      ],
+      "mapping": {
+        "BAPHKDEAPJD": "PKHEFFOICKC",
+        "CILPFMDBAPD": "HLFBKDKAAGG",
+        "DJJEFALFHCA": "CHDGFMBOPPP",
+        "EBCKPCKHIHC": "HNEAFCKDCMA",
+        "EENOBEALCHF": "JCAHMOFECFE",
+        "GKFGFOHABKE": "OLFMIDDKIKO",
+        "HGLEHHEBGOH": "DILKJNMPNFL",
+        "IFAJNGCJNNP": "FGICGCKEFAK",
+        "MDMOGGBPANG": "AHDCIPDCMFP"
+      },
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    },
+    "tps_option": {
+      "added_physical_rows": 6,
+      "aligned_rows": 49,
+      "injective_raw_anchors": [
+        [
+          "BJIGHLMNFNI",
+          "MEEMNJEJMPJ"
+        ],
+        [
+          "LJEDOJEFJDL",
+          "MDJJHKLDBJE"
+        ]
+      ],
+      "mapping": {
+        "BJIGHLMNFNI": "MEEMNJEJMPJ",
+        "CILPFMDBAPD": "HLFBKDKAAGG",
+        "DBKBPFAKJKO": "CPONCLDGFED",
+        "GKFGFOHABKE": "OLFMIDDKIKO",
+        "HGLEHHEBGOH": "DILKJNMPNFL",
+        "LJEDOJEFJDL": "MDJJHKLDBJE"
+      },
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    },
+    "tps_overall": {
+      "added_physical_rows": 0,
+      "aligned_rows": 1,
+      "injective_raw_anchors": [
+        [
+          "EHICHIDCBMB",
+          "GLDJKHNCENJ"
+        ]
+      ],
+      "mapping": {
+        "EHICHIDCBMB": "GLDJKHNCENJ"
+      },
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    },
+    "tps_push_tips": {
+      "added_physical_rows": 0,
+      "aligned_rows": 4,
+      "injective_raw_anchors": [
+        [
+          "pushTipsId",
+          "pushTipsId"
+        ]
+      ],
+      "mapping": {},
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    },
+    "tps_topic": {
+      "added_physical_rows": 5,
+      "aligned_rows": 28,
+      "injective_raw_anchors": [
+        [
+          "BEEJPINHGON",
+          "CNMPAADJIFL"
+        ],
+        [
+          "KKHOPDEHLBN",
+          "JDMOCEGAAGK"
+        ]
+      ],
+      "mapping": {
+        "BEEJPINHGON": "CNMPAADJIFL",
+        "KKHOPDEHLBN": "JDMOCEGAAGK"
+      },
+      "physical_order_is_not_semantic_order": true,
+      "proof_level": "complete raw-vector continuity, not new semantic role"
+    }
+  },
+  "files": [
+    {
+      "blob": "1099274a15510fd3faaaaaa141269ef9ccad653e",
+      "path": "ExcelBinOutput/TpsGlassesChatCharacterExcelConfigData.json",
+      "sha256": "fd64c297d3b5f7af03e679f297dcd14c43a633d0793af07218af4ecf25c1dea6",
+      "size_bytes": 552
+    },
+    {
+      "blob": "aa6f352969844a6871b589d34c6a1fa3de70812b",
+      "path": "ExcelBinOutput/TpsGlassesChatMessageExcelConfigData.json",
+      "sha256": "87735615ea26a0835e1714b8d37d22041006f4e8df115987e39815df26b5cedf",
+      "size_bytes": 130544
+    },
+    {
+      "blob": "b420beadbebe54e25578077075c3a5c3478353ac",
+      "path": "ExcelBinOutput/TpsGlassesChatOptionExcelConfigData.json",
+      "sha256": "5a4fdfda0eafeb5b1be7df95ebe0863b2aecf1a96998a2e0c5ba6a8cc1f0f001",
+      "size_bytes": 8022
+    },
+    {
+      "blob": "9b2afda38dc26cc1425e01e9e995ec2419cc78f6",
+      "path": "ExcelBinOutput/TpsGlassesChatTopicExcelConfigData.json",
+      "sha256": "16b6e11ae9119d692374b9a1f4665eecf9a2c942455c03b2accd183deb330a1d",
+      "size_bytes": 4692
+    },
+    {
+      "blob": "a5d8bb20edf674524df0ca266a0bae94138732b0",
+      "path": "ExcelBinOutput/TpsGlassesOverallExcelConfigData.json",
+      "sha256": "dc182585bc91b3bd7a3d7f6e0d7cc2781c6639223b261e15d8bc44f0bbd538e1",
+      "size_bytes": 89
+    },
+    {
+      "blob": "b3a47dc013a7f866a0810dbd88f5a7a687bdb4b2",
+      "path": "ExcelBinOutput/TpsGlassesPushTipsExcelConfigData.json",
+      "sha256": "ddb05cb65bcf6f7614e9bdc3e9abc72d391fdbc5cb016815309f5693362a9733",
+      "size_bytes": 200
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_quest": false,
+  "full_talk": false,
+  "full_tps_gameplay": false,
+  "graph_contract": {
+    "cross_family_relations": false,
+    "narrative_sequence_inferred": false,
+    "node_namespaces": [
+      "tps_overall",
+      "tps_push_tips",
+      "tps_character",
+      "tps_topic",
+      "tps_option",
+      "tps_message"
+    ],
+    "opaque_order_fields_remain_raw": true,
+    "relations_are_source_local_only": true
+  },
+  "historical_scope": "manifests/event-narrative/tps-glasses-chat-scope.json",
+  "historical_scope_sha256": "4c02c5a9ea32c6b7bed6a1544184339bea90941391abc1e5c5cd5ca94a1b945c",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {
+      "AEFJCKAJMFL": "JCAHMOFECFE",
+      "BHLEPODADCG": "CPONCLDGFED",
+      "DBMAKNMIGLP": "CHDGFMBOPPP",
+      "FJHBPBFGDNN": "FGICGCKEFAK",
+      "GEJENCICCEC": "AHDCIPDCMFP",
+      "HALPCBNIPJP": "AMPOJAAMOBL",
+      "HANOBLDBAPA": "MEEMNJEJMPJ",
+      "HAOFOHIJENC": "DILKJNMPNFL",
+      "JJGAICEDLNP": "PKHEFFOICKC",
+      "KEKHMPOIFHO": "CNMPAADJIFL",
+      "KLDJCKFKAKI": "MDJJHKLDBJE",
+      "LBCPBPBJDAB": "JDMOCEGAAGK",
+      "LICNBELGBCN": "HLFBKDKAAGG",
+      "LLEPDLIJBBP": "GLDJKHNCENJ",
+      "PADEPANADLD": "OLFMIDDKIKO",
+      "PJIDDONOIGK": "HNEAFCKDCMA"
+    },
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "product_accepted": false,
+  "row_denominator": {
+    "tps_character": 4,
+    "tps_message": 462,
+    "tps_option": 55,
+    "tps_overall": 1,
+    "tps_push_tips": 4,
+    "tps_topic": 33
+  },
+  "selection_rule": "all physical rows of six historical source arrays, six snapshot-local TextMaps",
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "GLDJKHNCENJ",
+          "relation_kind": "source_authored_local_push_tips_reference",
+          "shape": "array_scalar",
+          "target_kind": "tps_push_tips"
+        }
+      ],
+      "kind": "tps_overall",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesOverallExcelConfigData.json",
+      "text_owners": []
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_push_tips",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesPushTipsExcelConfigData.json",
+      "relation_lookup_field": "pushTipsId",
+      "text_owners": []
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_character",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatCharacterExcelConfigData.json",
+      "relation_lookup_field": "characterId",
+      "text_owners": [
+        {
+          "field": "AMPOJAAMOBL",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [],
+      "kind": "tps_topic",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatTopicExcelConfigData.json",
+      "relation_lookup_field": "CNMPAADJIFL",
+      "text_owners": [
+        {
+          "field": "JDMOCEGAAGK",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "DILKJNMPNFL",
+          "relation_kind": "source_authored_local_topic_membership",
+          "shape": "scalar",
+          "target_kind": "tps_topic"
+        },
+        {
+          "field": "OLFMIDDKIKO",
+          "relation_kind": "source_authored_local_option_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_option"
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "HLFBKDKAAGG",
+          "relation_kind": "raw_local_forward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "DILKJNMPNFL",
+            "HLFBKDKAAGG"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "DILKJNMPNFL",
+            "PKHEFFOICKC"
+          ]
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "CPONCLDGFED",
+          "relation_kind": "raw_local_backward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "DILKJNMPNFL",
+            "CPONCLDGFED"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "DILKJNMPNFL",
+            "PKHEFFOICKC"
+          ]
+        }
+      ],
+      "kind": "tps_option",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatOptionExcelConfigData.json",
+      "relation_lookup_field": "MEEMNJEJMPJ",
+      "text_owners": [
+        {
+          "field": "MDJJHKLDBJE",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "tps_glasses_chat",
+      "internal_relations": [
+        {
+          "field": "DILKJNMPNFL",
+          "relation_kind": "source_authored_local_topic_membership",
+          "shape": "scalar",
+          "target_kind": "tps_topic"
+        },
+        {
+          "field": "characterId",
+          "relation_kind": "source_authored_local_character_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_character"
+        },
+        {
+          "field": "OLFMIDDKIKO",
+          "relation_kind": "source_authored_local_option_reference",
+          "shape": "scalar_optional",
+          "target_kind": "tps_option"
+        },
+        {
+          "candidate_namespace": "tps_message_same_topic_raw_BAPH_coordinate",
+          "field": "HLFBKDKAAGG",
+          "relation_kind": "raw_local_forward_coordinate_observation",
+          "search_complete": false,
+          "shape": "scalar_optional",
+          "source_lookup_fields": [
+            "DILKJNMPNFL",
+            "HLFBKDKAAGG"
+          ],
+          "status": "mapping_unresolved",
+          "target_kind": "tps_message",
+          "target_lookup_fields": [
+            "DILKJNMPNFL",
+            "PKHEFFOICKC"
+          ]
+        }
+      ],
+      "kind": "tps_message",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TpsGlassesChatMessageExcelConfigData.json",
+      "relation_lookup_field": "JCAHMOFECFE",
+      "relation_lookup_field_sets": [
+        [
+          "DILKJNMPNFL",
+          "PKHEFFOICKC"
+        ]
+      ],
+      "text_owners": [
+        {
+          "field": "CHDGFMBOPPP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "field": "FGICGCKEFAK",
+            "present": true
+          }
+        },
+        {
+          "field": "AHDCIPDCMFP",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "field": "FGICGCKEFAK",
+            "present": true
+          }
+        },
+        {
+          "field": "HNEAFCKDCMA",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar",
+          "when": {
+            "equals": "LOCATION",
+            "field": "FGICGCKEFAK"
+          }
+        }
+      ]
+    }
+  ],
+  "talk_candidates": []
+}

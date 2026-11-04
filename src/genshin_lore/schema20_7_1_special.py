@@ -29,7 +29,8 @@ def sha(x):
     return hashlib.sha256(x.encode()).hexdigest()
 
 
-def coordinate(path, pointer):
+def coordinate(path, pointer, *, snapshot_id=SNAPSHOT):
+    SNAPSHOT = snapshot_id
     return sha(canon((SNAPSHOT, path) if pointer is None else (SNAPSHOT, path, pointer)))
 
 
@@ -37,21 +38,24 @@ def insert(db, table, values):
     db.execute(f'INSERT INTO "{table}" VALUES({",".join("?" for _ in values)})', values)
 
 
-def assemble(db, source, mappings):
+def assemble(db, source, mappings, *, snapshot_id=SNAPSHOT):
+    SNAPSHOT = snapshot_id
+    def coord(path, pointer):
+        return coordinate(path, pointer, snapshot_id=snapshot_id)
     rows_cache = {}
     records = {r[0] for r in db.execute("SELECT id FROM source_record")}
     files = {r[0] for r in db.execute("SELECT relative_path FROM source_file")}
     counts = []
 
     def record(path, pointer, raw=None, checksum=None):
-        rid = coordinate(path, pointer)
+        rid = coord(path, pointer)
         if rid not in records:
             if raw is None:
                 if path not in rows_cache:
                     rows_cache[path] = {r[1]: r for r in _physical_rows((source / path).read_bytes())}
                 physical = rows_cache[path][pointer]
                 raw, checksum = physical[2], physical[4]
-            insert(db, "source_record", (rid, coordinate(path, None), pointer,
+            insert(db, "source_record", (rid, coord(path, None), pointer,
                    "physical_textmap_pair" if path.startswith("TextMap/") else "physical_json_array_row",
                    None, checksum, raw))
             records.add(rid)
@@ -71,13 +75,13 @@ def assemble(db, source, mappings):
                           "storage_adapter": "schema20-7.1-special-storage-v1", "logical_identity_created": False}), "complete", STAMP))
             for sf in src.execute("SELECT * FROM source_file ORDER BY path"):
                 if sf["path"] not in files:
-                    insert(db, "source_file", (coordinate(sf["path"], None), SNAPSHOT, sf["path"],
+                    insert(db, "source_file", (coord(sf["path"], None), SNAPSHOT, sf["path"],
                            sf["git_blob_oid"], sf["sha256"], sf["size_bytes"], "json", str(source)))
                     files.add(sf["path"])
             if m["kind"] == "HISTORICAL_SPECIAL":
-                _historical(db, src, m, record)
+                _historical(db, src, m, record, snapshot_id=snapshot_id)
             else:
-                _m5c(db, src, m, record)
+                _m5c(db, src, m, record, snapshot_id=snapshot_id)
             counts.append({"family": f, "contract": m["provider_contract"], "parser": parser,
                            "run": run, "rows": m["selected_evidence_rows"]})
         finally:
@@ -85,7 +89,10 @@ def assemble(db, source, mappings):
     return counts
 
 
-def _m5c(db, src, m, record):
+def _m5c(db, src, m, record, *, snapshot_id=SNAPSHOT):
+    SNAPSHOT = snapshot_id
+    def coord(path, pointer):
+        return coordinate(path, pointer, snapshot_id=snapshot_id)
     f, run, parser = m["family"], m["ingest_run_id"], m["parser_build_id"]
     parents = {r["occurrence_id"]: dict(r) for r in src.execute("SELECT * FROM evidence_row ORDER BY occurrence_id")}
     avatar = f == "avatar_codex_archive"
@@ -96,12 +103,12 @@ def _m5c(db, src, m, record):
                           "raw_extra_fields": "retained in source row; not renamed to historical fields"})
         if avatar:
             insert(db, "avatar_codex_row_occurrence", (r["occurrence_id"], run, SNAPSHOT, parser,
-                   coordinate(r["source_path"], None), rid, r["source_pointer"], "avatar_codex_entry",
+                   coord(r["source_path"], None), rid, r["source_pointer"], "avatar_codex_entry",
                    "AvatarCodexExcelConfigData", r["source_ordinal"], "avatarId", str(native["avatarId"]),
                    sha(canon(json.loads(r["raw_record_json"]))), metadata))
         else:
             insert(db, f + "_row_occurrence", (r["occurrence_id"], f, m["provider_contract"], run,
-                   SNAPSHOT, parser, r["source_path"], coordinate(r["source_path"], None), rid,
+                   SNAPSHOT, parser, r["source_path"], coord(r["source_path"], None), rid,
                    r["source_pointer"], f"/#{r['source_ordinal']}", r["source_ordinal"], r["raw_record_json"],
                    sha(canon(json.loads(r["raw_record_json"]))), r["raw_record_sha256"], r["native_identity_json"], "raw_observed", metadata))
     relations = {r["occurrence_id"]: dict(r) for r in src.execute("SELECT * FROM relation_observation")}
@@ -126,17 +133,17 @@ def _m5c(db, src, m, record):
                         raise ValueError("special candidate source SHA mismatch")
                     if avatar:
                         values = (x["occurrence_id"], run, SNAPSHOT, parser, x["relation_id"],
-                                  coordinate(x["target_path"], None), target_id, x["target_pointer"], x["candidate_ordinal"],
+                                  coord(x["target_path"], None), target_id, x["target_pointer"], x["candidate_ordinal"],
                                   Path(x["target_path"]).stem, rel["target_field"], x["target_value_json"],
                                   sha(canon(json.loads(target_raw[0]))), canon(dict(x)))
                     else:
-                        values = (x["occurrence_id"], x["relation_id"], run, SNAPSHOT, parser, coordinate(x["target_path"], None),
+                        values = (x["occurrence_id"], x["relation_id"], run, SNAPSHOT, parser, coord(x["target_path"], None),
                                   target_id, x["target_pointer"], x["candidate_ordinal"], x["target_path"], x["target_ordinal"],
                                   x["target_pointer"], rel["target_field"], x["target_value_json"], sha(canon(json.loads(target_raw[0]))),
                                   x["target_raw_sha256"], canon(dict(x)))
             else:
                 parent = parents[x["row_id"]]
-                rid = coordinate(parent["source_path"], parent["source_pointer"])
+                rid = coord(parent["source_path"], parent["source_pointer"])
                 common = (x["occurrence_id"], x["row_id"], run, SNAPSHOT, parser, rid, x["source_pointer"])
                 if avatar:
                     common = (x["occurrence_id"], run, SNAPSHOT, parser, x["row_id"], rid, x["source_pointer"])
@@ -163,7 +170,10 @@ def _m5c(db, src, m, record):
             insert(db, ("avatar_codex" if avatar else f) + "_" + suffix, values)
 
 
-def _historical(db, src, m, record):
+def _historical(db, src, m, record, *, snapshot_id=SNAPSHOT):
+    SNAPSHOT = snapshot_id
+    def coord(path, pointer):
+        return coordinate(path, pointer, snapshot_id=snapshot_id)
     f = m["family"]
     prefix = "quest_codex" if f == "quest_codex_archive" else "world_archive"
     run, parser = m["ingest_run_id"], m["parser_build_id"]
@@ -182,7 +192,7 @@ def _historical(db, src, m, record):
                 pairs[(path, pair.pointer)] = pair
     for r in parents.values():
         rid = record(r["source_path"], r["source_pointer"], r["raw_record_json"], r["raw_record_sha256"])
-        values = (r["occurrence_id"], run, SNAPSHOT, parser, coordinate(r["source_path"], None), rid,
+        values = (r["occurrence_id"], run, SNAPSHOT, parser, coord(r["source_path"], None), rid,
                   r["source_pointer"])
         native = json.loads(r["native_locator_json"])
         if prefix == "quest_codex":
@@ -195,7 +205,7 @@ def _historical(db, src, m, record):
         values += (str(next(iter(native.values()))), sha(canon(json.loads(r["raw_record_json"]))), canon(dict(r)))
         insert(db, prefix + "_row_occurrence", values)
     for x in sorted(obs.values(), key=lambda r: (r["kind"] != "text_owner", r["occurrence_id"])):
-        p = parents[x["row_id"]];rid = coordinate(p["source_path"], p["source_pointer"])
+        p = parents[x["row_id"]];rid = coord(p["source_path"], p["source_pointer"])
         common = (x["occurrence_id"], run, SNAPSHOT, parser, x["row_id"], rid, x["source_pointer"])
         value = json.loads(x["payload_json"]);kind = x["kind"];meta = canon(dict(x));cs = candidates.get(x["occurrence_id"], [])
         if kind == "raw_field":
@@ -253,11 +263,11 @@ def _historical(db, src, m, record):
                 crid = record(c["target_path"], c["target_pointer"], raw_record, pair.raw_record_sha256)
                 v = json.loads(c["target_value_json"]);text = v["raw_text"]
                 insert(db, prefix + "_text_candidate_occurrence", (c["occurrence_id"], run, SNAPSHOT, parser,
-                       x["occurrence_id"], coordinate(c["target_path"], None), crid, c["target_pointer"],
+                       x["occurrence_id"], coord(c["target_path"], None), crid, c["target_pointer"],
                        v["tier"], v["locale"], text, normalize_text(text), sha(text), sha(normalize_text(text)), canon(c)))
             elif prefix == "quest_codex":
                 crid = record(c["target_path"], c["target_pointer"])
                 target_raw = db.execute("SELECT raw_json FROM source_record WHERE id=?", (crid,)).fetchone()[0]
                 insert(db, prefix + "_relationship_candidate_occurrence", (c["occurrence_id"], run, SNAPSHOT, parser,
-                       x["occurrence_id"], coordinate(c["target_path"], None), crid, c["target_pointer"], c["candidate_ordinal"],
+                       x["occurrence_id"], coord(c["target_path"], None), crid, c["target_pointer"], c["candidate_ordinal"],
                        Path(c["target_path"]).stem, value["target_field"], c["target_value_json"], sha(canon(json.loads(target_raw))), canon(c)))

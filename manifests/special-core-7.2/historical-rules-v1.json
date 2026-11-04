@@ -1,0 +1,103 @@
+{
+  "contract": "special-core-7.2-historical-family-rules-v1",
+  "identity_policy": "all observations are snapshot/run/source-coordinate scoped; candidates are physical lookup rows, never logical entities",
+  "quest_codex_archive": {
+    "historical_rule_source": "src/genshin_lore/quest_codex_phase4f3_contract.py",
+    "native_locator": "id",
+    "opaque_policy": "source-native obfuscated fields and historical ID-like unclassified fields are raw opaque observations; no cross-version field-role alignment",
+    "optional_primary_fields": [
+      "tabType",
+      "isDisuse"
+    ],
+    "primary": "ExcelBinOutput/QuestCodexExcelConfigData.json",
+    "provider_contract": "quest-codex-archive-evidence-v1",
+    "relations": [
+      {
+        "field": "chapterId",
+        "target": "ExcelBinOutput/ChapterExcelConfigData.json",
+        "target_field": "id"
+      },
+      {
+        "field": "parentQuestId",
+        "target": "ExcelBinOutput/QuestExcelConfigData.json",
+        "target_field": "mainId"
+      }
+    ],
+    "support": "ExcelBinOutput/ChapterExcelConfigData.json",
+    "support_assets": [
+      "chapterIcon",
+      "chapterImageHash",
+      "chapterSerialNumberIcon"
+    ],
+    "support_selection": "all physical Chapter rows matching any primary chapterId; no first-candidate selection",
+    "support_text_owners": [
+      "chapterImageTitleTextMapHash",
+      "chapterNumTextMapHash",
+      "chapterTitleTextMapHash"
+    ]
+  },
+  "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "world_archive": {
+    "historical_rule_source": "src/genshin_lore/world_archive_phase4e3_contract.py",
+    "opaque_policy": "source-native obfuscated fields and historical View configId/groupId are raw opaque observations; no cross-version field-role alignment",
+    "primary": {
+      "ExcelBinOutput/AnimalCodexExcelConfigData.json": {
+        "assets": [
+          "modelPath"
+        ],
+        "native_locator": "id",
+        "text_owners": [
+          "descTextMapHash"
+        ]
+      },
+      "ExcelBinOutput/ViewCodexExcelConfigData.json": {
+        "assets": [
+          "image"
+        ],
+        "native_locator": "id",
+        "text_owners": [
+          "descTextMapHash",
+          "nameTextMapHash"
+        ]
+      }
+    },
+    "provider_contract": "world-archive-evidence-v1",
+    "relations": [
+      {
+        "dynamic": "type_partition_animal_describe_v1",
+        "field": "describeId",
+        "source": "ExcelBinOutput/AnimalCodexExcelConfigData.json"
+      },
+      {
+        "field": "pushTipsCodexId",
+        "source": "ExcelBinOutput/AnimalCodexExcelConfigData.json",
+        "target": "ExcelBinOutput/PushTipsCodexExcelConfigData.json",
+        "target_field": "id"
+      },
+      {
+        "field": "cityId",
+        "source": "ExcelBinOutput/ViewCodexExcelConfigData.json",
+        "target": "ExcelBinOutput/CityConfigData.json",
+        "target_field": "cityId"
+      },
+      {
+        "field": "gadgetId",
+        "source": "ExcelBinOutput/ViewCodexExcelConfigData.json",
+        "target": "ExcelBinOutput/GadgetExcelConfigData.json",
+        "target_field": "id"
+      },
+      {
+        "field": "sceneId",
+        "source": "ExcelBinOutput/ViewCodexExcelConfigData.json",
+        "target": "ExcelBinOutput/SceneExcelConfigData.json",
+        "target_field": "id"
+      },
+      {
+        "field": "worldAreaId",
+        "source": "ExcelBinOutput/ViewCodexExcelConfigData.json",
+        "target": "ExcelBinOutput/WorldAreaConfigData.json",
+        "target_field": "id"
+      }
+    ]
+  }
+}

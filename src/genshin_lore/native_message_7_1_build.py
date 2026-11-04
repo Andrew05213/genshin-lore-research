@@ -36,12 +36,12 @@ def project(source: Path, scope_path: Path) -> tuple[dict, dict[str, list[tuple]
             candidate = [owner for owner in spec['text_owners'] if owner['field'] == 'GLPIOOHJNFF']
             if len(candidate) != 1 or candidate[0]['owner_role_status'] != 'mapping_unresolved':
                 raise ValueError('Native Message historical raw field contract')
-            candidate[0].update({'historical_field': 'GLPIOOHJNFF', 'field': 'DDBKODKACJA',
+            candidate[0].update({'historical_field': 'GLPIOOHJNFF', 'field': ('DDBKODKACJA' if scope['snapshot_id'].split(':')[1]=='7.1' else 'DNIFECBKEJB'),
                                  'field_continuity_status': 'full_20_row_raw_value_alignment;semantic_role_unresolved'})
     exact_paths = {spec['path'] for spec in adapted}
     exact_paths.update(historical['textmaps'][locale][tier] for locale in historical['languages']
                        for tier in ('main', 'medium'))
-    if (scope['contract'] != 'native-message-7.1-exact-source-scope-v1'
+    if (scope['contract'] != 'native-message-7.1-exact-source-scope-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or scope['historical_selection_sha256'] != sha(historical_path)
             or scope['sources'] != adapted or scope['languages'] != historical['languages']
             or scope['textmaps'] != historical['textmaps']

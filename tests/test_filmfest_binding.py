@@ -6,6 +6,7 @@ import sqlite3
 import pytest
 
 from genshin_lore import event_filmfest_7_1_build as filmfest
+from genshin_lore.source_versions import PINS
 
 
 def talk_input(root, run='synthetic-run'):
@@ -26,13 +27,14 @@ def talk_input(root, run='synthetic-run'):
         db.execute('INSERT INTO physical_container VALUES(?,?,?,?,?,?,?)',
                    ('occurrence-' + run, run, 'talk.json', '/', '123',
                     hashlib.sha256(raw.strip()).hexdigest(), 'talk_root'))
-    manifest = {'artifact': {'size_bytes': artifact.stat().st_size,
+    snapshot = f'anime-game-data:7.1:{PINS["7.1"][0]}'
+    manifest = {'source_snapshot': snapshot, 'artifact': {'size_bytes': artifact.stat().st_size,
                             'sha256': filmfest.sha(artifact)},
                 'contract': 'synthetic-contract', 'parser_build_id': 'synthetic-parser',
                 'ingest_run_id': run}
     path = root / 'dynamic-manifest.json'
     path.write_text(json.dumps(manifest))
-    scope = {'sources': [{'kind': 'filmfest_shooting_level', 'path': 'levels.json',
+    scope = {'snapshot_id': snapshot, 'sources': [{'kind': 'filmfest_shooting_level', 'path': 'levels.json',
                           'talk_relation_field': 'talk'}],
              'talk_candidate_namespace': {'accepted_manifest_sha256': filmfest.sha(path),
                  'artifact': manifest['artifact'], 'contract': manifest['contract'],
@@ -90,4 +92,11 @@ def test_source_coordinates_are_still_read_through(tmp_path):
     source, artifact, manifest, scope = talk_input(tmp_path / 'build')
     (source / 'talk.json').write_bytes(b'{"different_source":123}')
     with pytest.raises(ValueError, match='external Talk second-hop mismatch'):
+        filmfest.discover_target_candidates(source, artifact, scope, qt_manifest_path=manifest)
+
+
+def test_matching_locator_is_not_a_cross_snapshot_binding(tmp_path):
+    source, artifact, manifest, scope = talk_input(tmp_path / 'build')
+    scope['snapshot_id'] = f'anime-game-data:7.2:{PINS["7.2"][0]}'
+    with pytest.raises(ValueError, match='cross-snapshot'):
         filmfest.discover_target_candidates(source, artifact, scope, qt_manifest_path=manifest)

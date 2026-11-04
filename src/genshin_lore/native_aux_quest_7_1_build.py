@@ -21,18 +21,20 @@ def _maps(root,scope,wanted):
 def _owned(path,owned):
  try:s=Path(path).stat();return owned==(s.st_dev,s.st_ino)
  except FileNotFoundError:return False
-def implementation():return {p:sha(ROOT/p) for p in ('src/genshin_lore/native_aux_quest_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-aux-quest-7.1-v1.sql',SELECTION)}
+def implementation(selection=None):return {p:sha(ROOT/p) for p in ('src/genshin_lore/native_aux_quest_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-aux-quest-7.1-v1.sql',selection or SELECTION)}
 def identities(scope_path):
- impl=implementation();parser='naq71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='naq71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];return impl,parser,scope_sha,run
+ scope=json.loads(Path(scope_path).read_text());impl=implementation(scope['selection_manifest']);parser='naq71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='naq71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];return impl,parser,scope_sha,run
 def relation_values(row,spec):
  value=row.get(spec['field']);shape=spec.get('shape','scalar')
  if shape in ('scalar','scalar_optional'):return [] if value is None else [(spec['field'],value)]
- if shape=='array' and isinstance(value,list):return [(f"{spec['field']}/{i}",x) for i,x in enumerate(value) if x is not None]
+ if shape=='array' and isinstance(value,list):
+  if any(x is not None and type(x) is not int for x in value):raise ValueError('declared array locator must be integer or null')
+  return [(f"{spec['field']}/{i}",x) for i,x in enumerate(value) if x is not None]
  if value is not None:raise ValueError('declared relation shape mismatch '+spec['field'])
  return []
 def reconstruct(source_root,scope_path):
  scope=json.loads(Path(scope_path).read_text());selection_path=ROOT/scope.get('selection_manifest','');selection=json.loads(selection_path.read_text())
- if scope.get('selection_manifest')!=SELECTION or sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('frozen source selection mismatch')
+ if scope.get('selection_manifest')!=SELECTION.replace('7.1',scope['snapshot_id'].split(':')[1]) or sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('frozen source selection mismatch')
  check_files(source_root,scope);impl,parser,scope_sha,run=identities(scope_path);seals={x['path']:x for x in scope['files']};records={};wanted=set()
  for source in scope['sources']:
   rows=[]

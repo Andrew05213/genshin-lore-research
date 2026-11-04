@@ -39,20 +39,24 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, *, runtime_manif
     source_root, scope_path, artifact = Path(source_root), Path(scope_path), Path(artifact)
     if any(Path(str(artifact) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("SQLite sidecars beside candidate")
+    scope = json.loads(scope_path.read_text())
+    from .source_versions import scope_pin
+    version, commit, expected_tree = scope_pin(scope)
+    selection_path = SELECTION if version == '7.1' else f'manifests/native-archive-{version}/bulk-selection.json'
     head, tree = subprocess.check_output(
         ["git", "-C", str(source_root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True
     ).splitlines()
-    if (head, tree) != (COMMIT, TREE) or subprocess.check_output(
+    if (head, tree) != (commit, expected_tree) or subprocess.check_output(
         ["git", "-C", str(source_root), "status", "--porcelain"]
     ):
         raise ValueError("source worktree identity or cleanliness")
     scope = json.loads(scope_path.read_text())
-    selection = json.loads((ROOT / SELECTION).read_text())
+    selection = json.loads((ROOT / selection_path).read_text())
     if (scope["source_commit"], scope["source_tree"], scope["snapshot_id"]) != (
-        COMMIT, TREE, "anime-game-data:7.1:" + COMMIT
+        commit, expected_tree, f"anime-game-data:{version}:{commit}"
     ):
         raise ValueError("scope snapshot")
-    if (scope.get("selection_manifest") != SELECTION or scope.get("selection_sha256") != sha(ROOT / SELECTION)
+    if (scope.get("selection_manifest") != selection_path or scope.get("selection_sha256") != sha(ROOT / selection_path)
             or scope.get("sources") != selection["sources"] or scope.get("textmaps") != selection["textmaps"]
             or scope.get("languages") != selection["languages"]):
         raise ValueError("selection authority")
@@ -69,17 +73,17 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, *, runtime_manif
         seal = seals[path]
         source = source_root / path
         oid = subprocess.check_output(
-            ["git", "-C", str(source_root), "rev-parse", f"{COMMIT}:{path}"], text=True
+            ["git", "-C", str(source_root), "rev-parse", f"{commit}:{path}"], text=True
         ).strip()
         if (not source.is_file() or source.is_symlink() or source.stat().st_size != seal["size_bytes"]
                 or sha(source) != seal["sha256"] or git_blob(source) != oid or oid != seal["blob"]):
             raise ValueError("actual source bytes/Git blob mismatch: " + path)
-    impl = {name: sha(ROOT / name) for name in IMPLEMENTATION}
-    parser = "native-archive-7.1-parser:" + hashlib.sha256(
+    impl = {name: sha(ROOT / name) for name in (*IMPLEMENTATION[:-1], selection_path)}
+    parser = f"native-archive-{version}-parser:" + hashlib.sha256(
         json.dumps(impl, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()[:40]
     scope_sha = sha(scope_path)
-    run = "native-archive-7.1-run:" + hashlib.sha256((parser + ":" + scope_sha).encode()).hexdigest()[:40]
+    run = f"native-archive-{version}-run:" + hashlib.sha256((parser + ":" + scope_sha).encode()).hexdigest()[:40]
     physical: dict[str, list[tuple]] = {}
     wanted: set[str] = set()
     owner_count = 0
@@ -150,7 +154,7 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, *, runtime_manif
         expected[table].sort()
     counts = {table: len(expected[table]) for table in TABLES}
     release_expected = {
-        "contract": "native-bulk-7.1-standalone-v1", "family_contract_version": "native-archive-evidence-v1",
+        "contract": f"native-bulk-{version}-standalone-v1", "family_contract_version": "native-archive-evidence-v1",
         "snapshot_id": scope["snapshot_id"], "parser_build_id": parser, "run_id": run,
         "scope_sha256": scope_sha, "implementation": impl, "counts": counts,
         "text_state_counts": dict(sorted(states.items())), "owner_role_counts": dict(sorted(roles.items())),

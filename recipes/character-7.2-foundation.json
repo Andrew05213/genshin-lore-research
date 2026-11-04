@@ -1,0 +1,15 @@
+{
+  "audio_variants": 9925,
+  "contract": "character-7.2-physical-foundation-v1",
+  "logical_character_created": false,
+  "primary_rows": 10973,
+  "product_accepted": false,
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_file_count": 18,
+  "source_scope": "manifests/character-7.2-physical-foundation/source-scope.json",
+  "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "status": "unbuilt_source_migration",
+  "voice_item_records": 375,
+  "voice_lut_records": 375
+}

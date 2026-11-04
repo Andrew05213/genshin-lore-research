@@ -42,8 +42,8 @@ def ident(*parts):
     return "document71:" + digest(encoded(parts).encode())[:40]
 
 
-def tree(root, prefix):
-    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", prefix])
+def tree(root, prefix, commit=COMMIT):
+    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", prefix])
     out = {}
     for item in data.split(b"\0"):
         if item:
@@ -58,6 +58,11 @@ def verify(source_root, scope_path, artifact_path, report):
     root, scope_path, artifact = Path(source_root).resolve(), Path(scope_path).resolve(), Path(artifact_path).resolve()
     scope_raw = scope_path.read_bytes()
     scope = json.loads(scope_raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
+    chs_fields = ("BFDDHOKGBOH", "OKIHBKFCDND") if version == "7.2" else ("MBOPLLJEHCJ", "FCNGPFLCLFA")
+    content_field = "PLOJOMIPJGH" if version == "7.2" else "contentLocalizedId"
     require((scope["source_commit"], scope["source_tree"], scope["snapshot_id"]) == (COMMIT, TREE, SNAPSHOT), "source pin")
     require(subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() == [COMMIT, TREE], "checkout pin")
     require(not subprocess.check_output(["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True).strip(), "checkout clean")
@@ -69,7 +74,7 @@ def verify(source_root, scope_path, artifact_path, report):
     run_id = ident("run", SNAPSHOT, parser_id, digest(scope_raw))
     require((report["implementation"], report["parser_build_id"], report["run_id"], report["scope_sha256"]) ==
             (implementation, parser_id, run_id, digest(scope_raw)), "implementation/parser/run")
-    readable = tree(root, "Readable")
+    readable = tree(root, "Readable", COMMIT)
     readable_seal = digest((json.dumps(sorted(readable.items()), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode())
     require(len(readable) == scope["readable"]["file_count"] and readable_seal == scope["readable"]["path_blob_set_sha256"], "Readable denominator")
     physical = {path.relative_to(root).as_posix() for path in (root / "Readable").rglob("*.txt")}
@@ -86,7 +91,7 @@ def verify(source_root, scope_path, artifact_path, report):
     index = defaultdict(list)
     for ordinal, row, _ in locs:
         require(isinstance(row, dict) and type(row.get("id")) is int, "Localization row ID")
-        for field in ("MBOPLLJEHCJ", "FCNGPFLCLFA"):
+        for field in chs_fields:
             require(field in row and isinstance(row[field], str), "CHS authored locator " + field)
         for field in ("enPath", "jpPath"):
             if field in row:
@@ -95,7 +100,7 @@ def verify(source_root, scope_path, artifact_path, report):
     wanted = set()
     for _, row, _ in docs:
         require(isinstance(row, dict) and type(row.get("id")) is int and type(row.get("titleTextMapHash")) is int, "Document required fields")
-        for field in ("questIDList", "contentLocalizedId", "questContentLocalizedId"):
+        for field in ("questIDList", content_field, "questContentLocalizedId"):
             if field in row:
                 require(isinstance(row[field], list) and all(type(item) is int for item in row[field]), "Document locator list " + field)
         wanted.add(str(row["titleTextMapHash"]))
@@ -121,7 +126,7 @@ def verify(source_root, scope_path, artifact_path, report):
         require(len(releases) == 1 and releases[0][0] == 1, "single release")
         release = json.loads(releases[0][1])
         require(release == {key: value for key, value in report.items() if key not in ("artifact", "build_seconds")}, "release/report binding")
-        require(release["contract"] == "document-7.1-evidence-v1" and release["snapshot_id"] == SNAPSHOT, "release identity")
+        require(release["contract"] == f"document-{version}-evidence-v1" and release["snapshot_id"] == SNAPSHOT, "release identity")
         rows, slots, texts, relations, candidates = [], [], [], [], []
         title_states = Counter()
         relation_states = defaultdict(Counter)
@@ -157,18 +162,18 @@ def verify(source_root, scope_path, artifact_path, report):
                 slots.append((slot_id, row_id, "titleTextMapHash", locale, value, status))
                 for path, pair_ordinal, pointer, text in hits:
                     texts.append((ident(slot_id, path, pair_ordinal), slot_id, path, pair_ordinal, pointer, text))
-            for field in ("questIDList", "questContentLocalizedId", "contentLocalizedId"):
+            for field in ("questIDList", "questContentLocalizedId", content_field):
                 for j, value in enumerate(row.get(field, [])):
                     origin = f"/{ordinal}/{field}/{j}"
                     matches = index.get(value, [])
-                    complete = field != "contentLocalizedId"
+                    complete = field != content_field
                     targets = [(LOCALIZATION, f"/{k}", {**document_sources[LOCALIZATION], "native_id": loc["id"]}) for k, loc in matches]
                     add_relation(row_id, origin, "document_localization", PRIMARY, origin, value,
                                  "all physical Localization rows; " + ("explicit/project locator contract" if complete else "equality observations only; namespace unresolved"), complete, targets)
                     if not complete:
                         continue
                     for k, loc in matches:
-                        for key, locale in (("MBOPLLJEHCJ", "CHS"), ("FCNGPFLCLFA", "CHS"), ("enPath", "EN"), ("jpPath", "JP")):
+                        for key, locale in tuple((field,"CHS") for field in chs_fields) + (("enPath", "EN"), ("jpPath", "JP")):
                             if key not in loc:
                                 continue
                             value = loc[key]
@@ -179,7 +184,7 @@ def verify(source_root, scope_path, artifact_path, report):
                             seal = source_target(target) if target is not None else None
                             targets2 = [(target, "", seal)] if seal is not None else []
                             add_relation(row_id, origin, "localization_readable", LOCALIZATION, f"/{k}/{key}", value,
-                                         "all pinned Readable physical paths; 7.1 source-authored exported path" if mapped else "non-Readable/unknown path namespace; no inferred file",
+                                         f"all pinned Readable physical paths; {version} source-authored exported path" if mapped else "non-Readable/unknown path namespace; no inferred file",
                                          mapped, targets2)
             if "contentPath" in row:
                 origin = f"/{ordinal}/contentPath"

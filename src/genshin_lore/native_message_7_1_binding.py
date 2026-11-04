@@ -13,8 +13,12 @@ SCOPE = 'manifests/native-archive-7.1/message-scope-v1.json'
 QT_MANIFEST = 'manifests/quest-talk-7.1/standalone-candidate.json'
 
 
-def current_dependency(source, output):
+def current_dependency(source, output, source_version="7.1"):
     """Require complete current proofs and replay the unchanged source oracle."""
+    from .source_versions import PINS
+    snapshot = f"anime-game-data:{source_version}:{PINS[source_version][0]}"
+    scope_relative = SCOPE.replace("7.1",source_version)
+    qt_relative = QT_MANIFEST.replace("7.1",source_version)
     source, output = Path(source).resolve(), Path(output).resolve()
     directory = output / 'quest_narrative'
     receipt = load_object(directory / 'verified.json')
@@ -23,12 +27,12 @@ def current_dependency(source, output):
             or identity.get('parameters') != {'stage': 'quest_narrative'}):
         raise ValueError('Native Message current QuestNarrative source/stage')
     history = Path(identity['historical_source_root']) if identity.get('historical_source_root') else None
-    qt_inputs = qualify_stage_dependency(ROOT, source, history, output / 'quest_talk', 'quest_talk', SNAPSHOT)
-    qt_manifest = output / 'metadata' / QT_MANIFEST
+    qt_inputs = qualify_stage_dependency(ROOT, source, history, output / 'quest_talk', 'quest_talk', snapshot)
+    qt_manifest = output / 'metadata' / qt_relative
     expected_inputs = {str(p.resolve()): file_seal(p) for p in [*qt_inputs, qt_manifest]}
     if identity.get('stage_inputs') != expected_inputs:
         raise ValueError('Native Message QuestNarrative must bind its own Quest/Talk inputs')
-    qualify_stage_dependency(ROOT, source, history, directory, 'quest_narrative', SNAPSHOT)
+    qualify_stage_dependency(ROOT, source, history, directory, 'quest_narrative', snapshot)
     artifact = directory / 'artifact.sqlite'
     report = load_object(directory / 'build.json')
     actual = file_seal(artifact)
@@ -37,22 +41,22 @@ def current_dependency(source, output):
     checked = oracle.verify(source, artifact, directory / 'build.json', qt_inputs[0], qt_manifest)
     if checked != load_object(directory / 'verify.json'):
         raise ValueError('Native Message QuestNarrative independent oracle/report mismatch')
-    qualify_stage_dependency(ROOT, source, history, directory, 'quest_narrative', SNAPSHOT)
-    qualify_stage_dependency(ROOT, source, history, output / 'quest_talk', 'quest_talk', SNAPSHOT)
-    template = load_object(ROOT / SCOPE)['dependency']
+    qualify_stage_dependency(ROOT, source, history, directory, 'quest_narrative', snapshot)
+    qualify_stage_dependency(ROOT, source, history, output / 'quest_talk', 'quest_talk', snapshot)
+    template = load_object(ROOT / scope_relative)['dependency']
     release = report['release']
-    if release['contract'] != template['contract'] or release['snapshot'] != SNAPSHOT:
+    if release['contract'] != template['contract'] or release['snapshot'] != snapshot:
         raise ValueError('Native Message QuestNarrative contract/snapshot')
     return {**template, 'artifact': {**actual, 'path_machine_local': str(artifact)},
             'target_artifact_machine_local': str(artifact),
             'parser': release['parser_build_id'], 'run': release['ingest_run_id']}
 
 
-def prepare_scope(source, output):
+def prepare_scope(source, output, source_version="7.1"):
     """Rebind current physical candidates, never substitute a historical DB."""
     output = Path(output).resolve()
-    scope = load_object(ROOT / SCOPE)
-    scope['dependency'] = current_dependency(source, output)
+    scope = load_object(ROOT / SCOPE.replace('7.1',source_version))
+    scope['dependency'] = current_dependency(source, output, source_version)
     scope['local_rebuild'] = {'contract': 'local-native-message-quest-narrative-v1',
                              'receipt': file_seal(output / 'quest_narrative/verified.json')}
     target = Path(scope['dependency']['target_artifact_machine_local'])
@@ -79,22 +83,24 @@ def prepare_scope(source, output):
 
 def qualify_scope(source, scope_path, scope):
     """A local flag cannot relax the historical source selection or target proof."""
+    from .source_versions import scope_pin
+    source_version, _, _ = scope_pin(scope)
     scope_path = Path(scope_path).resolve()
     output = scope_path.parents[3]
-    if scope_path != output / 'metadata' / SCOPE:
+    if scope_path != output / 'metadata' / SCOPE.replace('7.1',source_version):
         raise ValueError('Native Message scope must bind its own output metadata')
     local = scope.get('local_rebuild')
     if (not isinstance(local, dict) or set(local) != {'contract', 'receipt'}
             or local['contract'] != 'local-native-message-quest-narrative-v1'):
         raise ValueError('Native Message unknown local qualification')
-    template = load_object(ROOT / SCOPE)
+    template = load_object(ROOT / SCOPE.replace("7.1",source_version))
     if {k: v for k, v in scope.items() if k not in ('dependency', 'external_candidates', 'local_rebuild')} != {
             k: v for k, v in template.items() if k not in ('dependency', 'external_candidates')}:
         raise ValueError('Native Message local source scope drift')
     receipt_path = output / 'quest_narrative/verified.json'
     if file_seal(receipt_path) != local['receipt']:
         raise ValueError('Native Message QuestNarrative receipt seal')
-    if scope['dependency'] != current_dependency(source, output):
+    if scope['dependency'] != current_dependency(source, output, source_version):
         raise ValueError('Native Message current dependency binding drift')
     if file_seal(receipt_path) != local['receipt']:
         raise ValueError('Native Message QuestNarrative proof changed')

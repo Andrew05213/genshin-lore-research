@@ -25,7 +25,8 @@ class UnifiedReadable:
     """The existing Book continuation's small, qualified line interface."""
     def __init__(self, runtime):
         self.runtime = runtime
-        self.db = {"readable_archive": runtime.query._source("7.1-readable_archive")}
+        self.version = runtime.version
+        self.db = {"readable_archive": runtime.query._source(f"{self.version}-readable_archive")}
 
     def _readable(self, text_id):
         row = self.db["readable_archive"].execute(
@@ -34,7 +35,7 @@ class UnifiedReadable:
         if row is None:
             raise KeyError(text_id)
         indexed = self.runtime.query.db.execute(
-            "SELECT * FROM research_text WHERE source_key='7.1-readable_archive' AND source_table='readable_line' AND pk_value=?", (text_id,)).fetchone()
+            f"SELECT * FROM research_text WHERE source_key='{self.version}-readable_archive' AND source_table='readable_line' AND pk_value=?", (text_id,)).fetchone()
         if indexed is None:
             raise ValueError("Readable line absent from qualified index")
         self.runtime.query._recheck_text(indexed)
@@ -46,6 +47,10 @@ class UnifiedReadable:
 
 class Research71Unified:
     def __init__(self, *, corpus, bindings, index, profile, released=False):
+        from .source_versions import source_pin
+        manifest = json.loads(Path(corpus).read_text())
+        self.snapshot = manifest["snapshot"]["id"]
+        self.version, _, _ = source_pin(self.snapshot)
         self.released = released
         if released:
             from .research71_release import ReleasedResearch71
@@ -61,12 +66,12 @@ class Research71Unified:
             return
         metadata = Path(corpus).resolve().parents[2]
         qualification_path=(metadata/json.loads(Path(profile).read_text()).get(
-            'runtime_qualification','manifests/research/candidate-7.1-agent-runtime-v2.json')).resolve()
+            'runtime_qualification',f'manifests/research/candidate-{self.version}-agent-runtime-v2.json')).resolve()
         if not qualification_path.is_relative_to(metadata):
             raise ValueError('candidate runtime qualification outside explicit metadata root')
         qualification=json.loads(qualification_path.read_text())
         if (qualification.get('contract')!='research71-unified-agent-runtime-v1' or
-                qualification.get('status')!='local_candidate_qualification' or qualification.get('snapshot')!=SNAPSHOT or
+                qualification.get('status')!='local_candidate_qualification' or qualification.get('snapshot')!=self.snapshot or
                 qualification.get('product_accepted') is not False or qualification.get('full_research_7_1_accepted') is not False or
                 qualification.get('legacy_fallback') is not False):
             raise ValueError('unified agent runtime candidate authority mismatch')
@@ -80,17 +85,17 @@ class Research71Unified:
 
     def _entries(self):
         self.corpus_ref = self.query.corpus_ref
-        self.labels = ResearchSourceContext(self.query.db, self.query._source('7.1-document_archive'))
+        self.labels = ResearchSourceContext(self.query.db, self.query._source(f'{self.version}-document_archive'))
         self.entries = {}
         # Old registry supplies capability naming/limitations only, never paths,
         # seals, parser/run identities or provider constructors.
         metadata = self.query.manifest_path.resolve().parents[2]
-        names = json.loads((metadata / 'manifests/research-7.1/7.1-capability-registry-v1.json').read_text())
+        names = json.loads((metadata / f'manifests/research-{self.version}/{self.version}-capability-registry-v1.json').read_text())
         components = self.query.components
         by_cap = {v.get('registered_capability_id'): k for k,v in components.items() if v.get('registered_capability_id')}
         for old in names['capabilities']:
             cid = old['capability_id']
-            key = '7.1-character-foundation' if cid.startswith('character_') else by_cap.get(cid)
+            key = f'{self.version}-character-foundation' if cid.startswith('character_') else by_cap.get(cid)
             if key is None:
                 raise ValueError('unified capability binding absent: ' + cid)
             c = components[key]
@@ -99,10 +104,10 @@ class Research71Unified:
                 'run': c.get('run', c.get('ingest_run_id')), 'artifacts': [self._artifact(key)],
                 'backend': 'unified_release' if self.released else 'unified_candidate',
                 'limitations': list(old['limitations']) + [
-                    'bounded published 7.1; historical gaps and candidate semantics remain' if self.released
+                    f'bounded published {self.version}; historical gaps and candidate semantics remain' if self.released
                     else 'unified local candidate; not current authority']}
         self.registry = {'capabilities': list(self.entries.values()),
-                         'backend': 'unified_release' if self.released else 'unified_candidate', 'snapshot': SNAPSHOT}
+                         'backend': 'unified_release' if self.released else 'unified_candidate', 'snapshot': self.snapshot}
         if self.released:
             self.registry.update(release_id=self.query.release_id, historical_contract_gaps=8,
                                  historical_component_gaps=12, full_research_7_1_accepted=False)
@@ -126,7 +131,7 @@ class Research71Unified:
         return UnifiedReadable(self)
 
     def _wrap(self, cid, base, child=None):
-        return PREFIX + token({'snapshot': SNAPSHOT, 'corpus': self.corpus_ref, 'capability_id': cid,
+        return PREFIX + token({'snapshot': self.snapshot, 'corpus': self.corpus_ref, 'capability_id': cid,
                               'base_ref': base, 'codex_child': child})
 
     def ref(self, entry, local):
@@ -134,7 +139,7 @@ class Research71Unified:
             return self._wrap(entry['capability_id'], local['base_ref'], local.get('codex_child'))
         if entry['capability_id'] != 'readable_archive':
             raise ValueError('no guessed occurrence refs')
-        row = self.query.db.execute("SELECT * FROM research_text WHERE source_key='7.1-readable_archive' AND source_table='readable_line' AND pk_value=?", (local['text_id'],)).fetchone()
+        row = self.query.db.execute(f"SELECT * FROM research_text WHERE source_key='{self.version}-readable_archive' AND source_table='readable_line' AND pk_value=?", (local['text_id'],)).fetchone()
         parent = None if row is None else self.query.db.execute('SELECT * FROM research_container WHERE id=?', (row['container_id'],)).fetchone()
         if row is None or (parent['source_path'], row['text_source_pointer'], row['evidence_run']) != (local['source_path'], local['pointer'], local['run_id']):
             raise ValueError('Readable continuation binding mismatch')
@@ -152,7 +157,7 @@ class Research71Unified:
 
     def _cap(self, parent):
         key = parent['source_key']
-        if key == '7.1-character-foundation':
+        if key == f'{self.version}-character-foundation':
             source = self.query._source(key)
             row = source.execute('SELECT * FROM foundation_primary_row WHERE id=?', (parent['occurrence_id'],)).fetchone()
             path = row['source_path']
@@ -166,7 +171,7 @@ class Research71Unified:
         if not isinstance(evidence_ref, str) or not evidence_ref.startswith(PREFIX):
             raise ValueError('foreign unified evidence ref; legacy fallback forbidden')
         local = untoken(evidence_ref[len(PREFIX):])
-        if local.get('snapshot') != SNAPSHOT or local.get('corpus') != self.corpus_ref:
+        if local.get('snapshot') != self.snapshot or local.get('corpus') != self.corpus_ref:
             raise ValueError('unified snapshot/corpus mismatch')
         parent, text = self._rows(local['base_ref'])
         cid = self._cap(parent)
@@ -200,7 +205,7 @@ class Research71Unified:
         if parent['evidence_family']=='readable_archive':
             context=self.labels.for_evidence(parent, rows[0] if rows else None)
             for title in context.get('title_candidates', []):
-                title_row=self.query.db.execute("SELECT * FROM research_text WHERE source_key='7.1-document_archive' AND source_table='document_text' AND pk_value=?", (title['title_text_id'],)).fetchone()
+                title_row=self.query.db.execute(f"SELECT * FROM research_text WHERE source_key='{self.version}-document_archive' AND source_table='document_text' AND pk_value=?", (title['title_text_id'],)).fetchone()
                 if title_row is None:raise ValueError('qualified source title missing')
                 self.query._recheck_text(title_row)
             return context
@@ -247,8 +252,8 @@ class Research71Unified:
         context=self._context(parent, rows)
         label=context.get('citation_label') or context['display_title'] or f"{parent['source_path']} {pointer}（物理来源；标题未解析）"
         artifacts={parent['source_key'], *(r['source_key'] for r in rows)}
-        if entry['capability_id']=='readable_archive':artifacts.add('7.1-document_archive')
-        return {'evidence_ref':evidence_ref,'snapshot':SNAPSHOT,'capability_id':entry['capability_id'],
+        if entry['capability_id']=='readable_archive':artifacts.add(f'{self.version}-document_archive')
+        return {'evidence_ref':evidence_ref,'snapshot':self.snapshot,'capability_id':entry['capability_id'],
             'family':parent['evidence_family'],'contract':parent['evidence_contract'],'parser':parent['evidence_parser'],
             'run':parent['evidence_run'],'artifacts':[self._artifact(k) for k in sorted(artifacts)],
             'capability_status':entry['status'],'limitations':entry['limitations'], 'source_context':context,
@@ -267,7 +272,7 @@ class Research71Unified:
             raise ValueError('bounded literal search required')
         scope={'op':'search','query':query,'capability':capability_id,'limit':limit,'corpus':self.corpus_ref}
         after=self._cursor(cursor,scope)
-        key='7.1-character-text' if capability_id.startswith('character_') else entry['source_key']
+        key=f'{self.version}-character-text' if capability_id.startswith('character_') else entry['source_key']
         # Same immutable index, literal substring fallback and per-hit source reread.
         if capability_id=='readable_archive':
             rows=self.query.db.execute("SELECT t.* FROM research_text t INDEXED BY sqlite_autoindex_research_text_1 WHERE t.source_key=? AND t.locale='CHS' AND instr(t.raw_text,?)>0 AND t.id>? ORDER BY t.id",(key,query,after))
@@ -280,7 +285,7 @@ class Research71Unified:
             rows=list(rows)
             # Source-authored Document title -> sealed physical Readable file.
             # Reuse the accepted title adapter, never filename guessing.
-            doc=self.query._source('7.1-document_archive')
+            doc=self.query._source(f'{self.version}-document_archive')
             paths=doc.execute("SELECT DISTINCT c.target_source_path FROM document_text t JOIN document_slot s ON s.id=t.slot_id JOIN document_relation r ON r.row_id=s.row_id JOIN document_candidate c ON c.relation_id=r.id WHERE s.field='titleTextMapHash' AND s.locale='CHS' AND instr(t.raw_text,?)>0 AND r.kind='localization_readable'",(query,)).fetchall()
             for (path,) in paths:
                 parents=self.query.db.execute("SELECT * FROM research_container WHERE source_key=? AND source_path=?",(key,path)).fetchall()
@@ -290,7 +295,7 @@ class Research71Unified:
                     matching=[t for t in titles if query in t['title']]
                     if not matching:continue
                     for title in matching:
-                        row=self.query.db.execute("SELECT * FROM research_text WHERE source_key='7.1-document_archive' AND source_table='document_text' AND pk_value=?",(title['title_text_id'],)).fetchone()
+                        row=self.query.db.execute(f"SELECT * FROM research_text WHERE source_key='{self.version}-document_archive' AND source_table='document_text' AND pk_value=?",(title['title_text_id'],)).fetchone()
                         if row is None:raise ValueError('source title missing from unified index')
                         self.query._recheck_text(row)
                     first=self.query.db.execute("SELECT * FROM research_text WHERE container_id=? AND locale='CHS' ORDER BY ordinal,child_id,id LIMIT 1",(parent['id'],)).fetchone()
@@ -333,10 +338,10 @@ class Research71Unified:
         parent,_=self._rows(local['base_ref']);cid=entry['capability_id'];edges=[]
         after=self._cursor(cursor,scope) if cid in {'character_avatar','quest_narrative_archive','quest_talk_physical','codexquest_archive','narrative_npc'} else 0
         if cid=='character_avatar':
-            for key,table,target in [('7.1-character-lore','lore_avatar_candidate','character_story'),('7.1-character-voice','voice_avatar_candidate','character_voice')]:
+            for key,table,target in [(f'{self.version}-character-lore','lore_avatar_candidate','character_story'),(f'{self.version}-character-voice','voice_avatar_candidate','character_voice')]:
                 db=self.query._source(key)
                 for row in db.execute(f'SELECT * FROM {table} WHERE avatar_row_id=? ORDER BY row_id,relation_id',(parent['occurrence_id'],)):
-                    ref=self._target('7.1-character-foundation',row['row_id'])
+                    ref=self._target(f'{self.version}-character-foundation',row['row_id'])
                     if ref and self.unref(ref,'read')[0]['capability_id']==target:
                         edges.append({'target_ref':ref,'status':'physical_candidate','source_key':key,'raw_candidate':dict(row)})
         elif cid=='quest_narrative_archive':
@@ -344,7 +349,7 @@ class Research71Unified:
             for row in db.execute('SELECT * FROM excel_candidate WHERE source_row_id=? ORDER BY id',(parent['occurrence_id'],)):
                 edges.append({'target_ref':self._target(parent['source_key'],row['target_main_row_id']),'status':'physical_candidate','raw_candidate':dict(row)})
             for row in db.execute('SELECT * FROM main_root_candidate WHERE main_row_id=? ORDER BY id',(parent['occurrence_id'],)):
-                edges.append({'target_ref':self._target('7.1-quest_talk_physical',row['quest_talk_container_id']),'status':row['status'],'raw_candidate':dict(row)})
+                edges.append({'target_ref':self._target(f'{self.version}-quest_talk_physical',row['quest_talk_container_id']),'status':row['status'],'raw_candidate':dict(row)})
         elif cid=='quest_talk_physical':
             db=self.query._source(parent['source_key'])
             for row in db.execute('SELECT * FROM physical_reference WHERE container_id=? ORDER BY id',(parent['occurrence_id'],)):
@@ -357,13 +362,13 @@ class Research71Unified:
         elif cid=='narrative_npc':
             # Invert an explicit frozen Dialog -> NPC physical candidate, not
             # a lexical name or native-ID equality relation.
-            db=self.query._source('7.1-narrative_dialog')
+            db=self.query._source(f'{self.version}-narrative_dialog')
             count=db.execute('SELECT count(*) FROM physical_candidate WHERE target_source_path=? AND target_pointer=?',(parent['source_path'],parent['source_pointer'])).fetchone()[0]
             rows=db.execute('SELECT * FROM physical_candidate WHERE target_source_path=? AND target_pointer=? ORDER BY row_ordinal,field,item_ordinal,target_ordinal LIMIT ? OFFSET ?',(parent['source_path'],parent['source_pointer'],limit,after)).fetchall()
             for row in rows:
                 locator=db.execute('SELECT * FROM locator WHERE row_ordinal=? AND field=? AND item_ordinal=?',(row['row_ordinal'],row['field'],row['item_ordinal'])).fetchone()
                 physical=db.execute('SELECT * FROM physical_row WHERE ordinal=?',(row['row_ordinal'],)).fetchone()
-                target=self.query.db.execute("SELECT * FROM research_container WHERE source_key='7.1-narrative_dialog' AND source_path=? AND source_pointer=?",(physical['source_path'],physical['pointer'])).fetchall()
+                target=self.query.db.execute(f"SELECT * FROM research_container WHERE source_key='{self.version}-narrative_dialog' AND source_path=? AND source_pointer=?",(physical['source_path'],physical['pointer'])).fetchall()
                 if len(target)!=1:raise ValueError('Dialog source occurrence missing/ambiguous')
                 self.query._recheck_container(target[0])
                 edges.append({'target_ref':self._wrap('narrative_dialog',self.query._container_ref(target[0])),'status':'physical_candidate','raw_candidate':dict(row),'raw_locator':dict(locator)})

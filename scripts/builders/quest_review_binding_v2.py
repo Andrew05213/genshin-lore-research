@@ -59,6 +59,9 @@ def readonly(path: Path) -> sqlite3.Connection:
 def build(source: Path, output: Path, *, manifest_path=None) -> dict:
     manifest = Path(manifest_path or MANIFEST)
     source, output = Path(source), Path(output)
+    from genshin_lore.source_versions import source_pin
+    SNAPSHOT = json.loads(manifest.read_text())["components"]["quest_review_archive"]["source_snapshot"]
+    version, SOURCE_COMMIT, SOURCE_TREE = source_pin(SNAPSHOT)
     require(subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines() == [SOURCE_COMMIT, SOURCE_TREE], '7.1 source pin')
     accepted = json.loads(manifest.read_text())['components']
     review, narrative = accepted['quest_review_archive'], accepted['quest_narrative_archive']
@@ -95,7 +98,7 @@ def build(source: Path, output: Path, *, manifest_path=None) -> dict:
         if kind in ('review_group', 'review_tab'):
             qr_own[native].append((path, pointer, native, 'quest_review_archive', review['contract'], review['parser_build_id'], review['ingest_run_id'], row_id, raw_sha, 'explicit_unresolved_same_value_navigation_candidate'))
         qr_row_count += 1
-    require(qr_row_count == 622 and len(qr_rows) == qr_row_count, 'complete Review row namespace')
+    require(qr_row_count == {'7.1':622,'7.2':624}[version] and len(qr_rows) == qr_row_count, 'complete Review row namespace')
     implementations = {str(path.relative_to(ROOT)): sha(path) for path in (ROOT / 'scripts/builders/quest_review_binding_v2.py', SCHEMA)}
     parser = ident('parser', implementations)
     dependencies = {'manifest_sha256': sha(manifest), 'review': {k: review[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}, 'narrative': {k: narrative[k] for k in ('contract', 'parser_build_id', 'ingest_run_id', 'artifact')}}
@@ -123,8 +126,8 @@ def build(source: Path, output: Path, *, manifest_path=None) -> dict:
         for hit in hits:
             target_path, target_pointer, target_native, family, contract, target_parser, target_run, occurrence, raw_sha, locator_kind = hit
             candidates.append((ident('candidate', lid, target_run, occurrence), lid, family, contract, target_parser, target_run, occurrence, target_path, target_pointer, target_native, raw_sha, locator_kind))
-    require(counts['summary_locators'] == 606 and counts['member_locators'] == 11 and counts['summary_candidates'] == 544 and counts['member_candidates'] == 16, 'locator denominator')
-    release = {'contract': 'quest-review-7.1-exact-target-binding-v2', 'status': 'candidate', 'snapshot': SNAPSHOT, 'source_commit': SOURCE_COMMIT, 'source_tree': SOURCE_TREE, 'implementation': implementations, 'parser_build_id': parser, 'ingest_run_id': run, 'dependencies': dependencies, 'counts': {'bound_locator': len(locators), 'bound_candidate': len(candidates), **dict(counts)}, 'relation_status': 'mapping_unresolved', 'search_complete': False, 'logical_relation_closure': False, 'product_accepted': False}
+    require(counts['summary_locators'] == 606 and counts['member_locators'] == {'7.1':11,'7.2':12}[version] and counts['summary_candidates'] == 544 and counts['member_candidates'] == {'7.1':16,'7.2':18}[version], 'locator denominator')
+    release = {'contract': f'quest-review-{version}-exact-target-binding-v2', 'status': 'candidate', 'snapshot': SNAPSHOT, 'source_commit': SOURCE_COMMIT, 'source_tree': SOURCE_TREE, 'implementation': implementations, 'parser_build_id': parser, 'ingest_run_id': run, 'dependencies': dependencies, 'counts': {'bound_locator': len(locators), 'bound_candidate': len(candidates), **dict(counts)}, 'relation_status': 'mapping_unresolved', 'search_complete': False, 'logical_relation_closure': False, 'product_accepted': False}
     require(not output.exists(), 'output exists')
     output.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(output)

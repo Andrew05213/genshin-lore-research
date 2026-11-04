@@ -1,0 +1,88 @@
+{
+  "alignment": "same physical row ordinal plus same source-owned id; physical comparison only, no logical identity",
+  "contract": "quest-review-7.2-field-continuity-v1",
+  "field_continuity": {
+    "ExcelBinOutput/QuestReviewExcelConfigData.json": [
+      {
+        "mismatches": 0,
+        "new": "LMOCNPIBCKF",
+        "old": "JIKNKEAFDJO",
+        "present": 9,
+        "rows": 9
+      },
+      {
+        "mismatches": 0,
+        "new": "MLELFKLKKLN",
+        "old": "KHAPIAPJAHD",
+        "present": 8,
+        "rows": 9
+      }
+    ],
+    "ExcelBinOutput/QuestReviewTabGroupExcelConfigData.json": [
+      {
+        "mismatches": 0,
+        "new": "BEEBMPCAJPL",
+        "old": "BGOCCKKGLPH",
+        "present": 7,
+        "rows": 7
+      },
+      {
+        "mismatches": 0,
+        "new": "PBBNMNAGFGK",
+        "old": "BOGKOENEJLM",
+        "present": 7,
+        "rows": 7
+      },
+      {
+        "mismatches": 0,
+        "new": "PKGOFBIHNPD",
+        "old": "GIAIIFFDFNE",
+        "present": 7,
+        "rows": 7
+      },
+      {
+        "mismatches": 0,
+        "new": "GCKCEOCPEEI",
+        "old": "PFDNJJNHAOJ",
+        "present": 7,
+        "rows": 7
+      }
+    ]
+  },
+  "new_physical_denominators": {
+    "ExcelBinOutput/QuestReviewExcelConfigData.json": 10,
+    "ExcelBinOutput/QuestReviewTabGroupExcelConfigData.json": 8
+  },
+  "new_rows_policy": "continuity proves all old physical rows only; additional rows independently shape-checked and fully projected by source oracle",
+  "new_source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "old_source_commit": "26df1dfbdf05a82bbb1d97506859f3e1c40718d8",
+  "source_seals": {
+    "ExcelBinOutput/QuestReviewExcelConfigData.json": {
+      "new_git_blob": "f8434e1cd4d2d5515a69f844436ee1907af22a64",
+      "new_sha256": "1ca2d084d7fc6483873ed45267c527bce55a620ca6d4216cc1060f1adbda83b4",
+      "old_git_blob": "bcc89a9364cb8bc5c020949e75dbe365049e7ca6",
+      "old_sha256": "2b5afd0cdccb1e1cec63ebbe6640a91143ade31c5fe9b94b5cfc96718a33f610"
+    },
+    "ExcelBinOutput/QuestReviewTabGroupExcelConfigData.json": {
+      "new_git_blob": "d288d5a60263bbcf4379dd5209accd93c8390840",
+      "new_sha256": "671ba2b154c5d23e17add6faaee57da51957613e21d2cf0a26fd5411f877c88d",
+      "old_git_blob": "168385f70e47b44b9eee3eb4c10c9ef6461a9b34",
+      "old_sha256": "173e68690ee1283cb1b24edbb1e9511a4c2597fd5eaa58e2c6234aa95375ec37"
+    }
+  },
+  "target_space_checks": {
+    "member_candidate_cardinality": {
+      "one": 6,
+      "two": 6
+    },
+    "member_candidate_occurrences": 18,
+    "member_locator_count": 12,
+    "tab_text_locator_count": 32,
+    "tab_text_main_hits": {
+      "CHS": 9,
+      "EN": 8,
+      "JP": 8
+    }
+  },
+  "verdict": "PROVEN_PHYSICAL_FIELD_CONTINUITY_NOT_LOGICAL_IDENTITY"
+}

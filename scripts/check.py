@@ -22,9 +22,12 @@ def payload(result):
 
 async def check(config):
     from scripts.runtime_config import load_runtime_paths
+    from genshin_lore.source_versions import source_pin
     config=Path(config).resolve()
     values=load_runtime_paths(config)
     corpus=json.loads(Path(values['profile']).read_text())['corpus_ref']
+    manifest=json.loads(Path(values['corpus']).read_text())
+    version, _, _=source_pin(manifest['snapshot']['id'])
     results={}
     for surface in ('research','narrative'):
         parameters=StdioServerParameters(command=sys.executable,args=[str(ROOT/'scripts/serve.py'),
@@ -47,7 +50,7 @@ async def check(config):
                         await call(name,{'corpus_ref':corpus,'evidence_ref':ref})
                     results[surface]={'tools':names,'all_five_called':True}
                 else:
-                    for question,kind in (('7.1这本《终北祷歌·上》讲什么？','book'),('7.1胡桃的角色故事讲了什么？','story')):
+                    for question,kind in ((f'{version}这本《终北祷歌·上》讲什么？','book'),(f'{version}胡桃的角色故事讲了什么？','story')):
                         response=await call('query_research71_preview',{'question':question})
                         key='book_continuations' if kind=='book' else 'text_continuations'
                         continuations=response.get(key,[])

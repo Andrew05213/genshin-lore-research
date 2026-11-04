@@ -62,8 +62,8 @@ def numeric(value, field):
     return value
 
 
-def indexed_tree(root, prefix):
-    raw = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", prefix])
+def indexed_tree(root, prefix, commit=COMMIT):
+    raw = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", prefix])
     result = {}
     for entry in raw.split(b"\0"):
         if not entry:
@@ -111,7 +111,18 @@ def physical_references(values, field, id_field, init_field):
     return result
 
 
-def decode_talk_source(doc, old_contract):
+def decode_talk_source(doc, old_contract, source_version="7.1"):
+    if source_version == "7.2":
+        require(isinstance(doc,dict), "Talk source root object")
+        if "dialogList" in doc:
+            native = numeric(doc["talkId"], "Talk root ID") if "talkId" in doc else None
+            return "talk_root", "7.2-authored", native, physical_nodes(doc["dialogList"], "dialogList", "id", "nextDialogs", "talkContentTextMapHash", "literal_key"), []
+        if "talks" in doc or ("id" in doc and "initDialog" in doc):
+            refs = physical_references(doc["talks"],"talks","id","initDialog") if "talks" in doc else physical_references([doc],None,"id","initDialog")
+            return "reference_wrapper", "7.2-authored-reference", None, [], refs
+        if tuple(sorted(doc)) not in {tuple(sorted(x["root_keys"])) for x in old_contract["shapes"]}:
+            native = numeric(doc["talkId"],"Talk root ID") if "talkId" in doc else None
+            return "mapping_unresolved", "7.2-registered-unresolved", native, [], []
     require(isinstance(doc, dict), "Talk source root object")
     keys = set(doc)
     if "PCIAMAFDDAA" in keys:
@@ -147,9 +158,14 @@ def decode_talk_source(doc, old_contract):
     return "mapping_unresolved", mapping or "legacy-terminal-unresolved", None, [], []
 
 
-def decode_quest_source(doc, old_contract):
+def decode_quest_source(doc, old_contract, source_version="7.1"):
     require(isinstance(doc, dict), "Quest source root object")
-    if "id" in doc and "JIJKODHIEED" in doc:
+    if source_version == "7.2":
+        native = numeric(doc["id"], "Quest root ID")
+        child_field = "subQuests" if "subQuests" in doc else None
+        children = doc.get("subQuests", [])
+        refs = physical_references(doc["talks"], "talks", "id", "initDialog") if "talks" in doc else []
+    elif "id" in doc and "JIJKODHIEED" in doc:
         native = numeric(doc["id"], "Quest root ID")
         child_field, ref_field = "JIJKODHIEED", "DLLABGGCEBM"
         children = doc[child_field]
@@ -170,11 +186,14 @@ def decode_quest_source(doc, old_contract):
         refs = physical_references(doc[ref_field], ref_field, refspec["id"], refspec["init"])
     require(isinstance(children, list) and all(isinstance(row, dict) for row in children), "Quest physical child array")
     embedded = []
-    fields = [name for name in ("PCIAMAFDDAA", "PFALHAKIILD", "GALIDJOEHOC") if name in doc]
+    fields = [name for name in ("dialogList", "PCIAMAFDDAA", "PFALHAKIILD", "GALIDJOEHOC") if name in doc]
     require(len(fields) <= 1, "multiple Quest embedded physical containers")
     if fields:
         name = fields[0]
-        if name == "PCIAMAFDDAA":
+        if name == "dialogList" and source_version == "7.2":
+            mapping = "7.2-authored"
+            nodes = physical_nodes(doc[name],name,"id","nextDialogs","talkContentTextMapHash","literal_key")
+        elif name == "PCIAMAFDDAA":
             mapping = "7.1-direct"
             nodes = physical_nodes(doc[name], name, "id", "GLJCECCOEDP", "LKECPJIFFEE", "literal_key")
         else:
@@ -198,6 +217,11 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
     root, scope_path, artifact = Path(source_root).resolve(), Path(scope_path).resolve(), Path(artifact).resolve()
     scope_raw = scope_path.read_bytes()
     scope = json.loads(scope_raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    CONTRACT = f"quest-talk-{game_version}-standalone-physical-v1"
+    signature_path = ROOT / f"manifests/quest-talk-{game_version}/root-signature-digests.json"
     require(scope["contract"] == CONTRACT and scope["source_commit"] == COMMIT and scope["source_tree"] == TREE, "scope source pin")
     require(subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() == [COMMIT, TREE], "source checkout pin")
     require(not subprocess.check_output(["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True).strip(), "source checkout dirty")
@@ -211,15 +235,15 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
         "decoder": hash_file(ROOT / "src/genshin_lore/quest_talk_7_1_physical.py"),
         "builder": hash_file(ROOT / "src/genshin_lore/quest_talk_7_1_build.py"),
         "schema": hash_file(ROOT / "schemas/quest-talk-7.1-standalone-v1.sql"),
-        "root_signatures": hash_file(ROOT / "manifests/quest-talk-7.1/root-signature-digests.json"),
+        "root_signatures": hash_file(signature_path),
     }).encode())
     require(build_report["implementation_sha256"] == implementation, "candidate implementation seal")
     parser_id = ident("parser-build", CONTRACT, implementation)
     run_id = ident("ingest-run", SNAPSHOT, parser_id, hash_bytes(scope_raw))
     require(build_report["parser_build_id"] == parser_id and build_report["ingest_run_id"] == run_id, "candidate parser/run identity")
-    blobs = indexed_tree(root, "BinOutput/Quest") | indexed_tree(root, "BinOutput/Talk")
-    blobs.update(indexed_tree(root, "TextMap"))
-    blobs.update(indexed_tree(root, MAIN))
+    blobs = indexed_tree(root, "BinOutput/Quest", COMMIT) | indexed_tree(root, "BinOutput/Talk", COMMIT)
+    blobs.update(indexed_tree(root, "TextMap", COMMIT))
+    blobs.update(indexed_tree(root, MAIN, COMMIT))
     quest_paths = sorted(path for path in blobs if path.startswith("BinOutput/Quest/") and path.endswith(".json"))
     talk_paths = sorted(path for path in blobs if path.startswith("BinOutput/Talk/") and path.endswith(".json"))
     quest_set, talk_set = set(quest_paths), set(talk_paths)
@@ -233,7 +257,7 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
     signature_path = ROOT / signature_binding["path"]
     require(hash_file(signature_path) == signature_binding["sha256"], "root signature manifest seal")
     signature_contract = json.loads(signature_path.read_text())
-    require(signature_contract["contract"] == "quest-talk-7.1-observed-root-signatures-v1" and signature_contract["source_commit"] == COMMIT and signature_contract["source_tree"] == TREE, "root signature source identity")
+    require(signature_contract["contract"] == f"quest-talk-{game_version}-observed-root-signatures-v1" and signature_contract["source_commit"] == COMMIT and signature_contract["source_tree"] == TREE, "root signature source identity")
     signatures = {kind: set(signature_contract[kind]["signature_digests"]) for kind in ("quest", "talk")}
     for kind in ("quest", "talk"):
         require(len(signatures[kind]) == signature_binding[kind + "_distinct_signatures"], kind + " signature denominator")
@@ -315,12 +339,12 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
             signature = root_signature_digest(doc)
             require(signature in signatures["quest"], "unregistered pinned Quest root signature")
             observed_signatures["quest"].add(signature)
-            native, child_field, physical_children, references, embedded = decode_quest_source(doc, old_contract)
+            native, child_field, physical_children, references, embedded = decode_quest_source(doc, old_contract, game_version)
             if child_field is None:
                 source_states["quest_child_field_absent"] += 1
-            if "id" in doc and "DLLABGGCEBM" not in doc and ("JIJKODHIEED" in doc or child_field is None):
+            if (game_version == "7.2" and "talks" not in doc) or (game_version == "7.1" and "id" in doc and "DLLABGGCEBM" not in doc and ("JIJKODHIEED" in doc or child_field is None)):
                 source_states["quest_reference_field_absent"] += 1
-            cid = put_container(path, "/", "quest_root", "7.1-versioned", native, doc)
+            cid = put_container(path, "/", "quest_root", f"{game_version}-versioned", native, doc)
             for ordinal, child in enumerate(physical_children):
                 pointer = f"/{child_field}/{ordinal}"
                 raw = enc(child)
@@ -336,7 +360,7 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, build_report: di
             signature = root_signature_digest(doc)
             require(signature in signatures["talk"], "unregistered pinned Talk root signature")
             observed_signatures["talk"].add(signature)
-            kind, mapping, native, physical_nodes_list, references = decode_talk_source(doc, old_contract)
+            kind, mapping, native, physical_nodes_list, references = decode_talk_source(doc, old_contract, game_version)
             if kind == "talk_root" and native is None:
                 source_states["talk_root_no_native_id"] += 1
             cid = put_container(path, "/", kind, mapping, native, doc)

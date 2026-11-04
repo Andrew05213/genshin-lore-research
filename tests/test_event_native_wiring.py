@@ -107,7 +107,8 @@ def test_event_native_stages_use_own_metadata_and_real_completion_contracts(tmp_
                     return []
                 fake.discover_target_candidates = discover
             if name == 'native_aux_quest_7_1_verify':
-                def external(*args,metadata_root):
+                def external(*args,metadata_root,source_version="7.1"):
+                    assert source_version == "7.1"
                     assert metadata_root == job.metadata
                     return [],{'quest_narrative':{'parser':'synthetic','run':'synthetic'}}
                 fake.expected_external = external

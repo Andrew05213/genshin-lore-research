@@ -58,8 +58,10 @@ def verify(source_root, historical_source, scope_path, qt_artifact, artifact,
     manifest_path = Path(qt_manifest_path) if qt_manifest_path is not None else QT_MANIFEST
     qt_manifest = json.loads(manifest_path.read_text())
     check_files(source_root, scope)
+    if qt_manifest.get('source_snapshot')!=scope['snapshot_id']:
+        raise ValueError('Filmfest oracle cross-snapshot Quest/Talk input')
     check_historical(historical_source, historical)
-    if (scope['contract'] != 'event-filmfest-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-filmfest-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or scope['family_contract_version'] != historical['family_contract_version']
             or len(scope['sources']) != 4 or len(historical['sources']) != 4

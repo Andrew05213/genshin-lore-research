@@ -42,8 +42,8 @@ def identity(*parts):
     return "document71:" + sha(canonical(parts).encode())[:40]
 
 
-def git_blobs(root, prefix):
-    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", prefix])
+def git_blobs(root, prefix, commit=COMMIT):
+    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", prefix])
     result = {}
     for item in data.split(b"\0"):
         if not item:
@@ -67,15 +67,18 @@ def qualify(root, scope_path):
     root, scope_path = Path(root).resolve(), Path(scope_path).resolve()
     raw = scope_path.read_bytes()
     scope = json.loads(raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
     if (scope.get("contract"), scope.get("source_commit"), scope.get("source_tree"), scope.get("snapshot_id")) != (
-        "document-readable-7.1-source-scope-v1", COMMIT, TREE, SNAPSHOT,
+        f"document-readable-{version}-source-scope-v1", COMMIT, TREE, SNAPSHOT,
     ):
         raise ValueError("7.1 Document source scope")
     if subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() != [COMMIT, TREE]:
         raise ValueError("7.1 source checkout pin")
     if subprocess.check_output(["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True).strip():
         raise ValueError("7.1 source checkout dirty")
-    readable = git_blobs(root, "Readable")
+    readable = git_blobs(root, "Readable", COMMIT)
     seal = sha((json.dumps(sorted(readable.items()), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode())
     if len(readable) != scope["readable"]["file_count"] or seal != scope["readable"]["path_blob_set_sha256"]:
         raise ValueError("7.1 Readable path/blob denominator")
@@ -91,6 +94,11 @@ def qualify(root, scope_path):
 def build(source_root, scope_path, output):
     started = time.monotonic()
     root, scope, scope_raw, readable, declared = qualify(source_root, scope_path)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, _, _ = source_pin(SNAPSHOT)
+    CONTRACT = f"document-{version}-evidence-v1"
+    content_field = "PLOJOMIPJGH" if version == "7.2" else "contentLocalizedId"
     output = Path(output).resolve()
     if output.exists() or output.is_symlink() or any(Path(str(output) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise FileExistsError("Document 7.1 target or sidecar exists")
@@ -103,12 +111,12 @@ def build(source_root, scope_path, output):
         raise ValueError("7.1 Document/Localization row denominator")
     lookup = defaultdict(list)
     for ordinal, row, _ in locs:
-        for locator in localization_readable_locators(row, ordinal):
+        for locator in localization_readable_locators(row, ordinal, source_version=version):
             pass
         lookup[row["id"]].append((ordinal, row))
     wanted = set()
     for ordinal, row, _ in docs:
-        wanted.add(str(document_row(row, ordinal)["title_text_hash"]))
+        wanted.add(str(document_row(row, ordinal, source_version=version)["title_text_hash"]))
     textmaps = {}
     for locale in ("CHS", "EN", "JP"):
         for tier in ("", "_Medium"):
@@ -156,7 +164,7 @@ def build(source_root, scope_path, output):
                 ))
 
         for ordinal, row, raw_json in docs:
-            decoded = document_row(row, ordinal)
+            decoded = document_row(row, ordinal, source_version=version)
             row_id = identity(run_id, "row", PRIMARY, ordinal)
             db.execute("INSERT INTO document_row VALUES(?,?,?,?,?,?,?,?)", (
                 row_id, run_id, "document", ordinal, str(decoded["native_id"]), PRIMARY, f"/{ordinal}", raw_json,
@@ -174,23 +182,23 @@ def build(source_root, scope_path, output):
                     db.execute("INSERT INTO document_text VALUES(?,?,?,?,?,?)", (
                         identity(slot, path, pair_ordinal), slot, path, pair_ordinal, pointer, text,
                     ))
-            for field in ("questIDList", "questContentLocalizedId", "contentLocalizedId"):
+            for field in ("questIDList", "questContentLocalizedId", content_field):
                 for element, value in enumerate(row.get(field, [])):
                     origin = f"/{ordinal}/{field}/{element}"
                     matches = lookup.get(value, [])
-                    complete = field != "contentLocalizedId"
+                    complete = field != content_field
                     targets = [(LOCALIZATION, f"/{loc_ordinal}", {**declared[LOCALIZATION], "native_id": loc_row["id"]}) for loc_ordinal, loc_row in matches]
                     relation(row_id, origin, "document_localization", PRIMARY, origin, value,
                              "all physical Localization rows; " + ("explicit/project locator contract" if complete else "equality observations only; namespace unresolved"), complete, targets)
                     if not complete:
                         continue
                     for loc_ordinal, loc_row in matches:
-                        for locator in localization_readable_locators(loc_row, loc_ordinal):
+                        for locator in localization_readable_locators(loc_row, loc_ordinal, source_version=version):
                             path = locator["target_path"]
                             seal = target_seal(path) if path is not None else None
                             hits = [(path, "", seal)] if seal is not None else []
                             relation(row_id, origin, "localization_readable", LOCALIZATION, locator["pointer"], locator["raw_locator"],
-                                     "all pinned Readable physical paths; 7.1 source-authored exported path" if path else "non-Readable/unknown path namespace; no inferred file",
+                                     f"all pinned Readable physical paths; {version} source-authored exported path" if path else "non-Readable/unknown path namespace; no inferred file",
                                      path is not None, hits)
             if "contentPath" in row:
                 origin = f"/{ordinal}/contentPath"

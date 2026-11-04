@@ -1,0 +1,1096 @@
+{
+  "completeness": {
+    "declared_physical_projection_complete": true,
+    "declared_relation_projection_complete": true,
+    "declared_text_projection_complete": true,
+    "full_7_1": false
+  },
+  "contract": "auxiliary-quest-delta-7.2-scope-v1",
+  "dependencies": {},
+  "external_candidates": [],
+  "family": "native_archive",
+  "family_contract_version": "native-archive-evidence-v1",
+  "files": [
+    {
+      "blob": "03e77ee07236c0f7ee85ba0a14d2a1f212f93d62",
+      "path": "ExcelBinOutput/BeyondRetEnumTextMapExcelConfigData.json",
+      "sha256": "8edbbeb9e59019fa671842d63cf8f79791f8fe2bc6368078973681b008e191e1",
+      "size_bytes": 8972
+    },
+    {
+      "blob": "3d3145420d692483c2ae52506672e4d8b5aa4e84",
+      "path": "ExcelBinOutput/BeyondRetTextMapExcelConfigData.json",
+      "sha256": "1f07073b9c26a52cb766dd6f29c80ca5d8b2a45d5e4a04cd3e4af2cf62ce954b",
+      "size_bytes": 60968
+    },
+    {
+      "blob": "df822a3b802494d2986471571298a6b8a2691e11",
+      "path": "ExcelBinOutput/BeyondRiskInspectTextMapExcelConfigData.json",
+      "sha256": "f3e0ed993698c78e879bfc8d64e17f176dbe9f868fcdebbad0915b703d5217d4",
+      "size_bytes": 2407
+    },
+    {
+      "blob": "8600f123d908cfcecf80cd20039c888e49dce53c",
+      "path": "ExcelBinOutput/DailyTaskExcelConfigData.json",
+      "sha256": "4b20c5c9dcf431aeaa74f189ea07ab74821bee736fad628206d5b4a8c0a41cc9",
+      "size_bytes": 309713
+    },
+    {
+      "blob": "dc4c0399c3a0ab7c4f75b766bcd46e645f31d7db",
+      "path": "ExcelBinOutput/EmbeddedTextMapConfigData.json",
+      "sha256": "ea0014e2145d7b30320f23fd9cd786f48accabfe9c054be4d4740171bd366041",
+      "size_bytes": 39618
+    },
+    {
+      "blob": "78e92869ab8982895a9444e13113caf88ebb4f74",
+      "path": "ExcelBinOutput/ExhibitionCardExcelConfigData.json",
+      "sha256": "93d371fca5cd504715cde28ab2fbe5b9511908da0f276454139830be30e639e5",
+      "size_bytes": 72878
+    },
+    {
+      "blob": "42943e8117fc22c773c45e41efe0f7f97ec2adab",
+      "path": "ExcelBinOutput/ExhibitionListExcelConfigData.json",
+      "sha256": "3f751a243fba66474943a0b3b668affd6621f002bfb3cde800e1572fdd2d9a87",
+      "size_bytes": 18339
+    },
+    {
+      "blob": "335f283d86ec7a127c06d74f9310587aa7e50bea",
+      "path": "ExcelBinOutput/GCGCharBreakExcelConfigData.json",
+      "sha256": "c30f4c611ed1f9c86db489c1904bea0a9680ce23e07c1c19914c47d4ecc482e7",
+      "size_bytes": 306493
+    },
+    {
+      "blob": "016cd0a278eb6931ef27a9bac6892406adf131f8",
+      "path": "ExcelBinOutput/GCGCharExcelConfigData.json",
+      "sha256": "f5346145429ffe5ec934097fd832aeff961d4e5504205828fb7a7a10b55592b5",
+      "size_bytes": 245984
+    },
+    {
+      "blob": "6e9a5f8c0ca18802c41b5a7fd082cce19b342c2e",
+      "path": "ExcelBinOutput/GCGChooseExcelConfigData.json",
+      "sha256": "3f144d8f8aa7b68bdc6725dd782f7f4cec406b2b6b7b68077f07512193c99221",
+      "size_bytes": 154670
+    },
+    {
+      "blob": "cd72daa3eadc1de30c77d93b0c450cd7724770f4",
+      "path": "ExcelBinOutput/GCGDeckBackExcelConfigData.json",
+      "sha256": "d8938303014df6832d17759b8e7e18a2bc3e70d791eed9df89ad09c1ebcefe46",
+      "size_bytes": 13121
+    },
+    {
+      "blob": "622e32a784c0dd160c70a2a9028ed87b5150ac66",
+      "path": "ExcelBinOutput/GCGKeywordExcelConfigData.json",
+      "sha256": "f63f24283d18acb20ae6b194533b7dc5d6433fa054f26bfdd454fd3f33af2f3a",
+      "size_bytes": 15251
+    },
+    {
+      "blob": "a8cf0a19701ec4c7870bb57ee4a58cccf508df9a",
+      "path": "ExcelBinOutput/GCGRuleTextExcelConfigData.json",
+      "sha256": "e99da03e95bc0a86649730344097709ebae19cfd3411042604162458b80ac08a",
+      "size_bytes": 2135
+    },
+    {
+      "blob": "144f667c000b1f6fa03af527a75a39f99780be0a",
+      "path": "ExcelBinOutput/GCGSkillExcelConfigData.json",
+      "sha256": "1fbabd9fd744619e89888bcb13e9f9aa03e416a800fc3e51f50a6b7a11dd6560",
+      "size_bytes": 1637724
+    },
+    {
+      "blob": "423577c32ddebd3cf861507cd3a49355e8eb91c9",
+      "path": "ExcelBinOutput/GCGTagExcelConfigData.json",
+      "sha256": "caeef117ed3a5d7a7bcc436f9bd54283929bd5ef5d14f7ff58b30a7f18065e0b",
+      "size_bytes": 12881
+    },
+    {
+      "blob": "1e3a1fe3d86b5b70ff2328a2eee64ff63dc116a1",
+      "path": "ExcelBinOutput/GCGTokenDescConfigData.json",
+      "sha256": "0bef46f7bf15adea937090ea3215789eb6c414591b9597fe03c3a750e9eacc17",
+      "size_bytes": 4651
+    },
+    {
+      "blob": "cad8f4c8cf4a99473621d19d84e2a34680d7d45d",
+      "path": "ExcelBinOutput/HyperLinkNameExcelConifgData.json",
+      "sha256": "3c8769d702fa614f158ad675d3b6b9de26d109348b9855addb88d968dbe33b3c",
+      "size_bytes": 22486
+    },
+    {
+      "blob": "3653c57f26fc3ee87f02a334c58d88cf97f999a1",
+      "path": "ExcelBinOutput/InvestigationTargetConfigData.json",
+      "sha256": "88ea67aad6d5926afe6250d213d94991839531b584d4567fc41a338aaca07047",
+      "size_bytes": 116000
+    },
+    {
+      "blob": "487814bad90695a7d79ba1c85a8c88067faadf39",
+      "path": "ExcelBinOutput/ManualTextMapConfigData.json",
+      "sha256": "1f32e0c14034f98cd391afe2dccaf23985b9705ad994ac663cd08999b05b7d26",
+      "size_bytes": 8726708
+    },
+    {
+      "blob": "2a9b50a55973da254d603f6c0bedb8b816476ad9",
+      "path": "ExcelBinOutput/MoonNightQuestAlbumExcelConfigData.json",
+      "sha256": "472b971bf713fb3dd370a4dfa9257853147f8f521b2426f7a84662b047078f5c",
+      "size_bytes": 1498
+    },
+    {
+      "blob": "651fe2135813dee7003998dced117233b51bc33e",
+      "path": "ExcelBinOutput/MpPlayLevelTextDataExcelConfigData.json",
+      "sha256": "ad23191d3d1c1c31cae6e57e877c46dcc2ee8809b7043659d41f7e9fd30a2d33",
+      "size_bytes": 374
+    },
+    {
+      "blob": "1b49677fc0640e31ac170f7c88f74d012ddfd6c8",
+      "path": "ExcelBinOutput/MpPlayStatisticConfigData.json",
+      "sha256": "91756c2277152f2c49a98b5f74206221fe706edf22739a0dc369a6070223a446",
+      "size_bytes": 12133
+    },
+    {
+      "blob": "792e353ed1b3871c0bccec62ed06ec6a12d1301e",
+      "path": "ExcelBinOutput/OfferingQuestExcelConfigData.json",
+      "sha256": "ad8922e19408a90455e68fb396d895c70e26bcf1cae7635bcf61462098b6da87",
+      "size_bytes": 2515
+    },
+    {
+      "blob": "b52b394cf73e720b28d2eff1ddbf4bd983fa4212",
+      "path": "ExcelBinOutput/OptionExcelConfigData.json",
+      "sha256": "24fcff8e26379847b38438c9e2241a4aca80bc547415b5bd6747d170232e5d03",
+      "size_bytes": 175172
+    },
+    {
+      "blob": "e55f57f7b9304d21b20287001cd253bd314087c5",
+      "path": "ExcelBinOutput/QuestAbyssWarLevelExcelConfigData.json",
+      "sha256": "3acf74786608b87b60b3c158c3da5fe9ba04e451c3bc5b150a232845cf36cdec",
+      "size_bytes": 40812
+    },
+    {
+      "blob": "255eac8cdba42706c1e430e3a712fd50b65bee10",
+      "path": "ExcelBinOutput/QuestAcceptionMarkExcelConfigData.json",
+      "sha256": "80db1df62313240b69577ec905a046d44443289631578af4f041d1af070cf464",
+      "size_bytes": 4369
+    },
+    {
+      "blob": "f79be8fdeb20e65c54a758646e4682047c691dbe",
+      "path": "ExcelBinOutput/QuestAlchemySimCropExcelConfigData.json",
+      "sha256": "94934da447645af538f874ee3f4a3755baeefadd127653962f2e3e59f8c512b1",
+      "size_bytes": 22741
+    },
+    {
+      "blob": "d865ffac93e034f230d9060553c4481aa3235351",
+      "path": "ExcelBinOutput/QuestCheckBonusExcelConfigData.json",
+      "sha256": "56b301d5048eade6957fe802dd6e18925482f4e46601cdb0210c19f2d0d0947a",
+      "size_bytes": 13125
+    },
+    {
+      "blob": "81d07ffdef7918f70bfe04057f05476eb37e8993",
+      "path": "ExcelBinOutput/QuestCheckExcelConfigData.json",
+      "sha256": "122199bc013d24165c11dfa790d075a5057f56dbeb92e3ab192a43e0850f3851",
+      "size_bytes": 13406
+    },
+    {
+      "blob": "ccec50eeea742386034392abc20b6620148b3fef",
+      "path": "ExcelBinOutput/RandomMainQuestExcelConfigData.json",
+      "sha256": "2f337dc83f28facb7a8455f472918ab1f93619b73212961809c10eea6bbfb855",
+      "size_bytes": 3981
+    },
+    {
+      "blob": "7ee71b9885341eb979be9450435a05cfe198886e",
+      "path": "ExcelBinOutput/RandomQuestExcelConfigData.json",
+      "sha256": "8b658ec57f5ee6d3d83b944042beb97d0d67f5fc45d37da7f51f26622396b7d3",
+      "size_bytes": 234330
+    },
+    {
+      "blob": "80667d6b1b59a995dc4a30913f6707dc2ba8437e",
+      "path": "ExcelBinOutput/RegionSearchExcelConfigData.json",
+      "sha256": "2968ba4f4c051b80090179b21d5c653b6405791c264d1d5474a377f3e01470a5",
+      "size_bytes": 391
+    },
+    {
+      "blob": "fa0464029b8d152cc1b0d72b7bac926cc70371f9",
+      "path": "ExcelBinOutput/ReputationEntranceExcelConfigData.json",
+      "sha256": "1a1ed49693e9562b816803770cb6a93f8123debff5fb42779891d1ef2d29f836",
+      "size_bytes": 9151
+    },
+    {
+      "blob": "b422216e91cf9321553d8c6900f3730b4cf82713",
+      "path": "ExcelBinOutput/ReunionV2QuestExcelConfigData.json",
+      "sha256": "fd17b41b9c33d065f27f0df0a4f03f982163431b99424e519d67ecf618c70e4c",
+      "size_bytes": 20747
+    },
+    {
+      "blob": "e38ccc32b2605fb0d4d588a1f7ceaf4bd2a6edea",
+      "path": "ExcelBinOutput/SeaLampSectionMainQuestExcelConfigData.json",
+      "sha256": "961a9960d78227cda2076370eee3e2f485e360c8e0d748e83def380121b499db",
+      "size_bytes": 764
+    },
+    {
+      "blob": "43e4454b4f52ed85eacdf444ef5719d849b38799",
+      "path": "ExcelBinOutput/SeaLampSectionMiniQuestExcelConfigData.json",
+      "sha256": "af970e671131ea290fcd9c78a876237cc29ab21265c47eadd0ed18a7337290f2",
+      "size_bytes": 3690
+    },
+    {
+      "blob": "7b7da9fcd311ebb9525f826f06fb38b2f0090e71",
+      "path": "ExcelBinOutput/TribalQuestChapterExcelConfigData.json",
+      "sha256": "a610cf27bab252d7e0e002fe92dba4e895c1a71388b079b4348f10e05e53d23a",
+      "size_bytes": 7140
+    },
+    {
+      "blob": "7a0d401bcd75f23cf7ebceb9f03a3b2a5502fc1c",
+      "path": "ExcelBinOutput/TribalQuestChapterGroupExcelConfigData.json",
+      "sha256": "1ba99bdf7aea0961f78a18e10426bc71243e2946d3d42ec1672a8225440d925e",
+      "size_bytes": 3872
+    },
+    {
+      "blob": "07da1fdf07f6613607d6b9dd27a9d117b3fc89c9",
+      "path": "ExcelBinOutput/TribalReputationQuestExcelConfigData.json",
+      "sha256": "2f32f165cfc404c38a416795e20fdfb0fc15fea704bf5d1e365a5bfa951489c9",
+      "size_bytes": 5305
+    },
+    {
+      "blob": "4902627061c7c0950e45c9b3b7619b8f1c4c25f5",
+      "path": "ExcelBinOutput/TutorialDetailExcelConfigData.json",
+      "sha256": "503e2af99df6d290384f356dfcc68aebc880633aed55db551ff26ed450b70b5f",
+      "size_bytes": 489150
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "historical_selector_physical_rows": 55037,
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "main_quest_reconciliation": {
+    "accepted_parser": null,
+    "accepted_run": null,
+    "physical_rows": 4543,
+    "source_path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+    "status": "same_snapshot_exact_physical_capability_reuse"
+  },
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {},
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "reuse_targets": [],
+  "selection_manifest": "manifests/native-archive-7.2/aux-quest-selection-v1.json",
+  "selection_sha256": "7ec89f18cdf17c136ef62fb735e4759d771fb46880e94712ba4ac6e886704b8a",
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "auxiliary_text_source",
+      "kind": "ManualTextMapConfigData",
+      "native_id_field": "textMapId",
+      "path": "ExcelBinOutput/ManualTextMapConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "textMapContentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "auxiliary_text_source",
+      "kind": "EmbeddedTextMapConfigData",
+      "native_id_field": "textMapId",
+      "path": "ExcelBinOutput/EmbeddedTextMapConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "textMapContentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "auxiliary_text_source",
+      "kind": "BeyondRetTextMapExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/BeyondRetTextMapExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "auxiliary_text_source",
+      "kind": "BeyondRetEnumTextMapExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/BeyondRetEnumTextMapExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "auxiliary_text_source",
+      "kind": "BeyondRiskInspectTextMapExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/BeyondRiskInspectTextMapExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "RandomQuestExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/RandomQuestExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "selected_random_main_quest_rows",
+          "field": "mainId",
+          "relation_kind": "random_quest_main",
+          "shape": "scalar",
+          "target": {
+            "mode": "local",
+            "native_id_field": "id",
+            "path": "ExcelBinOutput/RandomMainQuestExcelConfigData.json"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "QuestCheckExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/QuestCheckExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "parentQuestId",
+          "relation_kind": "quest_check_parent_main_quest",
+          "shape": "scalar",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_main"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descContentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "QuestCheckBonusExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/QuestCheckBonusExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "ReunionV2QuestExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ReunionV2QuestExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "tabNameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "RandomMainQuestExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/RandomMainQuestExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "TribalReputationQuestExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TribalReputationQuestExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "parentQuestId",
+          "relation_kind": "tribal_reputation_main_quest",
+          "shape": "scalar",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_main"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "SeaLampSectionMiniQuestExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/SeaLampSectionMiniQuestExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "miniQuestId",
+          "relation_kind": "sea_lamp_mini_main_quest",
+          "shape": "scalar",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_main"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "SeaLampSectionMainQuestExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/SeaLampSectionMainQuestExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "questId",
+          "relation_kind": "sea_lamp_section_main_quest",
+          "shape": "array",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_main"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "introTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "TribalQuestChapterExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TribalQuestChapterExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_step_rows",
+          "field": "guideQuestId",
+          "relation_kind": "tribal_chapter_guide_quest_step",
+          "shape": "scalar",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_step"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "chapterNumTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "TribalQuestChapterGroupExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/TribalQuestChapterGroupExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "MoonNightQuestAlbumExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MoonNightQuestAlbumExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "QuestAlchemySimCropExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/QuestAlchemySimCropExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "QuestAbyssWarLevelExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/QuestAbyssWarLevelExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "buffDescTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "QuestAcceptionMarkExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/QuestAcceptionMarkExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_step_rows",
+          "field": "subQuestId",
+          "relation_kind": "acception_mark_quest_step",
+          "shape": "scalar",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_step"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "acceptableTimeTipsTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_delta_text",
+      "kind": "OfferingQuestExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/OfferingQuestExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "mainQuestList",
+          "relation_kind": "offering_main_quest",
+          "shape": "array",
+          "target": {
+            "mode": "external",
+            "namespace": "quest_main"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGRuleTextExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGRuleTextExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_native_archive_gcg_rule_detail_rows",
+          "field": "detailIdList",
+          "relation_kind": "gcg_rule_detail",
+          "shape": "array",
+          "target": {
+            "mode": "external",
+            "namespace": "gcg_rule_detail"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "MpPlayLevelTextDataExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MpPlayLevelTextDataExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGKeywordExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGKeywordExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGTokenDescConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGTokenDescConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGChooseExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGChooseExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "targetHintTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGTagExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/GCGTagExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGDeckBackExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/GCGDeckBackExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "unlockCondTextTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGCharBreakExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGCharBreakExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "selected_gcg_skill_rows",
+          "field": "skillList",
+          "relation_kind": "gcg_break_character_skill",
+          "shape": "array",
+          "target": {
+            "mode": "local",
+            "native_id_field": "id",
+            "path": "ExcelBinOutput/GCGSkillExcelConfigData.json"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGCharExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGCharExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "selected_gcg_skill_rows",
+          "field": "skillList",
+          "relation_kind": "gcg_character_skill",
+          "shape": "array",
+          "target": {
+            "mode": "local",
+            "native_id_field": "id",
+            "path": "ExcelBinOutput/GCGSkillExcelConfigData.json"
+          }
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "gcg_native_text",
+      "kind": "GCGSkillExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/GCGSkillExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "TutorialDetailExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TutorialDetailExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descriptTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "DailyTaskExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/DailyTaskExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descriptionTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "targetTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "OptionExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/OptionExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "ExhibitionCardExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ExhibitionCardExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "styleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "ExhibitionListExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ExhibitionListExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "displayFormatTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "displayTitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "InvestigationTargetConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/InvestigationTargetConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "infoDesTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "HyperLinkNameExcelConifgData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/HyperLinkNameExcelConifgData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "RegionSearchExcelConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/RegionSearchExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "searchCompleteTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "searchDescTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "searchNameTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "ReputationEntranceExcelConfigData",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ReputationEntranceExcelConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "explainTitleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "native_guide_display_text",
+      "kind": "MpPlayStatisticConfigData",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/MpPlayStatisticConfigData.json",
+      "relations": [],
+      "text_owners": [
+        {
+          "field": "mpchallengeTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "mpchallengestyleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "mpchallengetitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    }
+  ],
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

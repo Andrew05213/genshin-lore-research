@@ -74,6 +74,9 @@ def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[s
     """No default/latest or historical-runtime fallback is allowed."""
     path = Path(path)
     manifest = json.loads(Path(foundation_manifest or FOUNDATION_MANIFEST).read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = manifest["source_snapshot"]
+    _, SOURCE_COMMIT, SOURCE_TREE = source_pin(SNAPSHOT)
     if (manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"]) != (SNAPSHOT, SOURCE_COMMIT, SOURCE_TREE):
         raise ValueError("immutable foundation manifest identity")
     if "local_rebuild" in manifest:
@@ -91,9 +94,9 @@ def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[s
         raise ValueError("immutable foundation source scope")
     conn = _readonly(path)
     try:
-        if conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0] != 34817:
+        if conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0] != sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()):
             raise ValueError("foundation text-owner denominator")
-        for table, expected in (("foundation_voice_lut", 375), ("foundation_voice_item", 375), ("foundation_audio_variant", 9770), ("foundation_source_file", 18)):
+        for table, expected in (("foundation_voice_lut", scope["voice_scope"]["selected_fetter_lut_records"]), ("foundation_voice_item", scope["voice_scope"]["selected_fetter_item_records"]), ("foundation_audio_variant", scope["voice_scope"]["audio_variants"]), ("foundation_source_file", 18)):
             if conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] != expected:
                 raise ValueError("foundation denominator " + table)
         release = json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])
@@ -109,6 +112,8 @@ def qualify_foundation(path: str | Path, *, foundation_manifest=None) -> tuple[s
 
 def qualify_source(source: str | Path, scope: dict) -> Path:
     source = Path(source)
+    from .source_versions import source_pin
+    _, SOURCE_COMMIT, SOURCE_TREE = source_pin(scope["snapshot_id"])
     actual = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines()
     dirty = subprocess.check_output(["git", "-C", str(source), "status", "--porcelain=v1"], text=True).strip()
     if actual != [SOURCE_COMMIT, SOURCE_TREE] or dirty:
@@ -148,7 +153,10 @@ def _foundation_run(foundation: sqlite3.Connection) -> str:
     return json.loads(foundation.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"]
 
 
-def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Path | None = None, source_scope: dict | None = None, foundation_run_id: str = FOUNDATION_RUN) -> dict:
+def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Path | None = None, source_scope: dict | None = None, foundation_run_id: str = FOUNDATION_RUN, snapshot_id=SNAPSHOT) -> dict:
+    SNAPSHOT = snapshot_id
+    from .source_versions import source_pin
+    game_version, _, _ = source_pin(SNAPSHOT)
     implementation = {
         "src/genshin_lore/character_7_1_successor_build.py": sha(ROOT / "src/genshin_lore/character_7_1_successor_build.py"),
         SCHEMAS[kind]: sha(ROOT / SCHEMAS[kind]),
@@ -158,7 +166,7 @@ def _release(kind: str, conn: sqlite3.Connection, foundation: Path, *, text: Pat
     foundation_size = foundation.stat().st_size
     run_id = _identity(kind, "run", parser_id, foundation_run_id, foundation_sha, sha(text) if text else None)
     release = {
-        "contract": f"character-7.1-{kind}-successor-v1",
+        "contract": f"character-{game_version}-{kind}-successor-v1",
         "snapshot_id": SNAPSHOT,
         "foundation_run_id": foundation_run_id,
         "foundation_size_bytes": foundation_size,
@@ -217,9 +225,10 @@ def build_text(source_root: str | Path, foundation_path: str | Path, output_path
                 conn.execute("INSERT INTO resolution VALUES(?,?,?,?,?,?,?,?)", (owner_id, row_id, pointer, field_name, key, locale, state, len(found)))
                 counts[locale + ":" + state] += 1
                 conn.executemany("INSERT INTO candidate VALUES(?,?,?,?,?,?,?)", ((owner_id, locale, tier, path, ordinal, key, value) for tier, path, ordinal, value in found))
-        if len(owner_rows) != 34817 or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3:
+        expected_owners = sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items())
+        if len(owner_rows) != expected_owners or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != expected_owners * 3:
             raise ValueError("text owner denominator")
-        release = _release("text", conn, Path(foundation_path), source_scope=scope, foundation_run_id=_foundation_run(foundation))
+        release = _release("text", conn, Path(foundation_path), source_scope=scope, foundation_run_id=_foundation_run(foundation), snapshot_id=scope["snapshot_id"])
         report = _finish(conn, output, {**release, "resolution_states": dict(sorted(counts.items())), "owner_count": len(owner_rows), "silent_skips": 0})
         conn = None
         qualify_source(source, scope)
@@ -232,18 +241,22 @@ def build_text(source_root: str | Path, foundation_path: str | Path, output_path
         foundation.close()
 
 
-def _qualify_text(path: Path, foundation_path: Path, *, foundation_run_id: str = FOUNDATION_RUN) -> sqlite3.Connection:
+def _qualify_text(path: Path, foundation_path: Path, *, foundation_run_id: str = FOUNDATION_RUN, scope=None) -> sqlite3.Connection:
+    from .source_versions import source_pin
+    snapshot = scope["snapshot_id"] if scope else SNAPSHOT
+    game_version, _, _ = source_pin(snapshot)
+    owners = sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()) if scope else 34817
     if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("text projection sidecar")
     conn = _readonly(path)
     try:
         release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
-        if (release["contract"] != "character-7.1-text-successor-v1"
-                or release["snapshot_id"] != SNAPSHOT
+        if (release["contract"] != f"character-{game_version}-text-successor-v1"
+                or release["snapshot_id"] != snapshot
                 or release["foundation_sha256"] != sha(foundation_path)
                 or release["foundation_size_bytes"] != foundation_path.stat().st_size
                 or release["foundation_run_id"] != foundation_run_id
-                or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != 34817 * 3):
+                or conn.execute("SELECT count(*) FROM resolution").fetchone()[0] != owners * 3):
             raise ValueError("text projection identity")
         return conn
     except Exception:
@@ -252,9 +265,9 @@ def _qualify_text(path: Path, foundation_path: Path, *, foundation_run_id: str =
 
 
 def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
-    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
+    foundation, scope = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     try:
-        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation))
+        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation), scope=scope)
     except Exception:
         foundation.close()
         raise
@@ -289,9 +302,9 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
                         raise ValueError("lore ownership candidate count")
                     conn.executemany("INSERT INTO lore_avatar_candidate VALUES(?,?,?)", ((row_id, rel[0], target) for (target,) in candidates))
                 counts[kind] += 1
-        if counts != {"avatar": 167, "fetter_info": 124, "story": 974}:
+        if counts != {kind:scope["primary_rows"]["ExcelBinOutput/" + basename] for basename, kind in LORE.items()}:
             raise ValueError("Lore/Story full denominator")
-        release = _release("lore", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation))
+        release = _release("lore", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation), snapshot_id=scope["snapshot_id"])
         report = _finish(conn, output, {**release, "record_counts": dict(counts), "silent_skips": 0})
         conn = None
         return report
@@ -305,9 +318,9 @@ def build_lore(foundation_path: str | Path, text_path: str | Path, output_path: 
 
 
 def build_voice(foundation_path: str | Path, text_path: str | Path, output_path: str | Path, *, foundation_manifest=None) -> dict:
-    foundation, _ = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
+    foundation, scope = qualify_foundation(foundation_path, foundation_manifest=foundation_manifest)
     try:
-        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation))
+        text = _qualify_text(Path(text_path), Path(foundation_path), foundation_run_id=_foundation_run(foundation), scope=scope)
     except Exception:
         foundation.close()
         raise
@@ -344,15 +357,16 @@ def build_voice(foundation_path: str | Path, text_path: str | Path, output_path:
             conn.execute("INSERT INTO item_ref VALUES(?,?,?,?,?,?)", row)
         for row in foundation.execute("SELECT id,item_id,ordinal,pointer,audio_path,selector,order_value FROM foundation_audio_variant ORDER BY item_id,ordinal"):
             conn.execute("INSERT INTO audio_ref VALUES(?,?,?,?,?,?,?)", row)
-        expected = {"voice_record": 9183, "voice_text_ref": 9183 * 3, "voice_lut_candidate": 9183, "lut_ref": 375, "item_ref": 375, "audio_ref": 9770}
+        voice_rows = scope["primary_rows"][VOICE]
+        expected = {"voice_record": voice_rows, "voice_text_ref": voice_rows * 3, "voice_lut_candidate": voice_rows, "lut_ref": scope["voice_scope"]["selected_fetter_lut_records"], "item_ref": scope["voice_scope"]["selected_fetter_item_records"], "audio_ref": scope["voice_scope"]["audio_variants"]}
         for table, count in expected.items():
             if conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] != count:
                 raise ValueError("Voice full denominator " + table)
         unattached = conn.execute("SELECT count(*) FROM lut_ref WHERE lut_id NOT IN(SELECT lut_id FROM voice_lut_candidate)").fetchone()[0]
         missing = conn.execute("SELECT count(*) FROM item_ref WHERE variants_status='missing'").fetchone()[0]
-        if (unattached, missing) != (8, 1):
+        if (unattached, missing) != (scope["voice_scope"]["unattached_fetter_lut_slots"], scope["voice_scope"]["items_with_missing_variant_array"]):
             raise ValueError("Voice legal missing/unattached denominator")
-        release = _release("voice", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation))
+        release = _release("voice", conn, Path(foundation_path), text=Path(text_path), foundation_run_id=_foundation_run(foundation), snapshot_id=scope["snapshot_id"])
         report = _finish(conn, output, {**release, "unattached_lut_slots": unattached, "missing_variant_arrays": missing, "coverage": "Character/Fetter Voice only", "silent_skips": 0})
         conn = None
         return report

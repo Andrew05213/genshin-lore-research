@@ -87,7 +87,7 @@ def test_narrative_actual_builder_uses_windows_publication_helpers(monkeypatch, 
     source.mkdir()
     (source/'rows.json').write_text('[{"id":1}]')
     scope = tmp_path/'scope.json'
-    scope.write_text(json.dumps({'families':{'npc':{'field_types':{'id':{'int':1}}}},
+    scope.write_text(json.dumps({'snapshot':narrative.SNAPSHOT, 'families':{'npc':{'physical_rows':1,'field_types':{'id':{'int':1}}}},
                                 'files':[], 'textmap_policy':'synthetic'}))
     monkeypatch.setattr(narrative, 'SCOPE', scope)
     monkeypatch.setattr(narrative, 'SPECS', {'npc':('rows.json',1,'id',{})})

@@ -40,20 +40,24 @@ def schema_check(db):
  expected.close()
 def verify(source,artifact,report,qt_manifest='manifests/quest-talk-7.1/standalone-candidate.json',qt_artifact='/tmp/genshin-lore-qt-7.1-final-b.sqlite',old_source='<explicit-source-required>/Documents/genshin-lore-database/cache/upstream-agd-git'):
  source=Path(source);artifact=Path(artifact);manifest=json.loads(Path(report).read_text());release=manifest['release']
+ from genshin_lore.source_versions import source_pin
+ version,SOURCE_COMMIT,SOURCE_TREE=source_pin(release["snapshot"])
+ member_field="MLELFKLKKLN" if version=="7.2" else "GJHKONEAHPC"
+ text_field="PKGOFBIHNPD" if version=="7.2" else "CCIHLEICLMF"
  require(subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()==[SOURCE_COMMIT,SOURCE_TREE],'source pin')
  require(release['source_commit']==SOURCE_COMMIT and release['source_tree']==SOURCE_TREE,'release pin')
- require(release['contract']=='quest-review-archive-7.1-evidence-v1' and release['status']=='candidate' and release['product_accepted'] is False,'release authority boundary')
+ require(release['contract']==f'quest-review-archive-{version}-evidence-v1' and release['status']=='candidate' and release['product_accepted'] is False,'release authority boundary')
  require(artifact.stat().st_size==manifest['artifact']['size_bytes'] and sha(artifact)==manifest['artifact']['sha256'],'artifact seal')
  require(not any(Path(str(artifact)+suffix).exists() for suffix in ('-wal','-shm','-journal')),'SQLite sidecar')
  for path,seal in release['source_seals'].items():
   local=source/path
   require(local.stat().st_size==seal['size'] and sha(local)==seal['sha256'],'source bytes '+path)
   require(subprocess.check_output(['git','-C',str(source),'rev-parse',SOURCE_COMMIT+':'+path],text=True).strip()==seal['blob'],'source blob '+path)
- impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_review.py','scripts/maintenance/quest_review_fields.py','schemas/quest-review-7.1-v1.sql','src/genshin_lore/loading_tips_source.py','manifests/quest-derived-7.1/review-field-continuity-v1.json')}
+ impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_review.py','scripts/maintenance/quest_review_fields.py','schemas/quest-review-7.1-v1.sql','src/genshin_lore/loading_tips_source.py',f'manifests/quest-derived-{version}/review-field-continuity-v1.json')}
  require(impl==release['implementation'],'implementation drift')
- proof_path=ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json';proof=json.loads(proof_path.read_text())
+ proof_path=ROOT/f'manifests/quest-derived-{version}/review-field-continuity-v1.json';proof=json.loads(proof_path.read_text())
  require(release['field_proof_sha256']==sha(proof_path) and proof['verdict']=='PROVEN_PHYSICAL_FIELD_CONTINUITY_NOT_LOGICAL_IDENTITY','field proof seal')
- check_field_proof(field_proof(old_source,source),proof)
+ check_field_proof(field_proof(old_source,source,source_version=version),proof)
  require(proof['old_source_commit']=='26df1dfbdf05a82bbb1d97506859f3e1c40718d8' and proof['new_source_commit']==SOURCE_COMMIT,'field proof pins')
  for path,entry in proof['source_seals'].items():
   require(release['source_seals'][path]['sha256']==entry['new_sha256'] and release['source_seals'][path]['blob']==entry['new_git_blob'],'field proof new source '+path)
@@ -93,16 +97,16 @@ def verify(source,artifact,report,qt_manifest='manifests/quest-talk-7.1/standalo
    targets.append((oid('candidate',lid,target_path,target_pointer),lid,target_path,target_pointer,native))
  for position,record in groups[SUMMARY]:add(SUMMARY,position,'summarization_id_observation',f'/{position}/Id',record['Id'],steps[record['Id']])
  for position,record in groups[GROUP]:
-  values=record.get('GJHKONEAHPC',[])
+  values=record.get(member_field,[])
   require(isinstance(values,list) and all(type(x) is int for x in values),'review member type')
-  for index,value in enumerate(values):add(GROUP,position,'review_member_locator_observation',f'/{position}/GJHKONEAHPC/{index}',value,lookup[value])
+  for index,value in enumerate(values):add(GROUP,position,'review_member_locator_observation',f'/{position}/{member_field}/{index}',value,lookup[value])
  seals['locator']=compare(db,'locator',locators);seals['locator_candidate']=compare(db,'locator_candidate',targets)
  owners=[]
  for position,record in groups[SUMMARY]:owners.append((SUMMARY,position,'DescTextMapHash',record['DescTextMapHash']))
  for position,record in groups[TAB]:
   owners.append((TAB,position,'titleTextMapHash',record['titleTextMapHash']))
-  values=record['CCIHLEICLMF'];require(isinstance(values,list) and all(type(x) is int for x in values),'tab owner array')
-  for index,value in enumerate(values):owners.append((TAB,position,f'CCIHLEICLMF/{index}',value))
+  values=record[text_field];require(isinstance(values,list) and all(type(x) is int for x in values),'tab owner array')
+  for index,value in enumerate(values):owners.append((TAB,position,f'{text_field}/{index}',value))
  require(all(type(owner[3]) is int for owner in owners),'text owner locator type')
  shards={}
  for language in ('CHS','EN','JP'):

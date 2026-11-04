@@ -1,0 +1,930 @@
+{
+  "contract": "special-core-7.2-provider-input-v1",
+  "contract_count": 13,
+  "contracts": [
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:avatar_codex_archive:avatar-codex-archive-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "avatarId": 124
+        },
+        "relation_slots": {
+          "avatarId": 124
+        },
+        "selected_rows": 124,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "avatar_codex_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 120,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "avatarId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "FMDEJPDNFKB"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/AvatarCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 124,
+      "provider_contract": "avatar-codex-archive-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "existing AvatarCodex boundary explicitly permits avatarId-to-AvatarExcel lookup only",
+          "field": "avatarId",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:cook_bonus_archive:cook-bonus-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "avatarId": 121,
+          "recipeId": 121
+        },
+        "relation_slots": {
+          "avatarId": 121,
+          "recipeId": 121
+        },
+        "selected_rows": 121,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "cook_bonus_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 117,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "avatarId",
+        "recipeId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json",
+        "ExcelBinOutput/CookRecipeExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "complexParamVec[]",
+        "paramVec[]"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/CookBonusExcelConfigData.json"
+      ],
+      "primary_physical_rows": 121,
+      "provider_contract": "cook-bonus-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "named avatarId field",
+          "field": "avatarId",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "named recipeId field to selected CookRecipe primary",
+          "field": "recipeId",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/CookRecipeExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [
+        "icon"
+      ],
+      "component_key": "schema20:cook_recipe_archive:cook-recipe-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 288
+        },
+        "relation_slots": {
+          "inputVec[].id": 1440,
+          "qualityOutputVec[].id": 864
+        },
+        "selected_rows": 288,
+        "text_owner_present": {
+          "descTextMapHash": 288,
+          "nameTextMapHash": 288
+        },
+        "text_owner_types": {
+          "descTextMapHash": [
+            "int"
+          ],
+          "nameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "cook_recipe_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 281,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/MaterialExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "effectDesc[]",
+        "qteParam",
+        "qteQualityWeightVec[]"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/CookRecipeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 288,
+      "provider_contract": "cook-recipe-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "explicit ingredient member id; empty input objects remain physical empty slots",
+          "field": "inputVec[].id",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "explicit quality output member id",
+          "field": "qualityOutputVec[].id",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:furniture_make_archive:furniture-make-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "configID": 1426
+        },
+        "relation_slots": {
+          "furnitureItemID": 1426,
+          "materialItems[].id": 4278
+        },
+        "selected_rows": 1426,
+        "text_owner_present": {},
+        "text_owner_types": {}
+      },
+      "family": "furniture_make_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 1398,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "configID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json",
+        "ExcelBinOutput/MaterialExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "JCENPMKMEHH"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/FurnitureMakeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 1426,
+      "provider_contract": "furniture-make-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "explicit furniture item field to selected furniture primary",
+          "field": "furnitureItemID",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "explicit crafting material member id; empty material objects remain physical slots",
+          "field": "materialItems[].id",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/MaterialExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": []
+    },
+    {
+      "asset_raw_only_paths": [
+        "itemIcon",
+        "mapIcon"
+      ],
+      "component_key": "schema20:furniture_suite_archive:furniture-suite-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "suiteID": 111
+        },
+        "relation_slots": {
+          "favoriteNpcExcelIdVec[]": 269,
+          "furnType[]": 222
+        },
+        "selected_rows": 111,
+        "text_owner_present": {
+          "suiteDescTextMapHash": 111,
+          "suiteNameTextMapHash": 111
+        },
+        "text_owner_types": {
+          "suiteDescTextMapHash": [
+            "int"
+          ],
+          "suiteNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "furniture_suite_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 111,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "suiteID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/HomeWorldNPCExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "transStr"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/FurnitureSuiteExcelConfigData.json"
+      ],
+      "primary_physical_rows": 111,
+      "provider_contract": "furniture-suite-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "explicit furniture type slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnType[]",
+          "target_locator_field": "typeID",
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "observed values are avatar IDs and match the named HomeWorldNPC.avatarID domain; NPC npcID and alternate HomeworldNPCExcelDataData are not substituted",
+          "field": "favoriteNpcExcelIdVec[]",
+          "target_locator_field": "avatarID",
+          "target_source_file": "ExcelBinOutput/HomeWorldNPCExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "suiteNameTextMapHash",
+        "suiteDescTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [],
+      "component_key": "schema20:gadget_title_archive:gadget-title-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "gadgetId": 53
+        },
+        "relation_slots": {
+          "gadgetId": 53
+        },
+        "selected_rows": 53,
+        "text_owner_present": {
+          "nameTextMapHash": 53,
+          "titleTextMapHash": 53
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "titleTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "gadget_title_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 53,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "gadgetId"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/GadgetExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [],
+      "primary_paths": [
+        "ExcelBinOutput/GadgetTitleExcelConfigData.json"
+      ],
+      "primary_physical_rows": 53,
+      "provider_contract": "gadget-title-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "explicit gadgetId field; Gadget is lookup-only, not selected as a primary candidate",
+          "field": "gadgetId",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "titleTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "bgmPath"
+      ],
+      "component_key": "schema20:homeworld_bgm_archive:homeworld-bgm-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "bgmID": 232
+        },
+        "relation_slots": {},
+        "selected_rows": 232,
+        "text_owner_present": {
+          "bgmNameTextMapHash": 232
+        },
+        "text_owner_types": {
+          "bgmNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_bgm_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 218,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "bgmID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "CAMEEHNHLKO",
+        "CDGNFFDGJGE",
+        "FCFBMBKOELI",
+        "IEIMECLJOAE",
+        "JJDADAADBDO",
+        "NJHBHFCDGJC",
+        "NNGPLCDJOPO"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldBgmExcelConfigData.json"
+      ],
+      "primary_physical_rows": 232,
+      "provider_contract": "homeworld-bgm-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "bgmNameTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "icon",
+        "itemIcon",
+        "effectIcon"
+      ],
+      "component_key": "schema20:homeworld_furniture_archive:homeworld-furniture-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 2541
+        },
+        "relation_slots": {
+          "furnType[]": 5082,
+          "furnitureGadgetID[]": 7623,
+          "pushTipsId": 2541,
+          "roomSceneID": 2541
+        },
+        "selected_rows": 2541,
+        "text_owner_present": {
+          "descTextMapHash": 2541,
+          "nameTextMapHash": 2541
+        },
+        "text_owner_types": {
+          "descTextMapHash": [
+            "int"
+          ],
+          "nameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_furniture_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 2483,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json",
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/PushTipsConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "sourceTextList[]",
+        "CLENOKFNDOM",
+        "KONAHFEPEMP",
+        "LEAFFKPKEBC"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json"
+      ],
+      "primary_physical_rows": 2541,
+      "provider_contract": "homeworld-furniture-evidence-v1",
+      "relations": [
+        {
+          "condition": null,
+          "evidence_basis": "explicit furniture type slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnType[]",
+          "target_locator_field": "typeID",
+          "target_source_file": "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "explicit gadget slots; zero is retained as a raw locator and exact lookup may resolve target 0",
+          "field": "furnitureGadgetID[]",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/GadgetExcelConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "exact named PushTipsConfig key",
+          "field": "pushTipsId",
+          "target_locator_field": "pushTipsId",
+          "target_source_file": "ExcelBinOutput/PushTipsConfigData.json"
+        },
+        {
+          "condition": null,
+          "evidence_basis": "explicit room scene identifier; unmatched values remain dangling",
+          "field": "roomSceneID",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/SceneExcelConfigData.json"
+        }
+      ],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "tabIcon"
+      ],
+      "component_key": "schema20:homeworld_furniture_type_archive:homeworld-furniture-type-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "typeID": 81
+        },
+        "relation_slots": {},
+        "selected_rows": 81,
+        "text_owner_present": {
+          "typeName2TextMapHash": 81,
+          "typeNameTextMapHash": 81
+        },
+        "text_owner_types": {
+          "typeName2TextMapHash": [
+            "int"
+          ],
+          "typeNameTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "homeworld_furniture_type_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 81,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "typeID"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "PBIOMJGIMAK"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json"
+      ],
+      "primary_physical_rows": 81,
+      "provider_contract": "homeworld-furniture-type-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "typeNameTextMapHash",
+        "typeName2TextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "iconPathHash"
+      ],
+      "component_key": "schema20:profile_frame_archive:profile-frame-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 12
+        },
+        "relation_slots": {},
+        "selected_rows": 12,
+        "text_owner_present": {
+          "nameTextMapHash": 12,
+          "unlockDescTextMapHash": 12
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "unlockDescTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "profile_frame_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 12,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [],
+      "opaque_unresolved_paths": [
+        "KNEHHMFJLFD",
+        "iconPathHash"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/ProfileFrameExcelConfigData.json"
+      ],
+      "primary_physical_rows": 12,
+      "provider_contract": "profile-frame-evidence-v1",
+      "relations": [],
+      "selected": null,
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "unlockDescTextMapHash"
+      ]
+    },
+    {
+      "asset_raw_only_paths": [
+        "iconPath"
+      ],
+      "component_key": "schema20:profile_picture_archive:profile-picture-evidence-v1",
+      "consumed_shape": {
+        "identity_field_present": {
+          "id": 5
+        },
+        "relation_slots": {
+          "unlockParam": 5
+        },
+        "selected_rows": 5,
+        "text_owner_present": {
+          "nameTextMapHash": 5,
+          "unlockDescTextMapHash": 5
+        },
+        "text_owner_types": {
+          "nameTextMapHash": [
+            "int"
+          ],
+          "unlockDescTextMapHash": [
+            "int"
+          ]
+        }
+      },
+      "family": "profile_picture_archive",
+      "historical_parser": "pb-batch-m5c-wave02:eb58675d6e35d894ed588be362c08fc60b23a635",
+      "historical_primary_rows": 5,
+      "historical_run": "ir-batch-m5c-wave02:b033d33c48801376269ecd4e8e9b7c347e71e379",
+      "identity_fields": [
+        "id"
+      ],
+      "kind": "M5C_WAVE02",
+      "lookup_paths": [
+        "ExcelBinOutput/AvatarExcelConfigData.json"
+      ],
+      "opaque_unresolved_paths": [
+        "GNOGOJPAFCJ",
+        "JJPFBBOGPMN",
+        "KNEHHMFJLFD",
+        "unlockParam"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/ProfilePictureExcelConfigData.json"
+      ],
+      "primary_physical_rows": 191,
+      "provider_contract": "profile-picture-evidence-v1",
+      "relations": [
+        {
+          "condition": {
+            "equals": "PROFILE_PICTURE_UNLOCK_BY_AVATAR",
+            "path": "NLAPNBMECDF"
+          },
+          "evidence_basis": "only the explicit AVATAR unlock variant is an Avatar relation; costume/item/quest parameters remain unresolved",
+          "field": "unlockParam",
+          "target_locator_field": "id",
+          "target_source_file": "ExcelBinOutput/AvatarExcelConfigData.json"
+        }
+      ],
+      "selected": {
+        "coverage": "bounded_canary",
+        "native_field": "id",
+        "native_values": [
+          1,
+          11,
+          99999,
+          100010,
+          900003
+        ]
+      },
+      "text_owner_fields": [
+        "nameTextMapHash",
+        "unlockDescTextMapHash"
+      ],
+      "versioned_decoder_basis": {
+        "accepted_foundation_manifest": "manifests/character-7.1-physical-foundation/immutable-runtime.json",
+        "consumption_contract": "manifests/character-7.1-physical-foundation/consumption-contract.json",
+        "new_field": "NLAPNBMECDF",
+        "old_field": "AHJHBENMGFK"
+      }
+    },
+    {
+      "component_key": "schema20:quest_codex_archive:quest-codex-archive-evidence-v1",
+      "family": "quest_codex_archive",
+      "historical_contract_path": "src/genshin_lore/quest_codex_phase4f3_contract.py",
+      "historical_parser": "pb-quest-codex-phase4f3:e8d8afa205bc1a56dcff5143b49fbbc04f648260",
+      "historical_run": "ir-quest-codex-phase4f3:08e7bde9c88f353bc1358d9287e154326b92c36c",
+      "kind": "HISTORICAL_SPECIAL",
+      "lookup_paths": [
+        "ExcelBinOutput/ChapterExcelConfigData.json",
+        "ExcelBinOutput/QuestExcelConfigData.json"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/QuestCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 507,
+      "provider_contract": "quest-codex-archive-evidence-v1"
+    },
+    {
+      "component_key": "schema20:world_archive:world-archive-evidence-v1",
+      "family": "world_archive",
+      "historical_contract_path": "src/genshin_lore/world_archive_phase4e3_contract.py",
+      "historical_parser": "pb-world-archive-phase4e3:d20c3b83bf0b838972d3b4ac7f71d3794c999692",
+      "historical_run": "ir-world-archive-phase4e3:2d800a2a6c8b3a60ac5ac9d06d27fd5757c6dbd3",
+      "kind": "HISTORICAL_SPECIAL",
+      "lookup_paths": [
+        "ExcelBinOutput/MonsterDescribeExcelConfigData.json",
+        "ExcelBinOutput/MonsterExcelConfigData.json",
+        "ExcelBinOutput/PushTipsCodexExcelConfigData.json",
+        "ExcelBinOutput/GadgetExcelConfigData.json",
+        "ExcelBinOutput/SceneExcelConfigData.json",
+        "ExcelBinOutput/CityConfigData.json",
+        "ExcelBinOutput/WorldAreaConfigData.json"
+      ],
+      "primary_paths": [
+        "ExcelBinOutput/AnimalCodexExcelConfigData.json",
+        "ExcelBinOutput/ViewCodexExcelConfigData.json"
+      ],
+      "primary_physical_rows": 870,
+      "provider_contract": "world-archive-evidence-v1"
+    }
+  ],
+  "identity_policy": "snapshot+parser+run+physical coordinate; no cross-snapshot or logical merge",
+  "inherited_rule_contract": {
+    "path": "manifests/special-core-7.1/input-contract-v1.json",
+    "sha256": "8c568121c83689760a35ca392cbbeef4bdc93328b41d72c5b9c2848b2efa8f07"
+  },
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_family_count": 13,
+  "source_files": {
+    "ExcelBinOutput/AnimalCodexExcelConfigData.json": {
+      "git_blob_oid": "77a613e95d2332a568b829b9cc2feb927f20840e",
+      "physical_rows": 591,
+      "sha256": "7bbe23b622db19446e5a6a2eed7616e87abe541cd65319bc9f4a9c7dc3381b61",
+      "size_bytes": 253227
+    },
+    "ExcelBinOutput/AvatarCodexExcelConfigData.json": {
+      "git_blob_oid": "5f3377b8c1826beb86d1e1021b1df77bfd1dc620",
+      "physical_rows": 124,
+      "sha256": "b2ff249937e12bbbc5439f28c91535fcf2fb14be0efc76acf06c3025c84290cf",
+      "size_bytes": 14250
+    },
+    "ExcelBinOutput/AvatarExcelConfigData.json": {
+      "git_blob_oid": "89068b5021ee7711fbf639b9c361607aaf5036b8",
+      "physical_rows": 169,
+      "sha256": "dbed6b4f540fe24f8d96dc46b545ac2f8c0d0197f38e4b9a4cac0762a569a897",
+      "size_bytes": 357668
+    },
+    "ExcelBinOutput/ChapterExcelConfigData.json": {
+      "git_blob_oid": "8f8f8fa23df84686883d931f248e6ff0b626ddd7",
+      "physical_rows": 436,
+      "sha256": "6c291ee3b5ca1e29b1b4395c1e13103d1965e1ce687eb3e0364e08dfcc55f164",
+      "size_bytes": 202292
+    },
+    "ExcelBinOutput/CityConfigData.json": {
+      "git_blob_oid": "1b4990e9798102fe1422e3a01110910b78617b0e",
+      "physical_rows": 16,
+      "sha256": "d80c722229175a698ef0ece34f7e57721c15371140d336c4d0543ee3c013f891",
+      "size_bytes": 7971
+    },
+    "ExcelBinOutput/CookBonusExcelConfigData.json": {
+      "git_blob_oid": "7d098cb0435aeefb167cefcde9faae27c6a9f234",
+      "physical_rows": 121,
+      "sha256": "13f5fe7d3da94d81a9a46b0e08130c36247ddffd329f7512a9acedf9246856ae",
+      "size_bytes": 24488
+    },
+    "ExcelBinOutput/CookRecipeExcelConfigData.json": {
+      "git_blob_oid": "684861275809910436b4a13e091d44fe5b61be0a",
+      "physical_rows": 288,
+      "sha256": "3f2435d9777f337aaad48e1c340f3b1e6c7c30feed87186ebfbdbf95623c8656",
+      "size_bytes": 253853
+    },
+    "ExcelBinOutput/FurnitureMakeExcelConfigData.json": {
+      "git_blob_oid": "2c41fa14576e9853587f9bb6d366c9302b0a76ab",
+      "physical_rows": 1426,
+      "sha256": "d938c90daf094d73c865a8102aad56926e5bd25c5558ba52b3de992eb8d7b395",
+      "size_bytes": 468054
+    },
+    "ExcelBinOutput/FurnitureSuiteExcelConfigData.json": {
+      "git_blob_oid": "73e951d93bd337195f54e2d5590fc476e34b7ebe",
+      "physical_rows": 111,
+      "sha256": "c199d38a8ca24d1e73627cbf4e5fedb37040cb4d272baf28afff496390b8a732",
+      "size_bytes": 48830
+    },
+    "ExcelBinOutput/GadgetExcelConfigData.json": {
+      "git_blob_oid": "ea71a56a5a1fc7623d87191b79458f8d99f98ecb",
+      "physical_rows": 31682,
+      "sha256": "5debe3c457b0fddc5264620aff1a9585cb19f24408a7f1974291244415ee1411",
+      "size_bytes": 10437145
+    },
+    "ExcelBinOutput/GadgetTitleExcelConfigData.json": {
+      "git_blob_oid": "3c5d942b4918fc60e8ccfccd38d78eb59ef33829",
+      "physical_rows": 53,
+      "sha256": "4ea2f2478e4687e8afb69db628aa3cdaa22b350113945515e813eeacd8c33f6f",
+      "size_bytes": 5543
+    },
+    "ExcelBinOutput/HomeWorldBgmExcelConfigData.json": {
+      "git_blob_oid": "c2422fd3bfe15da69a8d45a331801d16b49bdd54",
+      "physical_rows": 232,
+      "sha256": "e93e89e94c10d66039472033a42385ea68dc7a08d72a3002401aeca49bda18d7",
+      "size_bytes": 67879
+    },
+    "ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json": {
+      "git_blob_oid": "c97978bbbf532404aee6770959251d6f0c17d708",
+      "physical_rows": 2541,
+      "sha256": "dd0947a5861589d868f807a601c4657fd68e4292a35d65a059bde79c11f08056",
+      "size_bytes": 1674957
+    },
+    "ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json": {
+      "git_blob_oid": "0c47fec58fa98410d8e9cf2ee09568448a23384b",
+      "physical_rows": 81,
+      "sha256": "7f9ee4f21366e7603d186ad9a4abedfacd5e218299e34e6d939de6dbabc946c1",
+      "size_bytes": 19660
+    },
+    "ExcelBinOutput/HomeWorldNPCExcelConfigData.json": {
+      "git_blob_oid": "39664e969b573bc877cfa22ebc4105ee6138e3d0",
+      "physical_rows": 123,
+      "sha256": "5998c849dc32a33e8f981d84c9342f105862911b4478801fc4a0974c6cd33253",
+      "size_bytes": 27341
+    },
+    "ExcelBinOutput/MaterialExcelConfigData.json": {
+      "git_blob_oid": "76c128c449bf3ba4d9ea9822f6c64616d3409962",
+      "physical_rows": 10679,
+      "sha256": "e1cfaeb4c18ce57695748c62e07321456209b62c16fcb00753aefdd6fa912173",
+      "size_bytes": 9015300
+    },
+    "ExcelBinOutput/MonsterDescribeExcelConfigData.json": {
+      "git_blob_oid": "1662252128ad20e3e9d2693d24b51df3fd902139",
+      "physical_rows": 591,
+      "sha256": "f5e8cfc74286e80cb05c899f3d6d204566a647bf36b3852b730370bae4bdf041",
+      "size_bytes": 94580
+    },
+    "ExcelBinOutput/MonsterExcelConfigData.json": {
+      "git_blob_oid": "0d2d5eb481738cf185d59bd707a33006f020645e",
+      "physical_rows": 3518,
+      "sha256": "b0efcdb6bca52eca8c2b89fe2e43f8f5a65bc1596fd250e7ddc375acd92989cc",
+      "size_bytes": 5255030
+    },
+    "ExcelBinOutput/ProfileFrameExcelConfigData.json": {
+      "git_blob_oid": "96a97dc187166164407099c0bf405f57d7a741c7",
+      "physical_rows": 12,
+      "sha256": "242ab8231fcf388c02b9dad67a98931810ebe1683db8c9f0b20a718784cd1952",
+      "size_bytes": 2426
+    },
+    "ExcelBinOutput/ProfilePictureExcelConfigData.json": {
+      "git_blob_oid": "c7025e80954294ebae629deb54e2a2deb75d32ff",
+      "physical_rows": 191,
+      "sha256": "eef2a0c6de3f33d2b925d40ccc77278767c5b2d263228284044255bec87f9411",
+      "size_bytes": 49753
+    },
+    "ExcelBinOutput/PushTipsCodexExcelConfigData.json": {
+      "git_blob_oid": "d4f54fc6a87fbe3a6867abaf22453b5463298c58",
+      "physical_rows": 807,
+      "sha256": "0ae52b6fa1dcf4f068a697526fa1a15cab844de0dd48d3acba79776ce798ba69",
+      "size_bytes": 114001
+    },
+    "ExcelBinOutput/PushTipsConfigData.json": {
+      "git_blob_oid": "06d49f9641f090e260137bd1aa53bcf5fe4cb79a",
+      "physical_rows": 1826,
+      "sha256": "5743dc3eea5dd1ce6874f01a870f090dfa98d255b5673e86db99a5560b2c624e",
+      "size_bytes": 579843
+    },
+    "ExcelBinOutput/QuestCodexExcelConfigData.json": {
+      "git_blob_oid": "783933d571f40560101d9119835ba032febe984e",
+      "physical_rows": 507,
+      "sha256": "9eebd60fe1f9c46c3cc91cfa8a58c5dbd955897aabf99354335cc805877ef749",
+      "size_bytes": 52977
+    },
+    "ExcelBinOutput/QuestExcelConfigData.json": {
+      "git_blob_oid": "0788265f3a267a22abf2c7e33f04705704a04b0d",
+      "physical_rows": 17814,
+      "sha256": "c8561299f543456573b0fa16404e210bcd2ecf84ce5006eb63dd4b2845137a87",
+      "size_bytes": 7903186
+    },
+    "ExcelBinOutput/SceneExcelConfigData.json": {
+      "git_blob_oid": "9f06ef286acb103789c813cee90a62965430d512",
+      "physical_rows": 2431,
+      "sha256": "5a906393d1de46a6d397ae169cdcfb76a9ee77fc1c9e38dd3aec752656978550",
+      "size_bytes": 590002
+    },
+    "ExcelBinOutput/ViewCodexExcelConfigData.json": {
+      "git_blob_oid": "23ab6c096dd942f4b66f52b65f1520dfbf701a51",
+      "physical_rows": 279,
+      "sha256": "0a6f946b37fc210448b71abf7075718be28208585afe0417df46a771d810e5b4",
+      "size_bytes": 88433
+    },
+    "ExcelBinOutput/WorldAreaConfigData.json": {
+      "git_blob_oid": "9c32d0011ee34604d68616f5cd10e67560fa86e6",
+      "physical_rows": 597,
+      "sha256": "0a87b32746d53971a4c0c5b56b0bc20f1a1a01522d719056e93131c57a9ec1d1",
+      "size_bytes": 183768
+    },
+    "TextMap/TextMapCHS.json": {
+      "git_blob_oid": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    "TextMap/TextMapEN.json": {
+      "git_blob_oid": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    "TextMap/TextMapJP.json": {
+      "git_blob_oid": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    "TextMap/TextMap_MediumCHS.json": {
+      "git_blob_oid": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    "TextMap/TextMap_MediumEN.json": {
+      "git_blob_oid": "465719906988e84a5d30ab101732c34eac5bad20",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    "TextMap/TextMap_MediumJP.json": {
+      "git_blob_oid": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  },
+  "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "status": "source_contract_generated_not_qualified",
+  "textmap_paths": [
+    "TextMap/TextMapCHS.json",
+    "TextMap/TextMapEN.json",
+    "TextMap/TextMapJP.json",
+    "TextMap/TextMap_MediumCHS.json",
+    "TextMap/TextMap_MediumEN.json",
+    "TextMap/TextMap_MediumJP.json"
+  ]
+}

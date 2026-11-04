@@ -46,6 +46,8 @@ def discover_target_candidates(source_root, qt_artifact, scope, *, qt_manifest_p
     manifest_path = Path(qt_manifest_path) if qt_manifest_path is not None else QT_MANIFEST
     accepted = json.loads(manifest_path.read_text())
     binding = scope['talk_candidate_namespace']
+    if accepted.get('source_snapshot')!=scope['snapshot_id']:
+        raise ValueError('Filmfest cross-snapshot Quest/Talk input')
     if (binding['accepted_manifest_sha256'] != sha(manifest_path)
             or binding['artifact'] != accepted['artifact']
             or binding['contract'] != accepted['contract']
@@ -100,7 +102,7 @@ def project(source_root, scope_path, qt_artifact, *, qt_manifest_path=None):
     scope = json.loads(scope_path.read_text())
     check_files(source_root, scope)
     historical = json.loads(HISTORICAL.read_text())
-    if (scope['contract'] != 'event-filmfest-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-filmfest-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or scope['family_contract_version'] != historical['family_contract_version']
             or len(scope['sources']) != len(historical['sources']) or len(scope['sources']) != 4

@@ -178,7 +178,8 @@ def test_r0_native_report_is_adapted_verified_and_resumable(tmp_path, monkeypatc
 
     def independent_verifier(name, arguments, result):
         assert name == 'validators/source_archive.py'
-        assert Path(arguments[3]) == build.path('r0')
+        assert Path(arguments[arguments.index('--artifact') + 1]) == build.path('r0')
+        assert arguments[arguments.index('--source-version') + 1] == '7.1'
         calls.append(name)
         return {'status': 'PASS'}
 
