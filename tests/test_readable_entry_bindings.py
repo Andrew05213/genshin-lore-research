@@ -14,6 +14,58 @@ from genshin_lore import direct_text_7_1_verify as subtitle_oracle
 from test_r0_build_paths import real_job
 
 
+@pytest.mark.parametrize("version,wrong_contract", [
+    ("7.2", "document-7.2-evidence-v1"),
+    ("7.2", "document-7.1-evidence-v1"),
+    ("7.1", "document-7.2-evidence-v2"),
+])
+@pytest.mark.parametrize("boundary", ["builder", "oracle"])
+def test_readable_rejects_wrong_document_contract_before_database_access(
+    tmp_path, monkeypatch, version, wrong_contract, boundary,
+):
+    """Exercise the actual dependency gate, without fabricating a qualified DB."""
+    from genshin_lore.source_versions import PINS
+
+    commit, tree = PINS[version]
+    snapshot = f"anime-game-data:{version}:{commit}"
+    source = tmp_path / "source"
+    (source / "Readable").mkdir(parents=True)
+
+    def git(args, **kwargs):
+        if "rev-parse" in args:
+            return commit + "\n" + tree + "\n"
+        if "status" in args:
+            return ""
+        assert "ls-tree" in args
+        return b""
+
+    for module in (readable, readable_oracle):
+        monkeypatch.setattr(module, "subprocess", SimpleNamespace(check_output=git))
+
+    # Non-database bytes deliberately make accidental access past this gate fail.
+    r0, document, artifact = [tmp_path / name for name in ("r0", "document", "artifact")]
+    for path in (r0, document, artifact):
+        path.write_bytes(b"synthetic dependency-gate sentinel")
+    originals = {path: path.read_bytes() for path in (r0, document, artifact)}
+    scope = tmp_path / "scope.json"
+    write(scope, {
+        "snapshot_id": snapshot, "source_commit": commit, "source_tree": tree,
+        "readable": {"file_count": 0, "path_blob_set_sha256": readable.sha(b"[]\n")},
+        "r0_dependency": driver.seal(r0),
+    })
+    report = {"snapshot_id": snapshot, "contract": wrong_contract,
+              "artifact": driver.seal(document)}
+    output = tmp_path / "new-readable.sqlite"
+    with pytest.raises(ValueError, match="Document.*(?:snapshot|contract)"):
+        if boundary == "builder":
+            readable.build(source, scope, output, r0, document, report)
+        else:
+            readable_oracle.verify(source, scope, artifact, r0, document, report,
+                                   {"artifact": driver.seal(artifact)})
+    assert not output.exists()
+    assert {path: path.read_bytes() for path in originals} == originals
+
+
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
