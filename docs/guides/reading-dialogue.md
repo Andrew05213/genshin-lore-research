@@ -128,6 +128,10 @@ JSON 保留原始字符、SHA、原 read mapping 和本次正式 inspect 结果�
 
 ## 人物搜索与调用方展示
 
+本分支的 literal 采用 `body-first-v1`：精确的已声明标题优先，其后是已声明正文（包括 Readable 行）、其他标题、未分类文本和姓名定位。相同等级内先展示各个同文组的首条，再交付其余物理 occurrence；同文分组按 locale 区分，不合并证据或人物。未知字段不排除。该排序在取页前执行，分页仍包含全部匹配记录，不是只重排第一页。
+
+新 cursor 绑定排序版本及 rank/repeat/id。旧顺序 cursor 明确拒绝，需重新搜索；不可拼接两种顺序。semantic/lexical/hybrid 沿既有发现路径，未增加查询模式、实体识别或新的关系。正文命中附直接读取动作；来源已有 display title 时进入标题分组。没有姓名行的首页仍可有界定位精确人物姓名锚点，供已声明 Character/NPC 导航使用；带过滤的请求不自动扩出范围。
+
 `search_evidence` 默认 `detail="reading"`，先返回 `reading_view`：正文预览、已声明正文字段命中的原始 item 下标、单独姓名与标题命中及可直接执行的下一步。标题不计为正文，未分类字段保留在 `other_matches`；字段未分类不表示原文不存在。标题的读取动作只使用本次命中返回的物理 container/ref。精确姓名可补取最多三个来源角色发言节点；存在 qualified Character adapter 时，以其实际 family 做一次有界 literal 查找，再读至多两个已有 Story/Voice 候选导航目标。它不更改 literal/semantic 排序、命中身份、过滤或 cursor；不是新的身份解析器，也不承诺搜齐人物全部剧情。
 
 reading 视图中，每个原始搜索命中仍保留一个完整 `evidence_ref`，重复的 `container_ref`、`provenance_ref` 分别以 `container_handle`、`provenance_handle` 交付；正文预览使用自己的 `citation_handle`。对白边的 `source_evidence_ref`、`target_refs` 分别交付为 `source_citation_handle`、`target_handles`；候选的目标使用 `target_citation_handle`。这些都是工具返回的连接内定位器，可以原样传入 read/follow/inspect 的 `evidence_ref`，不是永久身份，也不表示正文已读或关系已确认。`next_actions[].arguments` 已含可执行参数，不额外添加或拼接 ref。
