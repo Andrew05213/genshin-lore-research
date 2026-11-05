@@ -84,6 +84,11 @@ class Research71Unified:
         self.query = CandidateResearch71(corpus, bindings, index, profile, allow_prepublication_profile=True)
 
     def _entries(self):
+        # Successor views bypass __init__; bind navigation to the already
+        # qualified query instead of relying on constructor-only state.
+        from .source_versions import source_pin
+        self.snapshot = self.query.manifest['snapshot']['id']
+        self.version, _, _ = source_pin(self.snapshot)
         self.corpus_ref = self.query.corpus_ref
         self.labels = ResearchSourceContext(self.query.db, self.query._source(f'{self.version}-document_archive'))
         self.entries = {}

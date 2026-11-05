@@ -157,7 +157,15 @@ def test_capacity_deduplicates_nested_roots_hardlinks_without_following_symlinks
     import os
     child=tmp_path/'data';child.mkdir()
     file=child/'artifact';file.write_bytes(b'synthetic' * 1000)
-    os.link(file,child/'same-inode');link=child/'symlink';link.symlink_to(file)
+    os.link(file,child/'same-inode')
+    assert driver.allocated((tmp_path,child)) == (getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)
+    link=child/'symlink'
+    try:
+        link.symlink_to(file)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows account lacks symbolic-link creation privilege; hardlink dedup checked')
+        raise
     stat=link.lstat()
     expected=(getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)+(getattr(stat,'st_blocks',0)*512 or stat.st_size)
     assert driver.allocated((tmp_path,child))==expected

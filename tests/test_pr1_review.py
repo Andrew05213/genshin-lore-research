@@ -64,7 +64,12 @@ def test_metadata_directory_symlink_cannot_write_into_another_output(tmp_path):
     job.output.mkdir()
     sibling = tmp_path/'sibling'
     sibling.mkdir()
-    (job.output/'metadata').symlink_to(sibling, target_is_directory=True)
+    try:
+        (job.output/'metadata').symlink_to(sibling, target_is_directory=True)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows account lacks symbolic-link creation privilege')
+        raise
     with pytest.raises(ValueError, match='metadata path outside build output'):
         job.bind('manifests/fixture.json', {'synthetic': True})
     assert not (sibling/'manifests').exists()
