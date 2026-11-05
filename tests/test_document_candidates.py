@@ -96,60 +96,103 @@ def test_five_tool_candidate_path_resolves_only_exact_source_and_file_seal():
     q.db.close()
 
 
-@pytest.mark.parametrize('case', ['typed_null', 'wrong_pointer', 'ambiguous', 'disabled'])
-def test_document_follow_reads_exact_source_candidate_with_nullable_raw_target(monkeypatch, case):
-    from copy import deepcopy
+@pytest.fixture
+def document_follow(monkeypatch):
+    """Real stored follow/rechecks over a small synthetic index and source."""
     from genshin_lore import research71_candidate_query as module
-    from genshin_lore.research_query import ResearchQuery, ResearchUnavailable
-
+    from genshin_lore import research_query, research_index
     q = object.__new__(module.CandidateResearch71)
     q.source_version = '7.2'
+    q.corpus_ref = 'corpus'
+    q.coverage = []
     q.db = sqlite3.connect(':memory:')
     q.db.row_factory = sqlite3.Row
-    q.db.executescript('CREATE TABLE research_container(id,source_key,source_path,source_file_sha256);'
-                      "INSERT INTO research_container VALUES(1,'7.2-readable_archive','Synthetic.txt','body-sha');")
+    q.db.executescript(research_index.SCHEMA)
+    q.db.execute("INSERT INTO research_container VALUES(1,'7.2-readable_archive','readable_archive',"
+                 "'readable_archive','synthetic','parser','run','body','file','files','id','body',"
+                 "'Synthetic.txt','/','body-sha',NULL,0,'physical')")
+    q.db.execute("INSERT INTO research_container VALUES(2,'document-source','document_archive',"
+                 "'document_archive','synthetic','parser','run','document-row','row','document_row','id',"
+                 "'document-row','SyntheticDocument.json','/0','document-sha',NULL,0,'physical')")
     source = sqlite3.connect(':memory:')
     source.row_factory = sqlite3.Row
-    source.executescript('CREATE TABLE document_relation(id,row_id,origin_pointer,kind);'
-                        'CREATE TABLE document_candidate(id,relation_id,target_source_path,target_pointer,target_seal_json);'
-                        "INSERT INTO document_relation VALUES('r','document-row','/0/opaque/0','document_localization');")
-    locator = {'target': {'path': 'Synthetic.txt', 'sha256': 'body-sha'}, 'locale': 'CHS'}
-    metadata = json.dumps({'candidate_readable_targets': [locator]})
-    source.execute("INSERT INTO document_candidate VALUES('c','r','SyntheticLocalization.json','/4',?)", (metadata,))
-    result = {'items': [{'relation_kind': 'document_localization', 'status': 'mapping_unresolved',
-                         'proof_source_pointer': '/0/opaque/0', 'candidates': [{
-                             'target_evidence_ref': None, 'target_source_path': 'SyntheticLocalization.json',
-                             'target_pointer': '/4', 'raw_target': None}]}],
-              'partial': True, 'scope_complete': False}
-    if case == 'wrong_pointer':
-        result['items'][0]['candidates'][0]['target_pointer'] = '/5'
-    elif case == 'ambiguous':
-        source.execute("INSERT INTO document_relation VALUES('r2','document-row','/0/opaque/0','document_localization')")
-        source.execute("INSERT INTO document_candidate VALUES('c2','r2','SyntheticLocalization.json','/4',?)", (metadata,))
-    monkeypatch.setattr(ResearchQuery, 'follow', lambda *a, **kw: deepcopy(result))
+    source.executescript('CREATE TABLE document_relation(id PRIMARY KEY,row_id,origin_pointer,kind,source_path,pointer,status,candidate_count);'
+                        'CREATE TABLE document_candidate(id PRIMARY KEY,relation_id,target_source_path,target_pointer,target_seal_json);')
+    for i in (1, 2):
+        locator = {'target': {'path': 'Synthetic.txt', 'sha256': 'body-sha'}, 'locale': 'CHS',
+                   'source_pointer': '/4/field' + str(i)}
+        source.execute('INSERT INTO document_relation VALUES(?,?,?,?,?,?,?,?)',
+                       ('r'+str(i),'document-row','/0/opaque/0','document_localization',
+                        'SyntheticLocalization.json',locator['source_pointer'],'mapping_unresolved',1))
+        source.execute('INSERT INTO document_candidate VALUES(?,?,?,?,?)',
+                       ('c'+str(i),'r'+str(i),'SyntheticLocalization.json','/4',
+                        json.dumps({'candidate_readable_targets': [locator]})))
+        q.db.execute('INSERT INTO research_relation VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                     (i,2,'document-source','document_archive','document_relation','id','r'+str(i),
+                      'document_localization','/0/opaque/0','synthetic locator','mapping_unresolved',0,1,'unresolved'))
+        q.db.execute('INSERT INTO research_candidate VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                     (i,i,'document_candidate','id','c'+str(i),None,None,None,None,None,
+                      'SyntheticLocalization.json','/4',None))
+    monkeypatch.setattr(research_query, 'relations_for', lambda *a: [])
     monkeypatch.setattr(module, 'decode_ref', lambda _: {'kind': 'container'})
-    q._container_for = lambda _: {'source_key': 'document-source', 'evidence_family': 'document_archive',
-                                  'occurrence_id': 'document-row'}
-    q.components = {'document-source': {'adapter': 'document_archive'}}
-    reads = []
-    q._source = lambda key: (reads.append(key), source)[1]
+    monkeypatch.setattr(research_query, 'decode_ref', lambda _: {'kind': 'container'})
+    q._require = lambda corpus: None
+    q._container_for = lambda _: q.db.execute('SELECT * FROM research_container WHERE id=2').fetchone()
+    q.components = {'document-source': {'adapter': 'document_archive', 'family': 'document_archive'}}
+    q._source = lambda key: source
     q._recheck_container = lambda row: None
     q._container_ref = lambda row: 'supplied-body-ref'
+    q._target_ref = lambda row: None
     try:
-        if case in ('wrong_pointer', 'ambiguous'):
-            with pytest.raises(ResearchUnavailable, match='source coordinates'):
-                q.follow('corpus', 'source-ref')
-        else:
-            value = q.follow('corpus', 'source-ref', None, 20, None, case != 'disabled')
-            candidate = value['items'][0]['candidates'][0]
-            assert candidate['raw_target'] is None  # Original projection is preserved.
-            if case == 'disabled':
-                assert not reads and 'candidate_readable_targets' not in candidate
-            else:
-                assert reads == ['document-source']
-                assert candidate['candidate_readable_targets'][0]['target_evidence_ref'] == 'supplied-body-ref'
-                assert candidate['candidate_readable_targets'][0]['namespace_proven'] is False
-                assert value['partial'] and not value['scope_complete']
+        yield q, source
     finally:
         source.close()
         q.db.close()
+
+
+@pytest.mark.parametrize('version', ['7.1', '7.2'])
+@pytest.mark.parametrize('exported', [False, True])
+def test_follow_keeps_distinct_localization_relations_with_equal_target_coordinates(document_follow, version, exported):
+    q, source = document_follow
+    q.source_version = version
+    q.db.execute('UPDATE research_container SET source_key=? WHERE id=1', (version+'-readable_archive',))
+    if not exported:
+        source.execute("UPDATE document_candidate SET target_seal_json='{}'")
+        source.execute("UPDATE document_relation SET kind='localization_readable'")
+        q.db.execute("UPDATE research_relation SET relation_kind='localization_readable'")
+    first = q.follow('corpus', 'source-ref', limit=1)
+    second = q.follow('corpus', 'source-ref', limit=1, cursor=first['next_cursor'])
+    assert first['next_cursor'] and second['next_cursor'] is None
+    candidates = [page['items'][0]['candidates'][0] for page in (first, second)]
+    assert all(c['raw_target'] is None for c in candidates)
+    if exported:
+        paths = [c['candidate_readable_targets'][0] for c in candidates]
+        assert [p['source_locator']['source_pointer'] for p in paths] == ['/4/field1', '/4/field2']
+        assert all(p['target_evidence_ref'] == 'supplied-body-ref' and not p['namespace_proven'] for p in paths)
+        assert first['partial'] and second['partial']
+    else:
+        assert all('candidate_readable_targets' not in c for c in candidates)
+
+
+@pytest.mark.parametrize('mutation', ['wrong_pointer', 'wrong_relation', 'missing_candidate'])
+def test_document_follow_rejects_source_candidate_identity_drift(document_follow, mutation):
+    from genshin_lore.research_query import ResearchUnavailable
+    q, source = document_follow
+    if mutation == 'wrong_pointer':
+        source.execute("UPDATE document_candidate SET target_pointer='/5' WHERE id='c1'")
+    elif mutation == 'wrong_relation':
+        source.execute("UPDATE document_candidate SET relation_id='r2' WHERE id='c1'")
+    else:
+        source.execute("DELETE FROM document_candidate WHERE id='c1'")
+    with pytest.raises(ResearchUnavailable, match='candidate.*(drift|identity|disappeared)'):
+        q.follow('corpus', 'source-ref')
+
+
+def test_document_follow_disabled_does_not_expand_exported_paths(document_follow, monkeypatch):
+    q, _ = document_follow
+    def forbidden(*args):
+        raise AssertionError('resolve_targets=false must not expand exported paths')
+    monkeypatch.setattr(q, '_document_readable_targets', forbidden)
+    result = q.follow('corpus', 'source-ref', resolve_targets=False)
+    assert len(result['items']) == 2
+    assert all('candidate_readable_targets' not in item['candidates'][0] for item in result['items'])

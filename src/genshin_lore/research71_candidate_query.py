@@ -231,6 +231,19 @@ class CandidateResearch71(ResearchQuery):
                 'limitation': 'exported path on an unresolved Localization candidate; book ownership is not proven'})
         return result
 
+    def _decorate_follow_candidate(self, relation, candidate, source_candidate, item):
+        item = super()._decorate_follow_candidate(relation, candidate, source_candidate, item)
+        if relation['source_table'] == 'document_relation' and candidate['source_table'] == 'document_candidate':
+            # The base follow just rechecked this exact candidate primary key.
+            # Equal target coordinates on another relation are separate source
+            # observations; never use them to rediscover this row's identity.
+            if source_candidate['relation_id'] != relation['pk_value']:
+                raise ResearchUnavailable('Document candidate source relation identity drift')
+            paths = self._document_readable_targets(dict(source_candidate))
+            if paths:
+                item['candidate_readable_targets'] = paths
+        return item
+
     def follow(self,*args,**kwargs):
         result=super().follow(*args,**kwargs)
         resolve_targets = kwargs.get('resolve_targets', args[5] if len(args) > 5 else True)
@@ -241,27 +254,10 @@ class CandidateResearch71(ResearchQuery):
             container=self.db.execute('SELECT * FROM research_container WHERE id=?',(text['container_id'],)).fetchone()
         else:container=self._container_for(decoded)
         mode=self.components[container['source_key']]['adapter']
-        if container['evidence_family'] == 'document_archive' and resolve_targets:
-            for relation in result.get('items', []):
-                for candidate in relation.get('candidates', []):
-                    # The formal adapter stores typed coordinates, with a legal
-                    # NULL raw_target. Read additional metadata from the exact
-                    # sealed source row, never infer it from display text.
-                    rows = self._source(container['source_key']).execute(
-                        'SELECT c.* FROM document_candidate c '
-                        'JOIN document_relation r ON r.id=c.relation_id '
-                        'WHERE r.row_id=? AND r.origin_pointer=? AND r.kind=? '
-                        'AND c.target_source_path=? AND c.target_pointer=? LIMIT 2',
-                        (container['occurrence_id'], relation['proof_source_pointer'],
-                         relation['relation_kind'], candidate['target_source_path'],
-                         candidate['target_pointer'])).fetchall()
-                    if len(rows) != 1:
-                        raise ResearchUnavailable('Document candidate source coordinates missing or ambiguous')
-                    paths = self._document_readable_targets(dict(rows[0]))
-                    if paths:
-                        candidate['candidate_readable_targets'] = paths
-                        result['partial'] = True
-                        result['scope_complete'] = False
+        if any(candidate.get('candidate_readable_targets')
+               for relation in result.get('items', []) for candidate in relation.get('candidates', [])):
+            result['partial'] = True
+            result['scope_complete'] = False
         if mode in {'event_physical_16','event_physical_18','native_successor_physical','native_high_value_physical','talk_physical'}:
             raw=dict(self._recheck_container(container))
             prefix='reuse_' if mode in {'native_successor_physical','native_high_value_physical'} else 'target_'

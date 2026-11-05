@@ -53,6 +53,10 @@ def test_successor_constructor_initializes_navigation_snapshot(tmp_path, monkeyp
         query = successor.SuccessorResearch71(Path('corpus'), Path('bindings'), Path('index'), profile)
 
     view = query.navigation
+    if published:
+        # This constructor also bypasses CandidateResearch71.__init__, whose
+        # inherited navigation methods require the query's source namespace.
+        assert query.source_version == '7.1'
     assert view.query is query
     assert view.version == '7.1' and view.snapshot == snapshot
     assert paths == ['7.1-document_archive']
