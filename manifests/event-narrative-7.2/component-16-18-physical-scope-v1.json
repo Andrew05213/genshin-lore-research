@@ -1,0 +1,81 @@
+{
+  "accepted_inputs": {
+    "dialog": {
+      "path_machine_local": null,
+      "release": null,
+      "runtime_manifest": null,
+      "runtime_manifest_sha256": null,
+      "sha256": null,
+      "size_bytes": null
+    },
+    "event15_photo": {
+      "path_machine_local": null,
+      "release": null,
+      "runtime_manifest": null,
+      "runtime_manifest_sha256": null,
+      "sha256": null,
+      "size_bytes": null
+    },
+    "reminder": {
+      "path_machine_local": null,
+      "release": null,
+      "runtime_manifest": null,
+      "runtime_manifest_sha256": null,
+      "sha256": null,
+      "size_bytes": null
+    }
+  },
+  "contract": "event16-18-7.2-physical-selection-v1",
+  "event15_scope": "manifests/event-narrative-7.2/component-15-scope-v1.json",
+  "event15_scope_sha256": "5f233047452ef3fd3232d9a03781319dd36a5750d5381f72405c46542bce100d",
+  "files": [
+    {
+      "blob": "0d32cab8a6384d7885ad8cc86e528b8e5a331427",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "sha256": "b81a90680cb59572fa4e59c81b57efb9f305d2839e5599f20d451962e3a05a2f",
+      "size_bytes": 154249
+    },
+    {
+      "blob": "801e54cf37d9bb1463ad970326d0bfbc8bf278b8",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "sha256": "92b5518a7dd4af32849dd7b22e7035b521b7ef5b4a4857c319ee0f74eeb9d974",
+      "size_bytes": 21980
+    },
+    {
+      "blob": "82aada8d8a52dafc4af4e2c4ce7863712f0b1107",
+      "path": "ExcelBinOutput/DialogExcelConfigData.json",
+      "sha256": "7bcea88c89e87ce67c38e551383fad50afcd7d76268c896f3099dbaa4c601007",
+      "size_bytes": 93248673
+    },
+    {
+      "blob": "84abdc53291fdd66112259e3c2cee55398b9ebc8",
+      "path": "ExcelBinOutput/ReminderExcelConfigData.json",
+      "sha256": "95424862e31babbd7e338ae4f7ed825085e1683f2b5b8f5645d23c8ba5fbbeac",
+      "size_bytes": 3047753
+    },
+    {
+      "blob": "e68bc505702d94174cad2061cbcd1280b22912e9",
+      "path": "ExcelBinOutput/TalkExcelConfigData_1.json",
+      "sha256": "f6259ebda34b484c6146f4e8653e3583a7155f2701f1b7c8ba2f05a17e976d66",
+      "size_bytes": 48096295
+    }
+  ],
+  "historical_scope_sha256": {
+    "event16_scope": "b610fba2bb381f5b4091e8b6c518fe7fd11728253e8e1ab607a1bb40aa6471e3",
+    "event18_scope": "456e756072d1a9b18666e93e3e5154c7339ce6476697052648a0ca51889f749c"
+  },
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {},
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "reminder_semantic_owner_mapping_unresolved": true,
+  "selection": {
+    "16": "photograph complement plus EchoShell-derived Dialog/Reminder/TalkExcel support",
+    "18": "complete Dialog/Reminder physical complement of component16"
+  },
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3"
+}

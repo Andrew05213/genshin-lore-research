@@ -11,7 +11,7 @@ from scripts import build
 
 
 def job(tmp_path,events):
-    return SimpleNamespace(output=tmp_path,source=tmp_path/'source',history=None,
+    return SimpleNamespace(version="7.1",output=tmp_path,source=tmp_path/'source',history=None,
         core=lambda:events.append('core'),r0=lambda:events.append('r0'),
         readable=lambda:events.append('readable'),
         dependency_inputs=lambda name:events.append('qualified '+name))

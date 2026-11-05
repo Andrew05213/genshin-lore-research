@@ -52,7 +52,7 @@ def text_view(observation, start, chars):
             "text_range": position, "segment_sha256": hashlib.sha256(text.encode()).hexdigest()}
 
 
-def version_route(question: str, default_version: str = '7.0') -> str:
+def version_route(question: str, default_version: str = '7.0', *, target_version: str = '7.1') -> str:
     """Select source only; this is not a second capability planner."""
     if not isinstance(question, str) or not question.strip() or len(question) > 1000:
         raise ValueError("question must be nonempty and at most 1000 characters")
@@ -63,13 +63,13 @@ def version_route(question: str, default_version: str = '7.0') -> str:
         versions = {default_version}
     if versions == {"7.0"}:
         return "accepted_7_0"
-    return "preview_7_1" if versions == {"7.1"} else "unsupported_version"
+    return 'preview_' + target_version.replace('.', '_') if versions == {target_version} else "unsupported_version"
 
 
 def retrieval_question(question: str) -> str:
     # Supply syntactic book delimiters only, never a different title or seed.
     # The transformation is returned for audit; all other questions are unchanged.
-    match = re.fullmatch(r"(7\.1\s*)([^《》\n]*书籍[^《》\n]*?)讲什么[？?]?", question.strip())
+    match = re.fullmatch(r"(\d+\.\d+\s*)([^《》\n]*书籍[^《》\n]*?)讲什么[？?]?", question.strip())
     return f"{match[1]}这本《{match[2]}》讲什么？" if match else question
 
 
@@ -83,7 +83,7 @@ def provenance(record: dict) -> dict:
     return result
 
 
-def compact_task(result: dict, original_question: str, request_id: str) -> dict:
+def compact_task(result: dict, original_question: str, request_id: str, *, snapshot: str = SNAPSHOT) -> dict:
     """Lossless proof/identity handoff for displayed excerpts, not a raw JSON dump."""
     records = {record["evidence_ref"]: record for record in result["evidence"]}
     context = {"unknown": list(result["task"]["answer_context"]["unknown"])}
@@ -123,7 +123,7 @@ def compact_task(result: dict, original_question: str, request_id: str) -> dict:
                 and item["locale"] == "CHS"]
     return {"status": "ok", "contract": "research71-agent-preview-v1", "request_id": request_id,
             "question": original_question, "retrieval_question": result["plan"]["question"],
-            "snapshot": SNAPSHOT, "product_accepted": False, "research_corpus_accepted": False,
+            "snapshot": snapshot, "product_accepted": False, "research_corpus_accepted": False,
             "partial": True, "scope": "bounded_material_retrieval_only", "plan": result["plan"],
             "task": {key: result["task"][key] for key in (
                 "goal", "task_status", "task_status_scope", "corpus_or_story_complete",
@@ -134,6 +134,9 @@ def compact_task(result: dict, original_question: str, request_id: str) -> dict:
 
 
 def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_supported=False) -> MCPServer:
+    from .source_versions import source_pin
+    snapshot = getattr(assistant.runtime, 'snapshot', SNAPSHOT)
+    version, _, _ = source_pin(snapshot)
     handoff = getattr(getattr(assistant.runtime, 'query', None), 'citation_handoff', None)
     released = getattr(assistant.runtime, 'released', False)
     instructions = INSTRUCTIONS if not released else (
@@ -146,6 +149,12 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
         +
         'Old tool names and frozen evidence namespaces are retained for compatibility, not a legacy fallback.'
     )
+    if version != '7.1':
+        instructions = (f'Explicit {version} questions use this fixed-snapshot bounded candidate. '
+                        'Other versions require separately configured sources; no fallback. '
+                        'Read task.answer_context, preserve candidates, unknown, source qualifiers and actual ranges. '
+                        'Inspect selected citations. COMPLETE is a material quota, not a complete story or corpus. '
+                        'Snapshot presence does not prove first introduction. Tool names are compatibility names, not source versions.')
     if handoff:
         instructions = (('Published bounded source: ' if released else 'Opt-in unified candidate: ') +
                         'use supplied [H...:R...:E...] citation handles with THIS server, including inspect evidence_ref. '
@@ -210,7 +219,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                   "corpus_or_story_complete": False, "evidence_goal": "next characters of the same text observation",
                   "retrieval_summary": {"characters": len(view["text"])}, "incompletion_reason": None,
                   "metrics": {"read_calls": 1, "inspect_calls": 1}}}
-        compact = compact_task(result, question, uuid.uuid4().hex)
+        compact = compact_task(result, question, uuid.uuid4().hex, snapshot=snapshot)
         compact["task"]["answer_context"] = compact.pop("_context")
         compact["task"]["answer_context"]["candidate_excerpts"][0]["text_range"] = position
         next_handle = None
@@ -259,7 +268,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
             if monotonic() - started >= 20:
                 stopped = "page_deadline"  # Do not start another read after expiry.
                 break
-            local = {"snapshot_id": SNAPSHOT, "family": "readable_archive", "run_id": entry["run"],
+            local = {"snapshot_id": snapshot, "family": "readable_archive", "run_id": entry["run"],
                      "text_id": row["id"], "source_path": anchor["source_path"], "pointer": row["pointer"]}
             ref = assistant.runtime.ref(entry, local)
             record = assistant._record(ref, origin="seed")  # read + inspect; proof policy unchanged
@@ -294,7 +303,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                            "evidence_goal": "read next physical lines", "retrieval_summary": {"physical_lines": len(covered)},
                            "incompletion_reason": stopped, "metrics": {"read_calls": verified_reads, "inspect_calls": verified_reads,
                                "count_scope": "page line read/inspect calls, including a budget-rejected line; anchor source qualification separate"}}}
-        compact = compact_task(result, question, uuid.uuid4().hex)
+        compact = compact_task(result, question, uuid.uuid4().hex, snapshot=snapshot)
         compact["task"]["answer_context"] = compact.pop("_context")
         add_text_continuations(compact, records, question)
         compact["book_page"] = {"source_path": anchor["source_path"], "total_physical_lines": total,
@@ -318,13 +327,13 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                                      inspected_ref=payload.get('provenance', {}).get('evidence_ref'))
         if len(json.dumps(payload, ensure_ascii=False).encode()) >= PAYLOAD_LIMIT:
             return {"status": "response_too_large", "partial": True, "product_accepted": False,
-                    "research_corpus_accepted": False, "snapshot": SNAPSHOT,
+                    "research_corpus_accepted": False, "snapshot": snapshot,
                     "error": "Preview payload exceeds cap; no unverified or silently relabeled material returned."}
         return payload
 
     @server.tool(name=PREVIEW_TOOL, annotations=READONLY,
-                 description=("Default and explicit 7.1: published bounded Research; eight historical contract gaps remain. " if released else
-                              "Explicit 7.1 only: partial bounded narrative material from accepted standalone capabilities. ") +
+                 description=(f"Default and explicit {version}: published bounded Research; eight historical contract gaps remain. " if released else
+                              f"Explicit {version}: partial bounded material from this exact qualified snapshot. ") +
                              "Consume task.answer_context and supplied citations; COMPLETE is NOT full story/all dialogue. "
                              "For Book, initial excerpts are samples: use returned book_continuations[].continuation "
                              "with this same tool to read bounded sequential pages from the file start; then book_page.continuation "
@@ -332,7 +341,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                              "Truncated Story/long Book lines expose text_continuations: pass their continuation to this tool "
                              "with text_chars=1..2000 (default 800); text_page gives original character range and EOF. "
                              "Book file EOF does not mean truncated lines were fully read. "
-                             "Candidate excerpts do not prove ownership/order. Explicit 7.0 uses separate formal tools.")
+                             "Candidate excerpts do not prove ownership/order. Other versions require separately configured sources.")
     def query_research71_preview(question: str = "", continuation: str | None = None, page_size: int = 12,
                                  text_chars: int = 800) -> dict[str, Any]:
         try:
@@ -345,13 +354,13 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                 if continuation in text_cursors:
                     return bounded(text_page(continuation, text_chars))
                 return bounded(book_page(continuation, page_size))
-            route = version_route(question, '7.1' if released else '7.0')
-            if route != "preview_7_1":
+            route = version_route(question, version if released or version != '7.1' else '7.0', target_version=version)
+            if route != 'preview_' + version.replace('.', '_'):
                 return bounded({"status": "route_required", "route": route, "question": question,
                         "partial": True, "product_accepted": False, "research_corpus_accepted": False,
                         "retrieval_executed": False})
             result = assistant.ask_task(retrieval_question(question))
-            compact = compact_task(result, question, uuid.uuid4().hex)
+            compact = compact_task(result, question, uuid.uuid4().hex, snapshot=snapshot)
             compact["task"]["answer_context"] = compact.pop("_context")
             add_text_continuations(compact, result["evidence"], question)
             compact["book_continuations"] = []
@@ -369,7 +378,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
                     "continuation": issue_book_cursor(question, citation["evidence_ref"], None)})
             return bounded(compact)
         except (ValueError, TimeoutError) as exc:
-            return bounded({"status": "unavailable", "snapshot": SNAPSHOT, "partial": True,
+            return bounded({"status": "unavailable", "snapshot": snapshot, "partial": True,
                     "product_accepted": False, "research_corpus_accepted": False, "error": str(exc)})
 
     @server.tool(name=INSPECT_TOOL, annotations=READONLY,
@@ -411,7 +420,7 @@ def create_server(assistant: NarrativeAssistant71, *, semantic_discovery_support
             observation = record["text_observations"][observation_index]
             if range_requested:
                 observation = text_view(observation, text_start, 800 if text_chars is None else text_chars)
-            return bounded({"status": "ok", "snapshot": SNAPSHOT, "partial": True,
+            return bounded({"status": "ok", "snapshot": snapshot, "partial": True,
                             "product_accepted": False, "research_corpus_accepted": False,
                             "single_physical_container": True, "provenance": provenance(record),
                             "observation_index": observation_index,

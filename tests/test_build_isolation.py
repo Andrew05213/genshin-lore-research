@@ -75,7 +75,7 @@ def test_core_index_reads_only_its_own_generated_mappings(tmp_path):
         metadata = tmp_path/arm/'metadata'
         corpus = metadata/'manifests/research/corpus.json'
         corpus.parent.mkdir(parents=True)
-        corpus.write_text('{}')
+        corpus.write_text(json.dumps({'snapshot':{'id':'anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99','version':'7.1'}}))
         for name, count in [('m3-7.1-provider', 20), ('special-core-7.1', 13)]:
             path = metadata/'manifests'/name/'accepted-exact-mappings-v1.json'
             path.parent.mkdir(parents=True)

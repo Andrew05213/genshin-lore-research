@@ -2,6 +2,8 @@
 
 ## 可执行入口
 
+完整有界构建支持显式固定 7.2 来源，范围仍为 35 个输入和 33 个 core providers，新增版本不等于全游戏覆盖或正式 release 晋级。review 修复后的 `e62e69f` 已在原生 Windows 的新目录完成全部输入、统一索引、默认向量、61 回执审计及真实 Codex 五工具观察，见 [Windows 7.2 复验](reviews/migration-7.2-windows.md)。原 [Linux 迁移记录](reviews/migration-7.2.md) 的失败、恢复和 seals 保留；既有 7.1 部署和安装器默认保持原样。
+
 阅读卡支持多句一次保存，Markdown 只显示标题和正文，完整证据另存 JSON。默认 reading 去掉重复技术结构，提供明确的续页/上下文动作；人物预览按材料类型组织。标准进度通知由支持它的客户端展示，未改原生 Codex renderer。实际 stdio 核对、体积测量、初轮失败与验证边界见 [阅读卡验证](reviews/reading-card-usability.md)。不自动切换已部署客户端或发布身份。
 
 Research 源码入口新增正文优先 reading 面板、紧凑对白分页与连接内短引用，full 视图和完整 inspect 保留。固定来源实测同一 `limit=20` 首屏由 3 个主节点变为 17 个；没有改变搜索排序或将候选升级为身份。接口和未执行范围见 [阅读展示验证](reviews/research-reading-experience.md)，部署参数见 [对白阅读指南](guides/reading-dialogue.md)。已有封存 release 和客户端配置不自动切换。

@@ -86,20 +86,26 @@ def verify_photo_echo_7_1_selection(root,scope):
  extensions=list(array_records(Path(root)/sources['activity_photograph_position_extension']['path']))
  positions=list(array_records(Path(root)/sources['activity_photograph_position']['path']))
  if len(root_rows)!=1:raise ValueError('Photo/Echo 7.1 root denominator')
- selected=root_rows[0][1].get('JPAAHMBJGOJ')
+ version=scope['snapshot_id'].split(':')[1]
+ selected=root_rows[0][1].get('JPAAHMBJGOJ' if version=='7.1' else 'CECCFAAFGNM')
  if not isinstance(selected,list) or any(type(x) is not int for x in selected) or len(selected)!=len(set(selected)):
   raise ValueError('Photo/Echo 7.1 root selector shape')
  page_ids=[]
  for _,row,_ in pages:
-  values=row.get('JOLGNPDDIJK')
+  values=row.get('JOLGNPDDIJK' if version=='7.1' else 'FJBMJKLCDDN')
   if not isinstance(values,list) or any(type(x) is not int for x in values):raise ValueError('Photo/Echo 7.1 page selector shape')
   page_ids.extend(values)
  extension_ids=[row.get('id') for _,row,_ in extensions]
  position_ids=[row.get('id') for _,row,_ in positions]
  if (len(page_ids)!=len(set(page_ids)) or len(extension_ids)!=len(set(extension_ids))
-     or len(position_ids)!=len(set(position_ids)) or set(selected)!=set(page_ids)
-     or set(selected)!=set(extension_ids) or not set(selected)<=set(position_ids)):
+     or len(position_ids)!=len(set(position_ids))
+     or (set(selected)!=set(page_ids) if version=='7.1' else bool(set(selected)&set(page_ids)))
+     or (set(selected) if version=='7.1' else set(selected)|set(page_ids))!=set(extension_ids)
+     or not set(extension_ids)<=set(position_ids)):
   raise ValueError('Photo/Echo 7.1 source-owned selector disagreement')
+ if version=='7.2':
+  if scope.get('selector_status')!='disjoint_root_and_page_physical_union_not_logical_order':raise ValueError('Photo selector conflict must remain explicit')
+  selected=sorted(set(selected)|set(page_ids))
  declaration=sources['activity_photograph_position']
  if (declaration.get('selection_field')!='id' or declaration.get('selected_native_ids')!=sorted(selected)
      or len([id_ for id_ in position_ids if id_ in set(selected)])!=len(selected)):
@@ -109,9 +115,11 @@ def verify(root,scope_path,artifact,build_report,dependency_paths):
  root=Path(root);scope_path=Path(scope_path);artifact=Path(artifact);scope=json.loads(scope_path.read_text());check_files(root,scope)
  verify_photo_echo_7_1_selection(root,scope)
  historical=json.loads(HISTORICAL.read_text())
- if scope.get('contract')!='event-photo-echo-7.1-versioned-source-v1' or scope.get('historical_scope_sha256')!=sha(HISTORICAL) or scope.get('family_contract_version')!=historical['family_contract_version'] or {x['path'] for x in scope['sources']}!={x['path'] for x in historical['sources']} or len(scope['sources'])!=6 or len(scope['files'])!=12:
+ if scope.get('contract')!='event-photo-echo-7.1-versioned-source-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]) or scope.get('historical_scope_sha256')!=sha(HISTORICAL) or scope.get('family_contract_version')!=historical['family_contract_version'] or {x['path'] for x in scope['sources']}!={x['path'] for x in historical['sources']} or len(scope['sources'])!=6 or len(scope['files'])!=12:
   raise ValueError('Photo/Echo 7.1 historical selector/contract drift')
  aliases={'KDLEHDLHHOD':'JPAAHMBJGOJ','FLKPLMMNLFL':'JOLGNPDDIJK','DLGNPIDJDAD':'EHLBLMHEAAB','EINGJLOCLJO':'PKPHBGMFODP','HPAMAMOHMMM':'ICMKPBCEJJB','NPDJPIBIDDG':'ELJEELOLFPI'}
+ if scope['snapshot_id'].split(':')[1]=='7.2':
+  aliases={'KDLEHDLHHOD':'CECCFAAFGNM','FLKPLMMNLFL':'FJBMJKLCDDN','DLGNPIDJDAD':'CMFMODONCGJ','EINGJLOCLJO':'OPBFJNLJJKA','HPAMAMOHMMM':'PAFDMIMKIAO','NPDJPIBIDDG':'IDNBLPICFGM'}
  if scope.get('field_renames')!=aliases:raise ValueError('Photo/Echo 7.1 field alias contract')
  expected_sources=copy.deepcopy(historical['sources'])
  for declaration in expected_sources:

@@ -27,6 +27,8 @@ def _blob(path: Path) -> str:
 
 
 def check_scope(root: Path, scope: dict) -> None:
+    from .source_versions import source_pin
+    version, COMMIT, TREE = source_pin(scope["snapshot_id"])
     root = Path(root)
     head, tree = subprocess.check_output(
         ["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True
@@ -36,7 +38,7 @@ def check_scope(root: Path, scope: dict) -> None:
     ):
         raise ValueError("clean exact 7.1 source checkout required")
     if (scope.get("source_commit"), scope.get("source_tree"), scope.get("snapshot_id")) != (
-        COMMIT, TREE, "anime-game-data:7.1:" + COMMIT
+        COMMIT, TREE, f"anime-game-data:{version}:" + COMMIT
     ):
         raise ValueError("LoadingTips 7.1 scope pin")
     if (scope.get("text_fields") != list(FIELDS) or scope.get("languages") != list(LANGUAGES)

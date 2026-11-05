@@ -1,0 +1,678 @@
+{
+  "contract": "m3-7.2-ten-family-provider-input-v1",
+  "families": [
+    {
+      "consumed_field_observations": {
+        "ActivityId": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2,
+          "present_rows": 2,
+          "types": {
+            "int": 2
+          }
+        },
+        "NameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2,
+          "present_rows": 2,
+          "types": {
+            "int": 2
+          }
+        }
+      },
+      "family": "activity_archive",
+      "key_observation_fields": [
+        "ActivityId"
+      ],
+      "source_family_key": "c01cd1768607f075",
+      "source_identity": {
+        "git_blob_oid": "14606695c5c568e3b954d832a77c93e38317ce4f",
+        "sha256": "7c6a733b4f3f3697e3324f8ae7d280968c9ddf4f1ec1e7732f2f2643143c200d",
+        "size_bytes": 574
+      },
+      "source_path": "ExcelBinOutput/ActivityExcelConfigData.json",
+      "source_physical_rows": 2,
+      "v1_contract": "activity-archive-evidence-v1",
+      "v2_contract": "activity-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "NameTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2073,
+          "present_rows": 2073,
+          "types": {
+            "int": 2073
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2073,
+          "present_rows": 2073,
+          "types": {
+            "int": 2073
+          }
+        },
+        "ps5TitleTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2073,
+          "present_rows": 2073,
+          "types": {
+            "int": 2073
+          }
+        },
+        "titleTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2073,
+          "present_rows": 2073,
+          "types": {
+            "int": 2073
+          }
+        }
+      },
+      "family": "achievement_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "e15b70b3e7fcb95b",
+      "source_identity": {
+        "git_blob_oid": "94253acb77c2f60cd0133ef363f69be4b48bc90b",
+        "sha256": "e911004f8b41616b9ab594c510273d31cb933a0cc16add9bce5bdf0b79f753c5",
+        "size_bytes": 982580
+      },
+      "source_path": "ExcelBinOutput/AchievementExcelConfigData.json",
+      "source_physical_rows": 2073,
+      "v1_contract": "achievement-archive-evidence-v1",
+      "v2_contract": "achievement-archive-evidence-v2",
+      "v2_historical_definition": "Q2",
+      "v2_text_fields": [
+        "titleTextMapHash",
+        "descTextMapHash",
+        "ps5TitleTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "coopPicNameHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 131,
+          "present_rows": 131,
+          "types": {
+            "int": 131
+          }
+        },
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 169,
+          "present_rows": 169,
+          "types": {
+            "int": 169
+          }
+        },
+        "gachaCardNameHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 131,
+          "present_rows": 131,
+          "types": {
+            "int": 131
+          }
+        },
+        "gachaImageNameHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 131,
+          "present_rows": 131,
+          "types": {
+            "int": 131
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 169,
+          "present_rows": 169,
+          "types": {
+            "int": 169
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 169,
+          "present_rows": 169,
+          "types": {
+            "int": 169
+          }
+        }
+      },
+      "family": "avatar_config_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "d5fa5583aae47323",
+      "source_identity": {
+        "git_blob_oid": "89068b5021ee7711fbf639b9c361607aaf5036b8",
+        "sha256": "dbed6b4f540fe24f8d96dc46b545ac2f8c0d0197f38e4b9a4cac0762a569a897",
+        "size_bytes": 357668
+      },
+      "source_path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "source_physical_rows": 169,
+      "v1_contract": "avatar-config-archive-evidence-v1",
+      "v2_contract": "avatar-config-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "coopPicNameHash",
+        "gachaCardNameHash",
+        "gachaImageNameHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2426,
+          "present_rows": 2426,
+          "types": {
+            "int": 2426
+          }
+        },
+        "displayNameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2426,
+          "present_rows": 2426,
+          "types": {
+            "int": 2426
+          }
+        },
+        "gearDescTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2426,
+          "present_rows": 2426,
+          "types": {
+            "int": 2426
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2426,
+          "present_rows": 2426,
+          "types": {
+            "int": 2426
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2426,
+          "present_rows": 2426,
+          "types": {
+            "int": 2426
+          }
+        }
+      },
+      "family": "dungeon_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "46e12f0c689b6c35",
+      "source_identity": {
+        "git_blob_oid": "6ea41cbd181e0dbb8282b708f46edecee66e7735",
+        "sha256": "8ef559c61e764d553f80127e6babd480d6fe0620db5762d04cb4feb75c204082",
+        "size_bytes": 2596200
+      },
+      "source_path": "ExcelBinOutput/DungeonExcelConfigData.json",
+      "source_physical_rows": 2426,
+      "v1_contract": "dungeon-archive-evidence-v1",
+      "v2_contract": "dungeon-archive-evidence-v2",
+      "v2_historical_definition": "Q2",
+      "v2_text_fields": [
+        "nameTextMapHash",
+        "displayNameTextMapHash",
+        "descTextMapHash",
+        "gearDescTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 3518,
+          "present_rows": 3518,
+          "types": {
+            "int": 3518
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 3518,
+          "present_rows": 3518,
+          "types": {
+            "int": 3518
+          }
+        }
+      },
+      "family": "monster_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "fbc3ae09e05391b3",
+      "source_identity": {
+        "git_blob_oid": "0d2d5eb481738cf185d59bd707a33006f020645e",
+        "sha256": "b0efcdb6bca52eca8c2b89fe2e43f8f5a65bc1596fd250e7ddc375acd92989cc",
+        "size_bytes": 5255030
+      },
+      "source_path": "ExcelBinOutput/MonsterExcelConfigData.json",
+      "source_physical_rows": 3518,
+      "v1_contract": "monster-archive-evidence-v1",
+      "v2_contract": "monster-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "nameTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 15494,
+          "present_rows": 15494,
+          "types": {
+            "int": 15494
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 15494,
+          "present_rows": 15494,
+          "types": {
+            "int": 15494
+          }
+        }
+      },
+      "family": "npc_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "4ef43630f2caa59b",
+      "source_identity": {
+        "git_blob_oid": "2fbafe717742da7647499d57bd4c905d83ce2397",
+        "sha256": "f2288db07452c3ae95da33c56da03db50760e9b321ce6e997933993c5595d32c",
+        "size_bytes": 7726862
+      },
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "source_physical_rows": 15494,
+      "v1_contract": "npc-archive-evidence-v1",
+      "v2_contract": "npc-archive-evidence-v2",
+      "v2_historical_definition": "Q2",
+      "v2_text_fields": [
+        "nameTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 2431,
+          "present_rows": 2431,
+          "types": {
+            "int": 2431
+          }
+        }
+      },
+      "family": "scene_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "328e428f7dc5997e",
+      "source_identity": {
+        "git_blob_oid": "9f06ef286acb103789c813cee90a62965430d512",
+        "sha256": "5a906393d1de46a6d397ae169cdcfb76a9ee77fc1c9e38dd3aec752656978550",
+        "size_bytes": 590002
+      },
+      "source_path": "ExcelBinOutput/SceneExcelConfigData.json",
+      "source_physical_rows": 2431,
+      "v1_contract": "scene-archive-evidence-v1",
+      "v2_contract": "scene-archive-evidence-v2",
+      "v2_historical_definition": "Q2",
+      "v2_text_fields": [],
+      "v2_textmap_paths": []
+    },
+    {
+      "consumed_field_observations": {
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 288,
+          "present_rows": 288,
+          "types": {
+            "int": 288
+          }
+        },
+        "gachaCardNameHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 288,
+          "present_rows": 288,
+          "types": {
+            "int": 288
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 288,
+          "present_rows": 288,
+          "types": {
+            "int": 288
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 288,
+          "present_rows": 288,
+          "types": {
+            "int": 288
+          }
+        }
+      },
+      "family": "weapon_config_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "10ee939d76277ac6",
+      "source_identity": {
+        "git_blob_oid": "9808d2d3debcc79bee048f6b383d0aa4ed38693d",
+        "sha256": "a6e2fec1b1f6ba842c016fcde9a3f54b28a3c9b098d5e6271574720687f92f4e",
+        "size_bytes": 370713
+      },
+      "source_path": "ExcelBinOutput/WeaponExcelConfigData.json",
+      "source_physical_rows": 288,
+      "v1_contract": "weapon-config-archive-evidence-v1",
+      "v2_contract": "weapon-config-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "gachaCardNameHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 4352,
+          "present_rows": 4352,
+          "types": {
+            "int": 4352
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 4352,
+          "present_rows": 4352,
+          "types": {
+            "int": 4352
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 4352,
+          "present_rows": 4352,
+          "types": {
+            "int": 4352
+          }
+        }
+      },
+      "family": "reliquary_config_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "8242b44a7dd98193",
+      "source_identity": {
+        "git_blob_oid": "48a892dee64a03eff17df210322dbfe45defe283",
+        "sha256": "921f2da8d78bccc3f167c3d00adcef6ab8759acc69b5acefd1fbb9413e68d05b",
+        "size_bytes": 2837490
+      },
+      "source_path": "ExcelBinOutput/ReliquaryExcelConfigData.json",
+      "source_physical_rows": 4352,
+      "v1_contract": "reliquary-config-archive-evidence-v1",
+      "v2_contract": "reliquary-config-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    },
+    {
+      "consumed_field_observations": {
+        "descTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "effectDescTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "id": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "interactionTitleTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "nameTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "specialDescTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        },
+        "typeDescTextMapHash": {
+          "container_mismatches": 0,
+          "null_rows": 0,
+          "occurrences": 10679,
+          "present_rows": 10679,
+          "types": {
+            "int": 10679
+          }
+        }
+      },
+      "family": "material_config_archive",
+      "key_observation_fields": [
+        "id"
+      ],
+      "source_family_key": "6d9a95e96158c8c0",
+      "source_identity": {
+        "git_blob_oid": "76c128c449bf3ba4d9ea9822f6c64616d3409962",
+        "sha256": "e1cfaeb4c18ce57695748c62e07321456209b62c16fcb00753aefdd6fa912173",
+        "size_bytes": 9015300
+      },
+      "source_path": "ExcelBinOutput/MaterialExcelConfigData.json",
+      "source_physical_rows": 10679,
+      "v1_contract": "material-config-archive-evidence-v1",
+      "v2_contract": "material-config-archive-evidence-v2",
+      "v2_historical_definition": "R3",
+      "v2_text_fields": [
+        "nameTextMapHash",
+        "descTextMapHash",
+        "effectDescTextMapHash",
+        "interactionTitleTextMapHash",
+        "specialDescTextMapHash",
+        "typeDescTextMapHash"
+      ],
+      "v2_textmap_paths": [
+        "TextMap/TextMapCHS.json",
+        "TextMap/TextMapEN.json",
+        "TextMap/TextMapJP.json",
+        "TextMap/TextMap_MediumCHS.json",
+        "TextMap/TextMap_MediumEN.json",
+        "TextMap/TextMap_MediumJP.json"
+      ]
+    }
+  ],
+  "family_count": 10,
+  "historical_source_audit": "reports/7.1-pre-schema20-closure/core-provider-source-family-map.json",
+  "historical_source_audit_sha256": "e893da21dea15a9a09cbc661b3be32c01fdb1bd768160148811c034f817d4443",
+  "identity_policy": "snapshot+parser+run+physical coordinate; no logical or cross-snapshot merge",
+  "provider_contract_count": 20,
+  "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+  "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "status": "frozen_build_input_not_evidence_acceptance",
+  "textmap_sources": {
+    "TextMap/TextMapCHS.json": {
+      "git_blob_oid": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    "TextMap/TextMapEN.json": {
+      "git_blob_oid": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    "TextMap/TextMapJP.json": {
+      "git_blob_oid": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    "TextMap/TextMap_MediumCHS.json": {
+      "git_blob_oid": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    "TextMap/TextMap_MediumEN.json": {
+      "git_blob_oid": "465719906988e84a5d30ab101732c34eac5bad20",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    "TextMap/TextMap_MediumJP.json": {
+      "git_blob_oid": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  }
+}

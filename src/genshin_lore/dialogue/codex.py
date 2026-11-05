@@ -59,7 +59,8 @@ class CodexDialogue:
         atom = at_pointer(self.root(parent), slot['source_pointer'])
         shape = SHAPES.get(self.roots[(parent['source_key'], parent['occurrence_id'])][1])
         hash_key = shape['locator_hash'] if shape else 'textId'
-        label_key = shape['locator_label'] if shape else 'DFKLAEHPOBE'
+        label_key = shape['locator_label'] if shape else (
+            'textType' if getattr(self.q, 'source_version', '7.1') == '7.2' else 'DFKLAEHPOBE')
         if (not isinstance(atom, dict) or str(atom.get(hash_key)) != slot['raw_hash']
                 or atom.get(label_key) != slot['source_label']):
             raise ValueError('Codex source label/hash differs from sealed slot: '

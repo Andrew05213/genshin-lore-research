@@ -49,8 +49,8 @@ def source_lines(raw):
         offset += size
 
 
-def source_tree(root):
-    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", "Readable"])
+def source_tree(root, commit=COMMIT):
+    data = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", "Readable"])
     result = {}
     for item in data.split(b"\0"):
         if item:
@@ -75,6 +75,9 @@ def verify(source_root, scope_path, artifact_path, r0_artifact, document_artifac
     r0_artifact, document_artifact = Path(r0_artifact).resolve(), Path(document_artifact).resolve()
     scope_raw = scope_path.read_bytes()
     scope = json.loads(scope_raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
     require((scope["source_commit"], scope["source_tree"], scope["snapshot_id"]) == (COMMIT, TREE, SNAPSHOT), "source scope pin")
     require(subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() == [COMMIT, TREE], "checkout pin")
     require(not subprocess.check_output(["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True).strip(), "checkout clean")
@@ -84,13 +87,14 @@ def verify(source_root, scope_path, artifact_path, r0_artifact, document_artifac
     require((r0_artifact.stat().st_size, file_digest(r0_artifact)) ==
             (scope["r0_dependency"]["size_bytes"], scope["r0_dependency"]["sha256"]), "7.1 R0 exact dependency")
     require(document_report["artifact"] == {"size_bytes": document_artifact.stat().st_size, "sha256": file_digest(document_artifact)}, "7.1 Document exact dependency")
-    require(document_report["snapshot_id"] == SNAPSHOT and document_report["contract"] == "document-7.1-evidence-v1", "Document snapshot/contract")
+    document_contract = 'document-7.2-evidence-v2' if version == '7.2' else 'document-7.1-evidence-v1'
+    require(document_report["snapshot_id"] == SNAPSHOT and document_report["contract"] == document_contract, "Document snapshot/contract")
     implementation = {path: file_digest(ROOT / path) for path in CODE}
     parser_id = identity("readable71-parser", implementation)
     run_id = identity("readable71-run", SNAPSHOT, parser_id, digest(scope_raw), document_report["artifact"]["sha256"], scope["r0_dependency"]["sha256"])
     require((report["implementation"], report["parser_build_id"], report["run_id"], report["scope_sha256"]) ==
             (implementation, parser_id, run_id, digest(scope_raw)), "implementation/parser/run")
-    paths = source_tree(root)
+    paths = source_tree(root, COMMIT)
     path_blob_seal = digest((json.dumps(sorted(paths.items()), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode())
     require(len(paths) == scope["readable"]["file_count"] and path_blob_seal == scope["readable"]["path_blob_set_sha256"], "Readable path/blob denominator")
     actual_paths = {path.relative_to(root).as_posix() for path in (root / "Readable").rglob("*.txt")}
@@ -138,7 +142,7 @@ def verify(source_root, scope_path, artifact_path, r0_artifact, document_artifac
             target = "Readable/" + value[len("ART/UI/Readable/"):] + ".txt"
             add("source_localization", None, None, None, f"localization:{ordinal}",
                 "ExcelBinOutput/LocalizationExcelConfigData.json", f"/{ordinal}/{key}",
-                "localization_readable_path", value, "all pinned 7.1 Readable paths; exact exported path + .txt", target)
+                "localization_readable_path", value, f"all pinned {version} Readable paths; exact exported path + .txt", target)
     document = sqlite3.connect("file:" + str(document_artifact) + "?mode=ro&immutable=1", uri=True)
     document.row_factory = sqlite3.Row
     release_row = document.execute("SELECT manifest_json FROM document_release WHERE id=1").fetchone()

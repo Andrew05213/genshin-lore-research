@@ -86,7 +86,7 @@ def verify(source_root, old_source, scope_path, artifact, build_report=None, run
     old = json.loads(OLD.read_text())
     check_files(source_root, scope)
     check_old_files(old_source, old)
-    if (scope['contract'] != 'event-legacy-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-legacy-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['family_contract_version'] != 'event-narrative-evidence-v1'
             or scope['historical_scope'] != OLD.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(OLD)

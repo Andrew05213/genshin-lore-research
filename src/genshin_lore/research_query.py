@@ -2609,6 +2609,11 @@ class ResearchQuery:
                     )
         if "npc_id" in cols and str(got["npc_id"]) != str(c["raw_target"]):
             raise ResearchUnavailable("relation candidate raw target drift")
+        return got
+
+    def _decorate_follow_candidate(self, relation, candidate, source_candidate, item):
+        """Optional presentation from the exact source row just rechecked."""
+        return item
 
     def follow(
         self,
@@ -2786,7 +2791,7 @@ class ResearchQuery:
                 (r["id"], ca, limit + 1),
             ).fetchall()
             for c in crows[:limit]:
-                self._recheck_candidate(r, c)
+                source_candidate = self._recheck_candidate(r, c)
                 target = self._target_ref(c) if resolve_targets else None
                 item = {
                     "target_evidence_ref": target,
@@ -2799,6 +2804,8 @@ class ResearchQuery:
                     "target_pointer": c["target_pointer"],
                     "raw_target": c["raw_target"],
                 }
+                if resolve_targets:
+                    item = self._decorate_follow_candidate(r, c, source_candidate, item)
                 if (
                     len(
                         json.dumps(

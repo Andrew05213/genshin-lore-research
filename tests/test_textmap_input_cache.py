@@ -97,7 +97,7 @@ def test_launcher_releases_core_cache_and_does_not_enable_other_stages(tmp_path,
         list(cached_reader(RAW, wanted_keys={'1'}))
         states.append(state)
     monkeypatch.setattr(driver, 'allocated', lambda *_: 0)
-    monkeypatch.setattr(driver, 'Rebuild', lambda *_: SimpleNamespace(**{stage:run}))
+    monkeypatch.setattr(driver, 'Rebuild', lambda *_, **kw: SimpleNamespace(**{stage:run}))
     monkeypatch.setattr(sys, 'argv', ['build', '--stage', stage, '--source', str(tmp_path),
                                      '--output-root', str(tmp_path/'output')])
     driver.main()

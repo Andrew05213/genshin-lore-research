@@ -88,6 +88,9 @@ def _schema(conn: sqlite3.Connection, kind: str) -> None:
 
 def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connection, dict]:
     manifest = json.loads(Path(foundation_manifest or MANIFEST).read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = manifest["source_snapshot"]
+    _, COMMIT, TREE = source_pin(SNAPSHOT)
     _eq((manifest["source_snapshot"], manifest["source_commit"], manifest["source_tree"]),
         (SNAPSHOT, COMMIT, TREE), "foundation source identity")
     if "local_rebuild" in manifest:
@@ -108,15 +111,19 @@ def _foundation(path: Path, *, foundation_manifest=None) -> tuple[sqlite3.Connec
         release = json.loads(conn.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])
         _eq((release["snapshot_id"], release["parser_build_id"], release["ingest_run_id"]),
             (SNAPSHOT, manifest["parser_build_id"], manifest["ingest_run_id"]), "foundation release")
-        _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], 34817, "text owner count")
+        _eq(conn.execute("SELECT count(*) FROM foundation_text_owner").fetchone()[0], sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()), "text owner count")
         return conn, scope
     except Exception:
         conn.close()
         raise
 
 
-def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_RUN) -> sqlite3.Connection:
+def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_RUN, scope=None, snapshot_id=SNAPSHOT) -> sqlite3.Connection:
     """Bind a text dependency to this exact foundation, including byte identity."""
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"] if scope else snapshot_id
+    game_version, _, _ = source_pin(SNAPSHOT)
+    owners = sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()) if scope else 34817
     if any(Path(str(path) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("text projection sidecar")
     conn = _open(path)
@@ -124,9 +131,9 @@ def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_R
         release = json.loads(conn.execute("SELECT manifest_json FROM release WHERE id=1").fetchone()[0])
         _eq((release["contract"], release["snapshot_id"], release["foundation_run_id"],
              release["foundation_size_bytes"], release["foundation_sha256"]),
-            ("character-7.1-text-successor-v1", SNAPSHOT, foundation_run_id,
+            (f"character-{game_version}-text-successor-v1", SNAPSHOT, foundation_run_id,
              foundation.stat().st_size, sha(foundation)), "text foundation identity")
-        _eq(conn.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text denominator")
+        _eq(conn.execute("SELECT count(*) FROM resolution").fetchone()[0], owners * 3, "text denominator")
         return conn
     except Exception:
         conn.close()
@@ -134,6 +141,8 @@ def _text(path: Path, foundation: Path, *, foundation_run_id: str = FOUNDATION_R
 
 
 def _source(source: Path, scope: dict) -> None:
+    from .source_versions import source_pin
+    _, COMMIT, TREE = source_pin(scope["snapshot_id"])
     actual = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines()
     _eq(actual, [COMMIT, TREE], "source checkout pin")
     _eq(subprocess.check_output(["git", "-C", str(source), "status", "--porcelain=v1"], text=True).strip(), "", "source checkout clean")
@@ -169,12 +178,12 @@ def _verify_text(conn: sqlite3.Connection, foundation: sqlite3.Connection, sourc
             states[locale + ":" + status] += 1
     _eq(_rows(conn, "resolution"), sorted(expected_resolution), "all owner-locale resolution rows")
     _eq(_rows(conn, "candidate"), sorted(expected_candidate), "all exact TextMap candidate rows")
-    _eq(len(owners), 34817, "owner denominator")
+    _eq(len(owners), sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()), "owner denominator")
     return {"owner_count": len(owners), "resolution_states": dict(sorted(states.items())), "candidate_count": len(expected_candidate)}
 
 
-def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text: sqlite3.Connection) -> dict:
-    _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text binding")
+def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text: sqlite3.Connection, scope) -> dict:
+    _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()) * 3, "text binding")
     kinds = {"AvatarExcelConfigData.json": "avatar", "FetterInfoExcelConfigData.json": "fetter_info", "FetterStoryExcelConfigData.json": "story"}
     records, refs, fields, candidates = [], [], [], []
     counts = Counter()
@@ -203,12 +212,12 @@ def _verify_lore(conn: sqlite3.Connection, foundation: sqlite3.Connection, text:
     _eq(_rows(conn, "lore_text_ref"), sorted(refs), "Lore/Story text owner pointers")
     _eq(_rows(conn, "lore_raw_field_ref"), sorted(fields), "Lore/Story raw unlock/open physical fields")
     _eq(_rows(conn, "lore_avatar_candidate"), sorted(candidates), "Lore/Story owner candidates")
-    _eq(dict(counts), {"avatar": 167, "fetter_info": 124, "story": 974}, "Lore denominator")
+    _eq(dict(counts), {"avatar": scope["primary_rows"]["ExcelBinOutput/AvatarExcelConfigData.json"], "fetter_info": scope["primary_rows"]["ExcelBinOutput/FetterInfoExcelConfigData.json"], "story": scope["primary_rows"]["ExcelBinOutput/FetterStoryExcelConfigData.json"]}, "Lore denominator")
     return {"record_counts": dict(counts), "text_refs": len(refs), "raw_condition_refs": len(fields), "avatar_candidates": len(candidates)}
 
 
-def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text: sqlite3.Connection) -> dict:
-    _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], 34817 * 3, "text binding")
+def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text: sqlite3.Connection, scope) -> dict:
+    _eq(text.execute("SELECT count(*) FROM resolution").fetchone()[0], sum(scope["primary_rows"]["ExcelBinOutput/" + name] * len(fields) for name, fields in scope["textmap_owner_fields"].items()) * 3, "text binding")
     path = "ExcelBinOutput/FettersExcelConfigData.json"
     records, refs, fields, avatar_candidates, lut_candidates = [], [], [], [], []
     candidate_rows = _candidate_rows_by_relation(foundation)
@@ -235,11 +244,11 @@ def _verify_voice(conn: sqlite3.Connection, foundation: sqlite3.Connection, text
     expected_audio = foundation.execute("SELECT id,item_id,ordinal,pointer,audio_path,selector,order_value FROM foundation_audio_variant").fetchall()
     for table, expected in (("voice_record", records), ("voice_text_ref", refs), ("voice_raw_field_ref", fields), ("voice_avatar_candidate", avatar_candidates), ("voice_lut_candidate", lut_candidates), ("lut_ref", expected_lut), ("item_ref", expected_item), ("audio_ref", expected_audio)):
         _eq(_rows(conn, table), sorted(expected), "Voice complete table " + table)
-    _eq((len(records), len(expected_lut), len(expected_item), len(expected_audio)), (9183, 375, 375, 9770), "Voice denominator")
+    _eq((len(records), len(expected_lut), len(expected_item), len(expected_audio)), (scope["primary_rows"]["ExcelBinOutput/FettersExcelConfigData.json"], scope["voice_scope"]["selected_fetter_lut_records"], scope["voice_scope"]["selected_fetter_item_records"], scope["voice_scope"]["audio_variants"]), "Voice denominator")
     attached = {lut_id for _, _, lut_id in lut_candidates}
     unattached = sum(row[0] not in attached for row in expected_lut)
     missing = sum(row[5] == "missing" for row in expected_item)
-    _eq((unattached, missing), (8, 1), "Voice legal missing/unattached")
+    _eq((unattached, missing), (scope["voice_scope"]["unattached_fetter_lut_slots"], scope["voice_scope"]["items_with_missing_variant_array"]), "Voice legal missing/unattached")
     return {"voice_owner_rows": len(records), "raw_condition_refs": len(fields), "lut_count": len(expected_lut), "item_count": len(expected_item), "audio_variant_count": len(expected_audio), "unattached_lut_slots": unattached, "missing_variant_arrays": missing}
 
 
@@ -254,11 +263,14 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
     if expected_artifact is not None:
         _eq(seal, expected_artifact, "candidate artifact seal")
     foundation, scope = _foundation(Path(foundation_path), foundation_manifest=foundation_manifest)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, _, _ = source_pin(SNAPSHOT)
     conn = text = None
     try:
         foundation_run = json.loads(foundation.execute("SELECT manifest_json FROM foundation_release WHERE id=1").fetchone()[0])["ingest_run_id"]
         conn = _open(artifact)
-        text = _text(Path(text_path), Path(foundation_path), foundation_run_id=foundation_run) if text_path else None
+        text = _text(Path(text_path), Path(foundation_path), foundation_run_id=foundation_run, scope=scope) if text_path else None
         _eq(conn.execute("PRAGMA integrity_check").fetchone()[0], "ok", "integrity")
         _eq(conn.execute("PRAGMA foreign_key_check").fetchall(), [], "foreign keys")
         _schema(conn, kind)
@@ -269,14 +281,14 @@ def verify(kind: str, foundation_path: str | Path, artifact_path: str | Path, *,
         else:
             if text is None or source_root is not None:
                 raise ValueError("Lore/Voice verifier requires text artifact only")
-            counts = (_verify_lore if kind == "lore" else _verify_voice)(conn, foundation, text)
+            counts = (_verify_lore if kind == "lore" else _verify_voice)(conn, foundation, text, scope)
         implementation = {"src/genshin_lore/character_7_1_successor_build.py": sha(ROOT / "src/genshin_lore/character_7_1_successor_build.py"), SCHEMAS[kind]: sha(ROOT / SCHEMAS[kind])}
         parser_id = _id(kind, "parser", implementation)
         foundation_sha = sha(Path(foundation_path))
         foundation_size = Path(foundation_path).stat().st_size
         run_id = _id(kind, "run", parser_id, foundation_run, foundation_sha, sha(Path(text_path)) if text_path else None)
         expected_release = {
-            "contract": f"character-7.1-{kind}-successor-v1",
+            "contract": f"character-{game_version}-{kind}-successor-v1",
             "snapshot_id": SNAPSHOT,
             "foundation_run_id": foundation_run,
             "foundation_size_bytes": foundation_size,

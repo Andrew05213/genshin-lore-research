@@ -1,0 +1,316 @@
+{
+  "mappings": [
+    {
+      "family": "activity_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "activity-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/ActivityExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "activity_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "activity-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/ActivityExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "achievement_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "achievement-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/AchievementExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "achievement_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "achievement-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/AchievementExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "avatar_config_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "avatar-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "avatar_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "avatar-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/AvatarExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "dungeon_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "dungeon-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/DungeonExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "dungeon_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "dungeon-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/DungeonExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "monster_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "monster-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/MonsterExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "monster_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "monster-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/MonsterExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "npc_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "npc-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "npc_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "npc-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/NpcExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "scene_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "scene-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/SceneExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "scene_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "scene-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/SceneExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "weapon_config_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "weapon-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/WeaponExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "weapon_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "weapon-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/WeaponExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "reliquary_config_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "reliquary-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/ReliquaryExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "reliquary_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "reliquary-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/ReliquaryExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    },
+    {
+      "family": "material_config_archive",
+      "historical_status_adapter": null,
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "material-config-archive-evidence-v1",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/MaterialExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v1"
+    },
+    {
+      "family": "material_config_archive",
+      "historical_status_adapter": {
+        "other_statuses": "identity",
+        "resolved_candidate_set": "ambiguous"
+      },
+      "logical_identity_created": false,
+      "product_accepted": false,
+      "provider_contract": "material-config-archive-evidence-v2",
+      "research_accepted": false,
+      "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_path": "ExcelBinOutput/MaterialExcelConfigData.json",
+      "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+      "status": "UNBUILT_SOURCE_MIGRATION",
+      "version": "v2"
+    }
+  ],
+  "product_accepted": false,
+  "source_snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1"
+}

@@ -1,0 +1,96 @@
+{
+  "contract": "quest-talk-7.2-standalone-physical-v1",
+  "decoder_contract": {
+    "identity_policy": "physical coordinates only; unresolved registered shapes remain partial",
+    "source_authored_fields": [
+      "id",
+      "subQuests",
+      "talks",
+      "initDialog",
+      "dialogList",
+      "talkId",
+      "nextDialogs",
+      "talkContentTextMapHash"
+    ],
+    "version": "quest-talk-7.2-physical-v1"
+  },
+  "main_quest_source": {
+    "path": "ExcelBinOutput/MainQuestExcelConfigData.json",
+    "physical_rows": 4543,
+    "sha256": "f6dcb39d39526cc699daf118b21c68481897238651af92b2e1ee77a54d757287",
+    "size_bytes": 2082467
+  },
+  "physical_scope": {
+    "quest": {
+      "file_count": 4543,
+      "path_set_sha256": "b6f6cf11ba55ed0b7cbb96437b4daa59649195459c9bc04e6cc9c74297d5f47f",
+      "source_root": "BinOutput/Quest"
+    },
+    "talk": {
+      "file_count": 57643,
+      "path_set_sha256": "205d24face895013e04832f174fa65e83149b1e63c37573b850c5a1b2bcfb9dc",
+      "source_root": "BinOutput/Talk"
+    }
+  },
+  "product_accepted": false,
+  "root_signature_manifest": {
+    "path": "manifests/quest-talk-7.2/root-signature-digests.json",
+    "quest_distinct_signatures": 1411,
+    "sha256": "ac957997f0366db4c95b4732bcc8e1ca496e982a789a5052da917e15be8c85e8",
+    "talk_distinct_signatures": 35
+  },
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "status": "source_contract_generated_not_qualified",
+  "textmap_shards": [
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "locale": "CHS",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413,
+      "tier": "main"
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "locale": "CHS",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964,
+      "tier": "medium"
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "locale": "EN",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319,
+      "tier": "main"
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "locale": "EN",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913,
+      "tier": "medium"
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "locale": "JP",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239,
+      "tier": "main"
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "locale": "JP",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099,
+      "tier": "medium"
+    }
+  ]
+}

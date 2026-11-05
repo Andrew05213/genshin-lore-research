@@ -48,7 +48,10 @@ def ident(*parts) -> str:
 
 
 def check_source(source: Path, scope: dict) -> None:
-    if scope.get("contract") != "character-7.1-physical-foundation-scope-v1" or scope.get("snapshot_id") != SNAPSHOT or scope.get("source_commit") != COMMIT or scope.get("source_tree") != TREE:
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    if scope.get("contract") != f"character-{game_version}-physical-foundation-scope-v1" or scope.get("snapshot_id") != SNAPSHOT or scope.get("source_commit") != COMMIT or scope.get("source_tree") != TREE:
         raise ValueError("Character 7.1 source scope identity")
     actual = subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines()
     dirty = subprocess.check_output(["git", "-C", str(source), "status", "--porcelain=v1"], text=True).strip()
@@ -69,14 +72,15 @@ def check_source(source: Path, scope: dict) -> None:
             raise ValueError("Character 7.1 source Git blob drift: " + entry["path"])
 
 
-def _field_role(basename: str, name: str) -> str:
+def _field_role(basename: str, name: str, *, source_version="7.1") -> str:
+    profile_field = {"7.1": "NLAPNBMECDF", "7.2": "FBFBNKHLFAO"}[source_version]
     if name in TEXT_HASH_FIELDS.get(basename, ()):
         return "source_textmap_locator"
     if name in CONDITION_FIELDS.get(basename, ()):
         return "source_condition_array"
     if name == "voiceFile":
         return "source_voice_slot_locator"
-    if name in ("NLAPNBMECDF", "unlockParam", "priority") and basename == "ProfilePictureExcelConfigData.json":
+    if name in (profile_field, "unlockParam", "priority") and basename == "ProfilePictureExcelConfigData.json":
         return "source_profile_unlock_observation"
     if name == "tips":
         return "opaque_source_tips_array"
@@ -101,6 +105,14 @@ def _guard_tables(conn: sqlite3.Connection) -> None:
 def build(source_root: str | Path, scope_path: str | Path, output_path: str | Path) -> dict:
     source, scope_file, output = Path(source_root), Path(scope_path), Path(output_path)
     scope = json.loads(scope_file.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    profile_field = {"7.1": "NLAPNBMECDF", "7.2": "FBFBNKHLFAO"}[game_version]
+    variants_field = {"7.1": "GLDBLKKLJHP", "7.2": "sourceNames"}[game_version]
+    native_fields = dict(NATIVE)
+    if game_version == "7.2":
+        native_fields["AvatarRenameExcelConfigData.json"] = "relatedAvatarID"
     check_source(source, scope)
     implementation = {relative: sha(ROOT / relative) for relative in IMPLEMENTATION}
     parser_id = ident("parser", implementation)
@@ -124,8 +136,8 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
         for basename in sorted(REQUIRED_INTEGER_FIELDS):
             relative = "ExcelBinOutput/" + basename
             for ordinal, row, raw in array_records(source / relative):
-                decoded = decode_primary_row(relative, ordinal, row, raw)
-                native_field = NATIVE[basename]
+                decoded = decode_primary_row(relative, ordinal, row, raw, source_version=game_version)
+                native_field = native_fields[basename]
                 native = str(row[native_field])
                 row_id = ident(run_id, "primary", relative, ordinal)
                 pointer = f"/{ordinal}"
@@ -135,7 +147,7 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
                 counts["primary_rows"] += 1
                 for field_ordinal, (name, value) in enumerate(row.items()):
                     field_pointer = f"/{ordinal}/{name}"
-                    conn.execute("INSERT INTO foundation_field VALUES(?,?,?,?,?,?,?,?)", (ident(row_id, "field", field_pointer), row_id, field_pointer, field_ordinal, None, name, _field_role(basename, name), canonical(value)))
+                    conn.execute("INSERT INTO foundation_field VALUES(?,?,?,?,?,?,?,?)", (ident(row_id, "field", field_pointer), row_id, field_pointer, field_ordinal, None, name, _field_role(basename, name, source_version=game_version), canonical(value)))
                     counts["top_level_fields"] += 1
                     if name in (*CONDITION_FIELDS.get(basename, ()), "tips", "multiLangDefaultNameList") and isinstance(value, list):
                         for child_ordinal, child in enumerate(value):
@@ -152,7 +164,7 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
         lut_raw = json.loads((source / LUT_PATH).read_text())
         lut_by_slot = defaultdict(list)
         for object_ordinal, (key, row) in enumerate(lut_raw.items()):
-            decoded = decode_fetter_lut(key, row)
+            decoded = decode_fetter_lut(key, row, source_version=game_version)
             if decoded is None:
                 continue
             lut_id = ident(run_id, "voice-lut", LUT_PATH, key)
@@ -166,7 +178,7 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
             if type(content) is not dict:
                 raise ValueError("Voice Items root shape")
             for object_ordinal, (key, row) in enumerate(content.items()):
-                item, variants = decode_fetter_item(relative, key, row)
+                item, variants = decode_fetter_item(relative, key, row, source_version=game_version)
                 item_id = ident(run_id, "voice-item", relative, key)
                 raw = canonical(row)
                 conn.execute("INSERT INTO foundation_voice_item VALUES(?,?,?,?,?,?,?,?,?)", (item_id, relative, key, object_ordinal, item.pointer, item.slot, item.variants_status, raw, digest(raw)))
@@ -174,7 +186,7 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
                 counts["voice_item_records"] += 1
                 counts["voice_items_missing_variant_array"] += item.variants_status == "missing"
                 for variant in variants:
-                    source_variant = row["GLDBLKKLJHP"][variant.ordinal]
+                    source_variant = row[variants_field][variant.ordinal]
                     variant_raw = canonical(source_variant)
                     conn.execute("INSERT INTO foundation_audio_variant VALUES(?,?,?,?,?,?,?,?,?)", (ident(item_id, "audio", variant.ordinal), item_id, variant.ordinal, variant.pointer, variant.audio_path, variant.selector, variant.order_value, variant_raw, digest(variant_raw)))
                     counts["audio_variants"] += 1
@@ -210,27 +222,27 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
                 if basename in ("FetterInfoExcelConfigData.json", "FetterStoryExcelConfigData.json", "FettersExcelConfigData.json"):
                     value = row["avatarId"]
                     targets = [("primary", *target) for target in index[(avatar, "id", str(value))]]
-                    add_relation(row_id, f"/{ordinal}/avatarId", "source_avatar_id_candidate", value, "all 7.1 physical AvatarExcel rows with exact id", targets)
+                    add_relation(row_id, f"/{ordinal}/avatarId", "source_avatar_id_candidate", value, f"all {game_version} physical AvatarExcel rows with exact id", targets)
                 if basename == "FettersExcelConfigData.json":
                     value = row["voiceFile"]
                     targets = [("lut", ident_, path, ptr) for ident_, path, ptr, _ in lut_by_slot[value]]
-                    add_relation(row_id, f"/{ordinal}/voiceFile", "fetter_voice_slot_candidate", value, "all 7.1 Fetter-category Voice LUT records with exact slot", targets)
+                    add_relation(row_id, f"/{ordinal}/voiceFile", "fetter_voice_slot_candidate", value, f"all {game_version} Fetter-category Voice LUT records with exact slot", targets)
                 elif basename == "AvatarCostumeExcelConfigData.json":
                     value = row["characterId"]
                     targets = [("primary", *target) for target in index[(avatar, "id", str(value))]]
-                    add_relation(row_id, f"/{ordinal}/characterId", "costume_avatar_id_candidate", value, "all 7.1 physical AvatarExcel rows with exact id", targets)
+                    add_relation(row_id, f"/{ordinal}/characterId", "costume_avatar_id_candidate", value, f"all {game_version} physical AvatarExcel rows with exact id", targets)
                 elif basename == "AvatarRenameExcelConfigData.json":
                     value = row["relatedAvatarID"]
                     targets = [("primary", *target) for target in index[(avatar, "id", str(value))]]
-                    add_relation(row_id, f"/{ordinal}/relatedAvatarID", "rename_avatar_id_candidate", value, "all 7.1 physical AvatarExcel rows with exact id", targets)
+                    add_relation(row_id, f"/{ordinal}/relatedAvatarID", "rename_avatar_id_candidate", value, f"all {game_version} physical AvatarExcel rows with exact id", targets)
                 elif basename == "ProfilePictureExcelConfigData.json":
-                    kind, value = row["NLAPNBMECDF"], row.get("unlockParam")
+                    kind, value = row[profile_field], row.get("unlockParam")
                     if kind == "PROFILE_PICTURE_UNLOCK_BY_AVATAR":
                         targets = [("primary", *target) for target in index[(avatar, "id", str(value))]]
-                        add_relation(row_id, f"/{ordinal}/unlockParam", "profile_unlock_avatar_candidate", value, "all 7.1 physical AvatarExcel rows with exact id", targets)
+                        add_relation(row_id, f"/{ordinal}/unlockParam", "profile_unlock_avatar_candidate", value, f"all {game_version} physical AvatarExcel rows with exact id", targets)
                     elif kind == "PROFILE_PICTURE_UNLOCK_BY_COSTUME":
                         targets = [("primary", *target) for target in index[(costume, "skinId", str(value))]]
-                        add_relation(row_id, f"/{ordinal}/unlockParam", "profile_unlock_costume_candidate", value, "all 7.1 physical AvatarCostume rows with exact skinId", targets)
+                        add_relation(row_id, f"/{ordinal}/unlockParam", "profile_unlock_costume_candidate", value, f"all {game_version} physical AvatarCostume rows with exact skinId", targets)
                     elif kind == "PROFILE_PICTURE_UNLOCK_BY_DEFAULT":
                         add_relation(row_id, f"/{ordinal}/unlockParam", "profile_unlock_default_observation", value, "no physical target required", [], not_applicable=True)
                     else:
@@ -240,7 +252,7 @@ def build(source_root: str | Path, scope_path: str | Path, output_path: str | Pa
             raise ValueError("full Fetter Voice denominator mismatch")
         tables = ("foundation_source_file", "foundation_primary_row", "foundation_field", "foundation_text_owner", "foundation_voice_lut", "foundation_voice_item", "foundation_voice_link", "foundation_audio_variant", "foundation_relation", "foundation_candidate")
         table_counts = {table: conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] for table in tables}
-        release = {"contract": "character-7.1-physical-foundation-v1", "snapshot_id": SNAPSHOT, "source_commit": COMMIT, "source_tree": TREE, "source_scope_sha256": sha(scope_file), "parser_build_id": parser_id, "ingest_run_id": run_id, "implementation": implementation, "table_counts": table_counts, "observation_counts": dict(sorted(counts.items())), "relation_states": dict(sorted(relation_states.items())), "source_file_count": len(scope["files"]), "product_accepted": False, "logical_character_created": False}
+        release = {"contract": f"character-{game_version}-physical-foundation-v1", "snapshot_id": SNAPSHOT, "source_commit": COMMIT, "source_tree": TREE, "source_scope_sha256": sha(scope_file), "parser_build_id": parser_id, "ingest_run_id": run_id, "implementation": implementation, "table_counts": table_counts, "observation_counts": dict(sorted(counts.items())), "relation_states": dict(sorted(relation_states.items())), "source_file_count": len(scope["files"]), "product_accepted": False, "logical_character_created": False}
         conn.execute("INSERT INTO foundation_release VALUES(1,?)", (canonical(release),))
         _guard_tables(conn)
         conn.commit()

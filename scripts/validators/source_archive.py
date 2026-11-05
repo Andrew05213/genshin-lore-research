@@ -141,9 +141,16 @@ def source_paths(source: Path) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", type=Path, required=True)
+    ap.add_argument("--source-version", choices=("7.1","7.2"), default="7.1")
     ap.add_argument("--artifact", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
+    from genshin_lore.source_versions import PINS, r0_identity, R0_IMPLEMENTATION_PATHS
+    COMMIT, TREE = PINS[args.source_version]
+    SNAPSHOT = f"anime-game-data:{args.source_version}:{COMMIT}"
+    root = Path(__file__).resolve().parents[2]
+    implementation = {path:sha_file(root/path) for path in R0_IMPLEMENTATION_PATHS} if args.source_version != "7.1" else {}
+    PARSER, RUN = r0_identity(SNAPSHOT, implementation)
     started = time.monotonic()
     pins = subprocess.check_output(["git", "-C", str(args.source), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines()
     clean = not subprocess.check_output(["git", "-C", str(args.source), "status", "--porcelain"])

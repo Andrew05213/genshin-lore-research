@@ -29,9 +29,11 @@ def schema(db):
  expected.close()
 def verify(source,artifact,report,quest_talk_artifact,quest_talk_manifest):
  source=Path(source);artifact=Path(artifact);manifest=json.loads(Path(report).read_text());release=manifest['release']
+ from genshin_lore.source_versions import source_pin
+ version,COMMIT,TREE=source_pin(release['snapshot'])
  check(subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()==[COMMIT,TREE],'pinned source')
  check(release['source_commit']==COMMIT and release['source_tree']==TREE,'release pin')
- check(release['contract']=='quest-narrative-7.1-derived-v1' and release['status']=='candidate' and release['product_accepted'] is False,'release authority boundary')
+ check(release['contract']==f'quest-narrative-{version}-derived-v1' and release['status']=='candidate' and release['product_accepted'] is False,'release authority boundary')
  check(artifact.stat().st_size==manifest['artifact']['size_bytes'] and sha(artifact)==manifest['artifact']['sha256'],'artifact seal')
  check(not any(Path(str(artifact)+x).exists() for x in ('-wal','-shm','-journal')),'sidecar')
  for relative,seal in release['source_seals'].items():
@@ -41,7 +43,7 @@ def verify(source,artifact,report,quest_talk_artifact,quest_talk_manifest):
  impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_narrative.py','schemas/quest-narrative-7.1-v1.sql','src/genshin_lore/loading_tips_source.py')}
  check(impl==release['implementation'] and identifier('parser',impl)==release['parser_build_id'],'implementation/parser identity')
  qmanifest=json.loads(Path(quest_talk_manifest).read_text());binding=release['quest_talk_binding']
- check(qmanifest['contract']=='quest-talk-7.1-standalone-physical-v1' and qmanifest['status']=='accepted_standalone_candidate' and qmanifest['product_accepted'] is False,'Quest/Talk accepted contract')
+ check(qmanifest['contract']==f'quest-talk-{version}-standalone-physical-v1' and qmanifest['status']=='accepted_standalone_candidate' and qmanifest['product_accepted'] is False,'Quest/Talk accepted contract')
  check(qmanifest['source_snapshot']==release['snapshot'] and qmanifest['source_commit']==COMMIT and qmanifest['source_tree']==TREE,'Quest/Talk snapshot')
  check(binding['manifest_sha256']==sha(quest_talk_manifest) and binding['artifact']==qmanifest['artifact'],'Quest/Talk manifest')
  check(binding['ingest_run_id']==qmanifest['ingest_run_id'] and binding['parser_build_id']==qmanifest['parser_build_id'],'Quest/Talk run')
@@ -66,7 +68,7 @@ def verify(source,artifact,report,quest_talk_artifact,quest_talk_manifest):
  qt_roots=defaultdict(list);qt_paths={}
  for cid,path,native in qt.execute("SELECT id,source_path,native_id FROM physical_container WHERE kind='quest_root'"):
   qt_paths[cid]=path;qt_roots[native].append((cid,path))
- check(len(qt_paths)==4808,'Quest/Talk root denominator')
+ check(len(qt_paths)=={'7.1':4808,'7.2':4543}[version],'Quest/Talk root denominator')
  roots=[]
  for ordinal,value in raw_by[MAIN]:
   owner=coords[(MAIN,ordinal)]
@@ -88,7 +90,10 @@ def verify(source,artifact,report,quest_talk_artifact,quest_talk_manifest):
   child=json.loads(raw_json);parts=pointer.split('/')
   check(len(parts)==3 and parts[0]=='' and parts[2].isdigit(),'child physical pointer')
   section=docs[path].get(parts[1]);check(isinstance(section,list) and int(parts[2])<len(section) and section[int(parts[2])]==child,'Quest/Talk child differs from raw source '+path+pointer)
-  if parts[1]=='JIJKODHIEED':
+  if parts[1]=='subQuests' and version=='7.2':
+   shape='7.2-authored';sub=child.get('subId');parent=child.get('mainId');order=child.get('order');state='versioned_locator_observation'
+   check(type(sub) is int and type(parent) is int and (order is None or type(order) is int),'authored child field types')
+  elif parts[1]=='JIJKODHIEED':
    shape='7.1-versioned';sub=child.get('NFGFDHPPBIF');parent=child.get('PCOMHEOJPOO');order=child.get('GBFIFKGFKHD');state='versioned_locator_observation'
    check(type(sub) is int and type(parent) is int and (order is None or type(order) is int),'new child field types')
   elif parts[1]=='EBNBLBEIFFJ':
@@ -102,7 +107,7 @@ def verify(source,artifact,report,quest_talk_artifact,quest_talk_manifest):
   children.append((sid,child_id,container_id,path,pointer,position,shape,None if sub is None else str(sub),None if parent is None else str(parent),canonical(order),'unresolved',state,len(subhits),len(mainhits)))
   for role,matches in (('quest_step',subhits),('main_quest',mainhits)):
    for target_id,target_path,target_pointer in matches:targets.append((identifier('child_candidate',sid,role,target_id),sid,role,target_id,target_path,target_pointer))
- check(len(children)==35704,'Quest/Talk child denominator')
+ check(len(children)=={'7.1':35704,'7.2':34249}[version],'Quest/Talk child denominator')
  seals['child_observation']=rowset(db,'child_observation',children);seals['child_candidate']=rowset(db,'child_candidate',targets)
  check(qt.execute("SELECT count(*) FROM physical_reference WHERE kind='quest_to_talk'").fetchone()[0]==binding['counts']['physical_reference'],'Quest/Talk references read-through')
  needed=set();owners=[]

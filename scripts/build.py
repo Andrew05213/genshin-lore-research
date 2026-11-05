@@ -138,13 +138,46 @@ def script_verify(name, arguments, result):
     return load(result)
 
 
+def capability_descriptions(caps, version):
+    """Keep executable proof ceilings, never copy old artifact/run acceptance."""
+    statuses = {
+        'ACCEPTED_EXACT_REPLACEMENT': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'ACCEPTED_STANDALONE_CANDIDATE': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'ACCEPTED_BOUNDED_CAPABILITY': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'PHYSICAL_TEXT_STANDALONE_CANDIDATE_ACCEPTED': 'SOURCE_VERIFIED_BOUNDED_CANDIDATE',
+        'PHYSICAL_CAPABILITY_ACCEPTED': 'SOURCE_VERIFIED_PHYSICAL_CAPABILITY',
+        'RAW_ONLY_ACCEPTED': 'SOURCE_VERIFIED_RAW_CAPABILITY',
+    }
+    descriptions = []
+    for cap in caps['capabilities']:
+        item = {k: cap[k] for k in ('capability_id', 'family', 'limitations', 'supported_operations')}
+        item['status'] = cap['status'] if version == '7.1' else statuses[cap['status']]
+        descriptions.append(item)
+    return descriptions
+
+
 class Rebuild:
-    def __init__(self, source, output, history):
+    def __init__(self, source, output, history, *, source_version="7.1"):
         self.source = source.resolve()
         self.output = output.resolve()
         self.history = history.resolve() if history else None
-        qualify(self.source)
+        from genshin_lore.source_versions import PINS
+        self.source_version = source_version
+        commit, _ = PINS[source_version]
+        self._snapshot = f"anime-game-data:{source_version}:{commit}"
+        qualify(self.source, source_version=source_version)
         self.output.mkdir(parents=True, exist_ok=True)
+
+    @property
+    def snapshot(self):
+        return getattr(self, "_snapshot", SNAPSHOT)
+
+    @property
+    def version(self):
+        return getattr(self, "source_version", "7.1")
+
+    def manifest(self, relative):
+        return ROOT / relative.replace("7.1", self.version)
 
     def path(self, name):
         return self.output / name / "artifact.sqlite"
@@ -157,7 +190,7 @@ class Rebuild:
         return self.output / "metadata"
 
     def metadata_path(self, relative):
-        path = Path(relative)
+        path = Path(str(relative).replace("7.1", self.version))
         if path.is_absolute():
             path = path.relative_to(ROOT)
         if ".." in path.parts:
@@ -172,7 +205,7 @@ class Rebuild:
         for name in names:
             paths.extend(qualify_stage_dependency(
                 getattr(self, "identity_root", ROOT), self.source, self.history,
-                self.output / name, name, SNAPSHOT,
+                self.output / name, name, self.snapshot,
             ))
         return paths
 
@@ -208,7 +241,7 @@ class Rebuild:
                         "resume identity mismatch or incompatible old receipt: " + name
                     )
                 if (
-                    receipt.get("source_snapshot") != SNAPSHOT
+                    receipt.get("source_snapshot") != self.snapshot
                     or receipt.get("independent_verifier_completed") is not True
                     or receipt["artifact"] != seal(artifact)
                     or any(
@@ -256,7 +289,7 @@ class Rebuild:
             directory / "invocation.json",
             {
                 "stage": name,
-                "source_snapshot": SNAPSHOT,
+                "source_snapshot": self.snapshot,
                 "identity": identity,
                 "formal_release_accepted": False,
             },
@@ -299,7 +332,7 @@ class Rebuild:
                     "contract": RECEIPT_CONTRACT,
                     "identity": identity,
                     "artifact": before,
-                    "source_snapshot": SNAPSHOT,
+                    "source_snapshot": self.snapshot,
                     "records": {
                         f: seal(directory / f)
                         for f in ("build.json", "verify.json", "invocation.json")
@@ -336,7 +369,7 @@ class Rebuild:
         p = self.path(name)
         r = release(p)
         return {
-            "source_snapshot": SNAPSHOT,
+            "source_snapshot": self.snapshot,
             "family": family,
             "family_contract_version": r.get("family_contract_version")
             or r.get("contract"),
@@ -352,16 +385,21 @@ class Rebuild:
         }
 
     def core(self):
+        version = getattr(self, "source_version", "7.1")
+        contract = ROOT / f"manifests/m3-{version}-provider/input-contract-v1.json"
+        special_contract = ROOT / f"manifests/special-core-{version}/input-contract-v1.json"
+        rules = ROOT / f"manifests/special-core-{version}/historical-rules-v1.json"
         m3 = module("m3_7_1_provider_build")
         mv = module("m3_7_1_provider_verify")
-        recipe = load(ROOT / "recipes/m3-7.1-provider-mappings.json")
+        recipe = load(ROOT / f"recipes/m3-{version}-provider-mappings.json")
         for family in sorted({m["family"] for m in recipe["mappings"]}):
             self.task(
                 family,
-                lambda p, f=family: m3.build(self.source, f, p),
+                lambda p, f=family: m3.build(self.source, f, p, contract_path=contract),
                 lambda p, r, f=family: mv.verify(
-                    self.source, f, p, self.output / f / "build.json"
+                    self.source, f, p, self.output / f / "build.json", contract_path=contract
                 ),
+                inputs=[contract],
             )
         for m in recipe["mappings"]:
             p = self.path(m["family"])
@@ -373,8 +411,10 @@ class Rebuild:
             m["independent_verifier_reports"] = [
                 {"path": str(proof), "sha256": sha(proof)}
             ]
-        self.bind("manifests/m3-7.1-provider/accepted-exact-mappings-v1.json", recipe)
-        special = load(ROOT / "recipes/special-core-7.1-mappings.json")
+            if version == "7.2":
+                m["status"] = "SOURCE_ORACLE_VERIFIED_LOCAL_MAPPING"
+        self.bind(f"manifests/m3-{version}-provider/accepted-exact-mappings-v1.json", recipe)
+        special = load(ROOT / f"recipes/special-core-{version}-mappings.json")
         for m in special["mappings"]:
             family = m["family"]
             kind = (
@@ -384,41 +424,55 @@ class Rebuild:
             )
             builder = module(kind + "_7_1_build")
             verifier = module(kind + "_7_1_verify")
+            options = {"contract_path": special_contract}
+            if m["kind"] == "HISTORICAL_SPECIAL":
+                options["rules_path"] = rules
             self.task(
                 family,
-                lambda p, f=family, b=builder: b.build(self.source, f, p),
-                lambda p, r, f=family, v=verifier: v.verify(self.source, f, p),
+                lambda p, f=family, b=builder, o=options: b.build(self.source, f, p, **o),
+                lambda p, r, f=family, v=verifier, o=options: v.verify(self.source, f, p, **o),
+                inputs=list(options.values()),
             )
             p = self.path(family)
             r = release(p)
             m["candidate_artifact"] = {**seal(p), "path_machine_local": str(p)}
             m["parser_build_id"] = r["parser_build_id"]
             m["ingest_run_id"] = r["ingest_run_id"]
-        self.bind("manifests/special-core-7.1/accepted-exact-mappings-v1.json", special)
+            if m["kind"] == "HISTORICAL_SPECIAL":
+                m["selected_primary_evidence_rows"] = r["counts"]["primary_rows"]
+                m["selected_support_evidence_rows"] = r["counts"].get("support_rows", 0)
+                m["selected_evidence_rows"] = m["selected_primary_evidence_rows"] + m["selected_support_evidence_rows"]
+            else:
+                m["selected_evidence_rows"] = r["selected_primary_rows"]
+                m["selected_primary_evidence_rows"] = r["selected_primary_rows"]
+                m["selected_support_evidence_rows"] = 0
+            m["status"] = "ACCEPTED_EXACT_7_1_MAPPING" if version == "7.1" else "SOURCE_ORACLE_VERIFIED_LOCAL_MAPPING"
+        self.bind(f"manifests/special-core-{version}/accepted-exact-mappings-v1.json", special)
         dependencies = sorted(
             {m["family"] for m in recipe["mappings"] + special["mappings"]}
         )
         self.task(
             "schema20_core",
             lambda p: module("schema20_7_1_candidate").build(
-                self.source, p, include_special=True, metadata_root=self.metadata
+                self.source, p, include_special=True, metadata_root=self.metadata, snapshot_id=self.snapshot
             ),
             lambda p, r: module("schema20_7_1_oracle").verify(
-                self.source, p, r, metadata_root=self.metadata
+                self.source, p, r, metadata_root=self.metadata, snapshot_id=self.snapshot
             ),
             inputs=self.dependency_inputs(*dependencies)
             + [
                 self.metadata_path(
-                    "manifests/m3-7.1-provider/accepted-exact-mappings-v1.json"
+                    f"manifests/m3-{version}-provider/accepted-exact-mappings-v1.json"
                 ),
                 self.metadata_path(
-                    "manifests/special-core-7.1/accepted-exact-mappings-v1.json"
+                    f"manifests/special-core-{version}/accepted-exact-mappings-v1.json"
                 ),
             ],
         )
 
     def character(self):
-        scope = ROOT / "manifests/character-7.1-physical-foundation/source-scope.json"
+        version = getattr(self, "source_version", "7.1")
+        scope = ROOT / f"manifests/character-{version}-physical-foundation/source-scope.json"
         self.task(
             "character_foundation",
             lambda p: module("character_7_1_foundation_build").build(
@@ -428,7 +482,7 @@ class Rebuild:
                 self.source, scope, p, expected_artifact=r["artifact"]
             ),
         )
-        manifest = load(ROOT / "recipes/character-foundation.json")
+        manifest = load(ROOT / ("recipes/character-foundation.json" if version == "7.1" else f"recipes/character-{version}-foundation.json"))
         foundation_report = load(self.output / "character_foundation" / "build.json")
         for key in ("parser_build_id", "ingest_run_id"):
             manifest[key] = foundation_report[key]
@@ -441,7 +495,7 @@ class Rebuild:
             "receipt": seal(self.output / "character_foundation" / "verified.json"),
         }
         self.bind(
-            "manifests/character-7.1-physical-foundation/immutable-runtime.json",
+            f"manifests/character-{version}-physical-foundation/immutable-runtime.json",
             manifest,
         )
         builder = module("character_7_1_successor_build")
@@ -450,7 +504,7 @@ class Rebuild:
 
             def build(p, role=role):
                 manifest = self.metadata_path(
-                    "manifests/character-7.1-physical-foundation/immutable-runtime.json"
+                    f"manifests/character-{version}-physical-foundation/immutable-runtime.json"
                 )
                 if role == "text":
                     return builder.build_text(
@@ -477,7 +531,7 @@ class Rebuild:
                     text_path=None if k == "text" else self.path("character_text"),
                     expected_artifact=r["artifact"],
                     foundation_manifest=self.metadata_path(
-                        "manifests/character-7.1-physical-foundation/immutable-runtime.json"
+                        f"manifests/character-{version}-physical-foundation/immutable-runtime.json"
                     ),
                 ),
                 inputs=self.dependency_inputs(
@@ -486,29 +540,32 @@ class Rebuild:
                 )
                 + [
                     self.metadata_path(
-                        "manifests/character-7.1-physical-foundation/immutable-runtime.json"
+                        f"manifests/character-{version}-physical-foundation/immutable-runtime.json"
                     )
                 ],
             )
 
     def narrative(self):
+        version = getattr(self, "source_version", "7.1")
+        scope = ROOT / f"manifests/narrative-{version}/physical-scope.json"
         for family in ("npc", "dialog", "reminder"):
             self.task(
                 "narrative_" + family,
                 lambda p, f=family: module("narrative_7_1_build").build(
-                    f, self.source, p, ROOT
+                    f, self.source, p, ROOT, scope_path=scope
                 ),
-                lambda p, r: module("narrative_7_1_verify").verify(self.source, p, r),
+                lambda p, r: module("narrative_7_1_verify").verify(self.source, p, r, scope_path=scope),
             )
 
     def simple(self):
+        version = getattr(self, "source_version", "7.1")
         for name, mod, scope in (
             ("document", "document_7_1", "document-readable-7.1/source-scope.json"),
             ("gcg_card", "gcg_card_7_1", "gcg-card-7.1/scope.json"),
             ("loading_tips", "loading_tips_7_1", "loading-tips-7.1/scope.json"),
             ("mail", "mail_7_1", "mail-archive-7.1/source-scope-v1.json"),
         ):
-            sp = ROOT / "manifests" / scope
+            sp = ROOT / "manifests" / scope.replace("7.1", version)
             builder = module(mod + "_build")
             verifier = module(mod + "_verify")
             self.task(
@@ -523,7 +580,7 @@ class Rebuild:
         from genshin_lore.native_message_7_1_binding import prepare_scope, SCOPE
 
         inputs = self.dependency_inputs("quest_narrative", "quest_talk")
-        self.bind(SCOPE, prepare_scope(self.source, self.output))
+        self.bind(SCOPE, prepare_scope(self.source, self.output, self.version))
         scope = self.metadata_path(SCOPE)
         self.task(
             "native_message",
@@ -533,7 +590,8 @@ class Rebuild:
         )
 
     def quest(self):
-        scope = ROOT / "manifests/quest-talk-7.1/source-scope.json"
+        from genshin_lore.source_versions import PINS
+        scope = self.manifest("manifests/quest-talk-7.1/source-scope.json")
         qt = self.task(
             "quest_talk",
             lambda p: module("quest_talk_7_1_build").build(self.source, scope, p),
@@ -544,9 +602,9 @@ class Rebuild:
         qm = {
             "contract": qt["contract"],
             "status": "accepted_standalone_candidate",
-            "source_snapshot": SNAPSHOT,
-            "source_commit": "9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
-            "source_tree": "aa578c08c402af39b41f1ffc95124d10f5410272",
+            "source_snapshot": self.snapshot,
+            "source_commit": self.snapshot.split(":")[2],
+            "source_tree": PINS[self.version][1],
             "parser_build_id": qt["parser_build_id"],
             "ingest_run_id": qt["ingest_run_id"],
             "artifact": seal(self.path("quest_talk")),
@@ -596,7 +654,7 @@ class Rebuild:
             r = release(p)
             components[name + "_archive"] = {
                 "acceptance_status": "PHYSICAL_FOUNDATION_ACCEPTED",
-                "source_snapshot": SNAPSHOT,
+                "source_snapshot": self.snapshot,
                 "product_accepted": False,
                 "artifact": {**seal(p), "path_machine_local": str(p)},
                 **{k: r[k] for k in ("contract", "parser_build_id", "ingest_run_id")},
@@ -629,11 +687,11 @@ class Rebuild:
         self.task(
             "talk_physical",
             lambda p: b.build(
-                self.source, self.path("quest_talk"), seal(self.path("quest_talk")), p
+                self.source, self.path("quest_talk"), seal(self.path("quest_talk")), p, snapshot_id=self.snapshot
             ),
             lambda p, r: importlib.import_module(
                 "scripts.validators.talk_physical"
-            ).verify(self.source, p, self.path("quest_talk"), seal(p)),
+            ).verify(self.source, p, self.path("quest_talk"), seal(p), snapshot_id=self.snapshot),
             inputs=self.dependency_inputs("quest_talk"),
         )
 
@@ -660,15 +718,16 @@ class Rebuild:
 
     def r0(self):
         b = module("batch_m3_physical")
-        parser = "pb-batch-m3-r0-physical-7.1:23e78b08f997ab610cd55a11f91f2f4c252260af"
-        run = "ir-batch-m3-r0-physical-7.1:9fc2c32cc6bb81dd6091e504d43e40bdcf930ea2"
+        from genshin_lore.source_versions import r0_identity, R0_IMPLEMENTATION_PATHS
+        implementation = {path:sha(ROOT/path) for path in R0_IMPLEMENTATION_PATHS} if getattr(self,"source_version","7.1") != "7.1" else {}
+        parser, run = r0_identity(self.snapshot, implementation)
 
         def build(path):
             report = b.build_r0_artifact(
                 self.source,
                 path,
                 repo_root=ROOT,
-                snapshot_id=SNAPSHOT,
+                snapshot_id=self.snapshot,
                 parser_build_id=parser,
                 ingest_run_id=run,
                 artifact_limit_bytes=6 * 1024**3,
@@ -692,6 +751,8 @@ class Rebuild:
                 (
                     "--source",
                     self.source,
+                    "--source-version",
+                    getattr(self,"source_version","7.1"),
                     "--artifact",
                     p,
                     "--output",
@@ -705,8 +766,9 @@ class Rebuild:
     def readable(self):
         inputs = self.dependency_inputs("r0", "document")
         relative = "manifests/document-readable-7.1/source-scope.json"
-        value = load(ROOT / relative)
-        value["r0_dependency"].update(seal(self.path("r0")))
+        value = load(self.manifest(relative))
+        value["r0_dependency"].update(**seal(self.path("r0")), ingest_run_id=self.report("r0")["ingest_run_id"])
+        value["r0_dependency"].pop("status", None)
         self.bind(relative, value)
         scope = self.metadata_path(relative)
         self.task(
@@ -732,10 +794,10 @@ class Rebuild:
         )
         inputs = self.dependency_inputs("r0")
         relative = "manifests/direct-text-7.1/subtitle-scope.json"
-        value = load(ROOT / relative)
+        value = load(self.manifest(relative))
         actual = seal(self.path("r0"))
         value["r0_dependency"].update(
-            artifact_size_bytes=actual["size_bytes"], artifact_sha256=actual["sha256"]
+            artifact_size_bytes=actual["size_bytes"], artifact_sha256=actual["sha256"], run=self.report("r0")["ingest_run_id"]
         )
         self.bind(relative, value)
         scope = self.metadata_path(relative)
@@ -781,7 +843,7 @@ class Rebuild:
                 if number == 17
                 else f"component-{number}-scope-v1.json"
             )
-            sp = ROOT / "manifests/event-narrative-7.1" / filename
+            sp = self.manifest("manifests/event-narrative-7.1") / filename
             b = module(mod + "_build")
             v = module(mod + "_verify")
             self.task(
@@ -795,8 +857,9 @@ class Rebuild:
             "manifests/quest-talk-7.1/standalone-candidate.json"
         )
         qt = load(qt_path)
-        scope = load(ROOT / "manifests/event-narrative-7.1/component-12-scope-v1.json")
+        scope = load(self.manifest("manifests/event-narrative-7.1/component-12-scope-v1.json"))
         scope["talk_candidate_namespace"].update(
+            contract=qt["contract"],
             accepted_manifest_sha256=sha(qt_path),
             artifact=qt["artifact"],
             parser=qt["parser_build_id"],
@@ -822,7 +885,7 @@ class Rebuild:
             ),
             inputs=self.dependency_inputs("quest_talk") + [qt_path, sp],
         )
-        sp = ROOT / "manifests/event-narrative-7.1/component-15-scope-v1.json"
+        sp = self.manifest("manifests/event-narrative-7.1/component-15-scope-v1.json")
         self.task(
             "event_15",
             lambda p: module("event_photo_echo_7_1_build").build(self.source, sp, p),
@@ -830,7 +893,7 @@ class Rebuild:
                 self.source, sp, p, r, {}
             ),
         )
-        sp = ROOT / "manifests/event-narrative-7.1/component-13-physical-scope-v1.json"
+        sp = self.manifest("manifests/event-narrative-7.1/component-13-physical-scope-v1.json")
         self.task(
             "event_13",
             lambda p: module("event13_7_1_physical").build(self.source, sp, p),
@@ -857,8 +920,7 @@ class Rebuild:
         }
         self.bind("manifests/narrative-7.1/runtime.json", {"families": families})
         scope = load(
-            ROOT
-            / "manifests/event-narrative-7.1/component-16-18-physical-scope-v1.json"
+            self.manifest("manifests/event-narrative-7.1/component-16-18-physical-scope-v1.json")
         )
         for key, name, manifest in (
             (
@@ -897,7 +959,7 @@ class Rebuild:
         )
 
     def native(self):
-        scope = ROOT / "manifests/native-archive-7.1/bulk-scope.json"
+        scope = self.manifest("manifests/native-archive-7.1/bulk-scope.json")
         self.task(
             "native_bulk",
             lambda p: module("native_bulk_7_1_build").build(self.source, scope, p),
@@ -920,6 +982,8 @@ class Rebuild:
                     str(ROOT / "scripts/maintenance/native_book_music_scope.py"),
                     "--source",
                     str(self.source),
+                    "--source-version",
+                    self.version,
                     "--message-artifact",
                     str(self.path("native_message")),
                     "--message-runtime",
@@ -955,12 +1019,12 @@ class Rebuild:
                 ),
             ],
         )
-        scope = load(ROOT / "manifests/native-archive-7.1/aux-quest-scope-v1.json")
+        scope = load(self.manifest("manifests/native-archive-7.1/aux-quest-scope-v1.json"))
         ext, deps = module("native_aux_quest_7_1_verify").expected_external(
             self.source,
             self.path("quest_narrative"),
             self.path("native_bulk"),
-            metadata_root=self.metadata,
+            metadata_root=self.metadata, source_version=self.version,
         )
         scope.update(external_candidates=ext, dependencies=deps)
         scope["main_quest_reconciliation"].update(
@@ -983,7 +1047,7 @@ class Rebuild:
             + [
                 sp,
                 *module("native_aux_quest_7_1_verify").dependency_manifests(
-                    self.metadata
+                    self.metadata, self.version
                 ),
             ],
         )
@@ -998,6 +1062,8 @@ class Rebuild:
                 )
             ]
         binding.update(
+            contract=binding["contract"].replace("7.1", self.version),
+            snapshot=self.snapshot,
             target_artifact={
                 **seal(self.path("event_13")),
                 "path_machine_local": str(self.path("event_13")),
@@ -1009,7 +1075,7 @@ class Rebuild:
             "manifests/event-narrative-7.1/component-13-snez-physical-binding-v1.json",
             binding,
         )
-        scope = load(ROOT / "manifests/native-archive-7.1/successor-scope-v1.json")
+        scope = load(self.manifest("manifests/native-archive-7.1/successor-scope-v1.json"))
         scope["event13_snez_binding"] = str(
             self.metadata_path(scope["event13_snez_binding"])
         )
@@ -1026,9 +1092,9 @@ class Rebuild:
             inputs=self.dependency_inputs(
                 "event_13", "quest_narrative", "narrative_npc", "quest_talk"
             )
-            + [sp, *module("native21_7_1_build").dependency_manifests(self.metadata)],
+            + [sp, *module("native21_7_1_build").dependency_manifests(self.metadata, self.version)],
         )
-        scope = load(ROOT / "manifests/native-archive-7.1/high-value-scope-v1.json")
+        scope = load(self.manifest("manifests/native-archive-7.1/high-value-scope-v1.json"))
         event_path = self.metadata_path(
             "manifests/event-narrative-7.1/component-16-physical-runtime-v1.json"
         )
@@ -1064,7 +1130,7 @@ class Rebuild:
             inputs=self.dependency_inputs("event_16", "quest_talk")
             + [
                 sp,
-                *module("native26_7_1_physical").dependency_manifests(self.metadata),
+                *module("native26_7_1_physical").dependency_manifests(self.metadata, self.version),
             ],
         )
 
@@ -1092,6 +1158,7 @@ class Rebuild:
             receipt = self.output / name / "verified.json"
             self.dependency_inputs(name)
             r = release(self.path(name)) if name != "schema20_core" else {}
+            key = key.replace("7.1", self.version)
             c = {
                 "source_key": key,
                 "family": family,
@@ -1120,7 +1187,7 @@ class Rebuild:
             "schema20_core",
             "schema20-core-7.1",
             "schema20_core",
-            "schema20-7.1-core33-materialization-v1",
+            f"schema20-{self.version}-core33-materialization-v1",
             "core33",
         )
         for cap in caps["capabilities"]:
@@ -1131,7 +1198,9 @@ class Rebuild:
             if cid.startswith(("event_narrative_", "event_physical_")):
                 name = "event_" + cid.rsplit("_", 1)[1]
             r = release(self.path(name))
-            contract = cap["contract"]
+            contract = cap["contract"] if self.version == "7.1" else r.get("family_contract_version", r.get("contract"))
+            if self.version == "7.2" and cid == "event_narrative_15":
+                cap["limitations"] = [*cap["limitations"], "Photograph root/page selectors disagree: 24 source-selected physical positions are a bounded union, not proven logical activity/order equivalence"]
             if cid.startswith("event_physical_"):
                 contract = r["contract"]
             component(
@@ -1182,11 +1251,11 @@ class Rebuild:
         if len(components) != 35:
             raise ValueError("35 exact input denominator changed")
         bundle = {
-            "contract": "candidate-7.1-complete-product-bundle-v1",
+            "contract": f"candidate-{self.version}-complete-product-bundle-v1",
             "status": "local_source_verified_rebuild",
             "product_accepted": False,
             "corpus_complete": False,
-            "snapshot": SNAPSHOT,
+            "snapshot": self.snapshot,
             "core_provider_contracts_materialized": 33,
             "components": components,
             "historical_contract_gaps": 8,
@@ -1197,7 +1266,7 @@ class Rebuild:
         )
         write(bp, bundle)
         manifest = {
-            "corpus_ref": "candidate-7.1-high-value-v1",
+            "corpus_ref": f"candidate-{self.version}-high-value-v1",
             "status": "candidate",
             "adapter_registry": "research-explicit-adapters-v2",
             "candidate_adapter_revision": builder.VERSION,
@@ -1208,7 +1277,7 @@ class Rebuild:
                 )
                 if p.stem != "research71_candidate_query"
             },
-            "snapshot": {"id": SNAPSHOT, "version": "7.1"},
+            "snapshot": {"id": self.snapshot, "version": self.version},
             "product_bundle": {
                 "path": str(bp.relative_to(self.metadata)),
                 "sha256": sha(bp),
@@ -1267,7 +1336,7 @@ class Rebuild:
             "evidence_product_bundle_sha256": sha(bp),
             "product_accepted": False,
             "full_research_7_1_accepted": False,
-            "qualification_scope": "local_7.1_candidate_only",
+            "qualification_scope": f"local_{self.version}_candidate_only",
             "candidate_runtime_sha256": sha(
                 ROOT / "src/genshin_lore/research71_candidate_query.py"
             ),
@@ -1277,7 +1346,11 @@ class Rebuild:
             "manifests/research/candidate-7.1-complete-profile-v1.json"
         )
         write(pp, profile)
-        self.bind("manifests/research-7.1/7.1-capability-registry-v1.json", caps)
+        self.bind("manifests/research-7.1/7.1-capability-registry-v1.json", {
+            "snapshot": self.snapshot,
+            "capabilities": capability_descriptions(caps, self.version),
+            "qualification": "local source-oracle verified inputs; not formal product/release acceptance",
+        })
         paths = (
             "src/genshin_lore/narrative_assistant_7_1.py",
             "src/genshin_lore/research71_preview_server.py",
@@ -1288,7 +1361,7 @@ class Rebuild:
             {
                 "contract": "research71-unified-agent-runtime-v1",
                 "status": "local_candidate_qualification",
-                "snapshot": SNAPSHOT,
+                "snapshot": self.snapshot,
                 "product_accepted": False,
                 "full_research_7_1_accepted": False,
                 "legacy_fallback": False,
@@ -1330,7 +1403,7 @@ class Rebuild:
             "manifests/research/candidate-7.1-complete-profile-v1.json"
         )
         corpus = self.metadata_path("manifests/research/candidate-7.1-complete-v1.json")
-        recipe = ROOT / "recipes/semantic-input.json"
+        recipe = ROOT / ("recipes/semantic-input.json" if self.version == "7.1" else f"recipes/semantic-input-{self.version}.json")
         embedding_threads = getattr(self, "embedding_threads", None)
         if embedding_threads is None:
             embedding_threads = builder.default_embedding_threads()
@@ -1437,7 +1510,7 @@ class Rebuild:
         profile = load(literal_profile)
         profile["semantic_discovery"] = report["config"]
         profile["runtime_qualification"] = (
-            "manifests/research/candidate-7.1-semantic-agent-runtime-v1.json"
+            f"manifests/research/candidate-{self.version}-semantic-agent-runtime-v1.json"
         )
         profile_path = self.metadata_path(
             "manifests/research/candidate-7.1-semantic-profile-v1.json"
@@ -1520,7 +1593,7 @@ def run_stages(job, selected, cache_mib, jobs):
         for path in log_paths:
             entry['streams'].append(path.open('x', encoding='utf-8'))
         command = [sys.executable, str(ROOT / 'scripts/build.py'),
-                   '--source', str(job.source), '--output-root', str(job.output),
+                   '--source', str(job.source), '--source-version', job.version, '--output-root', str(job.output),
                    '--stage', stage, '--jobs', '1', '--textmap-cache-mib', '0']
         if job.history is not None:
             command += ['--historical-source', str(job.history)]
@@ -1602,6 +1675,7 @@ def run_stages(job, selected, cache_mib, jobs):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--source-version", choices=("7.1", "7.2"), default="7.1")
     parser.add_argument(
         "--historical-source",
         type=Path,
@@ -1644,7 +1718,7 @@ def main():
                 "--historical-source required for independent field-continuity verification"
             )
         proof = load(
-            ROOT / "manifests/quest-derived-7.1/review-field-continuity-v1.json"
+            ROOT / f"manifests/quest-derived-{args.source_version}/review-field-continuity-v1.json"
         )
         actual = subprocess.check_output(
             ["git", "-C", str(args.historical_source), "rev-parse", "HEAD"], text=True
@@ -1698,7 +1772,7 @@ def main():
 
         check_model(args.model_cache)
     allocated_start = allocated((ROOT, args.output_root))
-    job = Rebuild(args.source, args.output_root, args.historical_source)
+    job = Rebuild(args.source, args.output_root, args.historical_source, source_version=args.source_version)
     job.available = args.available_allocated_bytes
     job.allocated_start = allocated_start
     job.with_semantic = with_semantic

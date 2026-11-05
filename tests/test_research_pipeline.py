@@ -124,12 +124,15 @@ def test_talk_physical_explicit_projection_is_not_also_declared_unsupported():
     out.close()
 
 
-def pipeline(output):
+def pipeline(output, source_version="7.1"):
     """Two tiny source artifacts + real derived-index publication and receipts."""
     output.mkdir()
     job = object.__new__(Rebuild)
     job.output, job.source, job.history = output, output/'synthetic-source', None
     job.identity_root = ROOT
+    from genshin_lore.source_versions import PINS
+    job.source_version = source_version
+    job._snapshot = f"anime-game-data:{source_version}:{PINS[source_version][0]}"
     arm = output.name
     body = '合成原文 '+arm
     source_sha = hashlib.sha256(body.encode()).hexdigest()
@@ -191,7 +194,7 @@ def pipeline(output):
             'contract':'synthetic-contract','parser':'synthetic-parser-'+arm,'run':'synthetic-run-'+arm,
             'artifact':seal(path),'runtime_manifest':str(receipt),'runtime_manifest_sha256':seal(receipt)['sha256']})
     write(bundle, {'components':components,'product_accepted':False})
-    manifest = {'corpus_ref':'synthetic-'+arm,'snapshot':{'id':'synthetic-snapshot','version':'7.1'},
+    manifest = {'corpus_ref':'synthetic-'+arm,'snapshot':{'id':job.snapshot,'version':source_version},
         'components':components,'adapter_registry':'research-explicit-adapters-v2',
         'candidate_adapter_revision':VERSION,'adapter_implementation_sha256':{
             p.name:seal(p)['sha256'] for p in (ROOT/'src/genshin_lore').glob('research71_candidate_*.py')
@@ -212,7 +215,7 @@ def pipeline(output):
     profile = {'status':'accepted','status_meaning':'local fixture qualification, NOT formal acceptance',
         'corpus_ref':manifest['corpus_ref'],'corpus_manifest':'manifests/research/corpus.json',
         'evidence_product_bundle':'manifests/product/bundle.json','evidence_product_bundle_sha256':seal(bundle)['sha256'],
-        'qualification_scope':'local_7.1_candidate_only','product_accepted':False,
+        'qualification_scope':f'local_{source_version}_candidate_only','product_accepted':False,
         'candidate_runtime_sha256':seal(ROOT/'src/genshin_lore/research71_candidate_query.py')['sha256'],
         'derived_index':{**seal(job.path('research_index')),'counts':counts}}
     job.bind('manifests/research/profile.json',profile)
@@ -223,11 +226,12 @@ def pipeline(output):
     return job, manifest, bindings, config
 
 
+@pytest.mark.parametrize('source_version', ['7.1', '7.2'])
 @pytest.mark.parametrize('utf8_mode', ['1', '0'])
-def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf8_mode):
+def test_actual_index_oracle_receipt_and_mcp_read_from_two_outputs(tmp_path, utf8_mode, source_version):
     work = tmp_path / '中文 space'
     work.mkdir()
-    outputs = [pipeline(work/arm) for arm in ('a','b')]
+    outputs = [pipeline(work/arm, source_version) for arm in ('a','b')]
 
     async def check(config, corpus, arm):
         params = StdioServerParameters(command=sys.executable,

@@ -38,7 +38,9 @@ def mutation_check(artifact):
     return {'status':'PASS','checks':checks,'seal_unchanged':before,'rollback_only':True,'delivery_new_insert':'mode=ro rejects INSERT; SQL distinct identities remain additive'}
 
 
-def verify(source, artifact, dependency, expected_seal):
+def verify(source, artifact, dependency, expected_seal, *, snapshot_id='anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'):
+    from genshin_lore.source_versions import source_pin
+    _, pin, tree = source_pin(snapshot_id)
     if artifact.stat().st_size != expected_seal['size_bytes'] or sha256_file(artifact)!=expected_seal['sha256']:
         raise ValueError('Talk physical seal drift')
     before = sha256_file(artifact)
@@ -47,8 +49,7 @@ def verify(source, artifact, dependency, expected_seal):
     release=json.loads(db.execute('SELECT manifest_json FROM talk_physical_release').fetchone()[0]);qualified=release['dependency']['artifact']
     if sha256_file(dependency)!=qualified['sha256'] or dependency.stat().st_size!=qualified['size_bytes']:
         raise ValueError('Quest/Talk dependency drift')
-    pin='9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
-    if subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD'],text=True).strip()!=pin or subprocess.check_output(['git','-C',str(source),'status','--porcelain','--untracked-files=all']):
+    if release['snapshot_id'] != snapshot_id or subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()!=[pin,tree] or subprocess.check_output(['git','-C',str(source),'status','--porcelain','--untracked-files=all']):
         raise ValueError('Talk oracle source pin/cleanliness mismatch')
     entries=subprocess.check_output(['git','-C',str(source),'ls-tree','-rz',pin,'--','BinOutput/Talk']).split(b'\0')
     blobs={p.decode():header.decode().split()[2] for e in entries if e for header,p in [e.split(b'\t',1)] if p.endswith(b'.json')}

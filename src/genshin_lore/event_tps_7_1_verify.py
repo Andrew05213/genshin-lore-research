@@ -57,7 +57,7 @@ def rederive_versioned_contract(old_root, new_root, old_scope, scope):
         after = list(array_records(new_root / original['path']))
         if (len(before) != old_scope['row_denominator'][original['kind']]
                 or len(after) != scope['row_denominator'][original['kind']]
-                or len(before) != len(after)):
+                or (len(before) != len(after) if scope['source_commit'] == '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99' else len(after) < len(before))):
             raise ValueError('TPS full old/new physical denominator')
         left = [row for _, row, _ in before]
         right = [row for _, row, _ in after]
@@ -111,7 +111,7 @@ def verify(source_root, old_root, scope_path, artifact, build_report=None, runti
     historical = json.loads(OLD.read_text())
     check_files(source_root, scope)
     check_old_files(old_root, historical)
-    if (scope['contract'] != 'event-tps-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-tps-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope'] != OLD.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(OLD)
             or scope['family_contract_version'] != historical['family_contract_version']
@@ -138,7 +138,7 @@ def verify(source_root, old_root, scope_path, artifact, build_report=None, runti
     physical = {spec['kind']: list(array_records(source_root / spec['path']))
                 for spec in scope['sources']}
     if ({spec['kind']: len(physical[spec['kind']]) for spec in scope['sources']}
-            != scope['row_denominator'] or sum(map(len, physical.values())) != 507):
+            != scope['row_denominator'] or sum(map(len, physical.values())) != (507 if scope['snapshot_id'].split(':')[1] == '7.1' else 559)):
         raise ValueError('TPS source rows not complete')
     observations = []
     for spec in scope['sources']:

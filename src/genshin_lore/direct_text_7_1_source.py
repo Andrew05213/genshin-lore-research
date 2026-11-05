@@ -16,11 +16,11 @@ def sha_file(path:Path)->str:
 def blob_oid(raw:bytes)->str:return hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()
 def canonical(value)->str:return json.dumps(value,ensure_ascii=True,sort_keys=True,separators=(',',':'))
 def ident(prefix,*parts)->str:return prefix+':'+hashlib.sha256(canonical(parts).encode()).hexdigest()[:40]
-def pinned_tree(root:Path)->dict[str,str]:
- out=subprocess.check_output(['git','-C',str(root),'ls-tree','-r',COMMIT,'--','Readable','Subtitle'],text=True)
+def pinned_tree(root:Path,commit=COMMIT)->dict[str,str]:
+ out=subprocess.check_output(['git','-C',str(root),'ls-tree','-r',commit,'--','Readable','Subtitle'],text=True)
  return {line.split('\t',1)[1]:line.split()[2] for line in out.splitlines() if line}
-def inventory(root:Path,tree_name:str)->list[dict]:
- pinned=pinned_tree(root);rows=[]
+def inventory(root:Path,tree_name:str,commit=COMMIT)->list[dict]:
+ pinned=pinned_tree(root,commit);rows=[]
  for path in sorted((root/tree_name).rglob('*')):
   if not path.is_file():continue
   rel=path.relative_to(root).as_posix();raw=path.read_bytes();actual=blob_oid(raw)

@@ -119,7 +119,7 @@ def selected_rows(db, scope):
 def make_scope(index, corpus_ref, recipe):
     """Static selection policy plus THIS index's identity, never a release fallback."""
     scope = json.loads(Path(recipe).read_text(encoding="utf-8"))
-    if scope.get("contract") != "research71-narrative-semantic-input-v1":
+    if scope.get("contract") not in ("research71-narrative-semantic-input-v1", "research72-narrative-semantic-input-v1"):
         raise ValueError("unsupported semantic input contract")
     scope.update(
         corpus_ref=corpus_ref,

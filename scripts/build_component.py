@@ -23,7 +23,9 @@ def sha(path):
     return result.hexdigest()
 
 
-def qualify(source):
+def qualify(source, *, source_version="7.1"):
+    from genshin_lore.source_versions import PINS
+    COMMIT, TREE = PINS[source_version]
     values = subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()
     dirty = subprocess.check_output(['git','-C',str(source),'status','--porcelain','--untracked-files=all'],text=True).strip()
     if values != [COMMIT,TREE] or dirty:

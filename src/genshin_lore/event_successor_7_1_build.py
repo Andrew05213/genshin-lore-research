@@ -37,7 +37,7 @@ def project(source_root, scope_path):
     scope = json.loads(scope_path.read_text())
     check_files(source_root, scope)
     historical = json.loads(HISTORICAL.read_text())
-    if (scope['contract'] != 'event-successor-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-successor-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope'] != HISTORICAL.relative_to(ROOT).as_posix()
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or scope['family_contract_version'] != 'event-narrative-evidence-v2'

@@ -56,9 +56,9 @@ def at(doc, pointer: str):
     return value
 
 
-def _tree_blobs(root: Path, prefix: str) -> dict[str, str]:
+def _tree_blobs(root: Path, prefix: str, commit=COMMIT) -> dict[str, str]:
     entries = subprocess.check_output(
-        ["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", prefix]
+        ["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", prefix]
     )
     result = {}
     for entry in entries.split(b"\0"):
@@ -73,6 +73,10 @@ def _tree_blobs(root: Path, prefix: str) -> dict[str, str]:
 
 
 def _preflight(root: Path, scope: dict) -> tuple[dict[str, str], list[str], list[str]]:
+    from .source_versions import source_pin
+    game_version, COMMIT, TREE = source_pin(scope["snapshot_id"])
+    CONTRACT = f"quest-talk-{game_version}-standalone-physical-v1"
+    SIGNATURE_MANIFEST = ROOT / f"manifests/quest-talk-{game_version}/root-signature-digests.json"
     if scope.get("contract") != CONTRACT or scope.get("source_commit") != COMMIT or scope.get("source_tree") != TREE:
         raise ValueError("7.1 Quest/Talk source contract mismatch")
     signature = scope.get("root_signature_manifest", {})
@@ -85,7 +89,7 @@ def _preflight(root: Path, scope: dict) -> tuple[dict[str, str], list[str], list
         ["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True
     ).strip():
         raise ValueError("7.1 source checkout is not exact and clean")
-    blobs = _tree_blobs(root, "BinOutput/Quest") | _tree_blobs(root, "BinOutput/Talk")
+    blobs = _tree_blobs(root, "BinOutput/Quest", COMMIT) | _tree_blobs(root, "BinOutput/Talk", COMMIT)
     quest = sorted(path for path in blobs if path.startswith("BinOutput/Quest/") and path.endswith(".json"))
     talk = sorted(path for path in blobs if path.startswith("BinOutput/Talk/") and path.endswith(".json"))
     for name, paths in (("quest", quest), ("talk", talk)):
@@ -114,6 +118,7 @@ def _heartbeat(phase: str, counts: Counter, last: list[float]) -> None:
 
 
 def _textmaps(root: Path, scope: dict, wanted: set[str], blobs: dict[str, str], conn: sqlite3.Connection):
+    SNAPSHOT = scope["snapshot_id"]
     resolved = {locale: defaultdict(list) for locale in LOCALES}
     for item in scope["textmap_shards"]:
         path = item["path"]
@@ -142,11 +147,16 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
         raise FileExistsError("Quest/Talk candidate target or sidecar already exists")
     scope_raw = scope_path.read_bytes()
     scope = json.loads(scope_raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    CONTRACT = f"quest-talk-{game_version}-standalone-physical-v1"
+    SIGNATURE_MANIFEST = ROOT / f"manifests/quest-talk-{game_version}/root-signature-digests.json"
     blobs, quest_paths, talk_paths = _preflight(root, scope)
-    if len(quest_paths) != 4808 or len(talk_paths) != 59853:
+    if (len(quest_paths),len(talk_paths)) != {"7.1":(4808,59853),"7.2":(4543,57643)}[game_version]:
         raise ValueError("unapproved 7.1 physical denominator")
-    blobs.update(_tree_blobs(root, "TextMap"))
-    blobs.update(_tree_blobs(root, MAIN_QUEST))
+    blobs.update(_tree_blobs(root, "TextMap", COMMIT))
+    blobs.update(_tree_blobs(root, MAIN_QUEST, COMMIT))
     implementation = sha256(canonical({
         "decoder": file_sha256(DECODER), "builder": file_sha256(Path(__file__)),
         "schema": file_sha256(SCHEMA), "root_signatures": file_sha256(SIGNATURE_MANIFEST),
@@ -209,12 +219,12 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
 
         for path in quest_paths:
             raw, doc = insert_source(path, "quest")
-            decoded = decode_quest(doc)
+            decoded = decode_quest(doc, source_version=game_version)
             if decoded["children_field_status"] == "source_field_absent":
                 states["quest_child_field_absent"] += 1
             if decoded["reference_field_status"] == "source_field_absent":
                 states["quest_reference_field_absent"] += 1
-            cid = insert_container(path, "/", "quest_root", "7.1-versioned", decoded["native_id"], doc)
+            cid = insert_container(path, "/", "quest_root", f"{game_version}-versioned", decoded["native_id"], doc)
             for ordinal, pointer in enumerate(decoded["child_pointers"]):
                 child = at(doc, pointer)
                 child_raw = canonical(child)
@@ -236,7 +246,7 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
         old_shapes = json.loads((ROOT / "manifests/quest-talk-physical/shapes-v1.json").read_text())["shapes"]
         for path in talk_paths:
             raw, doc = insert_source(path, "talk")
-            decoded = decode_talk(doc, old_shapes)
+            decoded = decode_talk(doc, old_shapes, source_version=game_version)
             if decoded["kind"] == "talk_root_no_id":
                 states["talk_root_no_native_id"] += 1
             kind = "talk_root" if decoded["kind"] in ("talk_root", "talk_root_no_id") else decoded["kind"]

@@ -28,9 +28,10 @@ def ident(*parts):
     return "talk71-physical:" + hashlib.sha256(canonical(parts).encode()).hexdigest()[:40]
 
 
-def build(source, dependency, seal, output):
+def build(source, dependency, seal, output, *, snapshot_id=SNAPSHOT):
     from .schema20_7_1_candidate import qualify_source
-    qualify_source(source)
+    SNAPSHOT = snapshot_id
+    qualify_source(source, snapshot_id)
     if dependency.stat().st_size != seal["size_bytes"] or sha256_file(dependency) != seal["sha256"]:
         raise ValueError("exact qualified Quest/Talk dependency seal mismatch")
     if any(Path(str(dependency) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):

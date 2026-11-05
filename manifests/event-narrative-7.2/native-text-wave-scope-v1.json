@@ -1,0 +1,542 @@
+{
+  "contract": "event-native-text-wave-7.2-exact-scope-v1",
+  "family_contract_version": "event-narrative-evidence-v3",
+  "files": [
+    {
+      "blob": "e2f41bdc160078f2357e8e4bcb27794ce1fe249e",
+      "path": "ExcelBinOutput/ActivityArchonBannerExcelConfigData.json",
+      "sha256": "0b0efeea01a0766e12fc15c3c1da2f2fe737f18ed2754b09440ea7829a7e71f2",
+      "size_bytes": 12896
+    },
+    {
+      "blob": "7e0cebf27dfb90874a5f3744cac086f5246517a8",
+      "path": "ExcelBinOutput/AkaFesReasoningLevelExcelConfigData.json",
+      "sha256": "541ef51dd02d79ddea48936f9da755a8d51468277f30f25c1d951cc090abcba6",
+      "size_bytes": 1123
+    },
+    {
+      "blob": "f67b8fabf939e90570099a53021f293bb4ef33f9",
+      "path": "ExcelBinOutput/AkaFesReasoningQuestionExcelConfigData.json",
+      "sha256": "9ed79d50866f8a6714116900b074c13045bfff0226da38180607670b6602ceb4",
+      "size_bytes": 10506
+    },
+    {
+      "blob": "74dc218637f1457b7b8c97228ace71e136c02f25",
+      "path": "ExcelBinOutput/AkaFesReasoningWordExcelConfigData.json",
+      "sha256": "b430cfb8758fce7eaa7457ec1861c1202528b1c2ea8cf9de379f407626061e66",
+      "size_bytes": 1751
+    },
+    {
+      "blob": "d9e6331de6fe38501da86851f7f578d61d6a6561",
+      "path": "ExcelBinOutput/BubbleTalkDataExcelConfigData.json",
+      "sha256": "cc312f96503489ccee9b6cc753c1baba55ac8156210a16264b24f034b8cc94b9",
+      "size_bytes": 244253
+    },
+    {
+      "blob": "00b0d322ce329f41e94b94ea4a4298f256c01f7b",
+      "path": "ExcelBinOutput/CoopActivityExcelConfigData.json",
+      "sha256": "e9b14635e774ddaefbad64c7750b27f78eb32b4c6228ffbfaf07242812766106",
+      "size_bytes": 2371
+    },
+    {
+      "blob": "c766ae34b13525cfdfb0e3b2c6a39d2b748a346c",
+      "path": "ExcelBinOutput/CoopChapterExcelConfigData.json",
+      "sha256": "a19f53afa64b5994a8b5987a540ef88b2ced23df50d3257e0eeef03d6ea4800e",
+      "size_bytes": 15166
+    },
+    {
+      "blob": "7a2d2add02d0c826e7f59793a548208d121c21d8",
+      "path": "ExcelBinOutput/IrodoriPoetryExcelConfigData.json",
+      "sha256": "10fe93879846d79240f8718a616371a3548ec34c4ffef8d6741eea08c0b9d78b",
+      "size_bytes": 3574
+    },
+    {
+      "blob": "fce5fd622a439542c93999ce67ad7b95dc9c7b89",
+      "path": "ExcelBinOutput/IrodoriPoetryLineExcelConfigData.json",
+      "sha256": "dd6d80aa69132846b4817cce0e1a04953429dd1869d97bbc77f239413ae1af85",
+      "size_bytes": 1582
+    },
+    {
+      "blob": "b11279ff228fa43f08390a5cda44f57a982bd694",
+      "path": "ExcelBinOutput/NewActivityMainQuestDataExcelConfigData.json",
+      "sha256": "7605578178989cb767cc8b7f5493e1642ee409cac275849acbe3e1eeee8a8d3c",
+      "size_bytes": 30932
+    },
+    {
+      "blob": "a9d7f758a420e7de3d262b369c9ce7a6bad058a7",
+      "path": "ExcelBinOutput/PersonalLineActivityExcelConfigData.json",
+      "sha256": "bbfdf0288e8c563e6258add2f421e730edda10577c3a439f61d2e036bfc25606",
+      "size_bytes": 9054
+    },
+    {
+      "blob": "1f8babf2a540a7f1789b60a94bec055550ea8126",
+      "path": "ExcelBinOutput/PersonalLineExcelConfigData.json",
+      "sha256": "d0caf3e5308cee3a24d0a952b6f041822f00f5d4955ffc9d74bd14b1ba07d8d9",
+      "size_bytes": 18533
+    },
+    {
+      "blob": "3f5e9dd4aa8e5565b791e01fbfe36c825f93ec0b",
+      "path": "ExcelBinOutput/PersonalLineGuideExcelConfigData.json",
+      "sha256": "52daf7ef001405209161b10e04ba443b4348e1f1194f3fa288e81878d4a32849",
+      "size_bytes": 265
+    },
+    {
+      "blob": "f6fb7c6574f46d3156fa2da8fe69b857260101d4",
+      "path": "ExcelBinOutput/QuestCatalogExcelConfigData.json",
+      "sha256": "6a4cbf24f65061d5b6e642ec77ebe9c1ab0e58b54e2ea4a5cc4bdc15c0347122",
+      "size_bytes": 5024
+    },
+    {
+      "blob": "784c6e21abedc0138a20ad93cc33db98634f41a5",
+      "path": "ExcelBinOutput/QuestCatalogGuideExcelConfigData.json",
+      "sha256": "d81de286367d89ea637a1c61317ea4bc1afd349ee49c50f7f3ce0e639d20e5f3",
+      "size_bytes": 5958
+    },
+    {
+      "blob": "720000450f8eb4997ace90409b16d3b6052d20d4",
+      "path": "ExcelBinOutput/SubQuestCatalogExcelConfigData.json",
+      "sha256": "ffde08785d8c9dc57e541c978900d699e16b6e0a9ce0f4ef7801c8cff3abd39f",
+      "size_bytes": 31926
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "historical_scope": "manifests/event-narrative/native-text-archive-wave-scope.json",
+  "historical_scope_sha256": "ed2b34a6732d635b2f946641f09b40e3b35e91d4bfe7caa3838f49e98da82bc5",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "path_delta": {
+    "inherited_paths": [
+      "ExcelBinOutput/ActivityArchonBannerExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningLevelExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningQuestionExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningWordExcelConfigData.json",
+      "ExcelBinOutput/BubbleTalkDataExcelConfigData.json",
+      "ExcelBinOutput/CoopActivityExcelConfigData.json",
+      "ExcelBinOutput/CoopChapterExcelConfigData.json",
+      "ExcelBinOutput/IrodoriPoetryExcelConfigData.json",
+      "ExcelBinOutput/IrodoriPoetryLineExcelConfigData.json",
+      "ExcelBinOutput/NewActivityMainQuestDataExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineActivityExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineGuideExcelConfigData.json",
+      "ExcelBinOutput/QuestCatalogExcelConfigData.json",
+      "ExcelBinOutput/QuestCatalogGuideExcelConfigData.json",
+      "ExcelBinOutput/SubQuestCatalogExcelConfigData.json",
+      "TextMap/TextMapCHS.json",
+      "TextMap/TextMapEN.json",
+      "TextMap/TextMapJP.json",
+      "TextMap/TextMap_MediumCHS.json",
+      "TextMap/TextMap_MediumEN.json",
+      "TextMap/TextMap_MediumJP.json"
+    ],
+    "modified_paths": [
+      "ExcelBinOutput/ActivityArchonBannerExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningLevelExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningQuestionExcelConfigData.json",
+      "ExcelBinOutput/AkaFesReasoningWordExcelConfigData.json",
+      "ExcelBinOutput/BubbleTalkDataExcelConfigData.json",
+      "ExcelBinOutput/CoopActivityExcelConfigData.json",
+      "ExcelBinOutput/CoopChapterExcelConfigData.json",
+      "ExcelBinOutput/NewActivityMainQuestDataExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineActivityExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineExcelConfigData.json",
+      "ExcelBinOutput/PersonalLineGuideExcelConfigData.json",
+      "ExcelBinOutput/QuestCatalogExcelConfigData.json",
+      "ExcelBinOutput/QuestCatalogGuideExcelConfigData.json",
+      "ExcelBinOutput/SubQuestCatalogExcelConfigData.json",
+      "TextMap/TextMapCHS.json",
+      "TextMap/TextMapEN.json",
+      "TextMap/TextMapJP.json",
+      "TextMap/TextMap_MediumCHS.json",
+      "TextMap/TextMap_MediumEN.json",
+      "TextMap/TextMap_MediumJP.json"
+    ],
+    "newly_selected_paths": [],
+    "no_longer_selected_paths": [],
+    "unchanged_paths": [
+      "ExcelBinOutput/IrodoriPoetryExcelConfigData.json",
+      "ExcelBinOutput/IrodoriPoetryLineExcelConfigData.json"
+    ]
+  },
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {},
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "product_accepted": false,
+  "row_denominator": {
+    "activity_archon_banner": 24,
+    "aka_fes_reasoning_level": 3,
+    "aka_fes_reasoning_question": 55,
+    "aka_fes_reasoning_word": 16,
+    "bubble_talk_message": 1828,
+    "coop_activity": 12,
+    "coop_chapter": 19,
+    "irodori_poetry": 3,
+    "irodori_poetry_line": 23,
+    "new_activity_main_quest": 98,
+    "personal_line": 49,
+    "personal_line_activity": 46,
+    "personal_line_guide": 1,
+    "quest_catalog": 13,
+    "quest_catalog_guide": 71,
+    "subquest_catalog": 116
+  },
+  "selection_rule": "all physical rows in each of the 16 historically declared Excel arrays; no native-ID filter",
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "bubble_talk_archive",
+      "internal_relations": [],
+      "kind": "bubble_talk_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/BubbleTalkDataExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_catalog_archive",
+      "internal_relations": [
+        {
+          "field": "guideId",
+          "relation_kind": "source_authored_catalog_guide_reference",
+          "shape": "array_scalar",
+          "target_kind": "quest_catalog_guide"
+        },
+        {
+          "field": "subIdList",
+          "relation_kind": "source_authored_catalog_subentry_reference",
+          "shape": "array_scalar",
+          "target_kind": "subquest_catalog"
+        }
+      ],
+      "kind": "quest_catalog",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/QuestCatalogExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_catalog_archive",
+      "internal_relations": [],
+      "kind": "quest_catalog_guide",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/QuestCatalogGuideExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "quest_catalog_archive",
+      "internal_relations": [],
+      "kind": "subquest_catalog",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/SubQuestCatalogExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_main_quest_archive",
+      "internal_relations": [],
+      "kind": "new_activity_main_quest",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/NewActivityMainQuestDataExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "chapterTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "questTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "questDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "personal_line_archive",
+      "internal_relations": [],
+      "kind": "personal_line",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/PersonalLineExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "personal_line_archive",
+      "internal_relations": [],
+      "kind": "personal_line_activity",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/PersonalLineActivityExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "personal_line_archive",
+      "internal_relations": [],
+      "kind": "personal_line_guide",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/PersonalLineGuideExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": []
+    },
+    {
+      "boundary": "coop_archive",
+      "internal_relations": [],
+      "kind": "coop_activity",
+      "native_id_field": "activityId",
+      "path": "ExcelBinOutput/CoopActivityExcelConfigData.json",
+      "relation_lookup_field": "activityId",
+      "text_owners": [
+        {
+          "field": "activityNameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "activityDesTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "coop_archive",
+      "internal_relations": [],
+      "kind": "coop_chapter",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/CoopChapterExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "chapterNameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "coopPageTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "archon_banner_archive",
+      "internal_relations": [],
+      "kind": "activity_archon_banner",
+      "native_id_field": "activityId",
+      "path": "ExcelBinOutput/ActivityArchonBannerExcelConfigData.json",
+      "relation_lookup_field": "activityId",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "aka_fes_reasoning_archive",
+      "internal_relations": [],
+      "kind": "aka_fes_reasoning_level",
+      "native_id_field": "levelId",
+      "path": "ExcelBinOutput/AkaFesReasoningLevelExcelConfigData.json",
+      "relation_lookup_field": "levelId",
+      "text_owners": [
+        {
+          "field": "levelNameTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "questDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "finishDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "unfinishDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "aka_fes_reasoning_archive",
+      "internal_relations": [],
+      "kind": "aka_fes_reasoning_question",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/AkaFesReasoningQuestionExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "tipTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "aka_fes_reasoning_archive",
+      "internal_relations": [],
+      "kind": "aka_fes_reasoning_word",
+      "native_id_field": "wordId",
+      "path": "ExcelBinOutput/AkaFesReasoningWordExcelConfigData.json",
+      "relation_lookup_field": "wordId",
+      "text_owners": [
+        {
+          "field": "keywordTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "irodori_poetry_archive",
+      "internal_relations": [],
+      "kind": "irodori_poetry",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/IrodoriPoetryExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "cameraHintTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "themeTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "themeDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "poetryTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "irodori_poetry_archive",
+      "internal_relations": [],
+      "kind": "irodori_poetry_line",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/IrodoriPoetryLineExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ]
+}

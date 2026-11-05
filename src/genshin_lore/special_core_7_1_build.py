@@ -114,12 +114,16 @@ def _write_guards(conn: sqlite3.Connection) -> None:
                 BEGIN SELECT RAISE(ABORT,'immutable special-core evidence'); END""")
 
 
-def build(source_root: str | Path, family: str, output_path: str | Path) -> dict:
+def build(source_root: str | Path, family: str, output_path: str | Path, *, contract_path=CONTRACT) -> dict:
     source = Path(source_root).resolve()
     output = Path(output_path).resolve()
-    contract_raw = CONTRACT.read_bytes()
+    contract_raw = Path(contract_path).read_bytes()
     frozen = json.loads(contract_raw)
-    if frozen["contract"] != "special-core-7.1-provider-input-v1" or frozen["contract_count"] != 13:
+    from .source_versions import source_pin
+    game_version, commit, tree = source_pin(frozen['source_snapshot'])
+    if (frozen['source_commit'],frozen['source_tree']) != (commit,tree):
+        raise ValueError('source contract pin mismatch')
+    if frozen["contract"] != f"special-core-{game_version}-provider-input-v1" or frozen["contract_count"] != 13:
         raise ValueError("frozen special/core input contract mismatch")
     rule = next((item for item in frozen["contracts"] if item["family"] == family), None)
     if rule is None or rule["kind"] != "M5C_WAVE02":
@@ -165,10 +169,10 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
     builder_sha = file_digest(Path(__file__))
     schema_sha = file_digest(SCHEMA)
     contract_sha = digest(contract_raw)
-    parser = "special-core-71-parser:" + identity("m5c-v1", family, rule["provider_contract"],
+    parser = "special-core-" + game_version.replace(".", "") + "-parser:" + identity("m5c-v1", family, rule["provider_contract"],
                                                     builder_sha, schema_sha, contract_sha)
     source_seals = [(path, frozen["source_files"][path]["sha256"]) for path in sorted(files)]
-    run = "special-core-71-run:" + identity(frozen["source_snapshot"], parser, source_seals)
+    run = "special-core-" + game_version.replace(".", "") + "-run:" + identity(frozen["source_snapshot"], parser, source_seals)
     output.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(output, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
     stat = os.fstat(fd)
@@ -283,7 +287,7 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
                             pair_pointer, raw_key, raw_text_json, text, key_sha, text_sha, record_sha))
                         counts["text_candidates"] += 1
         release = {
-            "contract": "special-core-7.1-m5c-provider-candidate-v1",
+            "contract": f"special-core-{game_version}-m5c-provider-candidate-v1",
             "family": family, "provider_contract": rule["provider_contract"],
             "source_snapshot": frozen["source_snapshot"], "source_commit": frozen["source_commit"],
             "source_tree": frozen["source_tree"], "parser_build_id": parser, "ingest_run_id": run,

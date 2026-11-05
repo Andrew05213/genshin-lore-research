@@ -19,6 +19,7 @@ from . import batch_m1_textmap as lexical_textmap_reader
 from .batch_m3_r1_projection import _iter_array_records
 from .batch_m1_textmap import iter_textmap_pairs
 from .batch_release import fsync_file
+from .source_versions import source_pin
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -56,12 +57,14 @@ def _git(root: Path, *args: str) -> str:
 
 
 def qualify_source(source: Path, family: dict, contract: dict) -> dict[str, bytes]:
-    if (_git(source, "rev-parse", "HEAD"), _git(source, "rev-parse", "HEAD^{tree}")) != (SOURCE_COMMIT, SOURCE_TREE):
-        raise ValueError("exact 7.1 source checkout required")
+    snapshot = contract["source_snapshot"]
+    game_version, commit, tree = source_pin(snapshot)
+    if (_git(source, "rev-parse", "HEAD"), _git(source, "rev-parse", "HEAD^{tree}")) != (commit, tree):
+        raise ValueError("exact declared source checkout required")
     if _git(source, "status", "--porcelain", "--untracked-files=all"):
-        raise ValueError("7.1 source checkout is dirty")
-    if contract["source_snapshot"] != SNAPSHOT:
-        raise ValueError("frozen input snapshot differs")
+        raise ValueError("source checkout is dirty")
+    if contract.get("source_tree", tree) != tree:
+        raise ValueError("frozen input snapshot/tree differs")
     identities = {family["source_path"]: family["source_identity"]}
     identities.update({path: contract["textmap_sources"][path] for path in family["v2_textmap_paths"]})
     result = {}
@@ -126,7 +129,9 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
     output = Path(output_path).resolve()
     frozen_raw = Path(contract_path).read_bytes()
     frozen = json.loads(frozen_raw)
-    if frozen.get("contract") != "m3-7.1-ten-family-provider-input-v1":
+    snapshot = frozen["source_snapshot"]
+    game_version, commit, tree = source_pin(snapshot)
+    if frozen.get("contract") != f"m3-{game_version}-ten-family-provider-input-v1":
         raise ValueError("M3 frozen input contract mismatch")
     family = next((item for item in frozen["families"] if item["family"] == family_name), None)
     if family is None:
@@ -164,26 +169,26 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
     }
     textmap_observation = None
     if family["v2_textmap_paths"]:
-        textmap_parser = "m3-71-textmap-parser:" + identity(
+        textmap_parser = "m3-" + game_version.replace(".", "") + "-textmap-parser:" + identity(
             "six-file-lexical-textmap-v2-input-cache", helper_shas["textmap_lexical_reader"],
             helper_shas["textmap_input_cache"], sha(schema_raw)
         )[:40]
-        textmap_run = "m3-71-textmap-run:" + identity(
-            SNAPSHOT, textmap_parser,
+        textmap_run = "m3-" + game_version.replace(".", "") + "-textmap-run:" + identity(
+            snapshot, textmap_parser,
             [(path, frozen["textmap_sources"][path]["sha256"])
              for path in family["v2_textmap_paths"]],
         )[:40]
-        textmap_observation = {"snapshot_id": SNAPSHOT, "parser_build_id": textmap_parser,
+        textmap_observation = {"snapshot_id": snapshot, "parser_build_id": textmap_parser,
                                "ingest_run_id": textmap_run,
                                "scope": "family-local exact six-file TextMap observation; no separate shard"}
     config = canonical({"family": family_name, "source": source_path,
                         "keys": family["key_observation_fields"], "text": family["v2_text_fields"],
                         "v1": family["v1_contract"], "v2": family["v2_contract"]})
-    parsers = {version: "m3-7.1-parser:" + identity("parser-v1", version, builder_sha,
+    parsers = {version: f"m3-{game_version}-parser:" + identity("parser-v1", version, builder_sha,
                                                       helper_shas, sha(schema_raw),
                                                       sha(config.encode()))[:40]
                for version in ("v1", "v2")}
-    runs = {version: "m3-7.1-run:" + identity("run-v1", SNAPSHOT, family_name, version,
+    runs = {version: f"m3-{game_version}-run:" + identity("run-v1", snapshot, family_name, version,
                                                parsers[version], contract_sha,
                                                family["source_identity"]["sha256"],
                                                [(path, frozen["textmap_sources"][path]["sha256"])
@@ -201,15 +206,15 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
         counts = Counter({key: 0 for key in ("v1_rows", "v2_rows", "text_owners",
                                              "text_resolutions", "text_candidates")})
         for ordinal, pointer, token, row_pairs, token_sha in source_rows:
-            v1_id = "m3-71-v1:" + identity(family_name, runs["v1"], source_path, pointer, token_sha)[:40]
-            v2_id = "m3-71-v2:" + identity(family_name, runs["v2"], source_path, pointer, token_sha)[:40]
+            v1_id = "m3-" + game_version.replace(".", "") + "-v1:" + identity(family_name, runs["v1"], source_path, pointer, token_sha)[:40]
+            v2_id = "m3-" + game_version.replace(".", "") + "-v2:" + identity(family_name, runs["v2"], source_path, pointer, token_sha)[:40]
             key_observations = [{"field": key, "pair_ordinal": index, "raw_value": value}
                                 for index, (key, value) in enumerate(row_pairs) if key in key_fields]
             conn.execute("INSERT INTO v1_row VALUES(?,?,?,?,?,?,?,?,?,?)",
-                         (v1_id, SNAPSHOT, parsers["v1"], runs["v1"], source_path, ordinal,
+                         (v1_id, snapshot, parsers["v1"], runs["v1"], source_path, ordinal,
                           pointer, token, token_sha, canonical(key_observations)))
             conn.execute("INSERT INTO v2_row VALUES(?,?,?,?,?,?,?,?,?)",
-                         (v2_id, SNAPSHOT, parsers["v2"], runs["v2"], source_path, ordinal,
+                         (v2_id, snapshot, parsers["v2"], runs["v2"], source_path, ordinal,
                           pointer, token, token_sha))
             counts["v1_rows"] += 1
             counts["v2_rows"] += 1
@@ -217,7 +222,7 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
                 if field not in text_fields:
                     continue
                 raw_hash = str(value)
-                owner_id = "m3-71-owner:" + identity(family_name, runs["v2"], v2_id,
+                owner_id = "m3-" + game_version.replace(".", "") + "-owner:" + identity(family_name, runs["v2"], v2_id,
                                                        field, pair_ordinal)[:40]
                 per_locale = {locale: candidates.get((locale, raw_hash), ()) for locale in LOCALES}
                 states = {locale: ("missing" if not per_locale[locale] else
@@ -230,7 +235,7 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
                              (owner_id, v2_id, field, pair_ordinal, canonical(value), raw_hash, overall, count))
                 counts["text_owners"] += 1
                 for locale in LOCALES:
-                    resolution_id = "m3-71-resolution:" + identity(owner_id, locale)[:40]
+                    resolution_id = "m3-" + game_version.replace(".", "") + "-resolution:" + identity(owner_id, locale)[:40]
                     found = per_locale[locale]
                     conn.execute("INSERT INTO v2_resolution VALUES(?,?,?,?,?)",
                                  (resolution_id, owner_id, locale, states[locale], len(found)))
@@ -239,7 +244,7 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
                     for (tier, relative, pair_index, source_record_pointer, text_pointer,
                          raw_key_json, raw_text_json, text, key_sha, text_sha,
                          record_sha, rendered_sha) in found:
-                        candidate_id = "m3-71-candidate:" + identity(owner_id, relative, pair_index)[:40]
+                        candidate_id = "m3-" + game_version.replace(".", "") + "-candidate:" + identity(owner_id, relative, pair_index)[:40]
                         conn.execute("INSERT INTO v2_candidate VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                                      (candidate_id, owner_id, textmap_observation["snapshot_id"],
                                       textmap_observation["parser_build_id"],
@@ -250,9 +255,9 @@ def build(source_root: str | Path, family_name: str, output_path: str | Path,
                                       rendered_sha))
                         counts["text_candidates"] += 1
         release = {
-            "contract": "m3-7.1-family-provider-candidate-v1",
-            "family": family_name, "source_snapshot": SNAPSHOT,
-            "source_commit": SOURCE_COMMIT, "source_tree": SOURCE_TREE,
+            "contract": f"m3-{game_version}-family-provider-candidate-v1",
+            "family": family_name, "source_snapshot": snapshot,
+            "source_commit": commit, "source_tree": tree,
             "frozen_input_contract_sha256": contract_sha,
             "schema_sha256": sha(schema_raw), "builder_implementation_sha256": builder_sha,
             "parser_helper_sha256": helper_shas,

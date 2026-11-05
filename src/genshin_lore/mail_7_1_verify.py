@@ -31,6 +31,9 @@ def rows(db: sqlite3.Connection, table: str) -> list[tuple]:
 def verify(source: Path, scope: Path, artifact: Path, report: dict) -> dict:
     source, scope, artifact = Path(source), Path(scope), Path(artifact)
     manifest = json.loads(scope.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = manifest["source_snapshot"]
+    version, SOURCE, TREE = source_pin(SNAPSHOT)
     if (manifest['source_commit'], manifest['source_tree'], manifest['source_snapshot']) != (SOURCE, TREE, SNAPSHOT):
         raise ValueError('Mail oracle source identity')
     if (subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD'], text=True).strip(),
@@ -145,7 +148,7 @@ def verify(source: Path, scope: Path, artifact: Path, report: dict) -> dict:
     if any(Path(str(artifact) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
         raise ValueError('Mail oracle sidecar')
     counts = {table: len(values) for table, values in expected.items()}
-    expected_release = {'contract': 'mail-narrative-7.1-versioned-evidence-v2', 'run_id': run,
+    expected_release = {'contract': f'mail-narrative-{version}-versioned-evidence-v2', 'run_id': run,
                         'parser_build_id': parser, 'scope_sha256': sha(scope), 'implementation': impl,
                         'snapshot_id': SNAPSHOT, 'counts': counts,
                         'text_state_counts': dict(sorted(states.items())),

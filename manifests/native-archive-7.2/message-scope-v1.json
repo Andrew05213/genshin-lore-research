@@ -1,0 +1,342 @@
+{
+  "contract": "native-message-7.2-exact-source-scope-v1",
+  "dependency": {
+    "artifact": {
+      "path_machine_local": null,
+      "sha256": null,
+      "size_bytes": null
+    },
+    "capability": "mainquest_exact_rows",
+    "contract": "quest-narrative-7.2-derived-v1",
+    "family": "quest_narrative_archive",
+    "parser": null,
+    "physical_target_denominator": 4543,
+    "run": null,
+    "target_artifact_machine_local": null
+  },
+  "external_candidates": [],
+  "family": "native_archive",
+  "files": [
+    {
+      "blob": "26cda9a87cbd690b1465062b67c579da24745a47",
+      "path": "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "sha256": "51395fc94fe00e90ec579ecde1adb5c4b7667c388ca562241300c60c1cda29e6",
+      "size_bytes": 1012
+    },
+    {
+      "blob": "c5de4cde893c6b7ccb8c54bf228b7c9b98e2ec12",
+      "path": "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "sha256": "3a0eb1930b0cf2b252c2fcb9b0427b77503bfbf8b27f73b891a472a572185689",
+      "size_bytes": 1991
+    },
+    {
+      "blob": "ae9b063eee0a6079a20f3b179e9f0287f273bcbd",
+      "path": "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "sha256": "a87929c2077e5457554e8fb49e2ac078880804f54e6652a1ddd504913b70c36c",
+      "size_bytes": 1391
+    },
+    {
+      "blob": "e4176038f848269c9f472e9279ad1304759b605a",
+      "path": "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "sha256": "3b9649edad7b2fda1998a847a09ec566f7f806ce098343bff22e02f051620f88",
+      "size_bytes": 63320
+    },
+    {
+      "blob": "06d49f9641f090e260137bd1aa53bcf5fe4cb79a",
+      "path": "ExcelBinOutput/PushTipsConfigData.json",
+      "sha256": "5743dc3eea5dd1ce6874f01a870f090dfa98d255b5673e86db99a5560b2c624e",
+      "size_bytes": 579843
+    },
+    {
+      "blob": "27130a2e25f216ed19dc0e3824893802e84e26f3",
+      "path": "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "sha256": "c2f24292ed67221eb963e31881f70d65644cfffdf7ed9135e07da6405b12692c",
+      "size_bytes": 874
+    },
+    {
+      "blob": "ffba7469569436dc18faad0cbdf0f56379009cec",
+      "path": "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "sha256": "4f544a76dd62955d27cb8cd1d7f9056c52ecc56ff2ca74fd058471ef6e5f0fac",
+      "size_bytes": 1020
+    },
+    {
+      "blob": "29c7e5951739227099be276d9ca582be50bdf6e5",
+      "path": "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "sha256": "647535daf4971943c30bf3c99ffd99da42cfd8a6fdafbb0235a1481be933cfae",
+      "size_bytes": 53531
+    },
+    {
+      "blob": "158878581ee86aab4f2d7d595a1634210597efad",
+      "path": "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "sha256": "e76425a03a7a4f8b28799ac0e3b8e374a8c9b104afbaae16d36b51645ce2a78d",
+      "size_bytes": 3017
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "historical_selection": "manifests/native-archive/message-selection.json",
+  "historical_selection_sha256": "7485b4ef55d5dd734a15c7373a364d52a30f1cb111ba88f468ede28a82eccc57",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "path_delta": {
+    "inherited": [
+      "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "ExcelBinOutput/PushTipsConfigData.json",
+      "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "TextMap/TextMapCHS.json",
+      "TextMap/TextMapEN.json",
+      "TextMap/TextMapJP.json",
+      "TextMap/TextMap_MediumCHS.json",
+      "TextMap/TextMap_MediumEN.json",
+      "TextMap/TextMap_MediumJP.json"
+    ],
+    "newly_selected": [],
+    "no_longer_selected": []
+  },
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {
+      "DDBKODKACJA": "DNIFECBKEJB"
+    },
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "product_accepted": false,
+  "raw_field_alignment": {
+    "aligned_ids": 20,
+    "alternative_integer_matches": {
+      "DNIFECBKEJB": 20
+    },
+    "new": "DNIFECBKEJB",
+    "old": "GLPIOOHJNFF",
+    "raw_equal": 20,
+    "semantic_role": "mapping_unresolved"
+  },
+  "row_denominator": {
+    "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json": 6,
+    "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json": 20,
+    "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json": 10,
+    "ExcelBinOutput/NewActivityPushTipsConfigData.json": 226,
+    "ExcelBinOutput/PushTipsConfigData.json": 1826,
+    "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json": 4,
+    "ExcelBinOutput/ServerMessageExcelConfigData.json": 9,
+    "ExcelBinOutput/TemplateReminderExcelConfigData.json": 285,
+    "ExcelBinOutput/TravelCatalogExcelConfigData.json": 15
+  },
+  "selection_rule": "all physical rows in nine historically selected Excel arrays",
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_gcg_festival_text",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/ActivityGCGFestivalTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "startDescTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_message_archive",
+      "kind": "activity_loli_golf_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityLoliGolfMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "bannerNameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "DNIFECBKEJB",
+          "field_continuity_status": "full_20_row_raw_value_alignment;semantic_role_unresolved",
+          "historical_field": "GLPIOOHJNFF",
+          "owner_role_status": "mapping_unresolved"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_notify_archive",
+      "kind": "activity_natlan_notify",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityNatlanNotifyExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "nameTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "new_activity_push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/NewActivityPushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "server_message_archive",
+      "kind": "server_message",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ServerMessageExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "template_reminder_archive",
+      "kind": "template_reminder",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TemplateReminderExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "contentTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "push_tips_archive",
+      "kind": "push_tips",
+      "native_id_field": "pushTipsId",
+      "path": "ExcelBinOutput/PushTipsConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "subtitleTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "resort_guide_map_text",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ResortGuideMapTextExcelConfigData.json",
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    },
+    {
+      "boundary": "catalog_guide_archive",
+      "kind": "travel_catalog",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/TravelCatalogExcelConfigData.json",
+      "relations": [
+        {
+          "candidate_namespace": "accepted_quest_narrative_main_quest_rows",
+          "field": "questId",
+          "relation_kind": "source_authored_main_quest_reference"
+        }
+      ],
+      "text_owners": [
+        {
+          "field": "titleTextMapHash",
+          "owner_role_status": "resolved"
+        },
+        {
+          "field": "descTextMapHash",
+          "owner_role_status": "resolved"
+        }
+      ]
+    }
+  ],
+  "textmaps": {
+    "CHS": {
+      "main": "TextMap/TextMapCHS.json",
+      "medium": "TextMap/TextMap_MediumCHS.json"
+    },
+    "EN": {
+      "main": "TextMap/TextMapEN.json",
+      "medium": "TextMap/TextMap_MediumEN.json"
+    },
+    "JP": {
+      "main": "TextMap/TextMapJP.json",
+      "medium": "TextMap/TextMap_MediumJP.json"
+    }
+  }
+}

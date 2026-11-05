@@ -44,35 +44,43 @@ class AudioVariant:
     order_value: float
 
 
-def decode_fetter_lut(key: str, row: dict) -> VoiceLutRecord | None:
+def decode_fetter_lut(key: str, row: dict, *, source_version="7.1") -> VoiceLutRecord | None:
+    category, slot_field, file_field = {
+        "7.1": (LUT_CATEGORY, LUT_SLOT, LUT_ITEM_FILE),
+        "7.2": ("gameTrigger", "gameTriggerArgs", "fileID"),
+    }[source_version]
     if type(key) is not str or type(row) is not dict:
         raise ValueError("7.1 Voice LUT object shape")
-    if row.get(LUT_CATEGORY) != "Fetter":
+    if row.get(category) != "Fetter":
         return None
     if any(old in row for old in ("PKPBCKFKHEE", "MHDDLMLPIBB", "DFEELKOFAKE")):
         raise ValueError("7.0 Voice LUT fields in 7.1 decoder")
-    slot, file_id = row.get(LUT_SLOT), row.get(LUT_ITEM_FILE)
+    slot, file_id = row.get(slot_field), row.get(file_field)
     if type(slot) is not int or type(file_id) is not int:
         raise ValueError("7.1 Fetter Voice LUT slot/file locator shape")
     return VoiceLutRecord(key, "/" + key, str(slot), f"BinOutput/Voice/Items/{file_id}.json")
 
 
-def decode_fetter_item(path: str, key: str, row: dict) -> tuple[VoiceItemRecord, tuple[AudioVariant, ...]]:
+def decode_fetter_item(path: str, key: str, row: dict, *, source_version="7.1") -> tuple[VoiceItemRecord, tuple[AudioVariant, ...]]:
+    category, slot, object_key, variant_field, audio_path, selector, order = {
+        "7.1": (ITEM_CATEGORY, ITEM_SLOT, ITEM_OBJECT_KEY, ITEM_VARIANTS, AUDIO_PATH, AUDIO_SELECTOR, AUDIO_ORDER_VALUE),
+        "7.2": ("gameTrigger", "gameTriggerArgs", "guid", "sourceNames", "sourceFileName", "avatarName", "rate"),
+    }[source_version]
     if not path.startswith("BinOutput/Voice/Items/") or not path.endswith(".json") or type(key) is not str or type(row) is not dict:
         raise ValueError("7.1 Voice Items source shape")
     if any(old in row for old in ("PKPBCKFKHEE", "MHDDLMLPIBB", "BOICINMJKCP", "AIFHPAAHJOC")):
         raise ValueError("7.0 Voice Items fields in 7.1 decoder")
-    if row.get(ITEM_CATEGORY) != "Fetter" or row.get(ITEM_OBJECT_KEY) != key or type(row.get(ITEM_SLOT)) is not int:
+    if row.get(category) != "Fetter" or row.get(object_key) != key or type(row.get(slot)) is not int:
         raise ValueError("7.1 Fetter Voice Items category/key/slot shape")
-    variants = row.get(ITEM_VARIANTS)
-    status = "present" if ITEM_VARIANTS in row else "missing"
+    variants = row.get(variant_field)
+    status = "present" if variant_field in row else "missing"
     if status == "missing":
         variants = []
     elif type(variants) is not list:
         raise ValueError("7.1 Fetter Voice variant array shape")
     audio = []
     for ordinal, variant in enumerate(variants):
-        if type(variant) is not dict or type(variant.get(AUDIO_PATH)) is not str or type(variant.get(AUDIO_SELECTOR)) is not str or type(variant.get(AUDIO_ORDER_VALUE)) not in (int, float):
-            raise ValueError(f"7.1 Fetter Voice audio variant shape: {path}#/{key}/{ITEM_VARIANTS}/{ordinal}")
-        audio.append(AudioVariant(path, key, ordinal, f"/{key}/{ITEM_VARIANTS}/{ordinal}", variant[AUDIO_PATH], variant[AUDIO_SELECTOR], float(variant[AUDIO_ORDER_VALUE])))
-    return VoiceItemRecord(path, key, "/" + key, str(row[ITEM_SLOT]), len(audio), status), tuple(audio)
+        if type(variant) is not dict or type(variant.get(audio_path)) is not str or type(variant.get(selector)) is not str or type(variant.get(order)) not in (int, float):
+            raise ValueError(f"Fetter Voice audio variant shape: {path}#/{key}/{variant_field}/{ordinal}")
+        audio.append(AudioVariant(path, key, ordinal, f"/{key}/{variant_field}/{ordinal}", variant[audio_path], variant[selector], float(variant[order])))
+    return VoiceItemRecord(path, key, "/" + key, str(row[slot]), len(audio), status), tuple(audio)

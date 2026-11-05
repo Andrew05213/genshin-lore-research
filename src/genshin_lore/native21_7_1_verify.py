@@ -71,14 +71,16 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
-    if scope['contract'] != 'native21-7.1-versioned-scope-v1' or len(scope['sources']) != 37:
+    if scope['contract'] != 'native21-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1]) or len(scope['sources']) != 37:
         raise ValueError('Native21 exact source selection contract')
     if any(Path(str(artifact) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
         raise ValueError('Native21 artifact sidecar')
-    event = json.loads((metadata / SOURCES[0]).read_text())
-    derived = json.loads((metadata / SOURCES[1]).read_text())['components']['quest_narrative_archive']
-    npc = json.loads((metadata / SOURCES[2]).read_text())['families']['npc']
-    talk = json.loads((metadata / SOURCES[3]).read_text())
+    event = json.loads((metadata / tuple(p.replace('7.1',scope['snapshot_id'].split(':')[1]) for p in SOURCES)[0]).read_text())
+    derived = json.loads((metadata / tuple(p.replace('7.1',scope['snapshot_id'].split(':')[1]) for p in SOURCES)[1]).read_text())['components']['quest_narrative_archive']
+    npc = json.loads((metadata / tuple(p.replace('7.1',scope['snapshot_id'].split(':')[1]) for p in SOURCES)[2]).read_text())['families']['npc']
+    talk = json.loads((metadata / tuple(p.replace('7.1',scope['snapshot_id'].split(':')[1]) for p in SOURCES)[3]).read_text())
+    if scope['snapshot_id'].split(':')[1]=='7.2' and any(v != scope['snapshot_id'] for v in (event.get('source_snapshot'), derived.get('source_snapshot'), npc['release'].get('snapshot'), talk.get('source_snapshot'))):
+        raise ValueError('Native21 oracle cross-snapshot dependency')
     artifacts = ((Path(event['artifact']['path_machine_local']), event['artifact']),
                  (Path(derived['artifact']['path_machine_local']), derived['artifact']),
                  (Path(npc['artifact']['path_machine_local']), npc['artifact']),
@@ -118,11 +120,11 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
                     if type(row[field]) is not int:
                         raise ValueError('Native21 source relation type')
                     wanted[rel['relation_kind']].add(str(row[field]))
-    if len(source_rows) != 1045 or len(binding['occurrences']) != 9:
+    if len(source_rows) != (1045 if scope['snapshot_id'].split(':')[1]=='7.1' else sum(s['source_row_count'] for s in scope['sources'])) or len(binding['occurrences']) != (9 if scope['snapshot_id'].split(':')[1]=='7.1' else 14):
         raise ValueError('Native21 source/binding row denominator')
     implementation = {path: sha(ROOT / path) for path in (
         'src/genshin_lore/native21_7_1_build.py', 'schemas/native21-7.1-projection-v1.sql')}
-    implementation.update({path: sha(metadata / path) for path in SOURCES})
+    implementation.update({path: sha(metadata / path.replace('7.1',scope['snapshot_id'].split(':')[1])) for path in SOURCES})
     parser = digest_id('parser', implementation)
     run = digest_id('run', parser, sha(scope_path), scope['snapshot_id'])
     expected = {table: [] for table in TABLES}
@@ -245,11 +247,11 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
     for table in TABLES:
         expected[table].sort()
     release = {
-        'contract': 'native21-7.1-physical-text-candidate-v1', 'snapshot': scope['snapshot_id'],
+        'contract': 'native21-7.1-physical-text-candidate-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]), 'snapshot': scope['snapshot_id'],
         'parser_build_id': parser, 'ingest_run_id': run, 'scope_sha256': sha(scope_path),
         'implementation': implementation, 'counts': {table: len(expected[table]) for table in TABLES},
         'text_states': dict(sorted(text_states.items())), 'relation_states': dict(sorted(relation_states.items())),
-        'snez_exact_reuse_count': 9, 'semantic_owner_mapping_unresolved_fields': 9,
+        'snez_exact_reuse_count': len(binding['occurrences']), 'semantic_owner_mapping_unresolved_fields': 9,
         'historical_exact_replacement': False, 'product_accepted': False,
     }
     with sqlite3.connect(artifact) as db, sqlite3.connect(':memory:') as schema:
@@ -271,5 +273,5 @@ def verify(root: Path, scope_path: Path, artifact: Path, *, metadata_root=None):
     return {'status': 'PASS', 'verified': True, 'artifact': {'size_bytes': artifact.stat().st_size, 'sha256': sha(artifact)},
             'counts': release['counts'], 'text_states': release['text_states'],
             'relation_states': release['relation_states'], 'second_hop_candidate_rows': len(expected['relation_candidate']),
-            'snez_exact_reuse_count': 9, 'schema_exact': True, 'mutation_cases': mutation_cases,
+            'snez_exact_reuse_count': len(binding['occurrences']), 'schema_exact': True, 'mutation_cases': mutation_cases,
             'silent_skips': 0, 'wrong_identity_merges': 0}

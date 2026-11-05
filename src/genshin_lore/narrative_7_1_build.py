@@ -19,11 +19,17 @@ from .narrative_7_1_contract import (
 from .batch_space import ProjectSpaceGate, broad_inventory, _walk_bytes, PROJECT_SPACE_LIMIT_BYTES
 
 
-def build(family, source, output, accounting_root):
+def build(family, source, output, accounting_root, *, scope_path=None):
     if family not in SPECS:
         raise ValueError("unknown family")
     source, output = Path(source), Path(output).absolute()
-    scope = json.loads(SCOPE.read_text())
+    scope_file = Path(scope_path) if scope_path is not None else SCOPE
+    scope = json.loads(scope_file.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    specs = {family:(value[0],scope["families"][family]["physical_rows"],value[2],value[3])
+             for family,value in SPECS.items()}
     check_source(source, scope)
     no_sidecars(output)
     if output.exists() or output.is_symlink():
@@ -47,7 +53,7 @@ def build(family, source, output, accounting_root):
         if output.exists():
             raise FileExistsError(output)
         start = time.monotonic()
-        path, expected, key_field, roles = SPECS[family]
+        path, expected, key_field, roles = specs[family]
         rows = list(array_records(source / path))
         if len(rows) != expected:
             raise ValueError("physical denominator")
@@ -71,7 +77,7 @@ def build(family, source, output, accounting_root):
             raise ValueError("unknown source field shape")
         npc_lookup = defaultdict(list)
         if family == "dialog":
-            for n, row, _ in array_records(source / SPECS["npc"][0]):
+            for n, row, _ in array_records(source / specs["npc"][0]):
                 npc_lookup[str(row["id"])].append(n)
         wanted = {str(row[field]) for n, row, _ in rows for field in owners[n]}
         maps = defaultdict(list)
@@ -85,7 +91,7 @@ def build(family, source, output, accounting_root):
             "src/genshin_lore/narrative_7_1_build.py", "src/genshin_lore/narrative_7_1_contract.py",
             "src/genshin_lore/loading_tips_source.py", "schemas/narrative-7.1-npc-dialog-reminder.sql")}
         parser = "narrative71-parser:" + digest(implementation)
-        run = "narrative71-run:" + digest([family, parser, sha(SCOPE)])
+        run = "narrative71-run:" + digest([family, parser, sha(scope_file)])
         fd, name = tempfile.mkstemp(prefix=".narrative71-", suffix=".sqlite", dir=output.parent)
         os.close(fd)
         stage = Path(name)
@@ -98,14 +104,14 @@ def build(family, source, output, accounting_root):
 
             def locator(n, field, position, value, target_family, state, matches):
                 c.execute("INSERT INTO locator VALUES(?,?,?,?,?,?,?)", (n, field, position, canonical(value), target_family, state, len(matches)))
-                target_path = SPECS[target_family][0]
+                target_path = specs[target_family][0]
                 c.executemany("INSERT INTO physical_candidate VALUES(?,?,?,?,?,?)", ((n, field, position, target, target_path, f"/{target}") for target in matches))
 
             def resolution(matches):
                 return "missing" if not matches else "resolved_unique" if len(matches) == 1 else "resolved_candidate_set"
 
             for n, row, raw in rows:
-                c.execute("INSERT INTO physical_row VALUES(?,?,?,?,?,?,?)", (n, ref(family, run, n), path, f"/{n}", str(row[key_field]), raw, hashlib.sha256(raw.encode()).hexdigest()))
+                c.execute("INSERT INTO physical_row VALUES(?,?,?,?,?,?,?)", (n, ref(family, run, n, snapshot_id=SNAPSHOT), path, f"/{n}", str(row[key_field]), raw, hashlib.sha256(raw.encode()).hexdigest()))
                 for field, role in sorted(owners[n].items()):
                     key = str(row[field])
                     c.execute("INSERT INTO text_owner VALUES(?,?,?,?)", (n, field, key, role))
@@ -151,9 +157,9 @@ def build(family, source, output, accounting_root):
                     print(f"{family}: {n + 1}/{expected} physical rows", flush=True)
                     heartbeat = time.monotonic()
             counts = {table: c.execute(f"SELECT count(*) FROM {table}").fetchone()[0] for table in TABLES if table != "release"}
-            release = {"contract": f"{family}-7.1-narrative-physical-v1", "family": family, "snapshot": SNAPSHOT,
+            release = {"contract": f"{family}-{game_version}-narrative-physical-v1", "family": family, "snapshot": SNAPSHOT,
                        "source_commit": COMMIT, "source_tree": TREE, "parser": parser, "run": run,
-                       "scope_sha256": sha(SCOPE), "schema_sha256": sha(SCHEMA), "implementation": implementation,
+                       "scope_sha256": sha(scope_file), "schema_sha256": sha(SCHEMA), "implementation": implementation,
                        "source_files": scope["files"], "counts": counts, "semantic_mapping": "unresolved" if family == "reminder" else "source_authored_declared_fields",
                        "textmap_policy": scope["textmap_policy"], "product_accepted": False, "research_corpus_accepted": False}
             c.execute("INSERT INTO release VALUES(1,?)", (canonical(release),))

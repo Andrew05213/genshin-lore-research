@@ -7,9 +7,9 @@ from .event_7_1_source import array_records,check_files,pairs,sha
 ROOT=Path(__file__).resolve().parents[2]
 TABLES=('native_archive_container','native_archive_slot','native_archive_text','native_archive_relation','native_archive_candidate')
 def ident(*parts):return 'nbm71:'+hashlib.sha256(json.dumps(parts,ensure_ascii=False,separators=(',',':')).encode()).hexdigest()[:40]
-def implementation():return {p:sha(ROOT/p) for p in ('src/genshin_lore/native_book_music_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-book-music-7.1-v1.sql','manifests/native-archive-7.1/book-music-selection-v1.json')}
+def implementation(selection=None):return {p:sha(ROOT/p) for p in ('src/genshin_lore/native_book_music_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-book-music-7.1-v1.sql',selection or 'manifests/native-archive-7.1/book-music-selection-v1.json')}
 def identities(scope_path):
- impl=implementation();parser='nbm71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='nbm71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];return impl,parser,scope_sha,run
+ scope=json.loads(Path(scope_path).read_text());impl=implementation(scope['selection_manifest']);parser='nbm71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='nbm71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];return impl,parser,scope_sha,run
 def _maps(root,scope,wanted):
  out={};filemap={x['path']:x for x in scope['files']}
  for locale in scope['languages']:
@@ -23,7 +23,7 @@ def _maps(root,scope,wanted):
  return out
 def reconstruct(source_root,scope_path):
  scope=json.loads(Path(scope_path).read_text())
- if scope.get('selection_manifest')!='manifests/native-archive-7.1/book-music-selection-v1.json':raise ValueError('unapproved selection authority')
+ if scope.get('selection_manifest')!='manifests/native-archive-7.1/book-music-selection-v1.json'.replace('7.1',scope['snapshot_id'].split(':')[1]):raise ValueError('unapproved selection authority')
  selection_path=ROOT/scope['selection_manifest'];selection=json.loads(selection_path.read_text())
  if sha(selection_path)!=scope.get('selection_sha256') or scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('frozen source selection mismatch')
  check_files(source_root,scope);impl,parser,scope_sha,run=identities(scope_path);seals={x['path']:x for x in scope['files']};records={};wanted=set()

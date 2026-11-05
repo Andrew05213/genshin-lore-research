@@ -14,23 +14,28 @@ READABLE_FIELDS = (
 )
 
 
-def document_row(row: dict, ordinal: int) -> dict:
+def document_row(row: dict, ordinal: int, *, source_version="7.1") -> dict:
     if not isinstance(row, dict) or type(row.get("id")) is not int or type(row.get("titleTextMapHash")) is not int:
         raise ValueError("7.1 Document row id/titleTextMapHash shape")
-    for field in ("questIDList", "contentLocalizedId", "questContentLocalizedId"):
+    fields = ("questIDList", "contentLocalizedId", "questContentLocalizedId")
+    if source_version == "7.2":
+        fields += ("PLOJOMIPJGH",)
+    for field in fields:
         if field in row and (not isinstance(row[field], list) or any(type(value) is not int for value in row[field])):
             raise ValueError(f"7.1 Document {field} physical locator shape")
     return {"pointer": f"/{ordinal}", "native_id": row["id"],
             "title_text_hash": row["titleTextMapHash"]}
 
 
-def localization_readable_locators(row: dict, ordinal: int) -> list[dict]:
+def localization_readable_locators(row: dict, ordinal: int, *, source_version="7.1") -> list[dict]:
+    chs_fields = {"7.1": CHS_READABLE_FIELDS, "7.2": ("BFDDHOKGBOH", "OKIHBKFCDND")}[source_version]
+    fields = tuple((field, "CHS") for field in chs_fields) + (("enPath", "EN"), ("jpPath", "JP"))
     if not isinstance(row, dict) or type(row.get("id")) is not int:
         raise ValueError("7.1 Localization row id shape")
-    if any(field not in row for field in CHS_READABLE_FIELDS):
+    if any(field not in row for field in chs_fields):
         raise ValueError("7.1 CHS authored locator field missing")
     result = []
-    for field, locale in READABLE_FIELDS:
+    for field, locale in fields:
         if field not in row:
             continue
         value = row[field]
