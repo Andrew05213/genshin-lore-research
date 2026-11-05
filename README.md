@@ -6,11 +6,11 @@
 
 源码发行版提供 **完整有界数据构建入口**：35 个独立输入、Schema20 的 33 个 core providers，以及统一 Research 文本、关系和候选索引。原 14 类基础组件入口继续保留，适合小范围验证。
 
-固定 7.2 来源可通过完整构建入口显式选择 `--source-version 7.2`，并使用独立输出目录；安装器和既有客户端的 7.1 默认不自动切换。来源差异、实测结果和未执行范围见 [7.2 迁移记录](docs/reviews/migration-7.2.md)，命令见 [完整重建指南](docs/guides/building-dataset.md#显式构建-72)。
+固定 7.2 来源可通过完整构建入口显式选择 `--source-version 7.2`，并使用独立输出目录；安装器和既有客户端的 7.1 默认不自动切换。review 修复后已完成原生 Windows 新 35 输入、索引、默认向量及真实 Codex 五工具复验，见 [Windows 7.2 验证范围](docs/reviews/migration-7.2-windows.md)。原 [迁移记录](docs/reviews/migration-7.2.md) 保留 Linux 实验和失败，命令见 [完整重建指南](docs/guides/building-dataset.md#显式构建-72)。
 
 最近的 Linux 同条件验证在两个新目录完成全部 35 输入、统一索引和默认向量的单命令构建。R0 无损元数据归一化与取消必需 VACUUM，使观测构建峰值从 **25.53 降至 16.49 GB**，完整输出从 **19.81 降至 16.49 GB**；本次总耗时 **37:50.51 → 35:38.49（-5.81%）**。全部 R0 字段、3,761,013 条文本的物理坐标/原文及 106,589 个来源窗口的向量数值对照通过。每侧一次，不能保证其他机器相同提速；实测 `--jobs 3`，保守默认为 2。取舍、采样限制与结果见 [构建存储优化](docs/compact-evidence-storage.md)。此前的 [完整冷构建性能](docs/cold-build-throughput.md) 和 [非向量记录](docs/nonvector-build-performance.md) 保留历史执行范围。
 
-Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的完整来源构建另有 [既有验证记录](docs/guides/windows.md)，最新 Linux 优化尚未在 Windows 重跑完整 35 输入；CI 不能代替这项验证。历史成功、原始失败、[工程质量记录](docs/engineering-quality.md) 和各次实现的执行范围分别保留，入口见 [当前状态](docs/status.md)。
+Ubuntu 与 Windows CI 均运行无游戏数据测试。原生 Windows 的 7.1 构建见 [既有验证记录](docs/guides/windows.md)，7.2 新完整构建见上述独立复验；没有执行 Windows/Linux 同条件性能 A/B，CI 也不能代替完整来源验证。历史成功、原始失败、[工程质量记录](docs/engineering-quality.md) 和各次实现的执行范围分别保留，入口见 [当前状态](docs/status.md)。
 
 仓库分发代码、SQL 定义和必要的来源校验清单；**不分发游戏数据库、游戏正文、模型权重或向量索引**。数据由上游源码在构建环境中生成。
 

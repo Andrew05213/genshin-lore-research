@@ -1,5 +1,9 @@
 # 固定 7.2 来源的有界数据迁移
 
+下文及 JSON 保留原 Linux 迁移实验的执行范围和当时结论。
+后续 review 修复后的新 35 输入冷构建、默认向量和真实 Codex 会话在原生 Windows
+另行完成，见 [Windows 复验](migration-7.2-windows.md)；不改写下文的原始失败或 seals。
+
 本次完成现有 **35 个 Research 输入、33 个 Schema20 core providers** 的
 7.2 来源构建、完整索引核对、新向量构建和程序化 MCP 验证。
 这是源码构建及本地候选资格，不是全游戏覆盖、正式 7.2 发布或 Agent 答案验收。
