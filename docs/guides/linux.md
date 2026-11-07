@@ -19,14 +19,15 @@ bash setup.sh
 后续与 Windows 共用 `scripts/setup_project.py`：
 
 1. 创建独立 `.venv`，先按锁文件安装 NumPy/pybind11 等编译依赖，再安装含 semantic 的运行依赖和源码。
-2. 取得固定 7.1 及历史 oracle 来源，校验干净 checkout，下载并验证固定模型。
-3. 调用现有 `scripts/build.py --stage all` 完成35输入、统一索引和默认向量，仍由原有回执和独立验证决定资格及阶段复用。
+2. 取得固定 7.2 及历史 oracle 来源，校验干净 checkout，下载并验证固定模型。当前来源 commit 为 `d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1`，tree 为 `5b334e711319726c504da95dbfe6ebb26baaa7d3`，位于 `data/AnimeGameData-7.2/`。
+3. 调用现有 `scripts/build.py --source-version 7.2 --stage all` 完成35输入、统一索引和默认向量，输出 `data/rebuilt-7.2/`，仍由原有回执和独立验证决定资格及阶段复用。
 4. 执行对白 MCP 启动和请求检查，通过后才写项目级 `.codex/config.toml`。
 
 安装器在开始数据准备前检查随源码提供的 [研究 Skill](../../.agents/skills/genshin-lore-research/SKILL.md)。它位于仓库 `.agents/skills/`，由 Codex 在该项目内自动发现，无需写用户全局目录。安装完成会显示其路径；研究时可显式使用 `$genshin-lore-research`。Skill 提供研究方法，不代替 MCP 配置或数据库。
 
 来源、模型和构建输出在 `data/`，pip 下载缓存在 `cache/pip/`；这些内容不提交 Git。
-不读取其他部署作为 fallback，不修改全局 Codex 配置。已有项目配置先备份，保留其他服务器，同名连接冲突拒绝覆盖。
+不读取其他部署作为 fallback，不修改全局 Codex 配置。已有项目配置先备份，保留其他服务器，同名连接冲突拒绝覆盖。`genshin-lore-research71` 保留为兼容连接键名，实际绑定本次 7.2 输出的 `runtime-config.json`。
+升级安装建议使用新的解压目录；旧 `data/AnimeGameData/`、`data/rebuilt/` 和回执保留，既有客户端不会自动切换。不要删除旧数据或配置来绕过冲突。
 完成后在 Codex 打开并信任该目录、重启 MCP，以 `/mcp` 核对五工具。
 该步骤不替代客户端授权，也不自动安装或登录 Codex。默认 literal，semantic/hybrid 显式可选；原生客户端不自动获得项目 citation renderer。
 

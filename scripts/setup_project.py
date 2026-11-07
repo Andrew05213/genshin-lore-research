@@ -15,8 +15,9 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = 'https://github.com/DimbreathBot/AnimeGameData.git'
-SOURCE = '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
-TREE = 'aa578c08c402af39b41f1ffc95124d10f5410272'
+SOURCE_VERSION = '7.2'
+SOURCE = 'd54f6f0d423ded9d055bb740a3e5f3aa8f2667f1'
+TREE = '5b334e711319726c504da95dbfe6ebb26baaa7d3'
 HISTORY = '26df1dfbdf05a82bbb1d97506859f3e1c40718d8'
 SERVER = 'genshin-lore-research71'
 PEAK = 22_000_000_000
@@ -134,9 +135,10 @@ def install(root, *, jobs=2):
 
 
 def finish(root, python, jobs):
-    source = root / 'data' / 'AnimeGameData'
+    # Versioned paths leave earlier installer sources and build receipts intact.
+    source = root / 'data' / f'AnimeGameData-{SOURCE_VERSION}'
     historical = root / 'data' / 'AnimeGameData-history'
-    output = root / 'data' / 'rebuilt'
+    output = root / 'data' / f'rebuilt-{SOURCE_VERSION}'
     cache = root / 'data' / 'model-cache'
     config = output / 'runtime-config.json'
     headroom(root)
@@ -144,7 +146,8 @@ def finish(root, python, jobs):
     checkout(historical, HISTORY)
     run([python, root / 'scripts' / 'maintenance' / 'fetch_semantic_model.py', '--cache-root', cache])
     # Always enter the existing coordinator: it alone qualifies stage reuse.
-    run([python, root / 'scripts' / 'build.py', '--source', source,
+    run([python, root / 'scripts' / 'build.py', '--source-version', SOURCE_VERSION,
+         '--source', source,
          '--historical-source', historical, '--output-root', output,
          '--model-cache', cache, '--available-allocated-bytes', headroom(root),
          '--stage', 'all', '--jobs', jobs])

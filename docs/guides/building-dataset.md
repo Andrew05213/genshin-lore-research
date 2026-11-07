@@ -25,8 +25,10 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 历史 oracle 来源和模型准备要求保持不变。不会从旧数据库 patch 出新版本。
 
 版本选择绑定所有输入、动态 manifest、Research corpus 和新向量；
-缺失或错配会报错，不寻找相邻版本。默认参数和两端安装器仍为固定 7.1，
-7.2 是显式源码构建路径，不自动部署、切换 Codex 或取得正式 release 身份。
+缺失或错配会报错，不寻找相邻版本。手动 `scripts/build.py` 的默认参数仍为固定 7.1，
+两端一键安装器则显式传入 `--source-version 7.2`，使用 `data/AnimeGameData-7.2/`
+和 `data/rebuilt-7.2/`，检查后配置项目级 MCP；既有来源、输出和客户端不自动迁移。
+手动 7.2 构建不自动部署、切换 Codex 或取得正式 release 身份。
 执行范围及来源差异见 [7.2 迁移记录](../reviews/migration-7.2.md)。
 
 ## 容量

@@ -78,6 +78,13 @@ def test_finish_preserves_full_build_and_checks_before_config(monkeypatch, tmp_p
     setup.finish(tmp_path, Path('python.exe'), 1)
     commands = [args for kind, args in events if kind == 'run']
     build = next(args for args in commands if args[1].endswith('build.py'))
+    assert build[build.index('--source-version') + 1] == '7.2'
+    assert build[build.index('--source') + 1] == str(tmp_path / 'data' / 'AnimeGameData-7.2')
+    output = tmp_path / 'data' / 'rebuilt-7.2'
+    assert build[build.index('--output-root') + 1] == str(output)
+    assert events[0] == ('source', (tmp_path / 'data' / 'AnimeGameData-7.2',
+        'd54f6f0d423ded9d055bb740a3e5f3aa8f2667f1',
+        '5b334e711319726c504da95dbfe6ebb26baaa7d3'))
     assert build[build.index('--stage') + 1] == 'all'
     assert build[build.index('--jobs') + 1] == '1'
     assert '--model-cache' in build
@@ -87,6 +94,61 @@ def test_finish_preserves_full_build_and_checks_before_config(monkeypatch, tmp_p
     assert commands[-2][-1] == '--check'
     assert commands[-1][1].endswith('check_dialogue.py')
     assert events[-1][0] == 'config'
+    assert events[-1][1] == (tmp_path, Path('python.exe'), output / 'runtime-config.json')
+    assert all(str(output / 'runtime-config.json') in args for args in commands[-2:])
+
+
+def test_installer_source_pin_matches_registered_72_contract():
+    from genshin_lore.source_versions import PINS
+    assert setup.SOURCE_VERSION == '7.2'
+    assert (setup.SOURCE, setup.TREE) == PINS['7.2']
+
+
+def test_72_finish_leaves_old_installation_bytes_untouched(monkeypatch, tmp_path):
+    old_files = ['data/AnimeGameData/old-source.json', 'data/rebuilt/verified.json',
+                 'data/rebuilt/runtime-config.json']
+    original = b'private synthetic old installation\r\n'
+    for name in old_files:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(original)
+    monkeypatch.setattr(setup, 'headroom', lambda _: setup.PEAK)
+    def checkout(path, *args):
+        assert path not in (tmp_path / 'data/AnimeGameData', tmp_path / 'data/rebuilt')
+    monkeypatch.setattr(setup, 'checkout', checkout)
+    monkeypatch.setattr(setup, 'run', lambda args: None)
+    # An existing 7.1 MCP binding is preserved instead of silently switched.
+    old_config = setup.configure_codex(tmp_path, Path('python.exe'),
+                                      tmp_path / 'data/rebuilt/runtime-config.json')
+    config_bytes = old_config.read_bytes()
+    with pytest.raises(ValueError, match='Existing MCP entry differs'):
+        setup.finish(tmp_path, Path('python.exe'), 1)
+    assert old_config.read_bytes() == config_bytes
+    assert not list(old_config.parent.glob('*.bak'))
+    assert all((tmp_path / name).read_bytes() == original for name in old_files)
+
+
+@pytest.mark.parametrize('invalid', ['commit', 'tree', 'dirty'])
+def test_72_source_rejection_stops_before_model_build_and_config(monkeypatch, tmp_path, invalid):
+    source = tmp_path / 'data/AnimeGameData-7.2'
+    source.mkdir(parents=True)
+    monkeypatch.setattr(setup, 'headroom', lambda _: setup.PEAK)
+    def run(args, *, capture=False):
+        assert args[0] == 'git', 'source rejection must precede model/build/check commands'
+        if args[-1] == '--show-toplevel':
+            return str(source)
+        if args[-1] == 'HEAD':
+            return '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99' if invalid == 'commit' else setup.SOURCE
+        if args[-1] == '--untracked-files=all':
+            return ' M synthetic.json' if invalid == 'dirty' else ''
+        if args[-1] == 'HEAD^{tree}':
+            return 'wrong-tree' if invalid == 'tree' else setup.TREE
+        pytest.fail(str(args))
+    monkeypatch.setattr(setup, 'run', run)
+    monkeypatch.setattr(setup, 'configure_codex', lambda *args: pytest.fail('registered rejected source'))
+    with pytest.raises(ValueError, match='Pinned source differs|Dirty source|Source tree differs'):
+        setup.finish(tmp_path, Path('python.exe'), 1)
+    assert not (tmp_path / 'data/rebuilt-7.2').exists()
 
 
 @pytest.mark.parametrize('failed_script', ['fetch_semantic_model.py', 'build.py', 'serve_dialogue.py', 'check_dialogue.py'])
