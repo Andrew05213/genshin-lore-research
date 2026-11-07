@@ -2,7 +2,7 @@
 
 ## 可执行入口
 
-完整有界构建支持显式固定 7.2 来源，范围仍为 35 个输入和 33 个 core providers，新增版本不等于全游戏覆盖或正式 release 晋级。review 修复后的 `e62e69f` 已在原生 Windows 的新目录完成全部输入、统一索引、默认向量、61 回执审计及真实 Codex 五工具观察，见 [Windows 7.2 复验](reviews/migration-7.2-windows.md)。原 [Linux 迁移记录](reviews/migration-7.2.md) 的失败、恢复和 seals 保留；既有 7.1 部署和安装器默认保持原样。
+完整有界构建支持固定 7.2 来源，两端一键安装器默认显式选择 7.2，并使用版本化来源/输出目录；既有部署和配置冲突不自动迁移。范围仍为 35 个输入和 33 个 core providers，新增版本不等于全游戏覆盖或正式 release 晋级。review 修复后的 `e62e69f` 已在原生 Windows 的新目录完成全部输入、统一索引、默认向量、61 回执审计及真实 Codex 五工具观察，见 [Windows 7.2 复验](reviews/migration-7.2-windows.md)。原 [Linux 迁移记录](reviews/migration-7.2.md) 的失败、恢复和 seals 保留；这些历史来源验收不代替新默认安装器的完整冷安装。手动 `scripts/build.py` 继续要求显式 `--source-version 7.2`。
 
 阅读卡支持多句一次保存，Markdown 只显示标题和正文，完整证据另存 JSON。默认 reading 去掉重复技术结构，提供明确的续页/上下文动作；人物预览按材料类型组织。标准进度通知由支持它的客户端展示，未改原生 Codex renderer。实际 stdio 核对、体积测量、初轮失败与验证边界见 [阅读卡验证](reviews/reading-card-usability.md)。不自动切换已部署客户端或发布身份。
 

@@ -9,9 +9,11 @@
 
 1. 检查 Git 与 Python 3.12；缺失时尝试 winget 安装。系统安装可能要求确认；没有 winget 时给出所缺软件，不修改系统策略。
 2. 检查 MSVC C++ 工具链，缺少时尝试通过 winget 安装 Build Tools 的 VCTools 与推荐 SDK（额外数 GB 系统空间，可能需要提权或重启）；再安装独立 `.venv` 和 semantic 依赖。失败会停止并保留日志，不能跳过向量。
-3. 下载固定 7.1 与历史 oracle 来源（浅 checkout），下载并校验固定模型。来源都放在本项目 `data/`，不读其他部署的数据库。
-4. 运行完整35输入构建及默认向量，通过已有阶段回执决定复用；随后执行对白服务启动和真实 MCP 程序化检查。
-5. 写入 `.codex/config.toml` 的 `genshin-lore-research71` 连接；保留其他配置、备份旧文件，同名冲突拒绝覆盖。安装器不改用户级配置。
+3. 下载固定 7.2 与历史 oracle 来源（浅 checkout），下载并校验固定模型。当前来源 commit 为 `d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1`，tree 为 `5b334e711319726c504da95dbfe6ebb26baaa7d3`；放在本项目 `data/AnimeGameData-7.2/`，不读其他部署的数据库。
+4. 显式以 `--source-version 7.2` 运行完整35输入构建及默认向量，输出 `data/rebuilt-7.2/`，通过已有阶段回执决定复用；随后使用该目录的 `runtime-config.json` 执行对白服务启动和真实 MCP 程序化检查。
+5. 写入 `.codex/config.toml` 的 `genshin-lore-research71` 连接（保留兼容键名，实际数据为 7.2）；保留其他配置、备份旧文件，同名冲突拒绝覆盖。安装器不改用户级配置。
+
+升级安装建议使用新的解压目录。旧 `data/AnimeGameData/`、`data/rebuilt/` 及其回执不改写，既有客户端连接也不自动切换；已有同名 MCP 项指向旧配置时仍会拒绝覆盖。不要删除旧数据或配置来绕过冲突。
 
 安装器在开始数据准备前检查随源码提供的 [研究 Skill](../../.agents/skills/genshin-lore-research/SKILL.md)。它位于仓库 `.agents/skills/`，由 Codex 在该项目内自动发现，无需写用户全局目录。安装完成会显示其路径；研究时可显式使用 `$genshin-lore-research`。Skill 提供研究方法，不代替 MCP 配置或数据库。
 
