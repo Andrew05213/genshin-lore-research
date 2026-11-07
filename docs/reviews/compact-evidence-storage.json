@@ -745,12 +745,10 @@
   "private_project_accounting": {
     "allocated_bytes": 69732331520,
     "extra_compile_cache_bytes": 12443648,
-    "hard_bytes": 90000000000,
     "hard_headroom_bytes": 20267668480,
     "host_free_bytes": 148793155584,
     "initial_raw_inventory_bytes": 72149819392,
-    "unknown": [],
-    "warning_bytes": 77309411328
+    "unknown": []
   },
   "r0_rowsets": {
     "physical_occurrence": {
@@ -810,5 +808,6 @@
     "skipped": 0,
     "status": "PASS",
     "tests": 681
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

@@ -1,3 +1,5 @@
+> 本页的容量额度属于当时实验主机，公开副本省略具体设置，不构成项目默认限制。
+
 # Research disk staging implementation plan
 
 **Goal:** Replace the Research RAM database with bounded private disk staging, retain failed bytes and sidecars, and durably record oracle and phase diagnostics before compaction/publication.
@@ -24,7 +26,7 @@
 ## Preservation, resources and fresh acceptance
 
 - [ ] Inventory eligible closed working copies and project-owned temporary files. Before removing any, losslessly archive, verify every payload/link/metadata and perform native recovery checks. Keep r9 in place; preserve old seals and failures. Never treat host free space as project quota.
-- [ ] Fresh native allocation inventory must show at least 27,000,000,000 B headroom under hard 90,000,000,000 B, with adequate output/system temporary volume space and memory/pagefile observations. If insufficient, report BLOCKED without expanding quota.
+- [ ] Fresh native allocation inventory must show at least 27,000,000,000 B headroom under hard 本机私有容量额度, with adequate output/system temporary volume space and memory/pagefile observations. If insufficient, report BLOCKED without expanding quota.
 - [ ] Freeze current source and inputs, then invoke one `scripts/build.py --stage all` into a new output with the fixed verified local model. Preserve stdout/stderr/exit/resources/stage receipts; a real failure ends that attempt without code edits or continuation.
 - [ ] Only after full/oracle/vector success run new-config `serve --check`, `check`, `check_dialogue`, three-config mode/citation/pagination/context/continuation checks. Verify exact five tools and all paths against this output.
 - [ ] Deliver explicit PASS/FAIL/NOT_RUN/BLOCKED, exact code/environment, rows/size/SHA/time/peaks and failure limitations. No merge, push, deployment or product promotion.

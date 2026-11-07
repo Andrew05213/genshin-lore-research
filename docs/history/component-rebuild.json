@@ -411,10 +411,9 @@
   "capacity": {
     "allocated_before_bytes": 46263914524,
     "allocated_after_builds_bytes": 49697624122,
-    "hard_limit_bytes": 90000000000,
-    "warning_bytes": 77309411328,
     "hard_headroom_after_builds_bytes": 40302375878,
     "host_free_after_builds_bytes": 167287603200,
     "scope": "repository/worktrees, attributable project tmp, configured source/runtime inputs and semantic model roots; device/inode deduplicated"
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

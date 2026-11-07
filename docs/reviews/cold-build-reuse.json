@@ -162,7 +162,7 @@
             "independent_source_oracle": 5.939924045931548,
             "post_vacuum_independent_oracle": 4.22037632483989,
             "projection_with_input_seal_checks": 1.0962564088404179,
-            "secondary_indexes": 0.000005460809916257858,
+            "secondary_indexes": 5.460809916257858e-06,
             "vacuum": 0.23463172698393464
           },
           "relation_rows": 9937,
@@ -178,7 +178,7 @@
             "independent_source_oracle": 4.1662072371691465,
             "post_vacuum_independent_oracle": 4.1309996522031724,
             "projection_with_input_seal_checks": 1.0729292598553002,
-            "secondary_indexes": 0.0000022980384528636932,
+            "secondary_indexes": 2.2980384528636932e-06,
             "vacuum": 0.22948883520439267
           },
           "relation_rows": 9937,
@@ -809,8 +809,6 @@
   "storage": {
     "before_allocated_bytes": 83043573760,
     "after_allocated_bytes": 87472381952,
-    "hard_limit_bytes": 90000000000,
-    "warning_bytes": 77309411328,
     "remaining_bytes": 2527618048,
     "host_free_bytes": 130616602624,
     "scope": "same project roots, related tmp/cache, device/inode deduplicated; includes retained new test fixtures, archives, dependency environments and independent build outputs",
@@ -819,5 +817,6 @@
   "review": {
     "scope": "actual diff, explicit ownership, independent parse namespaces, exact source oracle/byte equality, cache lifetime, offline Linux/Windows installation, unchanged current/WIP",
     "unmeasured": "Full 35-input build and total pipeline speedup remain NOT_RUN. No remote merge or deployed runtime change."
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

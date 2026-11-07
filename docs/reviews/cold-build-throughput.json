@@ -3119,8 +3119,6 @@
     "before": {
       "logical_bytes": 70429220683,
       "allocated_bytes": 71933558784,
-      "hard_bytes": 90000000000,
-      "warning_bytes": 77309411328,
       "hard_headroom_bytes": 18066441216,
       "host_free_bytes": 147196719104,
       "accounting": "Prior full project scope plus current project temp discovery; lstat blocks including directories, device/inode deduplication, no symlink following.",
@@ -3130,8 +3128,6 @@
     "after_prior_retirement": {
       "logical_bytes": 51698432227,
       "allocated_bytes": 53205135360,
-      "hard_bytes": 90000000000,
-      "warning_bytes": 77309411328,
       "hard_headroom_bytes": 36794864640,
       "host_free_bytes": 165049503744,
       "accounting": "Prior full project scope plus current project temp discovery; lstat blocks including directories, device/inode deduplication, no symlink following.",
@@ -3141,8 +3137,6 @@
     "before_candidate": {
       "logical_bytes": 59217392492,
       "allocated_bytes": 60725129216,
-      "hard_bytes": 90000000000,
-      "warning_bytes": 77309411328,
       "hard_headroom_bytes": 29274870784,
       "host_free_bytes": 157522464768,
       "accounting": "Prior full project scope plus current project temp discovery; lstat blocks including directories, device/inode deduplication, no symlink following.",
@@ -3152,8 +3146,6 @@
     "after_comparison_retirement": {
       "logical_bytes": 71541828478,
       "allocated_bytes": 73051738112,
-      "hard_bytes": 90000000000,
-      "warning_bytes": 77309411328,
       "hard_headroom_bytes": 16948261888,
       "host_free_bytes": 145197993984,
       "accounting": "Prior full project scope plus current project temp discovery; lstat blocks including directories, device/inode deduplication, no symlink following.",
@@ -3309,5 +3301,6 @@
     "Existing ONNX telemetry and FastEmbed mean-pooling warnings retained; pinned backend/model unchanged.",
     "Initial local cleanup helper used a build-only status allowlist for MCP results and rejected before any deletion; switched only the helper to exact MCP success contracts. Production gates unchanged.",
     "Initial private-state comparison used expanded untracked flags instead of the original compact status. Failed diagnostic retained; exact original flags and tracked diff/authority then matched. No WIP restored or ignored."
-  ]
+  ],
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

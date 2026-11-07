@@ -58,10 +58,8 @@
       "host_free_bytes": 166777970688,
       "unknown": []
     },
-    "hard_bytes": 90000000000,
     "new_nonvector_gate": 26000000000,
-    "new_with_vector_gate": 28000000000,
-    "warning_bytes": 77309411328
+    "new_with_vector_gate": 28000000000
   },
   "controlled_codex_cache": {
     "A_builder_median": 151.1879446117673,
@@ -936,5 +934,6 @@
     "historical_contract_gaps": 8,
     "schema_changed": false,
     "source_oracles": "Complete rowsets retained, both index passes completed"
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }
