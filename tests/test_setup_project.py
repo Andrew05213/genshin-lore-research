@@ -62,9 +62,11 @@ def test_windows_path_escaping_is_valid_toml(tmp_path):
 ])
 def test_capacity_does_not_substitute_disk_for_budget(monkeypatch, tmp_path, project_free, disk_free):
     from genshin_lore import batch_space, storage_policy
+    local_limit = setup.PEAK * 3
+    monkeypatch.setattr(storage_policy, 'PROJECT_HARD_LIMIT_BYTES', local_limit)
     monkeypatch.setattr(batch_space, 'broad_inventory', lambda _: SimpleNamespace(
-        allocated_bytes=storage_policy.PROJECT_HARD_LIMIT_BYTES - project_free))
-    monkeypatch.setattr(setup.shutil, 'disk_usage', lambda _: SimpleNamespace(free=disk_free))
+        allocated_bytes=local_limit - project_free))
+    monkeypatch.setattr(storage_policy.shutil, 'disk_usage', lambda _: SimpleNamespace(free=disk_free))
     with pytest.raises(ValueError, match='22 GB'):
         setup.headroom(tmp_path)
 

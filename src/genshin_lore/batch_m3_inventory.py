@@ -449,9 +449,9 @@ def _current_space(repo_root: Path) -> dict[str, Any]:
                 root["allocated_bytes"] -= allocated_removed
                 root["file_count"] -= files_removed
                 break
-    result.update({"status": "available", "gate": "blocker" if result["allocated_bytes"] >= PROJECT_SPACE_LIMIT_BYTES else "pass", "measurement_source": "current_batch_space_inventory", "accounting_roots": [root["path"] for root in result["roots"]], "excluded_derived_outputs": excluded})
-    result["warning"] = result["allocated_bytes"] >= PROJECT_SPACE_WARNING_BYTES
-    result["over_limit"] = result["allocated_bytes"] >= PROJECT_SPACE_LIMIT_BYTES
+    result["over_limit"] = PROJECT_SPACE_LIMIT_BYTES is not None and result["allocated_bytes"] >= PROJECT_SPACE_LIMIT_BYTES
+    result["warning"] = PROJECT_SPACE_WARNING_BYTES is not None and result["allocated_bytes"] >= PROJECT_SPACE_WARNING_BYTES
+    result.update({"status": "available", "gate": "blocker" if result["over_limit"] else "pass", "measurement_source": "current_batch_space_inventory", "accounting_roots": [root["path"] for root in result["roots"]], "excluded_derived_outputs": excluded})
     return result
 
 def _validate_r1_handoff(

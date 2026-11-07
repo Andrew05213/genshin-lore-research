@@ -1,6 +1,6 @@
 """Bounded, ownership-aware project space accounting for batch builds.
 
-The gate protects the current decimal 90 GB working-space budget without treating
+The gate checks real disk space and an optional private quota without treating
 unrelated /tmp content as project data. Its authoritative broad scope counts
 the repository plus convention-named directories and regular files. The old
 directory-only governed scope remains available as a diagnostic. A
@@ -21,9 +21,9 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 
-from .storage_policy import PROJECT_HARD_LIMIT_BYTES
+from .storage_policy import PROJECT_HARD_LIMIT_BYTES, PROJECT_WARNING_BYTES
 PROJECT_SPACE_LIMIT_BYTES = PROJECT_HARD_LIMIT_BYTES
-PROJECT_SPACE_WARNING_BYTES = 72 * 1024**3
+PROJECT_SPACE_WARNING_BYTES = PROJECT_WARNING_BYTES
 OWNERSHIP_MARKER = ".genshin-lore-batch-owner.json"
 OWNERSHIP_KIND = "genshin-lore-batch-temp-root"
 MARKER_VERSION = 2
@@ -53,12 +53,12 @@ class SpaceInventory:
     logical_bytes: int
     allocated_bytes: int
     warning: bool
-    limit_bytes: int = PROJECT_SPACE_LIMIT_BYTES
-    warning_bytes: int = PROJECT_SPACE_WARNING_BYTES
+    limit_bytes: int | None = PROJECT_SPACE_LIMIT_BYTES
+    warning_bytes: int | None = PROJECT_SPACE_WARNING_BYTES
 
     @property
     def over_limit(self) -> bool:
-        return self.allocated_bytes >= self.limit_bytes
+        return self.limit_bytes is not None and self.allocated_bytes >= self.limit_bytes
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -383,7 +383,9 @@ def inventory(
     allocated_total = sum(item.allocated_bytes for item in roots)
     return SpaceInventory(
         repo_root=str(repo), roots=tuple(roots), logical_bytes=logical_total,
-        allocated_bytes=allocated_total, warning=allocated_total >= PROJECT_SPACE_WARNING_BYTES,
+        allocated_bytes=allocated_total,
+        warning=PROJECT_SPACE_WARNING_BYTES is not None and allocated_total >= PROJECT_SPACE_WARNING_BYTES,
+        limit_bytes=PROJECT_SPACE_LIMIT_BYTES, warning_bytes=PROJECT_SPACE_WARNING_BYTES,
     )
 
 
@@ -545,12 +547,12 @@ class ProjectSpaceGate:
             "allocated_bytes": current.allocated_bytes,
             "governed_allocated_bytes": governed.allocated_bytes,
             "projected_total_bytes": projected,
-            "warning": projected >= PROJECT_SPACE_WARNING_BYTES,
+            "warning": PROJECT_SPACE_WARNING_BYTES is not None and projected >= PROJECT_SPACE_WARNING_BYTES,
             "host_available_bytes": host_available,
             "host_projected_headroom_bytes": host_available - projected_bytes,
         }
-        if projected < PROJECT_SPACE_LIMIT_BYTES and projected_bytes <= host_available:
-            event["status"] = "ok" if projected < PROJECT_SPACE_WARNING_BYTES else "warning"
+        if (PROJECT_SPACE_LIMIT_BYTES is None or projected < PROJECT_SPACE_LIMIT_BYTES) and projected_bytes <= host_available:
+            event["status"] = "warning" if event['warning'] else "ok"
             self.events.append(event)
             return current
         removed: list[str] = []
@@ -578,7 +580,7 @@ class ProjectSpaceGate:
         event["projected_total_bytes_after_cleanup"] = projected
         host_available = shutil.disk_usage(self.repo_root).free
         event["host_available_bytes_after_cleanup"] = host_available
-        if projected >= PROJECT_SPACE_LIMIT_BYTES or projected_bytes > host_available:
+        if (PROJECT_SPACE_LIMIT_BYTES is not None and projected >= PROJECT_SPACE_LIMIT_BYTES) or projected_bytes > host_available:
             event["status"] = "blocked"
             self._blocked = True
             self.events.append(event)

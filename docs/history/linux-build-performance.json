@@ -43,12 +43,30 @@
     "raw_ndarray_sha256_all_runs": "35c017d0b1cea851a4e4fab55a3dee7fae43b6d9fc8fd139a4f1fdf01b218c3e",
     "max_absolute_difference_all_runs": 0.0,
     "seconds": {
-      "source_order_threads2_batch64": [16.479332632850856, 16.083717315923423],
-      "source_order_threads4_batch64": [9.403639182914048, 9.128853935748339],
-      "source_order_threads8_batch64": [9.414404506795108, 9.497468898072839],
-      "source_order_threads2_batch32": [13.480585725978017, 13.512524193152785],
-      "length_order_threads2_batch64": [10.356267630122602, 10.350121788214892],
-      "length_order_threads4_batch64": [5.75706806499511, 5.739497886970639]
+      "source_order_threads2_batch64": [
+        16.479332632850856,
+        16.083717315923423
+      ],
+      "source_order_threads4_batch64": [
+        9.403639182914048,
+        9.128853935748339
+      ],
+      "source_order_threads8_batch64": [
+        9.414404506795108,
+        9.497468898072839
+      ],
+      "source_order_threads2_batch32": [
+        13.480585725978017,
+        13.512524193152785
+      ],
+      "length_order_threads2_batch64": [
+        10.356267630122602,
+        10.350121788214892
+      ],
+      "length_order_threads4_batch64": [
+        5.75706806499511,
+        5.739497886970639
+      ]
     },
     "baseline_median_seconds": 16.28152497438714,
     "adopted_median_seconds": 5.748282975982875,
@@ -91,9 +109,21 @@
   },
   "discarded_index_experiments": {
     "all_complete_source_oracles_and_full_logical_rowsets": "PASS",
-    "baseline": {"build_and_memory_oracle_seconds": 415.5192213859409, "including_disk_oracle_seconds": 605.5438325339928, "max_rss_kib": 14408160},
-    "vacuum_into": {"build_and_memory_oracle_seconds": 523.7621462219395, "including_disk_oracle_seconds": 704.4226102670655, "max_rss_kib": 8318740},
-    "direct_backup": {"build_and_memory_oracle_seconds": 506.4400268322788, "including_disk_oracle_seconds": 703.0319031313993, "max_rss_kib": 8318992},
+    "baseline": {
+      "build_and_memory_oracle_seconds": 415.5192213859409,
+      "including_disk_oracle_seconds": 605.5438325339928,
+      "max_rss_kib": 14408160
+    },
+    "vacuum_into": {
+      "build_and_memory_oracle_seconds": 523.7621462219395,
+      "including_disk_oracle_seconds": 704.4226102670655,
+      "max_rss_kib": 8318740
+    },
+    "direct_backup": {
+      "build_and_memory_oracle_seconds": 506.4400268322788,
+      "including_disk_oracle_seconds": 703.0319031313993,
+      "max_rss_kib": 8318992
+    },
     "decision": "REVERTED: less memory but slower; final research_dataset.py unchanged from baseline",
     "whole_pipeline_memory_improvement_claimed": false,
     "three_owned_closed_duplicate_trial_indexes_retired_after_equivalence": true,
@@ -122,8 +152,6 @@
     "accounting": "inclusive project roots and related tmp/worktrees/caches; allocated blocks; device/inode deduplicated",
     "before_allocated_bytes": 80221032448,
     "after_allocated_bytes": 81190805504,
-    "hard_bytes": 90000000000,
-    "warning_bytes": 77309411328,
     "after_hard_headroom_bytes": 8809194496,
     "after_host_free_bytes": 129146007552,
     "unknown_count": 0,
@@ -145,5 +173,6 @@
       "runtime-checks.json": "0437558603ab303ac3a09de2dd221feab86e51a37ff94ff55f4636fb0c986f00",
       "pytest-final-ci.stdout.log": "1741cca4d94a087d92c85702c93492268491da3b68eb693bcb483df544869a42"
     }
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

@@ -995,8 +995,6 @@
   "capacity": {
     "logical_bytes": 83578490365,
     "allocated_bytes": 86093791232,
-    "hard": 90000000000,
-    "warning": 77309411328,
     "hard_headroom": 3906208768,
     "host_free": 121809219584,
     "unknown": []
@@ -1649,5 +1647,6 @@
         "sha256": "136392afe32e413c0485772c98e57b0835e60bfac5f842126dbd56a2dc23a5eb"
       }
     ]
-  }
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
 }

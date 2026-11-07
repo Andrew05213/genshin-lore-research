@@ -45,7 +45,7 @@ def build(family, source, output, accounting_root, *, scope_path=None):
     allocated = sum(_walk_bytes(p, seen)[1] for p in sorted(roots, key=lambda p: (len(p.parts), str(p))))
     host_free = shutil.disk_usage(output.parent).free
     projected = 3 * 1024**3
-    if allocated + projected >= PROJECT_SPACE_LIMIT_BYTES or host_free < projected:
+    if (PROJECT_SPACE_LIMIT_BYTES is not None and allocated + projected >= PROJECT_SPACE_LIMIT_BYTES) or host_free < projected:
         raise ValueError("inclusive source/model project-space preflight")
     output.parent.mkdir(parents=True, exist_ok=True)
     with Path(str(output) + ".lock").open("a") as lock:

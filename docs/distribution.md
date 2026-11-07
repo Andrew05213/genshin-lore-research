@@ -12,6 +12,7 @@
 - embedding、向量索引和模型权重。
 - 历史会话正文、构建运行记录与部署验收材料。
 - 凭据、客户端个人配置和部署路径绑定。
+- 机器专属容量额度及 `GENSHIN_LORE_STORAGE_POLICY` 指向的私有配置。
 
 [初始源码清单](history/initial-source-files.json)（原名 `PUBLIC_SOURCE_FILES.json`）保存最初源码归档的文件 size/SHA，仅用于该归档的完整性核对，不是后续 Git 提交的当前文件 seal。后续代码版本按 Git commit 定位。
 

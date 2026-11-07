@@ -1,3 +1,5 @@
+> 本页的容量额度属于当时实验主机，公开副本省略具体设置，不构成项目默认限制。
+
 # Build inference and Research batching implementation plan
 
 **Goal:** Reduce repeated inference and SQLite calls while preserving every physical source occurrence and the existing independent acceptance gates.
@@ -26,7 +28,7 @@
 - [ ] Freeze the implementation only after both directed A/B checks pass and demonstrate useful performance. Run all collected source tests, native ANN path tests, compile, six command help checks, packaging, Markdown, license and locked dependency checks. Keep actual symlink tests and their required Windows privileges.
 - [ ] Rebuild real Activity and NPC components and run their independent source verifiers. Preserve both successes and failures.
 - [ ] Replace eligible closed working copies only with self-contained lossless archives whose complete decompressed member SHA values match the original seal manifests. Preserve the original reports and all r9 files in place.
-- [ ] Measure project source, both upstream checkouts, environment, model, archives, outputs and project temporary files using the existing Windows accounting method. Keep hard 90,000,000,000 B, warning 77,309,411,328 B and at least 27,000,000,000 B new-build headroom.
+- [ ] Measure project source, both upstream checkouts, environment, model, archives, outputs and project temporary files using the existing Windows accounting method. Keep hard 本机私有容量额度, warning 本机私有预警额度 and at least 27,000,000,000 B new-build headroom.
 - [ ] Start exactly one fresh `scripts/build.py --stage all` with both fixed sources and the explicitly verified local model cache. Record stdout, stderr, actual exit code, stage receipts, time and resource observations. Stop on the first failure and retain its complete scene.
 - [ ] After all stages and independent oracles pass, run `scripts/serve.py --check`, `scripts/check.py`, `scripts/check_dialogue.py` and actual literal/lexical/semantic/hybrid requests against only the new configurations.
 - [ ] Deliver PASS/FAIL/NOT_RUN/BLOCKED with original evidence locations, artifact sizes/SHA, versions, capacity and performance. Do not merge, deploy or promote a release.

@@ -33,7 +33,9 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 ## 容量
 
-先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
+公开源码不设置固定项目容量上限。默认按输出卷真实空闲空间扣除1 GB余量，检查本次构建的预计新增空间；系统临时卷和依赖下载也须有足够空间。
+
+可用 `--available-allocated-bytes` 显式给本次新增写入设定更小预算。若开发机器另有项目额度，将 `hard_limit_bytes`、`warning_bytes` 写入未跟踪的私有 JSON（正整数字节或 `null`），通过环境变量 `GENSHIN_LORE_STORAGE_POLICY` 指定其绝对路径。未选择私有文件时不启用额度；已选择但缺失或格式错误时拒绝继续。私有 hard 余量按项目 allocated bytes 及归属临时路径去重统计，不能用磁盘空闲代替。安装器、构建器和子进程继承相同私有设置；文件与机器专属数值不得提交 Git 或打包。
 
 默认含向量的全链路预检要求 22 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 20 GB。默认使用文件级身份归一化的 R0 storage v2，并省去索引 VACUUM 的第二份映像；显式 `--compact-index` 保留原压缩模式，预检分别为 28/26 GB。真实来源对照及峰值口径见 [存储布局记录](../compact-evidence-storage.md)。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。并行模式须另核对实际内存与临时空间峰值；磁盘预检不等于 RAM 上限。
 
@@ -72,7 +74,6 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
   --historical-source data/AnimeGameData-history \
   --output-root data/rebuilt \
   --model-cache data/model-cache \
-  --available-allocated-bytes HEADROOM_BYTES \
   --stage all
 ```
 

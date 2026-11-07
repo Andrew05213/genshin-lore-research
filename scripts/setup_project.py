@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tomllib
@@ -92,16 +91,12 @@ def configure_codex(root, python, config):
 
 
 def headroom(root):
-    # Reuse the same ownership-aware accounting and policy as the builders.
-    from genshin_lore.batch_space import broad_inventory
-    from genshin_lore.storage_policy import PROJECT_HARD_LIMIT_BYTES
+    from genshin_lore.storage_policy import available_headroom
 
-    current = broad_inventory(root)
-    remaining = PROJECT_HARD_LIMIT_BYTES - current.allocated_bytes
-    free = shutil.disk_usage(root).free
-    print(f'Project allocated: {current.allocated_bytes}; budget remaining: {remaining}; disk free: {free}', flush=True)
-    if remaining < PEAK or free < PEAK + 1_000_000_000:
-        raise ValueError('Full build requires 22 GB project headroom and 23 GB disk free after setup inputs. No data deleted.')
+    remaining = available_headroom(root, root)
+    print(f'Available build storage after disk reserve and optional local policy: {remaining}', flush=True)
+    if remaining < PEAK:
+        raise ValueError('Full build requires 22 GB additional storage plus 1 GB disk reserve after setup inputs. Check disk free or an explicitly selected local policy. No data deleted.')
     return remaining
 
 

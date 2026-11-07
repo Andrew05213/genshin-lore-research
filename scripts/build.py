@@ -1704,8 +1704,8 @@ def main():
     parser.add_argument(
         "--available-allocated-bytes",
         type=int,
-        default=0,
-        help="Fresh project hard-limit headroom, NOT host free space; required for all/index",
+        default=None,
+        help="Optional budget for additional writes; defaults to output disk free minus reserve, capped by any explicit private storage policy",
     )
     args = parser.parse_args()
     if args.embedding_threads is not None and args.embedding_threads <= 0:
@@ -1756,11 +1756,15 @@ def main():
         parent = args.output_root.resolve()
         while not parent.exists():
             parent = parent.parent
+        from genshin_lore.storage_policy import available_headroom
+        args.available_allocated_bytes = available_headroom(
+            ROOT, args.output_root, explicit_budget=args.available_allocated_bytes,
+        )
         if (
             args.available_allocated_bytes < peak
             or shutil.disk_usage(parent).free < peak + 1_000_000_000
         ):
-            raise ValueError("insufficient freshly measured project/host peak headroom")
+            raise ValueError("insufficient freshly measured storage peak headroom (disk free or optional local budget)")
     if with_semantic:
         if args.model_cache is None:
             parser.error(
