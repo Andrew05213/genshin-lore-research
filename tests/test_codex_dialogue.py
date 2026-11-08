@@ -94,6 +94,46 @@ def test_npc_to_source_labelled_speeches_with_titles_and_neighbours():
     assert result['partial'] and not result['corpus_complete']
 
 
+def test_container_title_lookup_preserves_id_order_and_exact_source_checks(monkeypatch):
+    from genshin_lore.dialogue.codex import CodexDialogue
+    q, src, ref = populated_fixture()
+    # Physical ordinal order deliberately differs from published title ID order.
+    q.db.execute("UPDATE research_text SET ordinal=100-id WHERE owner_field LIKE '%Title'")
+    optimized = q.read(q.corpus_ref, ref, view='dialogue', limit=2)
+
+    def legacy_titles(self, parent, child, locale):
+        section = child['source_pointer'].rsplit('/', 2)[0]
+        result = []
+        for row in self.q.db.execute('SELECT * FROM research_text WHERE container_id=? AND locale=? '
+                "AND owner_field IN ('MainQuestTitle','ChapterTitle','SubQuestTitle') ORDER BY id",
+                (parent['id'], locale)):
+            slot = self.slot(parent, row)
+            pointer = slot['source_pointer']
+            if (slot['source_label'] != 'SubQuestTitle' and pointer.count('/') == 1
+                    or slot['source_label'] == 'SubQuestTitle' and pointer.rsplit('/', 1)[0] == section):
+                result.append(self.text(parent, row))
+        return result
+
+    with monkeypatch.context() as patch:
+        patch.setattr(CodexDialogue, 'titles', legacy_titles)
+        assert q.read(q.corpus_ref, ref, view='dialogue', limit=2) == optimized
+    assert [x['owner_field'] for x in optimized['nodes'][0]['source_context']['titles']] == [
+        'MainQuestTitle', 'SubQuestTitle']
+    # A successful prior read does not grant a cache exemption from source checks.
+    src.execute("UPDATE codex_text_slot SET raw_hash='corrupt' WHERE source_label='MainQuestTitle'")
+    with pytest.raises(ValueError, match='source label/hash'):
+        q.read(q.corpus_ref, ref, view='dialogue', limit=2)
+
+
+def test_title_query_uses_the_existing_container_index():
+    q, _, ref = populated_fixture()
+    statements=[];q.db.set_trace_callback(statements.append)
+    q.read(q.corpus_ref, ref, view='dialogue', limit=2)
+    sql=next(x for x in statements if 'owner_field IN' in x and 'MainQuestTitle' in x)
+    plan=q.db.execute('EXPLAIN QUERY PLAN '+sql).fetchall()
+    assert any('research_text_container' in row[3] for row in plan)
+
+
 def test_authored_text_type_is_read_without_relabelling_old_source_slots():
     q, _, ref = populated_fixture(source_version='7.2')
     page = q.read(q.corpus_ref, ref, view='dialogue', limit=2)

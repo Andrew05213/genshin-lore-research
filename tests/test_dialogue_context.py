@@ -2,6 +2,8 @@
 import hashlib
 import json
 import sqlite3
+import threading
+from collections import OrderedDict
 from pathlib import Path
 
 import pytest
@@ -41,6 +43,8 @@ def fixture(dialog_bodies=None):
     q._source = lambda key: sources[key]
     q.sources = sources
     q.coverage = []
+    q._scope_source_cache = OrderedDict()
+    q.source_lock = threading.RLock()
 
     def physical(key, ordinal, native, original):
         src = sources[key]; raw = json.dumps(original, ensure_ascii=False, sort_keys=True)
