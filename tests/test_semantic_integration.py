@@ -1,16 +1,76 @@
 """Combined Linux scheduling, inference reuse and portable ANN transport."""
 import sqlite3
 import sys
+from collections import Counter
 from types import SimpleNamespace
 
 import numpy as np
 import pytest
 
-from genshin_lore import hnsw_io
+from genshin_lore import hnsw_io, semantic_discovery
 from genshin_lore.semantic_discovery import SemanticDiscovery, sha256_file
 from scripts.builders import semantic as builder
 from scripts.validators.semantic import verify
 from test_semantic_build import FixtureEmbedding, FixtureIndex, inputs, synthetic_model
+
+
+@pytest.fixture
+def sealed_model_cache(tmp_path):
+    cache = tmp_path / "模型 cache"
+    model = cache / "model"
+    (model / "nested").mkdir(parents=True)
+    (model / "Z-weights.bin").write_bytes(b"synthetic weights")
+    (model / "nested" / "config.json").write_bytes(b"{}")
+    (cache / "receipt.json").write_bytes(b"outside model directory")
+    return cache, {
+        "path_relative": "model",
+        "cache_tree_sha256": semantic_discovery.tree_sha256(cache),
+        "tree_sha256": semantic_discovery.tree_sha256(model),
+    }
+
+
+def test_model_cache_verification_hashes_overlapping_files_once(sealed_model_cache, monkeypatch):
+    cache, contract = sealed_model_cache
+    calls = Counter()
+
+    def count_hash(path):
+        calls[path.relative_to(cache).as_posix()] += 1
+        return sha256_file(path)
+
+    monkeypatch.setattr(semantic_discovery, "sha256_file", count_hash)
+    for expected_reads in (1, 2):
+        path, _ = semantic_discovery._verify_model_cache(cache, contract)
+        assert path == (cache / "model").resolve()
+        assert calls == {
+            "model/Z-weights.bin": expected_reads,
+            "model/nested/config.json": expected_reads,
+            "receipt.json": expected_reads,
+        }
+
+
+@pytest.mark.parametrize("field, message", [
+    ("cache_tree_sha256", "semantic model identity mismatch"),
+    ("tree_sha256", "semantic model files identity mismatch"),
+])
+def test_model_cache_verification_checks_both_seals(sealed_model_cache, field, message):
+    cache, contract = sealed_model_cache
+    contract[field] = "0" * 64
+    with pytest.raises(semantic_discovery.SemanticUnavailable, match=message):
+        semantic_discovery._verify_model_cache(cache, contract)
+
+
+def test_model_cache_drift_after_read_is_rejected(sealed_model_cache, monkeypatch):
+    cache, contract = sealed_model_cache
+
+    def change_weight_after_hash(path):
+        result = sha256_file(path)
+        if path.name == "Z-weights.bin":
+            path.write_bytes(b"changed after verification began")
+        return result
+
+    monkeypatch.setattr(semantic_discovery, "sha256_file", change_weight_after_hash)
+    with pytest.raises(semantic_discovery.SemanticUnavailable, match="changed during verification"):
+        semantic_discovery._verify_model_cache(cache, contract)
 
 
 @pytest.mark.parametrize('platform,expected_threads', [('linux', 4), ('win32', 2)])
