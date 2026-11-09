@@ -22,7 +22,7 @@ description: Research Genshin Impact lore with the configured evidence MCP and w
 - 通过 `read_evidence` 读取材料，沿工具返回的关系和定位信息继续；不按编号接近、文本相似或同 ID 猜人物归属、任务关联或剧情顺序。
 - 人物/NPC 姓名命中可用 `read_evidence(view="dialogue", locale="CHS")` 查来源标注的发言候选。普通调查的对白第一页从 `detail="reading", limit=3` 开始，按需沿 cursor 继续。用户需要较大范围时，可在第一次读取前选合适的页长。区分“提到了此人”和“来源将此人标为说话者”，同节点姓名标注仍不证明唯一逻辑人物。
 - 需要下一页时，直接使用 `reading_actions` 中返回的下一页参数。只有 `next_cursor` 时，沿用同一 anchor/ref、limit、locale、detail。`limit` 请求的是主节点，按 `page_info` 判断实际交付量和停止原因。沿现有入口继续，避免重新搜同名或重开第一页。
-- `detail="reading"` 提供正文、标题、说话者标注及邻居定位。选中一段后，用其 `context_action` 补需要的上下文。Codex 返回同 section 前后文，Dialog/Talk 返回当前及有界后继。需要 Dialog/Talk 前文时可走 `predecessor_action`，再读取选中的目标。需要邻居正文时实际读取 locator 或取 `detail="full"`，检查引用不能代替阅读。
+- `detail="reading"` 提供正文、标题、说话者标注及邻居定位。补上下文时，原样执行已读页所选节点的 `context_action`，包括它返回的工具名和参数。对白视图通过来源连接取上下文，`before` 和 `after` 保持为 0。Codex 返回同 section 前后文，Dialog/Talk 返回当前及有界后继。需要 Dialog/Talk 前文时可走 `predecessor_action`，再读取选中的目标。需要邻居正文时实际读取 locator 或取 `detail="full"`，检查引用不能代替阅读。
 - `dialogue_predecessor` 仅适用于声明支持的 Dialog/Talk 来源，不用于 NPC 姓名或 Codex 正文。Codex 依其来源 section 和续页入口读取；图遍历、分支连接或物理排列均不证明剧情播放顺序。
 - Book/Story 长正文沿当前接口返回的 cursor、continuation 或范围定位按需读取；不同接口参数不可混用。分别记录读过的篇章、物理行/字符范围及是否到达当前文件/记录 EOF，不能由一篇读完推断全部故事或整库完整。
 
