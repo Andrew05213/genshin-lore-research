@@ -129,9 +129,13 @@ class CodexDialogue:
     def titles(self, parent, child, locale):
         section = child['source_pointer'].rsplit('/', 2)[0]
         result = []
-        for row in self.q.db.execute('SELECT * FROM research_text WHERE container_id=? AND locale=? '
-            "AND owner_field IN ('MainQuestTitle','ChapterTitle','SubQuestTitle') ORDER BY id",
-            (parent['id'], locale)):
+        # Match the existing (container_id, ordinal, id) index instead of
+        # walking every text in the locale to satisfy ORDER BY id. Restore
+        # the original presentation order before resolving each source slot.
+        rows = self.q.db.execute('SELECT * FROM research_text WHERE container_id=? AND locale=? '
+            "AND owner_field IN ('MainQuestTitle','ChapterTitle','SubQuestTitle') ORDER BY ordinal,id",
+            (parent['id'], locale))
+        for row in sorted(rows, key=lambda row: row['id']):
             slot = self.slot(parent, row)
             pointer = slot['source_pointer']
             if (slot['source_label'] != 'SubQuestTitle' and pointer.count('/') == 1

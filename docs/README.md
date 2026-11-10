@@ -30,6 +30,7 @@
 | [Research 阅读展示](reviews/research-reading-experience.md) | 正文优先面板、紧凑对白分页、短引用与实际来源核对范围 |
 | [持久来源卡](reviews/persistent-research-sources.md) | 私有 Markdown/JSON 引用交付、默认发现减载、人物分组和实际验证边界 |
 | [Research 响应精简](reviews/compact-research-context.md) | 搜索/导航短定位、实际正文与引用等价、响应字节对照及客户端边界 |
+| [调查查询性能](history/research-query-performance.md) | 标题查询、连接内覆盖缓存、原生 Windows 同条件 MCP A/B 与验证边界 |
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |
