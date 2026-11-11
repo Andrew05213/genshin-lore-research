@@ -8,6 +8,7 @@
 | [Linux / Windows / 人物对白整合](reviews/linux-windows-integration.md) | 两个分支的保留范围、冲突处理、实际补测及未执行的整库验证 |
 | [数据重建指南](guides/building-components.md) | 环境、固定上游源码、组件构建、输出、对照与排错 |
 | [完整有界重建](guides/building-dataset.md) | 全部输入、统一索引、容量、运行配置与 MCP 启动 |
+| [7.2 迁移记录](reviews/migration-7.2.md) | 独立固定来源、35 输入迁移、来源变化与实际验证边界 |
 | [向量构建](guides/building-semantic.md) | 默认完整构建、固定模型、独立 overlay、核验与显式基础模式 |
 | [完整冷构建性能](cold-build-throughput.md) | 默认向量单命令对照、固定阶段重叠、token 调度、完整来源/向量核对与资源代价 |
 | [关键路径后续优化](build-critical-path.md) | 同期 33:54 → 32:27、Codex 有限重叠、批量查询索引与未达到的 30 分钟目标 |
@@ -30,6 +31,7 @@
 | [正文优先排序试用](reviews/body-first-search.md) | 取页前排序、同文延后、版本绑定 cursor 和八词实际 MCP 对照 |
 | [持久来源卡](reviews/persistent-research-sources.md) | 私有 Markdown/JSON 引用交付、默认发现减载、人物分组和实际验证边界 |
 | [Research 响应精简](reviews/compact-research-context.md) | 搜索/导航短定位、实际正文与引用等价、响应字节对照及客户端边界 |
+| [调查查询性能](history/research-query-performance.md) | 标题查询、连接内覆盖缓存、原生 Windows 同条件 MCP A/B 与验证边界 |
 | [对白阅读验证](history/dialogue-reading.md) | 合成测试、真实来源、MCP 和模型检查的分别状态 |
 | [目录与许可整理验证](history/repository-layout.md) | 命令迁移、测试、真实小样本构建与打包检查 |
 | [开发指南](development.md) | 开发安装、测试、修改范围和文档维护 |

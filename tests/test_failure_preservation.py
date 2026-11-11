@@ -79,7 +79,7 @@ def test_current_projected_builders_preserve_database_and_sidecar(
     source = tmp_path/'source'
     source.mkdir()
     scope = tmp_path/'scope.json'
-    scope.write_text(json.dumps({'files': [], 'accepted_inputs': {}}))
+    scope.write_text(json.dumps({'files': [], 'accepted_inputs': {}, 'snapshot_id': 'anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'}))
     rows = {table: [] for table in getattr(module, 'TABLES', ())}
     projected = (rows, {}) if arity == 2 else ({}, rows, {})
     monkeypatch.setattr(module, projector, lambda *a, **k: projected)
@@ -127,7 +127,7 @@ def test_m3_real_output_initialization_preserves_failed_sqlite(tmp_path, schema_
 def test_quest_builder_preserves_failed_private_image(tmp_path, monkeypatch, schema_failure):
     from genshin_lore import quest_talk_7_1_build as module
     scope = tmp_path/'scope.json'
-    scope.write_text('{}')
+    scope.write_text(json.dumps({'snapshot_id': module.SNAPSHOT}))
     # Only the fixed-source preflight is substituted. The real constructor,
     # full SQL schema and its failure/finally path execute before source reads.
     monkeypatch.setattr(module, '_preflight', lambda *a: ({}, ['q']*4808, ['t']*59853))
@@ -141,7 +141,7 @@ def test_quest_builder_preserves_failed_private_image(tmp_path, monkeypatch, sch
 
 def test_document_builder_preserves_failed_private_image(tmp_path, monkeypatch, schema_failure):
     from genshin_lore import document_7_1_build as module
-    scope = {'document_primary_rows': 0, 'document_source_row_counts': {module.LOCALIZATION: 0}}
+    scope = {'snapshot_id': module.SNAPSHOT, 'document_primary_rows': 0, 'document_source_row_counts': {module.LOCALIZATION: 0}}
     monkeypatch.setattr(module, 'qualify', lambda *a: (tmp_path, scope, b'{}', {}, {}))
     monkeypatch.setattr(module, 'array_records', lambda *a: iter(()))
     monkeypatch.setattr(module, 'pairs', lambda *a: iter(()))
@@ -155,7 +155,7 @@ def test_document_builder_preserves_failed_private_image(tmp_path, monkeypatch, 
 def test_bulk_builder_preserves_failed_database(tmp_path, monkeypatch, schema_failure):
     from genshin_lore import native_bulk_7_1_build as module
     rows = {table: [] for table in module.TABLES}
-    monkeypatch.setattr(module, '_qualify', lambda *a: ({'snapshot_id': 'synthetic'}, {}, 'p', 's', 'r'))
+    monkeypatch.setattr(module, '_qualify', lambda *a: ({'snapshot_id': 'anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'}, {}, 'p', 's', 'r'))
     monkeypatch.setattr(module, '_projection', lambda *a: (rows, {}, {}))
     schema_failure.install(module)
     with pytest.raises(InjectedFailure) as raised:

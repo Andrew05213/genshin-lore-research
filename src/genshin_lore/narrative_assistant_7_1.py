@@ -42,16 +42,18 @@ CAPABILITY_GROUPS = {
 }
 
 TITLE_FIELDS = {"titleTextMapHash", "nameTextMapHash", "storyTitleTextMapHash", "voiceTitleTextMapHash"}
-PHYSICAL_STATUSES = {"PHYSICAL_CAPABILITY_ACCEPTED", "RAW_ONLY_ACCEPTED"}
+PHYSICAL_STATUSES = {"PHYSICAL_CAPABILITY_ACCEPTED", "RAW_ONLY_ACCEPTED",
+                     "SOURCE_VERIFIED_PHYSICAL_CAPABILITY", "SOURCE_VERIFIED_RAW_CAPABILITY"}
 DIRECT_TEXT_STATES = {"source_exact", "resolved_unique", "resolved_main", "resolved_medium",
                       "unique_main", "unique_medium"}
-FORBIDDEN_CLAIM_RE = re.compile(r"(首次实装|7\.1新增|7\.0新增|语义顺序|剧情发生顺序|唯一拥有|同一个逻辑实体)")
+FORBIDDEN_CLAIM_RE = re.compile(r"(首次实装|\d+\.\d+新增|语义顺序|剧情发生顺序|唯一拥有|同一个逻辑实体)")
 VERSION_RE = re.compile(r"(?<!\d)(\d+\.\d+)(?!\d)")
 AUTHORED_FIELDS = TITLE_FIELDS | {"descTextMapHash", "unlockDescTextMapHash", "contentTextMapHash",
                                  "talkContentTextMapHash", "talkTitleTextMapHash", "talkRoleNameTextMapHash",
                                  "storyContextTextMapHash", "voiceFileTextTextMapHash", "senderTextMapHash"}
 SNAPSHOT_LOCAL_AUTHORED_CONTRACTS = {
     "character-7.1-lore-successor-v1", "character-7.1-voice-successor-v1",
+    "character-7.2-lore-successor-v1", "character-7.2-voice-successor-v1",
 }
 
 
@@ -89,20 +91,20 @@ def _normalize_text_proof(payload, parent, candidate, role, *, contract, candida
             "field_continuity_basis": continuity_basis}
 
 
-def _version_scope(question):
+def _version_scope(question, version="7.1"):
     versions = set(VERSION_RE.findall(question))
     if len(versions) > 1 or (versions and re.search(
             r"(?:相比|对比|比较)(?:以前|之前|旧版|其他版本)|(?:以前|之前|旧版|其他版本)(?:相比|对比|比较)", question)):
         return "unsupported_comparison", "Cross-version comparison requires a separate release/history authority."
-    if versions and versions != {"7.1"}:
-        return "unsupported_version", "This entry is pinned to 7.1, not the requested version."
+    if versions and versions != {version}:
+        return "unsupported_version", f"This entry is pinned to {version}, not the requested version."
     if re.search(r"新增|首次|初次实装|是不是.*新", question):
         return "unsupported_release_attribution", "Snapshot presence cannot prove release novelty; independent release/history evidence is required."
     if (re.search(r"比较|对比|有何不同|有什么不同|有何差异|有什么差异|区别|差异", question)
             and (re.search(r"(?:和|与|跟)", question) or re.search(r"两个|两名|二人", question))):
         return "unsupported_multi_subject", "This bounded planner cannot compare multiple entities; no entity is selected."
-    return "supported", ("Explicit 7.1 snapshot requested." if versions else
-                         "No version specified; defaulting explicitly to the pinned 7.1 snapshot.")
+    return "supported", (f"Explicit {version} snapshot requested." if versions else
+                         f"No version specified; defaulting explicitly to the pinned {version} snapshot.")
 
 
 def _intent(question):
@@ -155,12 +157,15 @@ def _subject(question, explicit):
 class CapabilityPlanner71:
     def __init__(self, registry):
         self.registry = registry
+        from .source_versions import source_pin
+        self.snapshot = registry.get("snapshot", SNAPSHOT)
+        self.version, _, _ = source_pin(self.snapshot)
         self.entries = {entry["capability_id"]: entry for entry in registry["capabilities"]}
 
     def plan(self, question, *, subject=None):
         if not isinstance(question, str) or not question.strip():
             raise ValueError("nonempty question required")
-        version_status, version_note = _version_scope(question)
+        version_status, version_note = _version_scope(question, self.version)
         intent = _intent(question)
         term, basis = _subject(question.strip(), subject)
         if version_status == "unsupported_multi_subject":
@@ -185,7 +190,7 @@ class CapabilityPlanner71:
                 "version_status": version_status, "version_note": version_note,
                 "planned_capabilities": declared, "search_capabilities": search,
                 "unknown_before_search": unknown, "product_accepted": False,
-                "research_corpus_accepted": False, "snapshot": SNAPSHOT,
+                "research_corpus_accepted": False, "snapshot": self.snapshot,
                 "partial": True, "no_global_search": True}
 
 
@@ -440,6 +445,8 @@ class NarrativeAssistant71:
         context = read["source_context"]
         relation_scope = {"direct": "direct_occurrence", "seed": "seeded_unverified_context",
                           "follow": "physical_candidate_navigation"}[origin]
+        if context.get('title_resolution_status') == 'candidate':
+            relation_scope = 'physical_candidate_navigation'
         proof_record = {"capability_status": entry["status"], "relation_scope_status": relation_scope}
         for index, item in enumerate(texts):
             item["observation_index"] = index

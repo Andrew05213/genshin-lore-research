@@ -90,7 +90,7 @@ def test_nonvector_full_capacity_accepts_exact_policy_boundary(tmp_path,monkeypa
                         proof['old_source_commit']+'\n' if 'rev-parse' in args else '')
     monkeypatch.setattr(driver.shutil,'disk_usage',lambda _:SimpleNamespace(free=100_000_000_000))
     monkeypatch.setattr(driver,'allocated',lambda _:0)
-    def admitted(*args):raise RuntimeError('admitted past capacity gate')
+    def admitted(*args, **kwargs):raise RuntimeError('admitted past capacity gate')
     monkeypatch.setattr(driver,'Rebuild',admitted)
     args=['rebuild','--source','missing',
         '--historical-source','synthetic-history','--output-root',str(tmp_path/'absent'),
@@ -157,7 +157,15 @@ def test_capacity_deduplicates_nested_roots_hardlinks_without_following_symlinks
     import os
     child=tmp_path/'data';child.mkdir()
     file=child/'artifact';file.write_bytes(b'synthetic' * 1000)
-    os.link(file,child/'same-inode');link=child/'symlink';link.symlink_to(file)
+    os.link(file,child/'same-inode')
+    assert driver.allocated((tmp_path,child)) == (getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)
+    link=child/'symlink'
+    try:
+        link.symlink_to(file)
+    except OSError as exc:
+        if getattr(exc, 'winerror', None) == 1314:
+            pytest.skip('Windows account lacks symbolic-link creation privilege; hardlink dedup checked')
+        raise
     stat=link.lstat()
     expected=(getattr(file.stat(),'st_blocks',0)*512 or file.stat().st_size)+(getattr(stat,'st_blocks',0)*512 or stat.st_size)
     assert driver.allocated((tmp_path,child))==expected

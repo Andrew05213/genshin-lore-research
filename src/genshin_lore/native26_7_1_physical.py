@@ -16,9 +16,9 @@ SCHEMA = REPO / 'schemas/native21-7.1-projection-v1.sql'
 HISTORY = REPO / 'manifests/native-archive/high-value-open-selection.json'
 EVENT16 = REPO / 'manifests/event-narrative-7.1/component-16-physical-runtime-v1.json'
 QUEST_TALK = REPO / 'manifests/quest-talk-7.1/standalone-candidate.json'
-def dependency_manifests(metadata_root=None):
+def dependency_manifests(metadata_root=None, source_version="7.1"):
     base = Path(metadata_root) if metadata_root is not None else REPO
-    return base / EVENT16.relative_to(REPO), base / QUEST_TALK.relative_to(REPO)
+    return base / str(EVENT16.relative_to(REPO)).replace("7.1",source_version), base / str(QUEST_TALK.relative_to(REPO)).replace("7.1",source_version)
 
 TABLES = ('row_occurrence', 'text_slot', 'text_candidate', 'relation_locator', 'relation_candidate')
 
@@ -53,9 +53,11 @@ def leaf_values(row, field, shape='scalar'):
 
 
 def _accepted(scope, metadata_root=None):
-    event_manifest, talk_manifest = dependency_manifests(metadata_root)
+    event_manifest, talk_manifest = dependency_manifests(metadata_root,scope['snapshot_id'].split(':')[1])
     event = json.loads(event_manifest.read_text())
     talk = json.loads(talk_manifest.read_text())
+    if scope['snapshot_id'].split(':')[1]=='7.2' and (event.get('source_snapshot')!=scope['snapshot_id'] or talk.get('source_snapshot')!=scope['snapshot_id']):
+        raise ValueError('Native26 cross-snapshot dependency')
     talk_artifact = Path(talk['local_artifact_path'])
     event_path = Path(event['artifact']['path_machine_local'])
     if (sha(event_manifest) != scope['event16_manifest_sha256'] or
@@ -78,7 +80,7 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
     expected_paths = [item['path'] for item in historical['sources']]
     expected_files = expected_paths + [historical['textmaps'][locale][tier]
                                        for locale in historical['languages'] for tier in ('main', 'medium')]
-    if (scope['contract'] != 'native26-7.1-physical-projection-scope-v1'
+    if (scope['contract'] != 'native26-7.1-physical-projection-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or sha(HISTORY) != scope['historical_selection_sha256']
             or len(scope['sources']) != 91
             or [source['path'] for source in scope['sources']] != expected_paths
@@ -101,7 +103,7 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
     implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
                       (Path(__file__), SCHEMA, HISTORY)}
     implementation.update({original.relative_to(REPO).as_posix(): sha(actual)
-                           for original, actual in zip((EVENT16, QUEST_TALK), dependency_manifests(metadata_root))})
+                           for original, actual in zip((EVENT16, QUEST_TALK), dependency_manifests(metadata_root,scope['snapshot_id'].split(':')[1]))})
     parser = oid('parser', implementation)
     run = oid('run', parser, sha(scope_path), scope['snapshot_id'])
     event_reuse = {item['source_pointer']: item for item in scope['event16_reuse_targets']}
@@ -151,7 +153,7 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
             for relation in other.get('relations', ()):
                 if relation['resolution'] == 'local' and path in relation['target_sources']:
                     local_targets[(path, relation['target_key'])].add(relation['relation_kind'])
-    if len(rows) != scope['raw_physical_row_denominator'] or len(rows) != 107323:
+    if len(rows) != scope['raw_physical_row_denominator'] or (scope['snapshot_id'].split(':')[1]=='7.1' and len(rows) != 107323):
         raise ValueError('Native26 full physical source denominator')
     expected_absent = sorted((source['path'], owner['field'])
                              for source in scope['sources'] for owner in source['text_owners']
@@ -260,7 +262,7 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
     for table in TABLES:
         expected[table].sort()
     release = {
-        'contract': 'native26-7.1-physical-text-candidate-v1',
+        'contract': 'native26-7.1-physical-text-candidate-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]),
         'snapshot': scope['snapshot_id'], 'scope_sha256': sha(scope_path),
         'parser_build_id': parser, 'ingest_run_id': run, 'implementation': implementation,
         'counts': {table: len(expected[table]) for table in TABLES},
@@ -277,9 +279,9 @@ def project(root: Path, scope_path: Path, *, metadata_root=None):
 
 
 def build(root: Path, scope_path: Path, output: Path, *, metadata_root=None):
-    event_manifest, talk_manifest = dependency_manifests(metadata_root)
     root, scope_path, output = Path(root).resolve(), Path(scope_path).resolve(), Path(output).absolute()
     scope = json.loads(scope_path.read_text())
+    event_manifest, talk_manifest = dependency_manifests(metadata_root,scope['snapshot_id'].split(':')[1])
     inputs = [('source_root', root), ('scope', scope_path), ('schema', SCHEMA),
               ('history', HISTORY), ('event16', event_manifest), ('quest_talk', talk_manifest)]
     inputs += [(str(i), root / item['path']) for i, item in enumerate(scope['files'])]

@@ -42,9 +42,15 @@ def expected_schema():
     return result
 
 
-def verify(source, artifact, report):
+def verify(source, artifact, report, *, scope_path=None):
     source, artifact = Path(source), Path(artifact)
-    scope = json.loads(SCOPE.read_text())
+    scope_file = Path(scope_path) if scope_path is not None else SCOPE
+    scope = json.loads(scope_file.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    specs = {family:(value[0],scope["families"][family]["physical_rows"],value[2],value[3])
+             for family,value in SPECS.items()}
     check_source(source, scope)
     no_sidecars(artifact)
     if {"size_bytes": artifact.stat().st_size, "sha256": sha(artifact)} != report["artifact"]:
@@ -57,7 +63,7 @@ def verify(source, artifact, report):
         if c.execute("PRAGMA integrity_check").fetchall() != [("ok",)] or c.execute("PRAGMA foreign_key_check").fetchall():
             raise ValueError("SQLite integrity/FK")
         release = json.loads(c.execute("SELECT payload FROM release WHERE id=1").fetchone()[0])
-        if release != report["release"] or release["snapshot"] != SNAPSHOT or release["scope_sha256"] != sha(SCOPE) or release["schema_sha256"] != sha(SCHEMA):
+        if release != report["release"] or release["snapshot"] != SNAPSHOT or release["scope_sha256"] != sha(scope_file) or release["schema_sha256"] != sha(SCHEMA):
             raise ValueError("release binding")
         if set(release["implementation"]) != {"src/genshin_lore/narrative_7_1_build.py", "src/genshin_lore/narrative_7_1_contract.py", "src/genshin_lore/loading_tips_source.py", "schemas/narrative-7.1-npc-dialog-reminder.sql"}:
             raise ValueError("allowed implementation path set")
@@ -65,11 +71,11 @@ def verify(source, artifact, report):
             if sha(ROOT / path) != seal:
                 raise ValueError("implementation identity")
         parser = "narrative71-parser:" + digest(release["implementation"])
-        run = "narrative71-run:" + digest([release["family"], parser, sha(SCOPE)])
+        run = "narrative71-run:" + digest([release["family"], parser, sha(scope_file)])
         if (release["parser"], release["run"]) != (parser, run):
             raise ValueError("derived parser/run identity")
         family = release["family"]
-        path, denominator, key_field, fields = SPECS[family]
+        path, denominator, key_field, fields = specs[family]
         raw = source_rows(source / path)
         if len(raw) != denominator:
             raise ValueError("independent denominator")
@@ -78,7 +84,7 @@ def verify(source, artifact, report):
             lookup[str(row[key_field])].append(n)
         npc = defaultdict(list)
         if family == "dialog":
-            for n, (row, _) in enumerate(source_rows(source / SPECS["npc"][0])):
+            for n, (row, _) in enumerate(source_rows(source / specs["npc"][0])):
                 npc[str(row["id"])].append(n)
         wanted = {str(value) for row, _ in raw for field, value in row.items() if type(value) is int}
         textmaps = defaultdict(list)
@@ -123,7 +129,7 @@ def verify(source, artifact, report):
             def expect(field, i, value, target, outcome, matches):
                 locators.append((n, field, i, canonical(value), target, outcome, len(matches)))
                 states[field + ":" + outcome] += 1
-                candidates.extend((n, field, i, ordinal, SPECS[target][0], f"/{ordinal}") for ordinal in matches)
+                candidates.extend((n, field, i, ordinal, specs[target][0], f"/{ordinal}") for ordinal in matches)
 
             if family == "dialog":
                 if not row["nextDialogs"]:
@@ -169,9 +175,9 @@ def verify(source, artifact, report):
                 raise ValueError("no extras/no omissions: " + table)
         if release["counts"] != {k: counts[k] for k in TABLES if k != "release"}:
             raise ValueError("self-reported counts")
-        expected_release = {"contract": f"{family}-7.1-narrative-physical-v1", "family": family, "snapshot": SNAPSHOT,
+        expected_release = {"contract": f"{family}-{game_version}-narrative-physical-v1", "family": family, "snapshot": SNAPSHOT,
                             "source_commit": COMMIT, "source_tree": TREE, "parser": parser, "run": run,
-                            "scope_sha256": sha(SCOPE), "schema_sha256": sha(SCHEMA), "implementation": release["implementation"],
+                            "scope_sha256": sha(scope_file), "schema_sha256": sha(SCHEMA), "implementation": release["implementation"],
                             "source_files": scope["files"], "counts": {k: counts[k] for k in TABLES if k != "release"},
                             "semantic_mapping": "unresolved" if family == "reminder" else "source_authored_declared_fields",
                             "textmap_policy": scope["textmap_policy"], "product_accepted": False, "research_corpus_accepted": False}

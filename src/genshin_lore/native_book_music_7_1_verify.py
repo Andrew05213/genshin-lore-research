@@ -17,13 +17,13 @@ def message_binding(message_artifact, message_runtime_path=None):
  return manifest
 def verify(source_root,scope_path,artifact,message_artifact,runtime_manifest_path=None,*,message_runtime_path=None):
  start=time.perf_counter();scope=json.loads(Path(scope_path).read_text())
- if scope.get('selection_manifest')!='manifests/native-archive-7.1/book-music-selection-v1.json':raise ValueError('unapproved selection authority')
+ if scope.get('selection_manifest')!='manifests/native-archive-7.1/book-music-selection-v1.json'.replace('7.1',scope['snapshot_id'].split(':')[1]):raise ValueError('unapproved selection authority')
  selection_path=ROOT/scope['selection_manifest'];selection=json.loads(selection_path.read_text())
  if sha(selection_path)!=scope.get('selection_sha256'):raise ValueError('selection seal mismatch')
  if scope['sources']!=selection['sources'] or scope['languages']!=selection['languages'] or scope['textmaps']!=selection['textmaps']:raise ValueError('scope selection mismatch')
  selected={x['path'] for x in selection['sources']}|{x for locale in selection['languages'] for x in selection['textmaps'][locale].values()}
  if {x['path'] for x in scope['files']}!=selected:raise ValueError('scope file denominator mismatch')
- check_files(source_root,scope);impl={p:sha(ROOT/p) for p in ('src/genshin_lore/native_book_music_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-book-music-7.1-v1.sql','manifests/native-archive-7.1/book-music-selection-v1.json')};parser='nbm71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='nbm71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];seals={x['path']:x for x in scope['files']};records={};wanted=set()
+ check_files(source_root,scope);impl={p:sha(ROOT/p) for p in ('src/genshin_lore/native_book_music_7_1_build.py','src/genshin_lore/event_7_1_source.py','schemas/native-book-music-7.1-v1.sql',scope['selection_manifest'])};parser='nbm71-parser:'+hashlib.sha256(json.dumps(impl,sort_keys=True,separators=(',',':')).encode()).hexdigest()[:40];scope_sha=sha(scope_path);run='nbm71-run:'+hashlib.sha256((parser+':'+scope_sha).encode()).hexdigest()[:40];seals={x['path']:x for x in scope['files']};records={};wanted=set()
  for spec in scope['sources']:
   rows=list(array_records(Path(source_root)/spec['path']));records[spec['path']]=rows
   for ordinal,row,_ in rows:

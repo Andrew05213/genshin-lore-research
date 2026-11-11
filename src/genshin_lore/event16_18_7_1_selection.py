@@ -37,6 +37,8 @@ def _dependency(scope, key):
     table = 'event_narrative_release' if key == 'event15_photo' else 'release'
     column = 'manifest_json' if key == 'event15_photo' else 'payload'
     actual = json.loads(connection.execute(f'SELECT {column} FROM {table}').fetchone()[0])
+    if scope['snapshot_id'].split(':')[1]=='7.2' and actual.get('snapshot_id',actual.get('snapshot'))!=scope['snapshot_id']:
+        raise ValueError('Event selection cross-snapshot dependency: '+key)
     if actual != item['release']:
         raise ValueError('Event selection accepted release: ' + key)
     return connection, actual
@@ -52,7 +54,7 @@ def project(root: Path, scope_path: Path, component: str):
         raise ValueError('Event selection component must be 16 or 18')
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
-    if (scope['contract'] != 'event16-18-7.1-physical-selection-v1'
+    if (scope['contract'] != 'event16-18-7.1-physical-selection-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or tuple(entry['path'] for entry in scope['files']) != SOURCE_PATHS
             or scope['historical_scope_sha256'] != {
                 'event16_scope': sha(REPO / 'manifests/event-narrative/photo-echo-delta-scope.json'),

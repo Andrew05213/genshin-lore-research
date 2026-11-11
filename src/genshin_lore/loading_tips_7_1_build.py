@@ -28,6 +28,8 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
                               for suffix in ("-wal", "-shm", "-journal")):
         raise FileExistsError("LoadingTips output or sidecar exists")
     scope = json.loads(scope_path.read_text())
+    from .source_versions import source_pin
+    version, _, _ = source_pin(scope["snapshot_id"])
     check_scope(source_root, scope)
     implementation = {name: sha(ROOT / name) for name in IMPLEMENTATION}
     parser = _id("parser", implementation)
@@ -78,7 +80,7 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
                     ))
     for table in TABLES:
         expected[table].sort()
-    release = {"contract": "loading-tips-7.1-standalone-v1",
+    release = {"contract": f"loading-tips-{version}-standalone-v1",
                "family_contract_version": "loading-tips-evidence-v1",
                "snapshot_id": scope["snapshot_id"], "parser_build_id": parser,
                "run_id": run, "scope_sha256": scope_sha,

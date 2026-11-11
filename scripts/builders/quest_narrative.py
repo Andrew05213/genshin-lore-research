@@ -17,15 +17,18 @@ FIELDS={MAIN:('titleTextMapHash','descTextMapHash','unlockDescTextMapHash'),STEP
 def canonical(v):return json.dumps(v,sort_keys=True,ensure_ascii=True,separators=(',',':'))
 def digest(blob):return hashlib.sha256(blob).hexdigest()
 def key(*parts):return 'qn71:'+digest(canonical(parts).encode())[:40]
-def source_seals(source):
+def source_seals(source,commit=COMMIT):
  paths=(MAIN,STEP,FMT,*(f'TextMap/TextMap{tier}{lang}.json' for lang in ('CHS','EN','JP') for tier in ('','_Medium')))
- return {p:{'size':(source/p).stat().st_size,'sha256':sha(source/p),'blob':subprocess.check_output(['git','-C',str(source),'rev-parse',COMMIT+':'+p],text=True).strip()} for p in paths}
+ return {p:{'size':(source/p).stat().st_size,'sha256':sha(source/p),'blob':subprocess.check_output(['git','-C',str(source),'rev-parse',commit+':'+p],text=True).strip()} for p in paths}
 def immutable(db):
  for table in (*TABLES,'release'):
   for operation in ('INSERT','UPDATE','DELETE'):
    db.execute(f"CREATE TRIGGER immutable_{table}_{operation.lower()} BEFORE {operation} ON {table} BEGIN SELECT RAISE(ABORT,'immutable quest narrative'); END")
 def qt_binding(artifact,manifest_path):
  manifest=json.loads(Path(manifest_path).read_text())
+ from genshin_lore.source_versions import source_pin
+ SNAPSHOT=manifest['source_snapshot']
+ _,COMMIT,TREE=source_pin(SNAPSHOT)
  if manifest['status']!='accepted_standalone_candidate' or manifest['source_snapshot']!=SNAPSHOT:raise ValueError('Quest/Talk accepted 7.1 binding')
  if Path(artifact).stat().st_size!=manifest['artifact']['size_bytes'] or sha(artifact)!=manifest['artifact']['sha256']:raise ValueError('Quest/Talk artifact drift')
  db=sqlite3.connect(Path(artifact).absolute().as_uri()+'?mode=ro&immutable=1',uri=True)
@@ -34,8 +37,11 @@ def qt_binding(artifact,manifest_path):
  return manifest,db
 def build(source,output,qt_artifact,qt_manifest):
  source=Path(source);output=Path(output)
+ from genshin_lore.source_versions import source_pin
+ SNAPSHOT=json.loads(Path(qt_manifest).read_text())["source_snapshot"]
+ version,COMMIT,TREE=source_pin(SNAPSHOT)
  if subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()!=[COMMIT,TREE]:raise ValueError('7.1 source pin')
- seals=source_seals(source);qt,qt_db=qt_binding(qt_artifact,qt_manifest)
+ seals=source_seals(source,COMMIT);qt,qt_db=qt_binding(qt_artifact,qt_manifest)
  impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_narrative.py','schemas/quest-narrative-7.1-v1.sql','src/genshin_lore/loading_tips_source.py')}
  parser=key('parser',impl);run=key('run',SNAPSHOT,parser,seals,qt['ingest_run_id'],qt['artifact'])
  all_rows=[];owner_ids={};raw_rows={};indexed={MAIN:defaultdict(list),STEP:defaultdict(list)}
@@ -68,7 +74,11 @@ def build(source,output,qt_artifact,qt_manifest):
   path=container_paths.get(container_id)
   if path is None:raise ValueError('Quest/Talk child without Quest root')
   value=json.loads(raw)
-  if pointer.startswith('/JIJKODHIEED/'):
+  if pointer.startswith('/subQuests/') and version=='7.2':
+   shape='7.2-authored';sub=value.get('subId');parent=value.get('mainId');order=value.get('order')
+   if type(sub) is not int or type(parent) is not int or (order is not None and type(order) is not int):raise ValueError('authored child field shape '+path+pointer)
+   sub_status='versioned_locator_observation'
+  elif pointer.startswith('/JIJKODHIEED/'):
    shape='7.1-versioned';sub=value.get('NFGFDHPPBIF');parent=value.get('PCOMHEOJPOO');order=value.get('GBFIFKGFKHD')
    if type(sub) is not int or type(parent) is not int or (order is not None and type(order) is not int):raise ValueError('7.1 child field shape '+path+pointer)
    sub_status='versioned_locator_observation'
@@ -108,7 +118,7 @@ def build(source,output,qt_artifact,qt_manifest):
  qt_counts={'quest_root':qt_db.execute("SELECT count(*) FROM physical_container WHERE kind='quest_root'").fetchone()[0],'quest_child':qt_db.execute('SELECT count(*) FROM quest_child').fetchone()[0],'physical_reference':qt_db.execute("SELECT count(*) FROM physical_reference WHERE kind='quest_to_talk'").fetchone()[0]}
  qt_db.close()
  data=(all_rows,root_candidates,excel_candidates,children,child_targets,slots,texts)
- release={'contract':'quest-narrative-7.1-derived-v1','status':'candidate','snapshot':SNAPSHOT,'source_commit':COMMIT,'source_tree':TREE,'source_seals':seals,'implementation':impl,'parser_build_id':parser,'ingest_run_id':run,'quest_talk_binding':{'manifest':qt_manifest,'manifest_sha256':sha(qt_manifest),'artifact':qt['artifact'],'parser_build_id':qt['parser_build_id'],'ingest_run_id':qt['ingest_run_id'],'counts':qt_counts},'counts':{table:len(records) for table,records in zip(TABLES,data)},'row_kinds':dict(Counter(row[2] for row in all_rows)),'child_shapes':dict(Counter(row[6] for row in children)),'semantic_order_status':'unresolved; raw candidate observed, physical ordinal kept separately','child_sub_mapping':'NFGFDHPPBIF raw 7.1 locator with exact same-snapshot candidate lookup; no cross-snapshot identity','quest_talk_physical_evidence_copied':False,'product_accepted':False}
+ release={'contract':f'quest-narrative-{version}-derived-v1','status':'candidate','snapshot':SNAPSHOT,'source_commit':COMMIT,'source_tree':TREE,'source_seals':seals,'implementation':impl,'parser_build_id':parser,'ingest_run_id':run,'quest_talk_binding':{'manifest':qt_manifest,'manifest_sha256':sha(qt_manifest),'artifact':qt['artifact'],'parser_build_id':qt['parser_build_id'],'ingest_run_id':qt['ingest_run_id'],'counts':qt_counts},'counts':{table:len(records) for table,records in zip(TABLES,data)},'row_kinds':dict(Counter(row[2] for row in all_rows)),'child_shapes':dict(Counter(row[6] for row in children)),'semantic_order_status':'unresolved; raw candidate observed, physical ordinal kept separately','child_sub_mapping':'source-native subId raw locator; same-snapshot physical candidates only' if version=='7.2' else 'NFGFDHPPBIF raw 7.1 locator with exact same-snapshot candidate lookup; no cross-snapshot identity','quest_talk_physical_evidence_copied':False,'product_accepted':False}
  if output.exists():raise FileExistsError(output)
  output.parent.mkdir(parents=True,exist_ok=True);db=sqlite3.connect(output);db.execute('PRAGMA page_size=4096');db.execute('PRAGMA journal_mode=OFF');db.execute('PRAGMA foreign_keys=ON')
  try:

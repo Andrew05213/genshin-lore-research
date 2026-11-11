@@ -48,7 +48,7 @@ def fresh(tmp_path, monkeypatch):
                 'target_artifact_machine_local':'/tmp/historical.sqlite','capability':'mainquest_exact_rows',
                 'contract':'quest-narrative-7.1-derived-v1','family':'quest_narrative_archive',
                 'parser':'old-parser','run':'old-run','physical_target_denominator':3}
-    scope={'contract':'native-message-7.1-exact-source-scope-v1','snapshot_id':binding.SNAPSHOT,
+    scope={'contract':'native-message-7.1-exact-source-scope-v1','snapshot_id':binding.SNAPSHOT,'source_commit':'9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99','source_tree':'aa578c08c402af39b41f1ffc95124d10f5410272',
            'historical_selection':'historical.json','historical_selection_sha256':file_seal(root/'historical.json')['sha256'],
            'sources':[spec],'languages':old['languages'],'textmaps':old['textmaps'],
            'files':[{'path':n,**file_seal(job.source/n),'blob':'synthetic'} for n in ('message.json','main.json','medium.json')],

@@ -48,14 +48,18 @@ class DecodedPrimaryRow:
     raw_json: str
 
 
-def decode_primary_row(source_path: str, ordinal: int, row: dict, raw_json: str) -> DecodedPrimaryRow:
+def decode_primary_row(source_path: str, ordinal: int, row: dict, raw_json: str, *, source_version="7.1") -> DecodedPrimaryRow:
+    profile_field = {"7.1": "NLAPNBMECDF", "7.2": "FBFBNKHLFAO"}[source_version]
     basename = source_path.rsplit("/", 1)[-1]
     if basename not in REQUIRED_INTEGER_FIELDS or source_path != "ExcelBinOutput/" + basename:
         raise ValueError("unsupported 7.1 Character source path")
     if type(ordinal) is not int or ordinal < 0 or type(row) is not dict or type(raw_json) is not str:
         raise ValueError("invalid 7.1 Character physical row")
     fields = []
-    for name in REQUIRED_INTEGER_FIELDS[basename]:
+    integer_fields = REQUIRED_INTEGER_FIELDS[basename]
+    if source_version == "7.2" and basename == "AvatarRenameExcelConfigData.json":
+        integer_fields = ("relatedAvatarID",)
+    for name in integer_fields:
         value = row.get(name)
         if type(value) is not int:
             raise ValueError(f"{source_path}#/{ordinal}/{name}: required integer field missing or changed")
@@ -81,16 +85,16 @@ def decode_primary_row(source_path: str, ordinal: int, row: dict, raw_json: str)
     if basename == "ProfilePictureExcelConfigData.json":
         if "AHJHBENMGFK" in row:
             raise ValueError("7.0 ProfilePicture discriminator in 7.1 decoder")
-        kind = row.get("NLAPNBMECDF")
+        kind = row.get(profile_field)
         if kind not in PROFILE_DISCRIMINATORS:
-            raise ValueError(f"{source_path}#/{ordinal}/NLAPNBMECDF: unknown discriminator")
+            raise ValueError(f"{source_path}#/{ordinal}/{profile_field}: unknown discriminator")
         value = row.get("unlockParam")
         if kind == "PROFILE_PICTURE_UNLOCK_BY_DEFAULT":
             if value is not None:
                 raise ValueError("default unlockParam must be absent")
         elif type(value) is not int:
             raise ValueError("non-default unlockParam must be integer")
-        fields.extend((("NLAPNBMECDF", kind), ("unlockParam", value)))
+        fields.extend(((profile_field, kind), ("unlockParam", value)))
     elif basename == "AvatarRenameExcelConfigData.json":
         names = row.get("multiLangDefaultNameList")
         if type(names) is not list or any(type(item) is not dict or type(item.get("languageType")) is not str or type(item.get("planeText")) is not str for item in names):

@@ -44,7 +44,7 @@ def projection(root: Path, scope_path: Path):
     expected_paths = [item['path'] for item in history['sources']]
     expected_paths += [f'TextMap/TextMap{tier}{locale}.json'
                        for locale in ('CHS', 'EN', 'JP') for tier in ('', '_Medium')]
-    if (scope['contract'] != 'event13-7.1-physical-capability-v1'
+    if (scope['contract'] != 'event13-7.1-physical-capability-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or scope['historical_scope_sha256'] != sha(HISTORICAL)
             or actual_descriptors != historic_descriptors
             or [item['path'] for item in scope['files']] != expected_paths

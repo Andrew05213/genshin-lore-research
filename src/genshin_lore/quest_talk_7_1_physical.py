@@ -44,16 +44,17 @@ def root_signature_digest(doc: dict) -> str:
     return hashlib.sha256(json.dumps(sorted(doc), ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-@lru_cache(maxsize=2)
-def _registered(kind: str) -> frozenset[str]:
-    manifest = json.loads(SIGNATURE_MANIFEST.read_text())
-    if manifest.get("contract") != "quest-talk-7.1-observed-root-signatures-v1":
+@lru_cache(maxsize=4)
+def _registered(kind: str, source_version="7.1") -> frozenset[str]:
+    path = SIGNATURE_MANIFEST if source_version == "7.1" else SIGNATURE_MANIFEST.parents[1] / f"quest-talk-{source_version}/root-signature-digests.json"
+    manifest = json.loads(path.read_text())
+    if manifest.get("contract") != f"quest-talk-{source_version}-observed-root-signatures-v1":
         raise ValueError("unknown 7.1 root signature contract")
     return frozenset(manifest[kind]["signature_digests"])
 
 
-def _require_registered(doc: dict, kind: str, provided=None) -> None:
-    accepted = _registered(kind) if provided is None else provided
+def _require_registered(doc: dict, kind: str, provided=None, *, source_version="7.1") -> None:
+    accepted = _registered(kind, source_version) if provided is None else provided
     if root_signature_digest(doc) not in accepted:
         raise ValueError(f"unregistered 7.1 {kind} physical root signature")
 
@@ -106,10 +107,26 @@ def _quest_embedded(doc):
     return [{"field": field, "pointer": f"/{field}", "mapping": mapping, "nodes": entries}]
 
 
-def decode_talk(doc: dict, old_shapes: list[dict], *, registered_signatures=None) -> dict:
+def decode_talk(doc: dict, old_shapes: list[dict], *, registered_signatures=None, source_version="7.1") -> dict:
     if not isinstance(doc, dict):
         raise ValueError("Talk physical root must be an object")
-    _require_registered(doc, "talk", registered_signatures)
+    _require_registered(doc, "talk", registered_signatures, source_version=source_version)
+    if source_version == "7.2":
+        if "dialogList" in doc:
+            native = integer(doc["talkId"], "talkId") if "talkId" in doc else None
+            return {"kind":"talk_root" if native is not None else "talk_root_no_id",
+                    "mapping":"7.2-authored", "native_id":native,
+                    "nodes":_authored_nodes(doc["dialogList"], "dialogList"), "references":[]}
+        if "talks" in doc or ("id" in doc and "initDialog" in doc):
+            refs = _authored_references(doc["talks"], "talks") if "talks" in doc else _authored_references([doc], None)
+            return {"kind":"reference_wrapper", "mapping":"7.2-authored-reference",
+                    "native_id":None, "nodes":[], "references":refs}
+        if tuple(sorted(doc)) not in {tuple(sorted(shape["root_keys"])) for shape in old_shapes}:
+            return {"kind":"mapping_unresolved", "mapping":"7.2-registered-unresolved",
+                    "native_id":integer(doc["talkId"], "talkId") if "talkId" in doc else None,
+                    "nodes":[], "references":[]}
+    elif source_version != "7.1":
+        raise ValueError("unsupported Quest/Talk source version")
     keys = set(doc)
     if TALK_LIST in keys:
         if not keys <= NEW_TALK_ROOT_KEYS or WRAPPER_LIST in keys:
@@ -168,10 +185,25 @@ def decode_talk(doc: dict, old_shapes: list[dict], *, registered_signatures=None
             "nodes": [], "references": []}
 
 
-def decode_quest(doc: dict, *, registered_signatures=None) -> dict:
+def decode_quest(doc: dict, *, registered_signatures=None, source_version="7.1") -> dict:
     if not isinstance(doc, dict):
         raise ValueError("Quest physical root must be object")
-    _require_registered(doc, "quest", registered_signatures)
+    _require_registered(doc, "quest", registered_signatures, source_version=source_version)
+    if source_version == "7.2":
+        native = integer(doc["id"], "Quest id")
+        children = _physical_list(doc.get("subQuests", []), "subQuests")
+        if any(not isinstance(child, dict) for child in children):
+            raise ValueError("Quest child must be a physical object")
+        return {"kind":"quest_root", "native_id":native,
+                "children_pointer":"/subQuests" if "subQuests" in doc else None,
+                "children_field_status":"present" if "subQuests" in doc else "source_field_absent",
+                "child_count":len(children), "child_pointers":[f"/subQuests/{i}" for i in range(len(children))],
+                "reference_field_status":"present" if "talks" in doc else "source_field_absent",
+                "references":_authored_references(doc["talks"], "talks") if "talks" in doc else [],
+                "embedded":[{"field":"dialogList", "pointer":"/dialogList", "mapping":"7.2-authored",
+                             "nodes":_authored_nodes(doc["dialogList"], "dialogList")}] if "dialogList" in doc else _quest_embedded(doc)}
+    if source_version != "7.1":
+        raise ValueError("unsupported Quest/Talk source version")
     new_regular = {"id", QUEST_CHILDREN} <= set(doc)
     new_no_child = (
         {"id", "luaPath", "KJBJDKALING", "KJOHNNANDBK"} <= set(doc)
@@ -218,3 +250,29 @@ def decode_quest(doc: dict, *, registered_signatures=None) -> dict:
             "references": [{"pointer": ref["pointer"], "native_id": ref["native_id"],
                             "init_dialogue": None} for ref in refs],
             "embedded": _quest_embedded(doc)}
+
+
+def _authored_nodes(values, field):
+    result = []
+    for ordinal, row in enumerate(_physical_list(values, field)):
+        if not isinstance(row, dict):raise ValueError("dialogue child must be an object")
+        native = integer(row["id"], "dialogue id")
+        successors = _physical_list(row.get("nextDialogs", []), "nextDialogs")
+        for target in successors:integer(target, "nextDialogs")
+        text = row.get("talkContentTextMapHash")
+        if text is not None:integer(text, "talkContentTextMapHash")
+        result.append({"ordinal":ordinal,"pointer":f"/{field}/{ordinal}","native_id":native,
+                       "next":successors,"text_hash":text,"text_mapping":"literal_key"})
+    return result
+
+
+def _authored_references(values, field):
+    result = []
+    for ordinal, row in enumerate(_physical_list(values, "talk references")):
+        if not isinstance(row,dict):raise ValueError("Talk reference must be an object")
+        native = integer(row["id"], "Talk reference id")
+        init = row.get("initDialog")
+        if init is not None:integer(init,"initDialog")
+        result.append({"pointer":"/" if field is None else f"/{field}/{ordinal}",
+                       "native_id":native,"init_dialogue":init})
+    return result

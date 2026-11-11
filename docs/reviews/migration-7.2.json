@@ -1,0 +1,1652 @@
+{
+  "status": "PASS_BOUNDED_72_SOURCE_MIGRATION_AND_PROGRAMMATIC_MCP",
+  "date": "2026-11-04",
+  "formal_release_accepted": false,
+  "client_default_switched": false,
+  "main_merged": false,
+  "source": {
+    "commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+    "files": 156131,
+    "bytes": 4151856370,
+    "every_git_blob_verified": true
+  },
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "snapshot": {
+    "id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+    "version": "7.2"
+  },
+  "corpus_ref": "candidate-7.2-high-value-v1",
+  "data_build_qualification_commit": "0ddad7ca9f3c72104b5243fde21cd5cbe39da513",
+  "scope": {
+    "research_inputs": 35,
+    "core_providers": 33,
+    "schema_version": 20,
+    "schema21_required": false,
+    "full_game_coverage": false,
+    "native_runs": 6,
+    "event_inputs": 9
+  },
+  "artifacts": [
+    {
+      "source_key": "schema20-core-7.2",
+      "family": "schema20_core",
+      "contract": "schema20-7.2-core33-materialization-v1",
+      "parser": "assembly-only-not-evidence-parser",
+      "run": "assembly-only-not-evidence-run",
+      "adapter": "core33",
+      "artifact": {
+        "sha256": "3f0337304fce6a6eeb7494dd13dd3a900eecc8b31bbc622ef16c71aaa8014b68",
+        "size_bytes": 1073700864
+      }
+    },
+    {
+      "source_key": "7.2-codexquest_archive",
+      "family": "codexquest_archive",
+      "contract": "codexquest-7.2-physical-text-foundation-v1",
+      "parser": "cq71:1bf96f946648ceeb3b1c460b16760b3e9c1b8ec7",
+      "run": "cq71:f949a2b9114c2ca4f9bf2ed873c0f6bb31f37c0a",
+      "adapter": "codexquest_archive",
+      "artifact": {
+        "sha256": "ea1fa06445f0e50e965b81a17aca6f15a66e77ae86424a129647945e2b9789a2",
+        "size_bytes": 792616960
+      }
+    },
+    {
+      "source_key": "7.2-document_archive",
+      "family": "document_archive",
+      "contract": "document-7.2-evidence-v2",
+      "parser": "document71:6846c01b9863d8d4529a0195888beec548784187",
+      "run": "document71:b5caaf7534ab1cff8913c4696e385480da1f070d",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "c254d61d058bf14f0bcf00e2ec991fddc5daabb28e5b5f3db181fb6412f52676",
+        "size_bytes": 16977920
+      }
+    },
+    {
+      "source_key": "7.2-event_narrative_10",
+      "family": "event_narrative_archive",
+      "contract": "event-narrative-evidence-v1",
+      "parser": "event10-71:e40e0f79e89a67fdc6ed0d801a3e55412307a222",
+      "run": "event10-71:6d5b89fca01408cf283ffdfab74892c9eae1ee29",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "b9559812a9750efd2d92c67b342bab049e43ad031c3080341886a3af4da589bf",
+        "size_bytes": 2252800
+      }
+    },
+    {
+      "source_key": "7.2-event_narrative_11",
+      "family": "event_narrative_archive",
+      "contract": "event-narrative-evidence-v2",
+      "parser": "event11-71:ed0f87a0953e2a9b229a1a81c3c7a57e5aa2b178",
+      "run": "event11-71:2561a83fd90f76484ca6c1ef117987ee6d39f00a",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "1376544a43ec3e0077a63de1173066b13dd080ad26ba9b76cbb1883a5e2a9a3e",
+        "size_bytes": 1196032
+      }
+    },
+    {
+      "source_key": "7.2-event_narrative_12",
+      "family": "event_narrative_archive",
+      "contract": "event-narrative-evidence-v3",
+      "parser": "filmfest71:8b45339798109bb6ffefe15a6a2403044772a015",
+      "run": "filmfest71:6959a03efcc90cd32d42b329a9d09501e62ecb00",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "c44998a2ec3a599ce4b096e703c69bdb5c42f714a57328967afac2c209573fc4",
+        "size_bytes": 1302528
+      }
+    },
+    {
+      "source_key": "7.2-event_narrative_14",
+      "family": "event_narrative_archive",
+      "contract": "event-narrative-evidence-v3",
+      "parser": "tps71:3e8f69ae794853058a6bb12e1ac35cabf077f1ec",
+      "run": "tps71:7f54794ec5c4fc32f35be8ca33b84a9f88d7984e",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "b9a25a9271d27fdc4f09b82c5b5222e1ffb31f1a21dbf66841f932fdd223edc5",
+        "size_bytes": 4890624
+      }
+    },
+    {
+      "source_key": "7.2-event_narrative_15",
+      "family": "event_narrative_archive",
+      "contract": "event-narrative-evidence-v3",
+      "parser": "event-narrative:2b3b0cb3ddebc28c5726da5858c0ecb1c5bbdd34",
+      "run": "event-narrative:0e070353b34710b7cf3574167fb7bf66b8caaa6e",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "14a358be56bb178df862b9616e5064ecab6b9fcb06058a5bfcb13b5800fb191a",
+        "size_bytes": 2007040
+      }
+    },
+    {
+      "source_key": "7.2-event_native_text_17",
+      "family": "event_narrative_archive",
+      "contract": "event-native-text-wave-7.1-versioned-evidence-v1",
+      "parser": "event71:94262afcd10d169ec46cea3008387bf5a1942424",
+      "run": "event71:30ab51ab96c28558dc05381baa6f4ab5ce91ecf4",
+      "adapter": "event_native_text_17",
+      "artifact": {
+        "sha256": "3676ae5bf90812bda123ba1d0c4a6edda457c83e179ce7c40b382db112ddde1f",
+        "size_bytes": 10465280
+      }
+    },
+    {
+      "source_key": "7.2-event_physical_13",
+      "family": "event_narrative_archive",
+      "contract": "event13-7.2-physical-capability-v1",
+      "parser": "event13-71:2726e04c8f1fc5854701766a55d454e0c3d982bb",
+      "run": "event13-71:b9bd80486afaca6939bc57a64091b253db897c6d",
+      "adapter": "event_physical_13",
+      "artifact": {
+        "sha256": "e52d902e40ceb1c3e1d7f10d33aa0598effd002402c5af28c5c403ee763f5c69",
+        "size_bytes": 2473984
+      }
+    },
+    {
+      "source_key": "7.2-event_physical_16",
+      "family": "event_narrative_archive",
+      "contract": "event16-18-7.2-physical-selection-v1",
+      "parser": "event16-18-71:778df8ecac08ead996d43c01e71c371e1f8d61a8",
+      "run": "event16-18-71:d9323adc9b22d623483ec14e2de155edd633f486",
+      "adapter": "event_physical_16",
+      "artifact": {
+        "sha256": "cd5f0f9f2e1d66a74a959ba633d2cfc0969513734be80b4bef51295edf334db5",
+        "size_bytes": 729088
+      }
+    },
+    {
+      "source_key": "7.2-event_physical_18",
+      "family": "event_narrative_archive",
+      "contract": "event16-18-7.2-physical-selection-v1",
+      "parser": "event16-18-71:778df8ecac08ead996d43c01e71c371e1f8d61a8",
+      "run": "event16-18-71:862e3ed0bdd967cbb5fd961441d882687b67cf79",
+      "adapter": "event_physical_18",
+      "artifact": {
+        "sha256": "c29560faab85fb1152a684d31e8a761f57b6f662fac79c043c2f28ef1340fb70",
+        "size_bytes": 258899968
+      }
+    },
+    {
+      "source_key": "7.2-loading_tips",
+      "family": "loading_tips_archive",
+      "contract": "loading-tips-evidence-v1",
+      "parser": "lt71:b3e41f5ba6cfbf802177fb453f02ce582b6b0305",
+      "run": "lt71:cba9071d2630f30a270659f24c4a4a6c843ad3cf",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "97729e7558204bf5746ebb5d3a6869907183a0b9c2f7ce0f43816e62a65aa95c",
+        "size_bytes": 5500928
+      }
+    },
+    {
+      "source_key": "7.2-mail_narrative",
+      "family": "mail_narrative_archive",
+      "contract": "mail-narrative-7.2-versioned-evidence-v2",
+      "parser": "mail71:6a2a19d5b12d397124a05565a2872e85e081a246",
+      "run": "mail71:3f1330eb3c3d35515d735e8bce04c2194a617a66",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "486a7f9e2d50c2fc2363573d134ae0f6902126c2be6f202a5a961fe28920f788",
+        "size_bytes": 3608576
+      }
+    },
+    {
+      "source_key": "7.2-narrative_dialog",
+      "family": "dialog_archive",
+      "contract": "dialog-7.2-narrative-physical-v1",
+      "parser": "narrative71-parser:ed924fe4e310374ea14512f9c9527743cd46741cb87fa62002e2f7ef892646e1",
+      "run": "narrative71-run:68d6cd373350c7d4aa05b2153180cabedd276c99db905995eb9c98f22494964b",
+      "adapter": "narrative_dialog",
+      "artifact": {
+        "sha256": "2a48935181816b4a607f9a69b02ac9e24b7d00f65c39fa6fae7ba782839b3589",
+        "size_bytes": 507944960
+      }
+    },
+    {
+      "source_key": "7.2-narrative_npc",
+      "family": "npc_archive",
+      "contract": "npc-7.2-narrative-physical-v1",
+      "parser": "narrative71-parser:ed924fe4e310374ea14512f9c9527743cd46741cb87fa62002e2f7ef892646e1",
+      "run": "narrative71-run:8d73f1d543bad4f32406d53e6e9d515e935e6d1dbe5ba4f4f2ea168443702b9f",
+      "adapter": "narrative_npc",
+      "artifact": {
+        "sha256": "1909adeca4c51b19d477efa315bbe4ad359abfe2ba47df64612e1b3c6fdb364e",
+        "size_bytes": 26669056
+      }
+    },
+    {
+      "source_key": "7.2-narrative_reminder",
+      "family": "reminder_archive",
+      "contract": "reminder-7.2-narrative-physical-v1",
+      "parser": "narrative71-parser:ed924fe4e310374ea14512f9c9527743cd46741cb87fa62002e2f7ef892646e1",
+      "run": "narrative71-run:1c977652cec863441d1b8521db372fda150e4b2dba13ca5d359401076f8886bf",
+      "adapter": "narrative_reminder",
+      "artifact": {
+        "sha256": "bf7bba0ab986697c3b1c9cf8bc90864e5ffa557a78a7fc07d2407295daec7580",
+        "size_bytes": 43765760
+      }
+    },
+    {
+      "source_key": "7.2-native_aux_quest",
+      "family": "native_archive",
+      "contract": "native-archive-evidence-v1",
+      "parser": "naq71-parser:e798976547368d417221fc32cd624b29cb0b5a07",
+      "run": "naq71-run:4260fb0662ddec3c11ac28bee18556aefe9b6f2f",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "d36a7134dd55d912d668826e80ba6620b65ea46feae6dd845e8cbc0c58714f4a",
+        "size_bytes": 255737856
+      }
+    },
+    {
+      "source_key": "7.2-native_book_music",
+      "family": "native_archive",
+      "contract": "native-archive-evidence-v1",
+      "parser": "nbm71-parser:f3c6ab00ea06c071fa433b214abd2d8ec4781e63",
+      "run": "nbm71-run:24f8eb1f23545f6a281ca382f948f3789f5584df",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "c5075d09b91ebb510272595358379a7adb70aa23aaa152c09c9114f3c6df60bf",
+        "size_bytes": 667648
+      }
+    },
+    {
+      "source_key": "7.2-native_bulk",
+      "family": "native_archive",
+      "contract": "native-archive-evidence-v1",
+      "parser": "native-archive-7.2-parser:a53f49455d2cfb1208cd43e95b10ac7d1f8ae8f1",
+      "run": "native-archive-7.2-run:f106a709473a9f77693e2e59b267158fadda0113",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "937a2794fd36269cb739be1c5034e7fd50b66b8b5dc463e532f538709f555245",
+        "size_bytes": 28442624
+      }
+    },
+    {
+      "source_key": "7.2-native_high_value_physical",
+      "family": "native_archive",
+      "contract": "native26-7.2-physical-text-candidate-v1",
+      "parser": "native26-71:d6355e2b0d184ce4ca8440cd61ea20a92ca3e4df",
+      "run": "native26-71:7ca6b7b79a8a62a49ba796912c12491439cd1ccd",
+      "adapter": "native_high_value_physical",
+      "artifact": {
+        "sha256": "6e0122a7bff08d5c6a8a27918a81536e3c7b0193183929d1b6771f1361ba11ed",
+        "size_bytes": 666660864
+      }
+    },
+    {
+      "source_key": "7.2-native_message",
+      "family": "native_archive",
+      "contract": "native-message-7.1-versioned-evidence-v1",
+      "parser": "nmsg71:62785ca182dd951d267eb07bd00152f45af09250",
+      "run": "nmsg71:996311015fdd2dbed03863965411fcff12edef5f",
+      "adapter": "native_message",
+      "artifact": {
+        "sha256": "69ecbf0269eb0d87aaf6dfe256d4befc4298db62af71e4eb462287abd0a7dd1e",
+        "size_bytes": 16564224
+      }
+    },
+    {
+      "source_key": "7.2-native_successor_physical",
+      "family": "native_archive",
+      "contract": "native21-7.2-physical-text-candidate-v1",
+      "parser": "native21-71:44a020bca0ab56ec1450819d0ef9c40e56631cde",
+      "run": "native21-71:3b2ed1008df89ebac8ed4e50a0fef47384db66cf",
+      "adapter": "native_successor_physical",
+      "artifact": {
+        "sha256": "22d6740c4ffcfe1f70a774ddada7b5d4d59b53de453febb97e772885ab7b03a7",
+        "size_bytes": 8376320
+      }
+    },
+    {
+      "source_key": "7.2-quest_narrative_archive",
+      "family": "quest_narrative_archive",
+      "contract": "quest-narrative-7.2-derived-v1",
+      "parser": "qn71:e069afdfd1169085ced3f2055bf0aa55f337d339",
+      "run": "qn71:ffc40611bceb13f9908f5eecf33a9122861060b8",
+      "adapter": "quest_narrative_archive",
+      "artifact": {
+        "sha256": "45a260c948b212d99480f7040757076240e9156a0b11605ec9b54714c5203763",
+        "size_bytes": 144039936
+      }
+    },
+    {
+      "source_key": "7.2-quest_review_archive",
+      "family": "quest_review_archive",
+      "contract": "quest-review-archive-7.2-evidence-v1",
+      "parser": "qr71:e67ee5a00e53865ede862e47da226f17aec75630",
+      "run": "qr71:74f99fbd9fdfeaa01553c64376aef9a7adbf4d2f",
+      "adapter": "quest_review_archive",
+      "artifact": {
+        "sha256": "39f7d2a4edd33bbd702b0b95f7fc57a69b11bfbba430e7d0d2a94fedf15d9442",
+        "size_bytes": 2134016
+      }
+    },
+    {
+      "source_key": "7.2-quest_talk_physical",
+      "family": "quest_talk_pilot",
+      "contract": "quest-talk-7.2-standalone-physical-v1",
+      "parser": "parser-build:67e26634eef0a4853e73d0d82f8728cb07f3dc67",
+      "run": "ingest-run:ce1c6eae2ea32a254e5b3c5fff78dd3e866265f1",
+      "adapter": "quest_talk_physical",
+      "artifact": {
+        "sha256": "42ed872ea35f3fe24963598a17fbfc0c7cfae67da93e1813f0c9a26bf6f1d688",
+        "size_bytes": 1899339776
+      }
+    },
+    {
+      "source_key": "7.2-readable_archive",
+      "family": "readable_archive",
+      "contract": "readable-7.2-evidence-v1",
+      "parser": "readable71-parser:f65aeda3ad1046bef886fdc4d23195476bdd3daa",
+      "run": "readable71-run:0711d82a443217b18f18b71da0b663cbb064c2e8",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "24fcc15e270a53664e43c326736e1dd807d01283c88497fbc28cc99a7cf87bd8",
+        "size_bytes": 404549632
+      }
+    },
+    {
+      "source_key": "7.2-character-foundation",
+      "family": "character_archive",
+      "contract": "character-7.2-physical-foundation-v1",
+      "parser": "character71:ce3b06a7535544da92c43139b136420625f71b73",
+      "run": "character71:2aef6bd9385f8eba6e2475630d14f9cc93b7961f",
+      "adapter": "character_foundation",
+      "artifact": {
+        "sha256": "3fb267aaed806f5d3a46cf50a390d94938e723cec3a893df21b51eb8d1916af5",
+        "size_bytes": 109903872
+      }
+    },
+    {
+      "source_key": "7.2-character-text",
+      "family": "character_archive",
+      "contract": "character-7.2-text-successor-v1",
+      "parser": "character71-text:80ba773345924b4ea7d69c211add3c9887a70773",
+      "run": "character71-text:f48b98071155e0bd7b900e11ff20a2caf1a1a28c",
+      "adapter": "character_text",
+      "artifact": {
+        "sha256": "5f1e9fa242a24d87225eaae50a2f5f309a765ec85b225c0e7b5616804a8e139a",
+        "size_bytes": 66715648
+      }
+    },
+    {
+      "source_key": "7.2-character-lore",
+      "family": "character_archive",
+      "contract": "character-7.2-lore-successor-v1",
+      "parser": "character71-lore:60e665086ea62ab276dacc59d1c4846bce3b5790",
+      "run": "character71-lore:3eb8d47a1ff03e529225c430b8e200a7c5bebf7b",
+      "adapter": "dependency_only",
+      "artifact": {
+        "sha256": "4ab2001d117dab5025296255f1a6c728a41b02133d79efcad3f9bac1aa2841fc",
+        "size_bytes": 4149248
+      }
+    },
+    {
+      "source_key": "7.2-character-voice",
+      "family": "character_archive",
+      "contract": "character-7.2-voice-successor-v1",
+      "parser": "character71-voice:897c1b226e0997d56c7ec25ac6832638a2d2cead",
+      "run": "character71-voice:b951c8944cf7f62840d747a66070f6e6dfd99676",
+      "adapter": "dependency_only",
+      "artifact": {
+        "sha256": "525353fc1d399f7ac5e7db55654142082a57815c8a18edd4f93caf0fddd89dd5",
+        "size_bytes": 33353728
+      }
+    },
+    {
+      "source_key": "7.2-quest-review-binding",
+      "family": "quest_review_archive",
+      "contract": "quest-review-7.2-exact-target-binding-v2",
+      "parser": "qr71b:064883830fd0e37de23192d65539c80ee79ae3f6",
+      "run": "qr71b:a07c0527f20b106d347aa5eda3d87002d43577c5",
+      "adapter": "quest_review_binding",
+      "artifact": {
+        "sha256": "43006313ee8711bb4d119cacb27dc09b57bfb987deb41ffad7b270609b3d945a",
+        "size_bytes": 811008
+      }
+    },
+    {
+      "source_key": "7.2-gcg-card",
+      "family": "gcg_card_archive",
+      "contract": "gcg-card-evidence-v1",
+      "parser": "gcg:5dd5cf94299a6abe18543e6c70c6afadcbd514a5",
+      "run": "gcg:4d22154076fe9b667889694b701b57330e871fd6",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "d2eb31d67faa5415e61c06afd33f6dbcfe53dc3c050accc8fc44821a4bdc11aa",
+        "size_bytes": 12795904
+      }
+    },
+    {
+      "source_key": "7.2-subtitle",
+      "family": "subtitle_archive",
+      "contract": "subtitle-evidence-v1",
+      "parser": "subtitle-parser:eeebda504a5ca96dd70d100f487caba7a88f3771",
+      "run": "subtitle-run:ccc6f479e1f8344332b3bd2a118a77169d252253",
+      "adapter": "formal_compatible",
+      "artifact": {
+        "sha256": "d4466b83b5f432c76c0e4698566ce07423be66dfee47062bc9f16aa372c6b813",
+        "size_bytes": 62316544
+      }
+    },
+    {
+      "source_key": "7.2-talk-physical",
+      "family": "talk_physical_archive",
+      "contract": "talk-physical-closure-v1",
+      "parser": "talk71-physical:eaac4555fe324e9dedfb78fde1b160a001008efc",
+      "run": "talk71-physical:db9e4d1137db7051915082f15319c0b387aa6793",
+      "adapter": "talk_physical",
+      "artifact": {
+        "sha256": "37cb482a1df927826ad82d31342de50f9ca2619efd975aa9c5b89cc83032c2cf",
+        "size_bytes": 101380096
+      }
+    }
+  ],
+  "r0": {
+    "sha256": "b864c2d1bc2bd0631fbf8146ca556a0c636d11c5f2fb99ddf4ae35dc95e891ec",
+    "size_bytes": 1315110912
+  },
+  "research_index": {
+    "counts": {
+      "adapter_coverage": 195,
+      "research_candidate": 434558,
+      "research_container": 927621,
+      "research_relation": 660120,
+      "research_text": 3735403,
+      "source_artifact": 35
+    },
+    "sha256": "48662d870bff428527b87ee63cae33b2306d829548f7d000106654fcdc340aa3",
+    "size_bytes": 6649913344
+  },
+  "complete_index_oracles": [
+    {
+      "record": "index-final-image-oracle-artifact.json",
+      "status": "PASS_COMPLETE_SOURCE_ROWSETS",
+      "sha256": "5b0843dd34d39c23511a2758902d6ed151a717d7be9b2f2ea57ab99b1f9d0e6e"
+    },
+    {
+      "record": "index-memory-oracle-artifact.json",
+      "status": "PASS_COMPLETE_SOURCE_ROWSETS",
+      "sha256": "5b0843dd34d39c23511a2758902d6ed151a717d7be9b2f2ea57ab99b1f9d0e6e"
+    }
+  ],
+  "semantic": {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "model_tree_sha256": "a7afbe9e63e0060cf7ca4a995e11ee5c916ff0c129b3096b6309eb530427c19f",
+    "dimension": 384,
+    "metric": "cosine",
+    "physical_occurrences": 103188,
+    "windows": 104558,
+    "files": {
+      "metadata.sqlite": {
+        "sha256": "a879427ea6d5b474fcae7ce42e8048eecac36b4b6e67287430bf92ba14d32117",
+        "size_bytes": 216526848
+      },
+      "index.hnsw": {
+        "sha256": "748f1c6ef5e2cc5fa46343441489afc45619b3e619abec88cc6a1be824a024e5",
+        "size_bytes": 172797308
+      },
+      "vectors.npy": {
+        "sha256": "1acfa007b233739b2ce73023f232ef539ee090868d03759fe34be88e5d5be76e",
+        "size_bytes": 160601216
+      },
+      "lexicon.sqlite": {
+        "sha256": "7dab89bc0a0f9e9399cce3a25b806cc888b034e5920e94428f70959b44280172",
+        "size_bytes": 396210176
+      },
+      "scope.json": {
+        "sha256": "1db3ae035bd91ec9401618c09d666a9f13eccefa48c87dbc7f493e4d666851f5",
+        "size_bytes": 2207
+      }
+    },
+    "file_logical_bytes": 946137755,
+    "input_rowset_sha256": "25886ca0fa922b7721192f56c55808e213116c0d7754fba543e9feb566498f00",
+    "vectors_sha256": "1acfa007b233739b2ce73023f232ef539ee090868d03759fe34be88e5d5be76e",
+    "verification": {
+      "ann_to_original_vector_max_absolute_difference": 1.043081283569336e-07,
+      "full_mapping_rows": 104558,
+      "input_rowset_sha256": "25886ca0fa922b7721192f56c55808e213116c0d7754fba543e9feb566498f00",
+      "physical_occurrences": 103188,
+      "scope": "complete source selection, row/window/ref/coordinates, lexical rowset and stored vector binding; not relevance or logical identity",
+      "status": "PASS",
+      "vectors_sha256": "1acfa007b233739b2ce73023f232ef539ee090868d03759fe34be88e5d5be76e"
+    },
+    "old_vectors_reused": false,
+    "fresh_full_overlay_AB": "NOT_RUN"
+  },
+  "runtime_only_update": {
+    "automatic_build_resume_under_changed_shared_code": "REJECT; no old v3 receipt was resigned",
+    "configs": [
+      "runtime-config.readthrough-literal.json",
+      "runtime-config.readthrough-semantic.json"
+    ],
+    "data_stage_receipts_preserved": true,
+    "formal_release_accepted": false,
+    "index_sha256_unchanged": "48662d870bff428527b87ee63cae33b2306d829548f7d000106654fcdc340aa3",
+    "new_full_35_input_cold_run_after_runtime_only_change": "NOT_RUN; source artifacts and complete source/index/semantic oracles unchanged",
+    "prior_profiles_and_qualifications_preserved": true,
+    "prior_runtime_profiles_reject_changed_code": true,
+    "runtime_changed_files": [
+      "src/genshin_lore/research71_candidate_query.py"
+    ],
+    "runtime_implementation_sha256": "6b46bc866ba75f27399c8fe03698bdd96aca833155d7be5144bc2f6ea6c15384",
+    "source_build_code_commit": "0ddad7ca9f3c72104b5243fde21cd5cbe39da513",
+    "status": "PASS_RUNTIME_ONLY_READTHROUGH_QUALIFICATION"
+  },
+  "source_stage_identity_audit": {
+    "status": "PASS_ALL_60_CURRENT_STAGE_IDENTITIES",
+    "qualified_at_commit": "0ddad7ca9f3c72104b5243fde21cd5cbe39da513",
+    "database_and_index_stages": 60,
+    "current_shared_runtime_code_resume": "REJECT; as-built v3 receipts remain immutable"
+  },
+  "actual_stdio": {
+    "modes_and_bindings": {
+      "status": "PASS_RESEARCH72_MODES_AND_BINDINGS",
+      "snapshot": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+      "fresh_output_bindings_only": true,
+      "no_cross_version_fallback": true,
+      "checks": [
+        {
+          "mode": "literal",
+          "hits": 3,
+          "wall_seconds": 7.582407421898097,
+          "read_and_inspect": true,
+          "reference_sha256": "a0b54cb296af3cd85dc98669a04e0ef08050abddb22378b7bad558f2be7765e6"
+        },
+        {
+          "mode": "lexical",
+          "hits": 3,
+          "wall_seconds": 4.036611109972,
+          "read_and_inspect": true,
+          "reference_sha256": "36b8c859822acf07e0452bf1ea16df5663a7de3bc15132e4bf479864464c6ceb"
+        },
+        {
+          "mode": "semantic",
+          "hits": 3,
+          "wall_seconds": 4.409012595657259,
+          "read_and_inspect": true,
+          "reference_sha256": "46be8e625353d4bed32d9ef31312c3e36c00eefc6e59de59bc53063ae982b7f5"
+        },
+        {
+          "mode": "hybrid",
+          "hits": 3,
+          "wall_seconds": 4.058078210800886,
+          "read_and_inspect": true,
+          "reference_sha256": "36b8c859822acf07e0452bf1ea16df5663a7de3bc15132e4bf479864464c6ceb"
+        },
+        {
+          "literal_query": "胡",
+          "hits": 2,
+          "wall_seconds": 4.099683563224971,
+          "cursor_checked": true
+        },
+        {
+          "literal_query": "。",
+          "hits": 2,
+          "wall_seconds": 4.0829094760119915,
+          "cursor_checked": true
+        },
+        {
+          "literal_query": "Hu Tao",
+          "hits": 2,
+          "wall_seconds": 4.930411682929844,
+          "cursor_checked": true
+        },
+        {
+          "book_candidate_follow_read_inspect": true,
+          "partial_preserved": true,
+          "no_resolution_when_disabled": true,
+          "body_entries": 19
+        }
+      ],
+      "model_autonomous_acceptance": false
+    },
+    "continuation": {
+      "status": "PASS_REBUILT_MCP_TRANSPORT_AND_CONTINUATION",
+      "checks": {
+        "research": {
+          "tools": [
+            "describe_corpus",
+            "search_evidence",
+            "read_evidence",
+            "follow_evidence",
+            "inspect_evidence"
+          ],
+          "all_five_called": true
+        },
+        "book": {
+          "continuation_pages": 13,
+          "local_eof": true,
+          "inspection_completed": true,
+          "actual_coverage": [
+            {
+              "lines": 6,
+              "first_ordinal": 0,
+              "last_ordinal": 5,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 6,
+              "first_ordinal": 6,
+              "last_ordinal": 11,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 12,
+              "last_ordinal": 18,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 6,
+              "first_ordinal": 19,
+              "last_ordinal": 24,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 6,
+              "first_ordinal": 25,
+              "last_ordinal": 30,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 31,
+              "last_ordinal": 37,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 38,
+              "last_ordinal": 44,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 45,
+              "last_ordinal": 51,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 52,
+              "last_ordinal": 58,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 59,
+              "last_ordinal": 65,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 7,
+              "first_ordinal": 66,
+              "last_ordinal": 72,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 6,
+              "first_ordinal": 73,
+              "last_ordinal": 78,
+              "total_physical_lines": 85
+            },
+            {
+              "lines": 6,
+              "first_ordinal": 79,
+              "last_ordinal": 84,
+              "total_physical_lines": 85
+            }
+          ]
+        },
+        "story": {
+          "continuation_pages": 1,
+          "local_eof": true,
+          "inspection_completed": true,
+          "actual_coverage": [
+            {
+              "start": 400,
+              "end": 467,
+              "total_chars": 467,
+              "segment_sha256": "99d3d7aaa641d88f6c63be96dd0986321a4cf539e54d2a7eb47748d0a1a9a535",
+              "full_text_sha256": "c563f1cae755f4cbe60240ea049d5ac56e32ed248c5ad15710cd61e62624ba04"
+            }
+          ]
+        },
+        "narrative": {
+          "tools": [
+            "query_research71_preview",
+            "inspect_research71_preview"
+          ]
+        }
+      },
+      "model_autonomous_acceptance": false,
+      "formal_release_accepted": false
+    },
+    "dialogue": {
+      "status": "PASS_DIALOGUE_MCP",
+      "tools": [
+        "describe_corpus",
+        "search_evidence",
+        "read_evidence",
+        "follow_evidence",
+        "inspect_evidence"
+      ],
+      "pages": 2,
+      "body_and_provenance_equivalence": true,
+      "cursor_mismatch_rejected": true,
+      "source_cards_readback_verified": true,
+      "reading_extension_release_accepted": false
+    }
+  },
+  "additional_narrative_probes": {
+    "status": "PASS_RESEARCH72_NARRATIVE_FAMILY_REACHABILITY",
+    "checks": [
+      {
+        "kind": "voice",
+        "question": "7.2胡桃有哪些语音？",
+        "task_status": "COMPLETE",
+        "citations_returned": 4,
+        "inspected": 2,
+        "wall_seconds": 0.3397952429950237,
+        "reference_hashes": [
+          "4e2d6ad253aa51984a7bd448b3c67031d7d5ce9ff53c6d7598d49fedd66fc08b",
+          "48b6c1e895f563bde830b60cb3a6e06ed8130931e6465cf9b5daf5ac52fb5f81"
+        ]
+      },
+      {
+        "kind": "npc",
+        "question": "7.2凯瑟琳说过什么？",
+        "task_status": "COMPLETE",
+        "citations_returned": 4,
+        "inspected": 2,
+        "wall_seconds": 1.7395761511288583,
+        "reference_hashes": [
+          "b3e524a663fb8029ce5cdc6ed1f0363ca78a5cc51152664cf368b5eda40f935c",
+          "88d5bc3266923d26bef9635a693283b9afb23575e1f64977c4141d59d28ed749"
+        ]
+      },
+      {
+        "kind": "quest",
+        "question": "7.2吞金和蓄财任务发生了什么？",
+        "task_status": "COMPLETE",
+        "citations_returned": 5,
+        "inspected": 2,
+        "wall_seconds": 11.289040259085596,
+        "reference_hashes": [
+          "c63a13f96c5ec25213819b070572282a5e497ce446c7928a01dabe2f1f266de3",
+          "2ccad1bab71c962c95aa662f7ed1fc88441922336b6a6a8f0e9377d5614718b7"
+        ]
+      },
+      {
+        "kind": "event",
+        "question": "7.2连线被弄乱了这个活动讲了什么？",
+        "task_status": "PARTIAL_USEFUL",
+        "citations_returned": 1,
+        "inspected": 1,
+        "wall_seconds": 0.02773759188130498,
+        "reference_hashes": [
+          "a2358e41391b41c2c6e0dcc08dd7d917f442a2f731d3fbcbbf15e2471c68db5a"
+        ]
+      }
+    ],
+    "actual_model_answer_acceptance": false,
+    "rephrased_convenience_npc_probe": true,
+    "original_npc_wording_not_passed": true
+  },
+  "convenience_grammar_limitation": {
+    "status": "CONFIRMED_PREEXISTING_CONVENIENCE_GRAMMAR_LIMITATION",
+    "checks": [
+      {
+        "question": "7.1凯瑟琳有哪些相关对白？",
+        "version_scope": "supported",
+        "intent": "unknown",
+        "subject": [
+          null,
+          "subject_not_identified"
+        ]
+      },
+      {
+        "question": "7.2凯瑟琳有哪些相关对白？",
+        "version_scope": "supported",
+        "intent": "unknown",
+        "subject": [
+          null,
+          "subject_not_identified"
+        ]
+      }
+    ],
+    "five_tool_npc_dialogue": "independently passed actual stdio check",
+    "not_a_source_absence_claim": true,
+    "grammar_modified": false,
+    "intent_and_subject_AST_equal_to_main_base": true
+  },
+  "tests": {
+    "full_synthetic": {
+      "passed": 827,
+      "skipped": 3,
+      "record": "synthetic-regression-14.log"
+    },
+    "runtime_targeted": {
+      "passed": 43,
+      "record": "runtime-source-target-regression.log"
+    },
+    "skill_validation": "PASS",
+    "documentation_layout": {
+      "passed": 11
+    },
+    "activity_fresh_AB": {
+      "status": "PASS_ACTIVITY_FRESH_AB",
+      "artifact": {
+        "size_bytes": 94208,
+        "sha256": "00d6bfadde833f263bdac0059f7667ea169a5d03ee4602d4a99b6b2d015fa927"
+      },
+      "source_version": "7.2",
+      "build_reports_equal": true,
+      "independent_verifier_both_arms": true,
+      "wall_seconds": [
+        11.076662553008646,
+        10.742212979122996
+      ],
+      "full_35_input_AB": false
+    },
+    "static_contract_regeneration": {
+      "status": "PASS_SOURCE_CONTRACT_REGENERATION",
+      "files": 17,
+      "entries": [
+        {
+          "path": "manifests/event-narrative-7.2/component-10-scope-v1.json",
+          "sha256": "993d2f80e9485cbc8ad852bb38b142caa0d6f41fa49a1f6a56e3bd2ac6910a10"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-11-scope-v1.json",
+          "sha256": "141704499398b99b8f9f1c208f9c3db56decb81399d5ef3e3e2b9f563d4b5a64"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-12-scope-v1.json",
+          "sha256": "e782c9bffaf83fa61029ef7167f85b28e88ee40574254d4d58c5347f3c7d1a85"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-13-physical-scope-v1.json",
+          "sha256": "e200eec7850e61aeb5433e79615389bf10294490c0d522c9bbb5e582c959bad8"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-14-scope-v1.json",
+          "sha256": "4c3997edc9a90ab19e123c717a30096cb0990d3ec2ebe0334b2914e92655e520"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-15-scope-v1.json",
+          "sha256": "5f233047452ef3fd3232d9a03781319dd36a5750d5381f72405c46542bce100d"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/component-16-18-physical-scope-v1.json",
+          "sha256": "e26b74660ee93dd06a87477340ce70a896407f09d7cc7e85d32359e7fec37bee"
+        },
+        {
+          "path": "manifests/event-narrative-7.2/native-text-wave-scope-v1.json",
+          "sha256": "f46aa4a863012c1d775d5fc04da564fe4b26e9a9e6b1ba8557274b794ec2e1f1"
+        },
+        {
+          "path": "manifests/native-archive-7.2/aux-quest-scope-v1.json",
+          "sha256": "f47c33518bb5a681080f5d6b2fa9a5e80fd9fd80ce8fe133d067ab93a60507f8"
+        },
+        {
+          "path": "manifests/native-archive-7.2/aux-quest-selection-v1.json",
+          "sha256": "7ec89f18cdf17c136ef62fb735e4759d771fb46880e94712ba4ac6e886704b8a"
+        },
+        {
+          "path": "manifests/native-archive-7.2/book-music-scope-v1.json",
+          "sha256": "0c6aa234d82cf801be9168ef4a8715230558e627e3c0582261441feed5f2ec4b"
+        },
+        {
+          "path": "manifests/native-archive-7.2/book-music-selection-v1.json",
+          "sha256": "f5d429f11695d6d1acde9fd319ec37a5c1af6963204e00e0349d47650c85fbc7"
+        },
+        {
+          "path": "manifests/native-archive-7.2/bulk-scope.json",
+          "sha256": "00d3bf5978ebc78778fe40d08dc74d691fc6de3ac415a6dbd856e7724aada5e6"
+        },
+        {
+          "path": "manifests/native-archive-7.2/bulk-selection.json",
+          "sha256": "79c0f3466be107f49a4cc86f902093e465911907eae9b671f47678066f430094"
+        },
+        {
+          "path": "manifests/native-archive-7.2/high-value-scope-v1.json",
+          "sha256": "6c3a8c4699aa0536f78501369a8980565326ba0610962f9ab6280138bc5f89e9"
+        },
+        {
+          "path": "manifests/native-archive-7.2/message-scope-v1.json",
+          "sha256": "fd923d4e3988c52969f97e4c9833f91405e2aedfe96e073e3df8165487106132"
+        },
+        {
+          "path": "manifests/native-archive-7.2/successor-scope-v1.json",
+          "sha256": "5260b95ee82e71d3a95b095e6b30909a91d1538733202ec4e4f03d8937731096"
+        }
+      ],
+      "scope": "Event/Native input metadata only; not a second full database or ANN build"
+    },
+    "wrong_document_contract_negative": {
+      "status": "PASS_WRONG_DOCUMENT_CONTRACT_REJECTED",
+      "checks": [
+        {
+          "boundary": "builder",
+          "rejected": true,
+          "error": "7.1 Document dependency snapshot",
+          "wall_seconds": 1.9867971362546086
+        },
+        {
+          "boundary": "independent_verifier",
+          "rejected": true,
+          "error": "Readable 7.1 independent verifier: Document snapshot/contract",
+          "wall_seconds": 1.2155380127951503
+        }
+      ],
+      "output_created": false,
+      "input_artifacts_modified": false
+    },
+    "semantic_input_metadata_AB": {
+      "status": "PASS_FRESH_SEMANTIC_INPUT_METADATA_AB",
+      "input_scopes_equal": true,
+      "selection_criteria_unchanged_except_snapshot_namespace": true,
+      "scope_sha256": "1db3ae035bd91ec9401618c09d666a9f13eccefa48c87dbc7f493e4d666851f5",
+      "embedding_AB_rerun": false,
+      "ANN_binary_AB": "NOT_RUN"
+    }
+  },
+  "execution": {
+    "first_full_command_F": "FAIL at Readable dependency contract; original failure retained",
+    "recovery": "new Document build plus remaining normal stages; unaffected stages reused only under matching v3 identity",
+    "completed_recovery_stages": [
+      {
+        "stage": "readable",
+        "wall_seconds": 54.70106554031372,
+        "exit_code": 0
+      },
+      {
+        "stage": "events",
+        "wall_seconds": 97.4898452758789,
+        "exit_code": 0
+      },
+      {
+        "stage": "native",
+        "wall_seconds": 224.5699179172516,
+        "exit_code": 0
+      },
+      {
+        "stage": "index",
+        "wall_seconds": 718.4989852905273,
+        "exit_code": 0
+      },
+      {
+        "stage": "semantic",
+        "wall_seconds": 882.3763599395752,
+        "exit_code": 0
+      }
+    ],
+    "cold_single_command_at_final_runtime_commit": "NOT_RUN; no data projection changed in the final runtime-only fix",
+    "performance_improvement_claimed": false
+  },
+  "capacity": {
+    "logical_bytes": 83578490365,
+    "allocated_bytes": 86093791232,
+    "hard_headroom": 3906208768,
+    "host_free": 121809219584,
+    "unknown": []
+  },
+  "limits": [
+    "Existing bounded scope, not all game text or a promoted 7.2 release.",
+    "Opaque Document arrays retain unresolved namespace; exported Readable targets and book-title association remain candidates.",
+    "Photo root/page selector union remains partial; 240 no-body Talk terminals remain unresolved.",
+    "Historical 8 contract/12 component gaps are not closed or re-counted by this migration.",
+    "The convenience query is not a universal natural-language parser; the Skill directs keyword/five-tool research.",
+    "No autonomous model answer acceptance, native Windows 7.2 full build, or full 35-input fresh A/B is claimed.",
+    "Old profiles and v3 data receipts were not resealed to hide the runtime-only code change."
+  ],
+  "raw_record_retention": {
+    "where": "ignored project-local build records; no game text or machine bindings in Git",
+    "records": [
+      {
+        "local_record": "activity-72-ab.log",
+        "size_bytes": 329,
+        "sha256": "4957f2f2e31bfa28fc49951f33ea63e57b1628d43055775e631a3e0d627ede1e"
+      },
+      {
+        "local_record": "affected-fixtures-regression-4.log",
+        "size_bytes": 181,
+        "sha256": "d7a736f9e8926ab90804b0cc01f12753d7107225e103289816a7bc160431d4f6"
+      },
+      {
+        "local_record": "archive-contract-recheck.log",
+        "size_bytes": 900,
+        "sha256": "ab1300a1b04b136d46221990d5c69dc05a24aea360de2803882547f6899f4485"
+      },
+      {
+        "local_record": "archive-contracts-attempt-1.log",
+        "size_bytes": 629,
+        "sha256": "ccad57f6113a5cb178620074a89155015a180c4e8c2b952fc9e482b0e865f042"
+      },
+      {
+        "local_record": "archive-contracts-attempt-2.log",
+        "size_bytes": 951,
+        "sha256": "10969744943b2523bda9b00cff5c7e8c79146e3a812881a945c4e3e7aa22a9ce"
+      },
+      {
+        "local_record": "archive-contracts-attempt-3.log",
+        "size_bytes": 1442,
+        "sha256": "54a92030395ab60611ac373517a669968e74c0f3f61871f1483c2b6d9f4ff7b4"
+      },
+      {
+        "local_record": "archive-contracts-attempt-4.log",
+        "size_bytes": 1505,
+        "sha256": "32d40cc76da12a733c22ef0a34303ff4ca8971c9f9739669a58d005d477bf025"
+      },
+      {
+        "local_record": "archive-contracts-attempt-5.log",
+        "size_bytes": 1507,
+        "sha256": "ac6d09c83c1932771c10f938a38243842d41fbeea6e4aca73af32ca5d72f2e4b"
+      },
+      {
+        "local_record": "archive-contracts-attempt-6.log",
+        "size_bytes": 625,
+        "sha256": "cc5f8ceeaede38280c74e100f4719abcdb9e9cccddd7b96ff427ebfc3d734ddd"
+      },
+      {
+        "local_record": "archive-contracts-attempt-7.log",
+        "size_bytes": 1450,
+        "sha256": "01323a581c4b517b2dc9bd2a4b33cc7eb1cac726f43e82d26df7e95cc30324ca"
+      },
+      {
+        "local_record": "archive-contracts-attempt-8.log",
+        "size_bytes": 900,
+        "sha256": "ab1300a1b04b136d46221990d5c69dc05a24aea360de2803882547f6899f4485"
+      },
+      {
+        "local_record": "archive-contracts-v2.log",
+        "size_bytes": 900,
+        "sha256": "ab1300a1b04b136d46221990d5c69dc05a24aea360de2803882547f6899f4485"
+      },
+      {
+        "local_record": "archive-contracts-v3.log",
+        "size_bytes": 900,
+        "sha256": "ab1300a1b04b136d46221990d5c69dc05a24aea360de2803882547f6899f4485"
+      },
+      {
+        "local_record": "archive-contracts-v4.log",
+        "size_bytes": 900,
+        "sha256": "ab1300a1b04b136d46221990d5c69dc05a24aea360de2803882547f6899f4485"
+      },
+      {
+        "local_record": "book-candidate-tests.log",
+        "size_bytes": 99,
+        "sha256": "c2cd46f3d40965157699cc7bdc8d7f0ed2fd6603b159e06afed706f25765f66a"
+      },
+      {
+        "local_record": "book-preflight-debug-1.log",
+        "size_bytes": 1607,
+        "sha256": "cbb38db1f3474f408cc1c0052dfa598074de79ce6a7244f9281b74cc311def9d"
+      },
+      {
+        "local_record": "candidate-card-tests.log",
+        "size_bytes": 99,
+        "sha256": "750629578324cd1a852a4ef10c37b6fefb2d779d15da0bf14eee1b49db0b8fce"
+      },
+      {
+        "local_record": "character-attempt-1.log",
+        "size_bytes": 230,
+        "sha256": "8541db728670b41c786c950017fd319357f19f15aad7c12b966118a52fb05965"
+      },
+      {
+        "local_record": "character-tests-1.log",
+        "size_bytes": 5478,
+        "sha256": "228c20a01d050e2530ee33a55c661f6a55931770af11e03b2aac2db44e91c0bc"
+      },
+      {
+        "local_record": "character-tests-2.log",
+        "size_bytes": 180,
+        "sha256": "1d078b10821642c507f0454c3ea1384f16add2d10da5ce1b9e47366014e85771"
+      },
+      {
+        "local_record": "codex-source-diagnostic-1.log",
+        "size_bytes": 1337,
+        "sha256": "74aa6fcd62e5640384c04e3397666b8b49a44b9510358f9504b3aca1d95620e0"
+      },
+      {
+        "local_record": "compile-and-help.log",
+        "size_bytes": 170,
+        "sha256": "ec9b1e9ab9e0552bbdd4cc03154a6c6beab8ceb7cb898083c3fcab03e03f6244"
+      },
+      {
+        "local_record": "convenience-grammar-comparison.json",
+        "size_bytes": 695,
+        "sha256": "f6cafa08c1c1f6fca2ed68f23da9d15498c71c0991c55c575c401a2c9051f90e"
+      },
+      {
+        "local_record": "core-attempt-1.log",
+        "size_bytes": 4009,
+        "sha256": "b277865ffac8e184dae58337e8282798191616d5ff281620a26bb762713ee1db"
+      },
+      {
+        "local_record": "core-attempt-2.log",
+        "size_bytes": 976,
+        "sha256": "3375f9b2474234ac401687325d6f00dadb826e493690345d969eb0fa8d1b7c1e"
+      },
+      {
+        "local_record": "document-contract-recheck.log",
+        "size_bytes": 93,
+        "sha256": "06f574bc3b055f88a214dbe94ec154cb9bfb96b874a87de134a0b7ce83184106"
+      },
+      {
+        "local_record": "document-negative-1.log",
+        "size_bytes": 275,
+        "sha256": "af3486fc443bb10d515e055f63763e52d778a09aa7bd490b1a8fcbf507788ef6"
+      },
+      {
+        "local_record": "document-probe-1.log",
+        "size_bytes": 181,
+        "sha256": "450220df9bf3abe6bafea56a438733d64f936d6b447346238111c3c592a26e82"
+      },
+      {
+        "local_record": "event-linked-diagnostics-1.log",
+        "size_bytes": 409,
+        "sha256": "0bfd6962c46a4ad5b5d1d57785e55fa4be92e56e9b20bec4281ddf0b49c2f36d"
+      },
+      {
+        "local_record": "event-source-diagnostics-1.log",
+        "size_bytes": 879,
+        "sha256": "64b635f3d8e5700a0bf0ca3e6a71cd7919ed33be69c7a6e25208706a3b72d48e"
+      },
+      {
+        "local_record": "field-alias-investigation.json",
+        "size_bytes": 9821,
+        "sha256": "e3e07022e591289498305387c74be967717b32df5d9a4004498d58ff3378d03c"
+      },
+      {
+        "local_record": "field-declaration-audit.json",
+        "size_bytes": 20481,
+        "sha256": "f1eb08729403498a23f8dbe70ccdf10232dae749ce3d1dc7f59170f0c583f71e"
+      },
+      {
+        "local_record": "final-b-character-attempt-1.log",
+        "size_bytes": 230,
+        "sha256": "6e7a7340ea3bf88bfd7fae188d9c8469cfb5baafed396495cb9efad4f10a3233"
+      },
+      {
+        "local_record": "final-b-core-attempt-1.log",
+        "size_bytes": 1740,
+        "sha256": "9c1d4f066e6f73fb197eb4050909a93f9c1d91f51f3a4f27f5ac27353363311f"
+      },
+      {
+        "local_record": "final-b-narrative-attempt-1.log",
+        "size_bytes": 173,
+        "sha256": "583e57825736876f846c79bc2d2b85a06bf5a71971b0400f583fca3ffaf55439"
+      },
+      {
+        "local_record": "final-b-quest-attempt-1.log",
+        "size_bytes": 2586,
+        "sha256": "05e946353fa09aa6ec3a49164f825419b0fa4726c42ce9717ebbfda4b4c9928d"
+      },
+      {
+        "local_record": "final-b-quest-attempt-2.log",
+        "size_bytes": 2802,
+        "sha256": "39af0512fd75334c6f72f71cf3b020fa3c3c2aa8b8c52c64075487342927ae74"
+      },
+      {
+        "local_record": "final-b-r0-attempt-1.log",
+        "size_bytes": 32,
+        "sha256": "9ebe0765d8d9bee87f30fa6092244d270801972ecc735a9ee7237e5bc47b7055"
+      },
+      {
+        "local_record": "final-b-readable-attempt-1.log",
+        "size_bytes": 85,
+        "sha256": "67cc803360883432dbf9152cafa318c9a3ab40f878d2293ec78e83f83ea4459f"
+      },
+      {
+        "local_record": "final-b-simple-attempt-1.log",
+        "size_bytes": 165,
+        "sha256": "fdf8ca9d35a1f8a759b9acad6ac15c83ba3609f89c9ac100a2a650964399d7ba"
+      },
+      {
+        "local_record": "final-freeze-targeted.log",
+        "size_bytes": 100,
+        "sha256": "03bd400f4fd819a115a175c9ecae8d5e84aaac0d61893c463a792dad23b43e49"
+      },
+      {
+        "local_record": "final-mcp-continuation-fixed.json",
+        "size_bytes": 2910,
+        "sha256": "a7d6317ae132bb84b3f0f46614f8596ce2fcec3c594ef1d9fa4c92c06a5807a8"
+      },
+      {
+        "local_record": "final-mcp-continuation-fixed.stderr",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-continuation.json",
+        "size_bytes": 2910,
+        "sha256": "a7d6317ae132bb84b3f0f46614f8596ce2fcec3c594ef1d9fa4c92c06a5807a8"
+      },
+      {
+        "local_record": "final-mcp-continuation.stderr",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-dialogue-fixed.json",
+        "size_bytes": 309,
+        "sha256": "94aa4ac780fbc7170eb1240f473713e408e0961a0e7632197947764022393bcf"
+      },
+      {
+        "local_record": "final-mcp-dialogue-fixed.stderr",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-dialogue.json",
+        "size_bytes": 309,
+        "sha256": "94aa4ac780fbc7170eb1240f473713e408e0961a0e7632197947764022393bcf"
+      },
+      {
+        "local_record": "final-mcp-dialogue.stderr",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-family-checks-rephrase.json",
+        "size_bytes": 1776,
+        "sha256": "956736c339d5741bf51f01e1d58f82a32f22fd1dc07a4b405fb7f58528d109f4"
+      },
+      {
+        "local_record": "final-mcp-family-checks-rephrase.stderr",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-family-checks.json",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-family-checks.stderr",
+        "size_bytes": 4257,
+        "sha256": "2a968373c991b0b0ecd0e18db467ff72948e227e44147c6a687dbe2d41f13540"
+      },
+      {
+        "local_record": "final-mcp-modes-and-bindings-fixed.json",
+        "size_bytes": 1703,
+        "sha256": "653657d2ed8962f842a6f1742d8edd7f0f39d047bb994f934ef67b5065b6f167"
+      },
+      {
+        "local_record": "final-mcp-modes-and-bindings-fixed.stderr",
+        "size_bytes": 592,
+        "sha256": "52cf16f67ce0e6d2b9cf7ff5724fb6fc7e2568ea8bfea5dad74f7a08e0803e57"
+      },
+      {
+        "local_record": "final-mcp-modes-and-bindings.json",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "final-mcp-modes-and-bindings.stderr",
+        "size_bytes": 8518,
+        "sha256": "7afd4d720ced3b55d9d6b3d9c23a415ec4f3515eef7be0039c81bdd96d5eefa3"
+      },
+      {
+        "local_record": "final-runtime-targeted.log",
+        "size_bytes": 180,
+        "sha256": "0bf21a411a85f5f8142c8b0a5cb2860e1665774f250be769cfd284accdb8e57d"
+      },
+      {
+        "local_record": "final-stage-identity-audit-2.log",
+        "size_bytes": 1434,
+        "sha256": "42e4b0e6c1948b13219ef90a901b20a5725f6151f0b82887684ac7630fcdc5fc"
+      },
+      {
+        "local_record": "final-stage-identity-audit.log",
+        "size_bytes": 223,
+        "sha256": "6b9863195af7d8d25960f9df0e96c5852f0b7370f2010681353f32628cfbcb0c"
+      },
+      {
+        "local_record": "fixtures-regression-1.log",
+        "size_bytes": 179,
+        "sha256": "766c20edb68cf74400eb59829057f3da8eac3690b4c8810542e72df4631ac19c"
+      },
+      {
+        "local_record": "full-c-1.log",
+        "size_bytes": 3033,
+        "sha256": "ef0f15d98df44b36478da9006b307925ef37cc24514d41643814cf9a55f8fc69"
+      },
+      {
+        "local_record": "full-d-1.log",
+        "size_bytes": 5953,
+        "sha256": "58d439af33b8ea380f32163946b35835481934420551410b5499b405d1bced1c"
+      },
+      {
+        "local_record": "full-e-1.log",
+        "size_bytes": 9557,
+        "sha256": "e10ed1dea0484097c492ed002cbd91fcc2ce20e79ce107cb7c896abd245d38c7"
+      },
+      {
+        "local_record": "full-f-1.log",
+        "size_bytes": 6658,
+        "sha256": "443b0d9684fdbe93c031e8c06fe0fae0b8e3fbc46ca8a707e024a346b5dd5794"
+      },
+      {
+        "local_record": "full-f-document-recovery.log",
+        "size_bytes": 1154,
+        "sha256": "92502f982fb6080df9b50fe30d44a458839e66603f38d15777761c2cd95355d1"
+      },
+      {
+        "local_record": "full-f-events-recovery.log",
+        "size_bytes": 1483,
+        "sha256": "2c09860568013bf9e533b517c5c2774628530f5bbe0b5c5c6bd94759c1695e06"
+      },
+      {
+        "local_record": "full-f-index-recovery.log",
+        "size_bytes": 3639,
+        "sha256": "72fe9ecc6daac60d3536001969a32c11b34052cb0ae267739d8186da021804c6"
+      },
+      {
+        "local_record": "full-f-native-recovery.log",
+        "size_bytes": 1441,
+        "sha256": "fb210dbc7b505938952ed4d16206c122b6d2e21831281a01a4937a52294bddaa"
+      },
+      {
+        "local_record": "full-f-readable-recovery.log",
+        "size_bytes": 1192,
+        "sha256": "23490fe8a194505d749ccad7f64573f2495e56f497eb5e06467c14527cfb5914"
+      },
+      {
+        "local_record": "full-f-semantic-recovery.log",
+        "size_bytes": 11834,
+        "sha256": "3a6e0faca74945b26ce1512036a3c4d21c6e6af7848f3c0a666b364a7180fe3f"
+      },
+      {
+        "local_record": "full-f-stage-recovery.json",
+        "size_bytes": 3787,
+        "sha256": "da3917454115455b233f358390ac5e471dd0496e951cc6d0c7fd4282d8a38bbc"
+      },
+      {
+        "local_record": "mcp-continuation-e-1.log",
+        "size_bytes": 4404,
+        "sha256": "00e700b9febbbff8cb027f1de23f514e2c49afe3c46c3f26ab953f417c91487c"
+      },
+      {
+        "local_record": "mcp-dialogue-e-1.log",
+        "size_bytes": 309,
+        "sha256": "94aa4ac780fbc7170eb1240f473713e408e0961a0e7632197947764022393bcf"
+      },
+      {
+        "local_record": "metadata-isolation-final-tests.log",
+        "size_bytes": 99,
+        "sha256": "1242cf5f7bf00947ad87c71476433e200fd1b257fb42f4a129c6cb17b1e965d2"
+      },
+      {
+        "local_record": "migration-and-workers-regression.log",
+        "size_bytes": 100,
+        "sha256": "b5791fc4047447f65cb1d7172cc577980126966fac03295014c0002169dd40d5"
+      },
+      {
+        "local_record": "narrative-attempt-1.log",
+        "size_bytes": 173,
+        "sha256": "583e57825736876f846c79bc2d2b85a06bf5a71971b0400f583fca3ffaf55439"
+      },
+      {
+        "local_record": "narrative-tests-1.log",
+        "size_bytes": 100,
+        "sha256": "0334e9a10ca8784369f3321d89e0e85920b9bd7b6d7fa2a62740a122180963f9"
+      },
+      {
+        "local_record": "native-high-value-diagnostic-2.log",
+        "size_bytes": 185,
+        "sha256": "1b7e9a12738b70aef69eb9651d983f3dafa0ffb71b33687c3bce443f5f56d3d5"
+      },
+      {
+        "local_record": "native-physical-diagnostics-1.log",
+        "size_bytes": 1044,
+        "sha256": "cfd8d19c25bff424491c5c21d2afc5b1b42f47683b76856ded591571b91c924c"
+      },
+      {
+        "local_record": "native-physical-diagnostics-2.log",
+        "size_bytes": 1341,
+        "sha256": "234cac3228e583cca8f0bb60876c15562ed3b4989304106baa2724e2188f7c08"
+      },
+      {
+        "local_record": "native-source-diagnostics-1.log",
+        "size_bytes": 607,
+        "sha256": "12ba33817efe129e66a2607777979e00a6d65039e3c1403b3707b6b399ec9e23"
+      },
+      {
+        "local_record": "native-source-diagnostics-2.log",
+        "size_bytes": 1762,
+        "sha256": "a31e5b31edb5877cf0a6e7db946a99cebb8a4beb4b42589ec586be8b73a1e549"
+      },
+      {
+        "local_record": "native-source-diagnostics-3.log",
+        "size_bytes": 476,
+        "sha256": "16c9d32ff168cda0e96858eeab3e471d0179dc2f0df77cf4d90a240f6ab408d2"
+      },
+      {
+        "local_record": "qualification-tests-3.log",
+        "size_bytes": 179,
+        "sha256": "4df6e8f94113507636877060dca102be32e9d5f9038d87f51a32715c44f551a5"
+      },
+      {
+        "local_record": "quest-talk-attempt-1.log",
+        "size_bytes": 990,
+        "sha256": "85b1a687e3b1b43d6bee8255ed9ef1d698be7f62f2c6b6863c5ab36d7c797940"
+      },
+      {
+        "local_record": "r0-attempt-1.log",
+        "size_bytes": 912,
+        "sha256": "c4c8528d0247a4a61e40bd2a7484ae4a868f98cd539724181e3af0ad0eb1f9e7"
+      },
+      {
+        "local_record": "r0-tests-2.log",
+        "size_bytes": 99,
+        "sha256": "bf0ffa330e13fc0febecb355f6635d421c18156899b6e1f870f6a248d675bba7"
+      },
+      {
+        "local_record": "readable-contract-negative.log",
+        "size_bytes": 414,
+        "sha256": "87faff760beb0ec232e6c059113909718b90f0416e9997e3c2e5e3efeab6ee0e"
+      },
+      {
+        "local_record": "readable-contract-regression-2.log",
+        "size_bytes": 179,
+        "sha256": "a9758170630195a97981f0fe4dc08efc711a6d8366b73179e9410b23f59a382c"
+      },
+      {
+        "local_record": "readable-contract-regression-3.log",
+        "size_bytes": 99,
+        "sha256": "54785585d4ec68d94d698332e7c6275e223141ddf45538bb9a9e31afa1df7bdc"
+      },
+      {
+        "local_record": "readable-contract-regression.log",
+        "size_bytes": 86,
+        "sha256": "397b854b894aa4e8f0490539ca6089afb1be688952768005ec061c7c64e8f5ca"
+      },
+      {
+        "local_record": "regression-after-archive-wiring.log",
+        "size_bytes": 261,
+        "sha256": "d15905bfa1b5a1ce064fcf5c04fbdc1d790c39c76e783e2e843dc4baec4b1d39"
+      },
+      {
+        "local_record": "regression-focus-1.log",
+        "size_bytes": 2313,
+        "sha256": "d6cc2ecebdee5cdd24e60c91e94961841ac5fdce39cf9379b89368e487551efc"
+      },
+      {
+        "local_record": "repository-layout-final.log",
+        "size_bytes": 99,
+        "sha256": "8e3dd3f3ec5b8ce7536c0d81dabdf0848432b04c6950f23d3febd3fc54d8b462"
+      },
+      {
+        "local_record": "review-field-proof-1.json",
+        "size_bytes": 3638,
+        "sha256": "fa1ee2cb7bd78d03564842e028ce8708c3f9f76d15f74502c0adc622b36136d6"
+      },
+      {
+        "local_record": "root-signature-digests-unpaired-attempt-1.json",
+        "size_bytes": 218852,
+        "sha256": "ac957997f0366db4c95b4732bcc8e1ca496e982a789a5052da917e15be8c85e8"
+      },
+      {
+        "local_record": "runtime-only-readthrough-qualification.log",
+        "size_bytes": 912,
+        "sha256": "d41ab91e4c87b0d3737bf2e75e26c4e2b11d2330d1410f78d4633d97a9f2aba1"
+      },
+      {
+        "local_record": "runtime-preflight-check-1.log",
+        "size_bytes": 3856,
+        "sha256": "9198177fac6baace3e5c7bf3b213997420b2585859ccd9520511ed1de729a39c"
+      },
+      {
+        "local_record": "runtime-registry-fix-tests.log",
+        "size_bytes": 99,
+        "sha256": "725b4fe40a2a3de1aed301d193909f37aaa2ca997a691fd21dd82c0ab79fdab5"
+      },
+      {
+        "local_record": "runtime-source-target-regression.log",
+        "size_bytes": 99,
+        "sha256": "abe2082f444988e1720fc12ff6b62018704680385f0e2405ad0761f487aed391"
+      },
+      {
+        "local_record": "semantic-input-determinism.log",
+        "size_bytes": 285,
+        "sha256": "a25502378b206a2bb6fc87e5e9872de14d04a11366f172f7be91453c83bf4ee4"
+      },
+      {
+        "local_record": "simple-attempt-1.log",
+        "size_bytes": 165,
+        "sha256": "fdf8ca9d35a1f8a759b9acad6ac15c83ba3609f89c9ac100a2a650964399d7ba"
+      },
+      {
+        "local_record": "skill-and-links-regression.log",
+        "size_bytes": 99,
+        "sha256": "4fa7a44ec8447334636893f093b95b475c336b183bfc246bc1b9fbb0dfb35da5"
+      },
+      {
+        "local_record": "snapshot-continuation-1.log",
+        "size_bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "local_record": "snapshot-continuation-2.log",
+        "size_bytes": 98,
+        "sha256": "9a4cb81656c059b52b1c267a178efddb093363a90d9f1a7b2b9e666306763811"
+      },
+      {
+        "local_record": "source72-boundary-tests.log",
+        "size_bytes": 180,
+        "sha256": "ebcb1996c830ce0e667646130d98d06a6ee253438d50fb85997c28f770013fc1"
+      },
+      {
+        "local_record": "source72-contracts-final-tests.log",
+        "size_bytes": 99,
+        "sha256": "a524c375a710fd7b454e8a6c465f57972b04e6b985fc46e6e7d96ccc7646496e"
+      },
+      {
+        "local_record": "story-preflight-debug-1.log",
+        "size_bytes": 20368,
+        "sha256": "027f47dbf4a9dec877f99b1c9439aa2dbeec20ced70dfe58c7e0b20837e70bc3"
+      },
+      {
+        "local_record": "subtitle-contract.log",
+        "size_bytes": 87,
+        "sha256": "78888547ceed6a5709cf3ddd8e1668c47de69ef8b822cf7c0562677f5f694083"
+      },
+      {
+        "local_record": "synthetic-regression-1.log",
+        "size_bytes": 52676,
+        "sha256": "87441f001be3c7333e860a1440290148e15c8ddcc6a19f299dd5f0004f780671"
+      },
+      {
+        "local_record": "synthetic-regression-10.log",
+        "size_bytes": 1003,
+        "sha256": "a41f92ec1705e95bf239f0981a0ac22263fbc273f0f77cd93b5b95c5506f5920"
+      },
+      {
+        "local_record": "synthetic-regression-11.log",
+        "size_bytes": 1003,
+        "sha256": "13ec3f54e4d35a08e7b0aaef1114af99f7eddfddb7219189e3c6e6dc95cd9de4"
+      },
+      {
+        "local_record": "synthetic-regression-12.log",
+        "size_bytes": 1003,
+        "sha256": "860de036cef98184a852e1b5c5a6df301dfd86efd1c689ec07211c884e3449ae"
+      },
+      {
+        "local_record": "synthetic-regression-13.log",
+        "size_bytes": 1003,
+        "sha256": "8e8ff33a67fe1e12592bdf15fbc902118d2113cf2a5673bbe60480587d1a339e"
+      },
+      {
+        "local_record": "synthetic-regression-14.log",
+        "size_bytes": 1003,
+        "sha256": "df9c0eae09fccb5a4a0c668cf4ba7255917c4a7044a9270cc78cc0ffbb126044"
+      },
+      {
+        "local_record": "synthetic-regression-2.log",
+        "size_bytes": 3576,
+        "sha256": "7371ecf14353de995b629a8ba64a1b8cc9e8722a5cbd012e1b527e9ca67db971"
+      },
+      {
+        "local_record": "synthetic-regression-3.log",
+        "size_bytes": 253880,
+        "sha256": "43f40a4698c9165927418ab9229f83b124346dd8b6b559564360dc19b440284d"
+      },
+      {
+        "local_record": "synthetic-regression-4.log",
+        "size_bytes": 1003,
+        "sha256": "bc2c8b0cf59926fe9b705c5f73af4d06be5b993bd9169e964c83a5c0aff5ded1"
+      },
+      {
+        "local_record": "synthetic-regression-5.log",
+        "size_bytes": 22963,
+        "sha256": "b777b3bcfa19e0ef1c52ea78bf06551d78e93a0ccca8c55b687c6b6b31bbcd57"
+      },
+      {
+        "local_record": "synthetic-regression-6.log",
+        "size_bytes": 1003,
+        "sha256": "f460b25fd28f3b4583b8e6269d8ca966a80c5de3009bd89abf8a65ca2f9f7a09"
+      },
+      {
+        "local_record": "synthetic-regression-7.log",
+        "size_bytes": 1003,
+        "sha256": "fd95f23579a3c3aa61ed25f9aa01af7d15f9d9646d2d93ba4bc9b766b5e7e710"
+      },
+      {
+        "local_record": "synthetic-regression-8.log",
+        "size_bytes": 1003,
+        "sha256": "b65271e9b72ae333f2d90548ffc13a211dbeff9fc06177d3cdecf252ff91bc34"
+      },
+      {
+        "local_record": "synthetic-regression-9.log",
+        "size_bytes": 1003,
+        "sha256": "09337959426939ac98f63e04b30b2c81c3523c33931f7c43143417246a58c0c1"
+      },
+      {
+        "local_record": "talk-closure-diagnostic-1.log",
+        "size_bytes": 454,
+        "sha256": "a4c472b8277441cbdec62246030481b4fca0ac4cbb4b8a21ece3bcebcd0ab091"
+      },
+      {
+        "local_record": "trust-tests-4.log",
+        "size_bytes": 179,
+        "sha256": "54d863bbdb1ae97a43f4923e09573dd7328738d16add72e7c5d3e0680a9fc80e"
+      },
+      {
+        "local_record": "version72-entry-regression.log",
+        "size_bytes": 99,
+        "sha256": "136392afe32e413c0485772c98e57b0835e60bfac5f842126dbd56a2dc23a5eb"
+      }
+    ]
+  },
+  "public_copy_note": "Machine-specific quota fields omitted; original machine record retained privately. Source/data seals and original verification scope are unchanged."
+}

@@ -1,0 +1,415 @@
+{
+  "contract": "event13-7.2-physical-capability-v1",
+  "files": [
+    {
+      "blob": "c401dee8294eb18fdefeb023131252995a0419f9",
+      "path": "ExcelBinOutput/ActivityTradeShowOverAllExcelConfigData.json",
+      "sha256": "c256e82abd7d41326aa2ae1cb4d75eb47e1a9cee55e868909b0ad4d745cf944d",
+      "size_bytes": 1098
+    },
+    {
+      "blob": "5d9042c227daddd1aae2ba920fe526cae735ab8d",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusExcelConfigData.json",
+      "sha256": "a996c7c409288a0f071a5de73a7b39eb75f18878322566ac7a7bd07ca9087df9",
+      "size_bytes": 1561
+    },
+    {
+      "blob": "4974593ddb2628a9acb955dc67cefe4fe818b916",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusQuestExcelConfigData.json",
+      "sha256": "89342055abcdf7b3f51323dd8b306139d55f254e5729cd0bd20ce2235ae7b86f",
+      "size_bytes": 4269
+    },
+    {
+      "blob": "eeb1dc4781af31b76096683699cfdbfd226fdf41",
+      "path": "ExcelBinOutput/DreamBookInvestDetailExcelConfigData.json",
+      "sha256": "13ea751983c37ec78e0edb056d51d80b4ea41b0034bbc1b520e6c0ddf2fd8faa",
+      "size_bytes": 2685
+    },
+    {
+      "blob": "97c97f489fc75f3860939de6a5dcbc82d8587043",
+      "path": "ExcelBinOutput/DreamBookInvestigationExcelConfigData.json",
+      "sha256": "ab983f4b023dd230d930e8dd8d811db454b5c02b1d52493db059b497e593223f",
+      "size_bytes": 1849
+    },
+    {
+      "blob": "f918029068b6263b5d58d2aa7ac53cf054fe2eb5",
+      "path": "ExcelBinOutput/DreamBookPhotoAvatarExcelConfigData.json",
+      "sha256": "b8582b1a2591c2e98af34f2d89edde242331de0ca59e3f89874da129c74e9dde",
+      "size_bytes": 3536
+    },
+    {
+      "blob": "2d6673e015e20f25e93f8be33934c945dd2fd0a7",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionExcelConfigData.json",
+      "sha256": "1d52e3a7db6aed42acf0399c80416b7d9b22f4f80e3bf8ddee2bda2a5a99b172",
+      "size_bytes": 1973
+    },
+    {
+      "blob": "40c4620ae35e8487d481fe7db6bfcc46a433b15d",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionReminderExcelConfigData.json",
+      "sha256": "6de4e14c8b7041f7f6ed1840389f21de606883df6cdcd1a6f5c65a8f4fd2c15c",
+      "size_bytes": 7340
+    },
+    {
+      "blob": "4a7a72b026efa549888909748ba16a5020b6d27e",
+      "path": "ExcelBinOutput/DreamBookPhotoPickExcelConfigData.json",
+      "sha256": "4390069d7397a0ceecfe258480a5b765e98d92efa81cf81cdf0a38743202c54f",
+      "size_bytes": 273
+    },
+    {
+      "blob": "674f8eaff70bce8d4aa28f0cfed07ee586651298",
+      "path": "ExcelBinOutput/DreamBookPhotoPickReminderExcelConfigData.json",
+      "sha256": "b618bea1b4af544f7600fb86497a02a2b003e7ac140f1d272430d85491b3bb29",
+      "size_bytes": 3851
+    },
+    {
+      "blob": "2c052b64802a9ae907bf5b818add913eb0b76bac",
+      "path": "ExcelBinOutput/SnezBookAreaExcelConfigData.json",
+      "sha256": "79a130ebd8412c2dbd1181309f9f5def6300596952735d5916c2222448a121f6",
+      "size_bytes": 858
+    },
+    {
+      "blob": "51fe3d58c724c0a85ed76674ba9a3d95c7c39748",
+      "path": "ExcelBinOutput/SnezBookOfferingExcelConfigData.json",
+      "sha256": "b3a20c5c4cc8d34f844ef9fd56265d7e48967f102071918c8900ee6ec6d6ea8e",
+      "size_bytes": 2476
+    },
+    {
+      "blob": "a6107c70f03c45320ac771fd55b3fa5ba950d9f9",
+      "path": "ExcelBinOutput/SnezBookQuestChunkExcelConfigData.json",
+      "sha256": "b715f630f7524b3a90c331e1dd9f8e474d17f58a203dbcc5f5c92478cf94d024",
+      "size_bytes": 2598
+    },
+    {
+      "blob": "bfa1f06ec0911e64c959b19c88a2c23bd336ea6a",
+      "path": "ExcelBinOutput/SnezBookQuestQuoteExcelConfigData.json",
+      "sha256": "8c638ff87ab820b8aee21fa623ce8ecd232cc0f56aab2ead9d5ba73b7852175e",
+      "size_bytes": 18311
+    },
+    {
+      "blob": "1a5a0e920e3da5b85e231c3779b4f6a56b3ed379",
+      "path": "ExcelBinOutput/SnezBookTheGreyExcelConfigData.json",
+      "sha256": "f7e719346c72b534584b53d9ca4ecca510695dd7aef0523a25e3cf2c6ef8bc41",
+      "size_bytes": 2772
+    },
+    {
+      "blob": "90a2e5df5fbd454f5a1853dda0ed601c4e52654f",
+      "path": "ExcelBinOutput/SnezBookWeatherExcelConfigData.json",
+      "sha256": "4ab23fd7dd4704a88970e7f96e35f4fe15e6aa3bbd64ca582302c77c1d5f0b77",
+      "size_bytes": 304
+    },
+    {
+      "blob": "0637a088a01e8ddab3bf3fa98dbe804cbde1a0dc",
+      "path": "ExcelBinOutput/SnezBookCharacterExtraExcelConfigData.json",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "size_bytes": 2
+    },
+    {
+      "blob": "1c38f4c36bcee19689d3dd0a9b2cba3e3bcd8e9c",
+      "path": "ExcelBinOutput/SnezBookOfferingGameplayExcelConfigData.json",
+      "sha256": "cd393ba1c2eac6a252a2065910e3433098ef55948c85687f398928f90f2f6cb1",
+      "size_bytes": 2947
+    },
+    {
+      "blob": "aedfd56556d97724ae0c85509298591ae712f3da",
+      "path": "ExcelBinOutput/SnezBookOverallExcelConfigData.json",
+      "sha256": "28992c553a1bbbf10339af28d038aa4972e6821bda5fc377da88d898796f8740",
+      "size_bytes": 470
+    },
+    {
+      "blob": "af6d9959fd53d969f6c94d0cee0931e999e40060",
+      "path": "ExcelBinOutput/AgentReconClueExcelConfigData.json",
+      "sha256": "25ba6466058f0df58a17b92b83d145733dbde941ab64439f396181c852b1a6a5",
+      "size_bytes": 7492
+    },
+    {
+      "blob": "0d2c6e00cc81d9dfa131c2c2ccf7814e46e3089b",
+      "path": "ExcelBinOutput/AgentReconConstExcelConfigData.json",
+      "sha256": "4460af00b65c92b44d31922d48da432a03893943707381f4ac4d3ae3ff7eb9c6",
+      "size_bytes": 251
+    },
+    {
+      "blob": "9489ca0a90e6beae24059b80570845f85d1d0e09",
+      "path": "ExcelBinOutput/AgentReconLevelExcelConfigData.json",
+      "sha256": "b6d53cffc3b0e23f8b4fcb16d5265ccfd822672fede19fe8be8376aa7f2fe5af",
+      "size_bytes": 8721
+    },
+    {
+      "blob": "40fc4ce7621d2b2535eed38a57a8092b3bd0e629",
+      "path": "ExcelBinOutput/AgentReconSuspectExcelConfigData.json",
+      "sha256": "a3687517c5678775f24a7586fbee8fa1cc39093695316fa9e9e41b1cd96c426a",
+      "size_bytes": 1017
+    },
+    {
+      "blob": "e51b022428ee312cd8c570d0db696df18730cf70",
+      "path": "ExcelBinOutput/DailyStaffCommentsExcelConfigData.json",
+      "sha256": "91b683adbcfffefb3f03e228d073a3fd0ea79cc40ab1094c3f4716afb2a01970",
+      "size_bytes": 3589
+    },
+    {
+      "blob": "56dea7133aef169d2fa92f7953731c7045ae8a21",
+      "path": "ExcelBinOutput/DailyStaffIntroductionExcelConfigData.json",
+      "sha256": "84587b69694d0f61d6fe48e20ddad612ea77bf55e5a1f476b2fc84f643a31c97",
+      "size_bytes": 870
+    },
+    {
+      "blob": "208d3a9926d6c18c217087fb4f25c8aaae8528bc",
+      "path": "ExcelBinOutput/DailyStaffOptionExcelConfigData.json",
+      "sha256": "8161559eddc515907fc09cc8ed4b13f2dced4f37bcf11c99235b034153257914",
+      "size_bytes": 9949
+    },
+    {
+      "blob": "11b99f0bf06c85b3c6155808d37e9ca24ed7ab32",
+      "path": "ExcelBinOutput/ActivitySnowRaceStoryExcelConfigData.json",
+      "sha256": "7dc1b2313ae082117891b17016c2592f8a089df76793dca4a8e473b234a47a41",
+      "size_bytes": 1047
+    },
+    {
+      "blob": "64874cd855972be18b30c48e8a31d1237015339f",
+      "path": "ExcelBinOutput/ActivityAnimalViewOverallDataExcelConfigData.json",
+      "sha256": "71e6d2e99cfeeb5105e1f6592e2939362bea0b9debf4f98c3d0b842e74e939e2",
+      "size_bytes": 286
+    },
+    {
+      "blob": "0e3085fc9480d96b3d426e32e40290781cc850c4",
+      "path": "ExcelBinOutput/ActivityAnimalViewLevelExcelConfigData.json",
+      "sha256": "28b100d00ded6ac66ce069a218b7724373f655991aae724bd0e714e2d3aa248f",
+      "size_bytes": 2498
+    },
+    {
+      "blob": "6ebee6dcf3af77086ccf2e1e70df9ee2f9b6358c",
+      "path": "ExcelBinOutput/ActivityAnimalViewTargetExcelConfigData.json",
+      "sha256": "ac2e25388e7f5f3581530080d34b8d100561ea4c6e075f63190dab32ee13f65e",
+      "size_bytes": 7191
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "historical_scope_sha256": "0f2027627a9a4a6547b42e6b3e829c755746e920c92558dc0ca3dd683940c139",
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {},
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "selection": "historical 30 full physical arrays, no native-ID filter",
+  "semantic_owner_mapping_unresolved": true,
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "trade_show",
+      "kind": "trade_show_overall",
+      "path": "ExcelBinOutput/ActivityTradeShowOverAllExcelConfigData.json",
+      "row_count": 1
+    },
+    {
+      "boundary": "trade_show",
+      "kind": "trade_show_bonus",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusExcelConfigData.json",
+      "row_count": 10
+    },
+    {
+      "boundary": "trade_show",
+      "kind": "trade_show_bonus_quest",
+      "path": "ExcelBinOutput/ActivityTradeShowBonusQuestExcelConfigData.json",
+      "row_count": 17
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_invest_detail",
+      "path": "ExcelBinOutput/DreamBookInvestDetailExcelConfigData.json",
+      "row_count": 24
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_investigation",
+      "path": "ExcelBinOutput/DreamBookInvestigationExcelConfigData.json",
+      "row_count": 6
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_photo_avatar",
+      "path": "ExcelBinOutput/DreamBookPhotoAvatarExcelConfigData.json",
+      "row_count": 13
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_photo_deduction",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionExcelConfigData.json",
+      "row_count": 6
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_photo_deduction_reminder",
+      "path": "ExcelBinOutput/DreamBookPhotoDeductionReminderExcelConfigData.json",
+      "row_count": 78
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_photo_pick",
+      "path": "ExcelBinOutput/DreamBookPhotoPickExcelConfigData.json",
+      "row_count": 3
+    },
+    {
+      "boundary": "dreambook",
+      "kind": "dreambook_photo_pick_reminder",
+      "path": "ExcelBinOutput/DreamBookPhotoPickReminderExcelConfigData.json",
+      "row_count": 39
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_area",
+      "path": "ExcelBinOutput/SnezBookAreaExcelConfigData.json",
+      "row_count": 2
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_offering",
+      "path": "ExcelBinOutput/SnezBookOfferingExcelConfigData.json",
+      "row_count": 5
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_quest_chunk",
+      "path": "ExcelBinOutput/SnezBookQuestChunkExcelConfigData.json",
+      "row_count": 11
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_quest_quote",
+      "path": "ExcelBinOutput/SnezBookQuestQuoteExcelConfigData.json",
+      "row_count": 39
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_grey",
+      "path": "ExcelBinOutput/SnezBookTheGreyExcelConfigData.json",
+      "row_count": 9
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_weather",
+      "path": "ExcelBinOutput/SnezBookWeatherExcelConfigData.json",
+      "row_count": 3
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_character_extra",
+      "path": "ExcelBinOutput/SnezBookCharacterExtraExcelConfigData.json",
+      "row_count": 0
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_offering_gameplay",
+      "path": "ExcelBinOutput/SnezBookOfferingGameplayExcelConfigData.json",
+      "row_count": 14
+    },
+    {
+      "boundary": "snezbook",
+      "kind": "snezbook_overall",
+      "path": "ExcelBinOutput/SnezBookOverallExcelConfigData.json",
+      "row_count": 1
+    },
+    {
+      "boundary": "agent_recon",
+      "kind": "agent_recon_clue",
+      "path": "ExcelBinOutput/AgentReconClueExcelConfigData.json",
+      "row_count": 25
+    },
+    {
+      "boundary": "agent_recon",
+      "kind": "agent_recon_const",
+      "path": "ExcelBinOutput/AgentReconConstExcelConfigData.json",
+      "row_count": 1
+    },
+    {
+      "boundary": "agent_recon",
+      "kind": "agent_recon_level",
+      "path": "ExcelBinOutput/AgentReconLevelExcelConfigData.json",
+      "row_count": 6
+    },
+    {
+      "boundary": "agent_recon",
+      "kind": "agent_recon_suspect",
+      "path": "ExcelBinOutput/AgentReconSuspectExcelConfigData.json",
+      "row_count": 3
+    },
+    {
+      "boundary": "daily_staff",
+      "kind": "daily_staff_comments",
+      "path": "ExcelBinOutput/DailyStaffCommentsExcelConfigData.json",
+      "row_count": 24
+    },
+    {
+      "boundary": "daily_staff",
+      "kind": "daily_staff_introduction",
+      "path": "ExcelBinOutput/DailyStaffIntroductionExcelConfigData.json",
+      "row_count": 6
+    },
+    {
+      "boundary": "daily_staff",
+      "kind": "daily_staff_option",
+      "path": "ExcelBinOutput/DailyStaffOptionExcelConfigData.json",
+      "row_count": 13
+    },
+    {
+      "boundary": "snow_race_story",
+      "kind": "snow_race_story",
+      "path": "ExcelBinOutput/ActivitySnowRaceStoryExcelConfigData.json",
+      "row_count": 5
+    },
+    {
+      "boundary": "animal_view",
+      "kind": "animal_view_overall",
+      "path": "ExcelBinOutput/ActivityAnimalViewOverallDataExcelConfigData.json",
+      "row_count": 1
+    },
+    {
+      "boundary": "animal_view",
+      "kind": "animal_view_level",
+      "path": "ExcelBinOutput/ActivityAnimalViewLevelExcelConfigData.json",
+      "row_count": 6
+    },
+    {
+      "boundary": "animal_view",
+      "kind": "animal_view_target",
+      "path": "ExcelBinOutput/ActivityAnimalViewTargetExcelConfigData.json",
+      "row_count": 18
+    }
+  ]
+}

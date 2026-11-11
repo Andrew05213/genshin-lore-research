@@ -15,9 +15,27 @@ git -C data/AnimeGameData worktree add --detach ../AnimeGameData-history \
 
 两个 checkout 都须保持干净。历史源码不是旧版数据库，不参与当前游戏文本查询；不能用 7.1 源码替代它而跳过原校验。
 
+### 显式构建 7.2
+
+`--source-version 7.2` 选择独立的固定合同，来源 commit 为
+`d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1`，tree 为
+`5b334e711319726c504da95dbfe6ebb26baaa7d3`。
+将该 commit checkout 到单独目录，在下方完整命令中指定该 `--source`、
+追加 `--source-version 7.2`，并选择新的 `--output-root`。
+历史 oracle 来源和模型准备要求保持不变。不会从旧数据库 patch 出新版本。
+
+版本选择绑定所有输入、动态 manifest、Research corpus 和新向量；
+缺失或错配会报错，不寻找相邻版本。手动 `scripts/build.py` 的默认参数仍为固定 7.1，
+两端一键安装器则显式传入 `--source-version 7.2`，使用 `data/AnimeGameData-7.2/`
+和 `data/rebuilt-7.2/`，检查后配置项目级 MCP；既有来源、输出和客户端不自动迁移。
+手动 7.2 构建不自动部署、切换 Codex 或取得正式 release 身份。
+执行范围及来源差异见 [7.2 迁移记录](../reviews/migration-7.2.md)。
+
 ## 容量
 
-先统计整个项目、相关来源、输出和缓存的 allocated bytes，按 device/inode 去重。当前政策为 hard `90,000,000,000 B`，warning `77,309,411,328 B`。hard headroom 是 hard 减去当前项目占用，不能用主机空闲空间代替。
+公开源码不设置固定项目容量上限。默认按输出卷真实空闲空间扣除1 GB余量，检查本次构建的预计新增空间；系统临时卷和依赖下载也须有足够空间。
+
+可用 `--available-allocated-bytes` 显式给本次新增写入设定更小预算。若开发机器另有项目额度，将 `hard_limit_bytes`、`warning_bytes` 写入未跟踪的私有 JSON（正整数字节或 `null`），通过环境变量 `GENSHIN_LORE_STORAGE_POLICY` 指定其绝对路径。未选择私有文件时不启用额度；已选择但缺失或格式错误时拒绝继续。私有 hard 余量按项目 allocated bytes 及归属临时路径去重统计，不能用磁盘空闲代替。安装器、构建器和子进程继承相同私有设置；文件与机器专属数值不得提交 Git 或打包。
 
 默认含向量的全链路预检要求 22 GB 新增峰值预算；显式 `--without-semantic` 的基础数据构建要求 20 GB。默认使用文件级身份归一化的 R0 storage v2，并省去索引 VACUUM 的第二份映像；显式 `--compact-index` 保留原压缩模式，预检分别为 28/26 GB。真实来源对照及峰值口径见 [存储布局记录](../compact-evidence-storage.md)。另检查输出文件系统的可用空间。该预算不包含尚未取得的上游 checkout、依赖或模型下载。统一索引构建及完整 oracle 使用较多 RAM；当前验证环境有约 16 GB RAM 和 4 GB swap。并行模式须另核对实际内存与临时空间峰值；磁盘预检不等于 RAM 上限。
 
@@ -56,7 +74,6 @@ Event/Native 的实际调度签名与动态路径另由编排测试检查。
   --historical-source data/AnimeGameData-history \
   --output-root data/rebuilt \
   --model-cache data/model-cache \
-  --available-allocated-bytes HEADROOM_BYTES \
   --stage all
 ```
 
@@ -110,7 +127,7 @@ data/rebuilt/
 
 默认 surface 复用原五工具：describe/search/read/follow/inspect。加 `--surface narrative` 复用独立 query/inspect 便利接口及 Book/Story 续读。客户端通过上述 stdio 命令连接；源码安装和数据构建不自动修改个人 Codex 配置。
 
-五工具请求使用生成 profile 中的 `corpus_ref`。此来源核验入口尚未晋级为正式 release；便利接口的自然问题应明确写出 `7.1`，如“7.1这本《终北祷歌·上》讲什么？”。它不提供其他版本，也不继承原部署的日常默认配置。
+五工具请求使用生成 profile 中的 `corpus_ref`。此来源核验入口尚未晋级为正式 release；便利接口的自然问题应明确写出本次构建的版本，如“7.2这本《终北祷歌·上》讲什么？”。单个配置只读取其固定版本，不继承原部署的日常默认配置。
 
 生成配置绑定本次 exact artifacts、parser/run、来源归档和索引。其 `accepted` 历史字段仅满足已有 prepublication 协议，`product_accepted=false`，不是正式 release 晋级，也不是复制原部署的 acceptance。
 
@@ -125,7 +142,7 @@ data/rebuilt/
 
 ## 范围
 
-- 重建的是固定 7.1 的有界数据产品及 literal Research 服务，不是全部游戏数据。
+- 重建的是显式固定 snapshot 的有界数据产品及 literal Research 服务，不是全部游戏数据；未指定 `--source-version` 时仍为 7.1。
 - 8 项 historical contract gaps 和 12 条 component gap records 不因重建消失；候选、未判明关系及有限 Event 范围保留。
 - 默认完整入口包括独立 semantic overlay。`--without-semantic` 或单独 `--stage index` 仅构建基础数据；不能将 literal 启动成功写成 semantic 已验证。向量失败时保留基础数据配置，但不交付一个冒充完整向量构建的默认配置。
 - 新来源绑定和代码会产生新的 parser/run 与 seal。完整来源正文和坐标核验，比复写旧数据库 SHA 更重要；不声称跨目录、跨 Python/SQLite 版本的数据库字节完全相同。

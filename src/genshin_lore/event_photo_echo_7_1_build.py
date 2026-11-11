@@ -43,7 +43,7 @@ def selected_records(root,source):
 def reconstruct(root,scope_path):
  root=Path(root);scope_path=Path(scope_path);manifest=json.loads(scope_path.read_text());check_files(root,manifest);impl,parser,scope_sha,run=identities(scope_path)
  historical=json.loads(HISTORICAL.read_text())
- if manifest.get('contract')!='event-photo-echo-7.1-versioned-source-v1' or manifest.get('historical_scope_sha256')!=sha(HISTORICAL) or manifest.get('family_contract_version')!=historical['family_contract_version'] or {x['path'] for x in manifest['sources']}!={x['path'] for x in historical['sources']} or len(manifest['sources'])!=6 or len(manifest['files'])!=12:
+ if manifest.get('contract')!='event-photo-echo-7.1-versioned-source-v1'.replace('7.1',manifest['snapshot_id'].split(':')[1]) or manifest.get('historical_scope_sha256')!=sha(HISTORICAL) or manifest.get('family_contract_version')!=historical['family_contract_version'] or {x['path'] for x in manifest['sources']}!={x['path'] for x in historical['sources']} or len(manifest['sources'])!=6 or len(manifest['files'])!=12:
   raise ValueError('Photo/Echo historical selector/contract drift')
  file_seals={x['path']:x for x in manifest['files']};physical={s['kind']:selected_records(root,s) for s in manifest['sources']}
  if {s['kind']:len(physical[s['kind']]) for s in manifest['sources']}!=manifest['row_denominator']:raise ValueError('Event wave row denominator')

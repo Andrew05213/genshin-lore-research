@@ -344,7 +344,9 @@ def test_successor_independent_text_rowset_oracle_stays_exact(tmp_path, monkeypa
         elif mutation == "body":
             conn.execute("UPDATE candidate SET raw_text='synthetic tamper' WHERE owner_id='0' AND locale='CHS'")
         if mutation == "none":
-            result = verifier._verify_text(conn, foundation, source, {})
+            scope = {"primary_rows": {"ExcelBinOutput/Synthetic.json": 34817},
+                     "textmap_owner_fields": {"Synthetic.json": ["field"]}}
+            result = verifier._verify_text(conn, foundation, source, scope)
             assert result["owner_count"] == 34817 and result["candidate_count"] == 104451
         else:
             with pytest.raises(ValueError, match="all exact TextMap candidate rows"):

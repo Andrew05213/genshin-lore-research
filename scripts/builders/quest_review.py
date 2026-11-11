@@ -25,19 +25,26 @@ FIELD_PROOF=ROOT/'manifests/quest-derived-7.1/review-field-continuity-v1.json'
 def canon(x):return json.dumps(x,ensure_ascii=True,sort_keys=True,separators=(',',':'))
 def digest(value):return hashlib.sha256(value).hexdigest()
 def key(*parts):return 'qr71:'+digest(canon(parts).encode())[:40]
-def pin(source):
+def pin(source,commit=COMMIT,tree=TREE):
  actual=subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()
- if actual!=[COMMIT,TREE]:raise ValueError('wrong 7.1 source pin')
-def seals(source):
+ if actual!=[commit,tree]:raise ValueError('wrong 7.1 source pin')
+def seals(source,commit=COMMIT):
  files=(*SOURCES,*(f'TextMap/TextMap{tier}{lang}.json' for lang in ('CHS','EN','JP') for tier in ('','_Medium')))
- return {p:{'size':(source/p).stat().st_size,'sha256':sha(source/p),'blob':subprocess.check_output(['git','-C',str(source),'rev-parse',COMMIT+':'+p],text=True).strip()} for p in files}
+ return {p:{'size':(source/p).stat().st_size,'sha256':sha(source/p),'blob':subprocess.check_output(['git','-C',str(source),'rev-parse',commit+':'+p],text=True).strip()} for p in files}
 def guard(c):
  for table in (*TABLES,'release'):
   for op in ('INSERT','UPDATE','DELETE'):
    c.execute(f"CREATE TRIGGER immutable_{table}_{op.lower()} BEFORE {op} ON {table} BEGIN SELECT RAISE(ABORT,'immutable quest review'); END")
 def build(source,output,qt_manifest=QT_MANIFEST,qt_artifact=QT_ARTIFACT):
- source=Path(source);output=Path(output);pin(source)
- source_seals=seals(source)
+ source=Path(source);output=Path(output)
+ from genshin_lore.source_versions import source_pin
+ SNAPSHOT=json.loads(Path(qt_manifest).read_text())["source_snapshot"]
+ version,COMMIT,TREE=source_pin(SNAPSHOT)
+ FIELD_PROOF=ROOT/f"manifests/quest-derived-{version}/review-field-continuity-v1.json"
+ member_field="MLELFKLKKLN" if version=="7.2" else "GJHKONEAHPC"
+ text_field="PKGOFBIHNPD" if version=="7.2" else "CCIHLEICLMF"
+ pin(source,COMMIT,TREE)
+ source_seals=seals(source,COMMIT)
  proof=json.loads(FIELD_PROOF.read_text())
  if proof['verdict']!='PROVEN_PHYSICAL_FIELD_CONTINUITY_NOT_LOGICAL_IDENTITY' or proof['new_source_commit']!=COMMIT:raise ValueError('Quest Review field proof')
  for path,entry in proof['source_seals'].items():
@@ -50,7 +57,7 @@ def build(source,output,qt_manifest=QT_MANIFEST,qt_artifact=QT_ARTIFACT):
  if qt_release!=(COMMIT,TREE,accepted['parser_build_id'],accepted['ingest_run_id']):raise ValueError('Quest/Talk dependency run')
  qt.close()
  binding={'manifest_sha256':sha(qt_manifest),'artifact':accepted['artifact'],'parser_build_id':accepted['parser_build_id'],'ingest_run_id':accepted['ingest_run_id'],'contract':accepted['contract']}
- impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_review.py','scripts/maintenance/quest_review_fields.py','schemas/quest-review-7.1-v1.sql','src/genshin_lore/loading_tips_source.py','manifests/quest-derived-7.1/review-field-continuity-v1.json')}
+ impl={p:sha(ROOT/p) for p in ('scripts/builders/quest_review.py','scripts/maintenance/quest_review_fields.py','schemas/quest-review-7.1-v1.sql','src/genshin_lore/loading_tips_source.py',f'manifests/quest-derived-{version}/review-field-continuity-v1.json')}
  parser=key('parser',impl);run=key('run',SNAPSHOT,parser,source_seals,binding)
  parsed={};rows=[];row_ids={};id_lookup=defaultdict(list)
  for path,kind,field in ((SUMMARY,'summarization','Id'),(GROUP,'review_group','id'),(TAB,'review_tab','id')):
@@ -74,17 +81,17 @@ def build(source,output,qt_manifest=QT_MANIFEST,qt_artifact=QT_ARTIFACT):
  for ordinal,value in parsed[SUMMARY]:
   add_locator(SUMMARY,ordinal,'summarization_id_observation',f'/{ordinal}/Id',value['Id'],step_lookup[value['Id']])
  for ordinal,value in parsed[GROUP]:
-  members=value.get('GJHKONEAHPC',[])
+  members=value.get(member_field,[])
   if not isinstance(members,list) or any(not isinstance(v,int) for v in members):raise ValueError(f'group member shape /{ordinal}')
-  for i,target in enumerate(members):add_locator(GROUP,ordinal,'review_member_locator_observation',f'/{ordinal}/GJHKONEAHPC/{i}',target,id_lookup[target])
+  for i,target in enumerate(members):add_locator(GROUP,ordinal,'review_member_locator_observation',f'/{ordinal}/{member_field}/{i}',target,id_lookup[target])
  owners=[]
  for ordinal,value in parsed[SUMMARY]:
   owners.append((SUMMARY,ordinal,'DescTextMapHash',value.get('DescTextMapHash')))
  for ordinal,value in parsed[TAB]:
   owners.append((TAB,ordinal,'titleTextMapHash',value.get('titleTextMapHash')))
-  texts=value.get('CCIHLEICLMF')
+  texts=value.get(text_field)
   if not isinstance(texts,list) or any(not isinstance(v,int) for v in texts):raise ValueError(f'tab text owner shape /{ordinal}')
-  owners.extend((TAB,ordinal,f'CCIHLEICLMF/{i}',v) for i,v in enumerate(texts))
+  owners.extend((TAB,ordinal,f'{text_field}/{i}',v) for i,v in enumerate(texts))
  if any(not isinstance(raw,int) for _,_,_,raw in owners):raise ValueError('text owner shape')
  maps={}
  for lang in ('CHS','EN','JP'):
@@ -102,7 +109,7 @@ def build(source,output,qt_manifest=QT_MANIFEST,qt_artifact=QT_ARTIFACT):
    for target_path,index,pointer,text in hits:
     text_candidates.append((key('text',sid,target_path,index,pointer),sid,target_path,index,pointer,text,digest(text.encode())))
  data=(rows,loc,candidates,slots,text_candidates)
- release={'contract':'quest-review-archive-7.1-evidence-v1','status':'candidate','snapshot':SNAPSHOT,'source_commit':COMMIT,'source_tree':TREE,'source_seals':source_seals,'implementation':impl,'parser_build_id':parser,'ingest_run_id':run,'quest_talk_binding':binding,'field_proof_sha256':sha(FIELD_PROOF),'counts':{t:len(d) for t,d in zip(TABLES,data)},'kinds':dict(Counter(r[2] for r in rows)),'locator_semantics':'mapping_unresolved equality navigation; no logical relation','text_resolution':'main else Medium; all physical candidates preserved','product_accepted':False}
+ release={'contract':f'quest-review-archive-{version}-evidence-v1','status':'candidate','snapshot':SNAPSHOT,'source_commit':COMMIT,'source_tree':TREE,'source_seals':source_seals,'implementation':impl,'parser_build_id':parser,'ingest_run_id':run,'quest_talk_binding':binding,'field_proof_sha256':sha(FIELD_PROOF),'counts':{t:len(d) for t,d in zip(TABLES,data)},'kinds':dict(Counter(r[2] for r in rows)),'locator_semantics':'mapping_unresolved equality navigation; no logical relation','text_resolution':'main else Medium; all physical candidates preserved','product_accepted':False}
  output.parent.mkdir(parents=True,exist_ok=True)
  if output.exists():raise FileExistsError(output)
  c=sqlite3.connect(output);c.execute('PRAGMA page_size=4096');c.execute('PRAGMA journal_mode=OFF');c.execute('PRAGMA foreign_keys=ON')

@@ -4,7 +4,7 @@ from __future__ import annotations
 import copy
 import re
 from urllib.parse import quote
-from ..research_literal import BODY_FIELDS
+from ..research_literal import BODY_FIELDS, TITLE_FIELDS
 
 READING_PAGE_BYTES = 160_000  # leaves room for scoped citation metadata under MCP's 256 KiB cap
 
@@ -23,8 +23,6 @@ CHARACTER_TITLE_FIELDS = {'storyTitleTextMapHash', 'storyTitle2TextMapHash', 'vo
 # Display hints for fields already declared by the source adapters/readers.
 # Unknown fields stay unclassified; these labels never upgrade source proof.
 NAME_FIELDS = {'nameTextMapHash', 'avatarName', 'name', 'Name', 'SpeakerKnown'}
-TITLE_FIELDS = CHARACTER_TITLE_FIELDS | {'MainQuestTitle', 'SubQuestTitle', 'ChapterTitle',
-    'titleTextMapHash', 'title', 'Title', 'storyTitleLockedTextMapHash', 'voiceTitleLockedTextMapHash'}
 
 
 def check_detail(detail):

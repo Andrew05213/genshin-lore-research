@@ -5,6 +5,7 @@ import hashlib
 import sqlite3
 import threading
 import numpy as np
+from collections.abc import Callable
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,10 @@ def sha256_file(path: Path) -> str:
 
 
 def tree_sha256(path: Path) -> str:
+    return _tree_sha256(path, sha256_file)
+
+
+def _tree_sha256(path: Path, file_digest: Callable[[Path], str]) -> str:
     digest = hashlib.sha256()
     # Hash the same case-sensitive relative-name order on every platform;
     # WindowsPath's native comparisons otherwise move mixed-case filenames.
@@ -32,7 +37,7 @@ def tree_sha256(path: Path) -> str:
         key=lambda item: item.relative_to(path).as_posix(),
     ):
         digest.update(child.relative_to(path).as_posix().encode() + b"\0")
-        digest.update(bytes.fromhex(sha256_file(child)))
+        digest.update(bytes.fromhex(file_digest(child)))
     return digest.hexdigest()
 
 
@@ -48,6 +53,36 @@ def _tree_fingerprint(path: Path) -> tuple[tuple[str, int, int, int, int], ...]:
         output.append((str(child.relative_to(path)), stat.st_dev, stat.st_ino,
                        stat.st_size, stat.st_mtime_ns))
     return tuple(output)
+
+
+def _verify_model_cache(
+    cache: Path, model: dict[str, Any]
+) -> tuple[Path, tuple[tuple[str, int, int, int, int], ...]]:
+    if not cache.is_dir():
+        raise SemanticUnavailable("semantic model identity mismatch")
+
+    before = _tree_fingerprint(cache)
+    digests: dict[str, str] = {}
+
+    def file_digest(child: Path) -> str:
+        # The two trees have different relative names in their seals. Share
+        # only the bytes' digest, using case-sensitive resolved path strings.
+        key = child.resolve(strict=True).as_posix()
+        if key not in digests:
+            digests[key] = sha256_file(child)
+        return digests[key]
+
+    if _tree_sha256(cache, file_digest) != model["cache_tree_sha256"]:
+        raise SemanticUnavailable("semantic model identity mismatch")
+    cache_root = cache.resolve()
+    model_path = (cache / model["path_relative"]).resolve()
+    if (cache_root not in model_path.parents
+            or not model_path.is_dir()
+            or _tree_sha256(model_path, file_digest) != model["tree_sha256"]):
+        raise SemanticUnavailable("semantic model files identity mismatch")
+    if _tree_fingerprint(cache) != before:
+        raise SemanticUnavailable("semantic model cache changed during verification")
+    return model_path, before
 
 
 class SemanticDiscovery:
@@ -93,16 +128,9 @@ class SemanticDiscovery:
                 or sha256_file(path) != expected["sha256"]
             ):
                 raise SemanticUnavailable(f"semantic {key} identity mismatch")
-        if (
-            not self.cache.is_dir()
-            or tree_sha256(self.cache) != config["model"]["cache_tree_sha256"]
-        ):
-            raise SemanticUnavailable("semantic model identity mismatch")
-        self.model_path = (self.cache / config["model"]["path_relative"]).resolve()
-        if (self.cache.resolve() not in self.model_path.parents
-                or not self.model_path.is_dir()
-                or tree_sha256(self.model_path) != config["model"]["tree_sha256"]):
-            raise SemanticUnavailable("semantic model files identity mismatch")
+        self.model_path, self._model_cache_fingerprint = _verify_model_cache(
+            self.cache, config["model"]
+        )
         if any(
             Path(str(self.meta_path) + suffix).exists()
             for suffix in ("-journal", "-wal", "-shm")
@@ -178,7 +206,6 @@ class SemanticDiscovery:
             "metadata": _fingerprint(self.meta_path),
             "hnsw": _fingerprint(self.hnsw_path),
         }
-        self._model_cache_fingerprint = _tree_fingerprint(self.cache)
 
     def close(self) -> None:
         self.db.close()

@@ -28,7 +28,7 @@ def verify(source: Path, scope_path: Path, artifact: Path, build_report: dict) -
     source, scope_path, artifact = Path(source), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(source, scope)
-    if (scope['contract'] != 'event-native-text-wave-7.1-exact-scope-v1'
+    if (scope['contract'] != 'event-native-text-wave-7.1-exact-scope-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or scope['historical_scope_sha256'] != sha(ROOT / scope['historical_scope'])):
         raise ValueError('Event 7.1 oracle scope')
     historical = json.loads((ROOT / scope['historical_scope']).read_text())

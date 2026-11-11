@@ -48,39 +48,47 @@ def schema_check(db):
  query="SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name"
  check([tuple(row) for row in db.execute(query)]==[tuple(row) for row in expected.execute(query)],'schema/index/trigger mismatch')
  expected.close()
-def text_locators(value,pointer,old_spec):
+def text_locators(value,pointer,old_spec,source_version="7.1"):
  if isinstance(value,dict):
   if old_spec and set(value)=={old_spec[4],old_spec[5]} and value[old_spec[4]]:
    yield pointer or '/',str(value[old_spec[4]]),value[old_spec[5]],'historical_exact'
+  if old_spec is None and source_version=='7.2' and 'textType' in value:
+   check(type(value['textType']) is str,'authored text role string')
+   if value['textType']:yield pointer or '/',value['textType'],value.get('textId'),'source_authored_text_type'
   if old_spec is None and value.get('DFKLAEHPOBE'):
    yield pointer or '/',str(value['DFKLAEHPOBE']),value.get('textId'),'new_wrapper_role_unproven'
-  for field,child in value.items():yield from text_locators(child,pointer+'/'+field,old_spec)
+  for field,child in value.items():yield from text_locators(child,pointer+'/'+field,old_spec,source_version)
  elif isinstance(value,list):
-  for ordinal,child in enumerate(value):yield from text_locators(child,pointer+'/'+str(ordinal),old_spec)
+  for ordinal,child in enumerate(value):yield from text_locators(child,pointer+'/'+str(ordinal),old_spec,source_version)
 def verify(source,artifact,report,core_manifest,core_artifact):
  source=Path(source);artifact=Path(artifact);manifest=json.loads(Path(report).read_text());release=manifest['release']
+ from genshin_lore.source_versions import source_pin
+ version,COMMIT,TREE=source_pin(release["snapshot"])
+ primary,support={"7.1":(499,142),"7.2":(507,144)}[version]
+ expected_status="ACCEPTED_EXACT_7_1_MAPPING" if version=="7.1" else "SOURCE_ORACLE_VERIFIED_LOCAL_MAPPING"
+ signatures=SIGNATURES if version=="7.1" else {frozenset(k):v for k,v in {tuple(sorted(('chapterNum','chapterTitle','mainQuestDesp','mainQuestId','mainQuestTitle','subQuests'))):'new_without_type',tuple(sorted(('chapterNum','chapterTitle','mainQuestDesp','mainQuestId','mainQuestTitle','subQuests','questType'))):'new_with_type',tuple(sorted(('chapterNum','chapterTitle','mainQuestDesp','mainQuestId','mainQuestTitle','questType'))):'new_metadata_only'}.items()}
  check(subprocess.check_output(['git','-C',str(source),'rev-parse','HEAD','HEAD^{tree}'],text=True).splitlines()==[COMMIT,TREE],'source pin')
  check(release['source_commit']==COMMIT and release['source_tree']==TREE,'release pin')
- check(release['contract']=='codexquest-7.1-physical-text-foundation-v1' and release['status']=='physical_foundation_candidate' and release['product_accepted'] is False,'release authority boundary')
+ check(release['contract']==f'codexquest-{version}-physical-text-foundation-v1' and release['status']=='physical_foundation_candidate' and release['product_accepted'] is False,'release authority boundary')
  check(release['child_raw_json_semantics']=='canonical parsed subtree; root raw_bytes retain authoritative lexical source','child projection honesty')
  check(artifact.stat().st_size==manifest['artifact']['size_bytes'] and sha(artifact)==manifest['artifact']['sha256'],'artifact seal')
  check(not any(Path(str(artifact)+s).exists() for s in ('-wal','-shm','-journal')),'SQLite sidecar')
  impl={p:sha(ROOT/p) for p in ('scripts/builders/codexquest.py','schemas/codexquest-7.1-v1.sql','src/genshin_lore/loading_tips_source.py')}
  check(impl==release['implementation'] and identity('parser',impl)==release['parser_build_id'],'parser/implementation')
  bindings=[x for x in json.loads(Path(core_manifest).read_text())['mappings'] if x.get('family')=='quest_codex_archive']
- check(len(bindings)==1 and bindings[0]['status']=='ACCEPTED_EXACT_7_1_MAPPING','QuestCodex accepted mapping')
+ check(len(bindings)==1 and bindings[0]['status']==expected_status,'QuestCodex accepted mapping')
  binding=bindings[0];dependency=release['quest_codex_binding']
  check(sha(core_manifest)==dependency['manifest_sha256'] and dependency['artifact']==binding['candidate_artifact'],'QuestCodex manifest')
  check(dependency['parser_build_id']==binding['parser_build_id'] and dependency['ingest_run_id']==binding['ingest_run_id'] and dependency['provider_contract']==binding['provider_contract'],'QuestCodex parser/run/contract')
  check(dependency['source_snapshot']==binding['source_snapshot']==release['snapshot'],'QuestCodex same-snapshot binding')
  check(Path(core_artifact).stat().st_size==binding['candidate_artifact']['size_bytes'] and sha(core_artifact)==binding['candidate_artifact']['sha256'],'QuestCodex artifact')
- check(binding['selected_primary_evidence_rows']==499 and binding['selected_support_evidence_rows']==142,'QuestCodex denominator')
+ check(binding['selected_primary_evidence_rows']==primary and binding['selected_support_evidence_rows']==support,'QuestCodex denominator')
  expected_files=[]
  for line in subprocess.check_output(['git','-C',str(source),'ls-tree','-rl',COMMIT,'--','BinOutput/CodexQuest'],text=True).splitlines():
   attrs,path=line.split('\t',1);_,kind,blob,size=attrs.split()
   check(kind=='blob' and path.endswith('.json'),'Codex inventory')
   expected_files.append((path,blob,int(size)))
- check(len(expected_files)==522,'522 root denominator')
+ check(len(expected_files)=={'7.1':522,'7.2':507}[version],'root denominator')
  check(set(release['source_seals'])=={p for p,_,_ in expected_files}|{MAIN}|{f'TextMap/TextMap{tier}{lang}.json' for lang in ('CHS','EN','JP') for tier in ('','_Medium')},'source seal path set')
  # Obtain the pinned support identities in one independent Git inventory,
  # rather than starting a Git process for each source file. The actual bytes
@@ -110,7 +118,7 @@ def verify(source,artifact,report,core_manifest,core_artifact):
  for oid,pointer,raw in core.execute("SELECT occurrence_id,source_pointer,raw_record_json FROM physical_row WHERE row_kind='primary'"):
   item=json.loads(raw);check(type(item.get('parentQuestId')) is int and type(item.get('id')) is int,'QuestCodex source row')
   codex_targets[item['parentQuestId']].append((CORE_SOURCE,pointer,str(item['id']),oid,binding['ingest_run_id']))
- check(sum(len(v) for v in codex_targets.values())==499,'QuestCodex primary target set')
+ check(sum(len(v) for v in codex_targets.values())==primary,'QuestCodex primary target set')
  core.close()
  main_targets=defaultdict(list)
  for ordinal,item,_ in array_records(source/MAIN):
@@ -121,12 +129,12 @@ def verify(source,artifact,report,core_manifest,core_artifact):
   raw=(source/path).read_bytes();pinned=hashlib.sha1(b'blob '+str(size).encode()+b'\0');pinned.update(raw)
   check(len(raw)==size and pinned.hexdigest()==blob,'physical root Git blob '+path)
   check(h(raw)==release['source_seals'][path]['sha256'],'physical root source seal '+path)
-  value=json.loads(raw.decode('utf-8-sig'));shape=SIGNATURES.get(frozenset(value)) if isinstance(value,dict) else None
+  value=json.loads(raw.decode('utf-8-sig'));shape=signatures.get(frozenset(value)) if isinstance(value,dict) else None
   check(shape is not None,'unknown root signature '+path)
-  shapes[shape]+=1;spec=OLD.get(shape);id_field=spec[0] if spec else 'MFANMBMKKLC';native=value[id_field]
+  shapes[shape]+=1;spec=OLD.get(shape);id_field=spec[0] if spec else 'mainQuestId' if version=='7.2' else 'MFANMBMKKLC';native=value[id_field]
   check(type(native) is int,'root locator type '+path)
   raw_type=str(value[spec[1]]) if spec else str(value['questType']) if 'questType' in value else None
-  list_field=spec[2] if spec else 'JIJKODHIEED';sections=value.get(list_field)
+  list_field=spec[2] if spec else 'subQuests' if version=='7.2' else 'JIJKODHIEED';sections=value.get(list_field)
   check(isinstance(sections,list) or (sections is None and shape=='new_metadata_only'),'section field shape '+path)
   rid=identity('root',release['ingest_run_id'],path)
   roots.append((rid,release['ingest_run_id'],path,blob,h(raw),raw,shape,str(native),raw_type,'absent_in_source' if sections is None else 'present',0 if sections is None else len(sections),'historical_physical' if spec else 'new_shape_unresolved'))
@@ -134,7 +142,7 @@ def verify(source,artifact,report,core_manifest,core_artifact):
    check(isinstance(section,dict),'section object '+path)
    section_pointer=f'/{list_field}/{index}';serialized=j(section)
    children.append((identity('child',rid,section_pointer),rid,'section_like',section_pointer,index,serialized,h(serialized.encode())))
-   node_field=spec[3] if spec else 'DCBDMJAPBOK';nodes=section.get(node_field)
+   node_field=spec[3] if spec else 'items' if version=='7.2' else 'DCBDMJAPBOK';nodes=section.get(node_field)
    if nodes is None and spec is None:continue
    check(isinstance(nodes,list),'node array '+path+section_pointer)
    for node_index,node in enumerate(nodes):
@@ -146,13 +154,13 @@ def verify(source,artifact,report,core_manifest,core_artifact):
    navs.append((nid,rid,role,'/'+id_field,str(native),state,len(targets),complete))
    for target_path,pointer,target_native,target_oid,target_run in targets:
     candidates.append((identity('candidate',nid,target_path,pointer,target_oid),nid,target_path,pointer,target_native,target_oid,target_run))
-  for pointer,label,raw_hash,owner_state in text_locators(value,'',spec):
+  for pointer,label,raw_hash,owner_state in text_locators(value,'',spec,version):
    check(raw_hash is None or isinstance(raw_hash,(str,int)),'locator type '+path+pointer)
    if raw_hash is None:missing+=1
    else:wanted.add(str(raw_hash))
    owners.append((rid,pointer,label,None if raw_hash is None else str(raw_hash),owner_state))
  core_status=Counter(row[5] for row in navs if row[2]=='questcodex_reverse_equality')
- check(core_status=={'resolved_unique':509,'resolved_candidate_set':3,'missing':10},'QuestCodex physical candidate distribution')
+ check(core_status=={'resolved_unique':509 if version=='7.1' else 494,'resolved_candidate_set':3,'missing':10},'QuestCodex physical candidate distribution')
  seals={'codex_root':compare(db,'codex_root',roots),'codex_child':compare(db,'codex_child',children),'codex_navigation':compare(db,'codex_navigation',navs),'codex_candidate':compare(db,'codex_candidate',candidates)}
  lookup={}
  for lang in ('CHS','EN','JP'):
@@ -174,6 +182,6 @@ def verify(source,artifact,report,core_manifest,core_artifact):
  check(release['counts']=={table:seal['rows'] for table,seal in seals.items()},'release count seal')
  check(release['shape_counts']==dict(shapes) and release['missing_text_id_wrappers']==missing,'shape/unknown wrapper counts')
  db.close()
- return {'verdict':'PASS_PHYSICAL_PROJECTION','artifact':manifest['artifact'],'counts':release['counts'],'shape_counts':dict(shapes),'questcodex_candidate_status':dict(core_status),'semantic_successor':'NOT_PROVEN for 499 new roots','independent_source_to_rowset_oracle':True,'logical_seals':seals,'wrong_identity_merges':0}
+ return {'verdict':'PASS_PHYSICAL_PROJECTION','artifact':manifest['artifact'],'counts':release['counts'],'shape_counts':dict(shapes),'questcodex_candidate_status':dict(core_status),'semantic_successor':('NOT_PROVEN for 499 new roots' if version=='7.1' else 'NOT_PROVEN: physical roots do not establish historical logical equivalence'),'independent_source_to_rowset_oracle':True,'logical_seals':seals,'wrong_identity_merges':0}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--source',required=True);p.add_argument('--artifact',required=True);p.add_argument('--report',required=True);p.add_argument('--core-manifest',default='manifests/special-core-7.1/accepted-exact-mappings-v1.json');p.add_argument('--core-artifact',default='/tmp/special-core-7.1-historical-ab-v1/quest_codex_archive-a.sqlite');a=p.parse_args();print(json.dumps(verify(a.source,a.artifact,a.report,a.core_manifest,a.core_artifact),indent=2))

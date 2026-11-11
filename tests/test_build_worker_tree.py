@@ -132,7 +132,7 @@ child.wait()
         if failure=='parent':raise ValueError('synthetic parent failure')
         for name in worker_names:(output/name/'allow-worker-exit').touch()
     def unexpected(*args):pytest.fail('continued to a consumer after failure')
-    job=SimpleNamespace(output=output,source=tmp_path/'source',history=None,
+    job=SimpleNamespace(version="7.1",output=output,source=tmp_path/'source',history=None,
         core=core,r0=unexpected,readable=unexpected,dependency_inputs=unexpected)
     monkeypatch.setattr(build,'ROOT',root)
     monkeypatch.setattr(build_workers,'STOP_GRACE_SECONDS',.15)

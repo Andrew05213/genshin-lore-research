@@ -70,6 +70,9 @@ def _eq(actual, expected, label):
 
 
 def _source_check(source, scope):
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    _, COMMIT, TREE = source_pin(SNAPSHOT)
     _eq(subprocess.check_output(["git", "-C", str(source), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines(), [COMMIT, TREE], "source commit/tree")
     _eq(subprocess.check_output(["git", "-C", str(source), "status", "--porcelain=v1"], text=True).strip(), "", "source cleanliness")
     _eq((scope["source_commit"], scope["source_tree"], scope["snapshot_id"]), (COMMIT, TREE, SNAPSHOT), "scope identity")
@@ -130,6 +133,17 @@ def _verify_schema(conn):
 def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str | Path, *, expected_artifact: dict | None = None) -> dict:
     source, scope_file, artifact = Path(source_root), Path(scope_path), Path(artifact_path)
     scope = json.loads(scope_file.read_text())
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    game_version, COMMIT, TREE = source_pin(SNAPSHOT)
+    profile_field = {"7.1": "NLAPNBMECDF", "7.2": "FBFBNKHLFAO"}[game_version]
+    primary_fields = dict(PRIMARY)
+    if game_version == "7.2":
+        primary_fields["AvatarRenameExcelConfigData.json"] = "relatedAvatarID"
+    category, slot_field, file_field, item_key, variants_field, audio_path, selector, rate = {
+        "7.1": ("NLGBEEIGDJP", "BMPENHIILJG", "PFMLOBHKGJO", "OKAHIJCNNFM", "GLDBLKKLJHP", "CFIKOCLOKGH", "CCCECEDMIEI", "EEJEGIEMJBL"),
+        "7.2": ("gameTrigger", "gameTriggerArgs", "fileID", "guid", "sourceNames", "sourceFileName", "avatarName", "rate"),
+    }[game_version]
     _source_check(source, scope)
     for suffix in ("-wal", "-shm", "-journal"):
         if Path(str(artifact) + suffix).exists():
@@ -154,7 +168,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
         counts = Counter()
         relation_states = Counter()
         candidate_rows = _candidate_rows_by_relation(conn)
-        for basename, native_field in sorted(PRIMARY.items()):
+        for basename, native_field in sorted(primary_fields.items()):
             relative = "ExcelBinOutput/" + basename
             scanned = 0
             for ordinal, row, raw in array_records(source / relative):
@@ -174,7 +188,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
                         role = "source_condition_array"
                     elif basename == "FettersExcelConfigData.json" and name == "voiceFile":
                         role = "source_voice_slot_locator"
-                    elif basename == "ProfilePictureExcelConfigData.json" and name in ("NLAPNBMECDF", "unlockParam", "priority"):
+                    elif basename == "ProfilePictureExcelConfigData.json" and name in (profile_field, "unlockParam", "priority"):
                         role = "source_profile_unlock_observation"
                     elif name == "tips":
                         role = "opaque_source_tips_array"
@@ -204,12 +218,12 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
         lut_slots = defaultdict(list)
         item_slots = defaultdict(list)
         for ordinal, (key, row) in enumerate(lut_source.items()):
-            if row.get("NLGBEEIGDJP") != "Fetter":
+            if row.get(category) != "Fetter":
                 continue
-            if type(row.get("BMPENHIILJG")) is not int or type(row.get("PFMLOBHKGJO")) is not int:
+            if type(row.get(slot_field)) is not int or type(row.get(file_field)) is not int:
                 raise ValueError("7.1 Voice LUT shape")
             path = "BinOutput/Voice/Lut/Lut.json"
-            slot, item_path, pointer = str(row["BMPENHIILJG"]), f"BinOutput/Voice/Items/{row['PFMLOBHKGJO']}.json", "/" + key
+            slot, item_path, pointer = str(row[slot_field]), f"BinOutput/Voice/Items/{row[file_field]}.json", "/" + key
             record_id, raw = _id(run_id, "voice-lut", path, key), _json(row)
             _eq(conn.execute("SELECT * FROM foundation_voice_lut WHERE source_path=? AND object_key=?", (path, key)).fetchone(), (record_id, path, key, ordinal, pointer, slot, item_path, raw, _digest(raw)), "voice LUT " + key)
             lut_slots[slot].append((record_id, path, pointer, item_path))
@@ -220,11 +234,11 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
             if type(content) is not dict:
                 raise ValueError("7.1 Voice Items root")
             for ordinal, (key, row) in enumerate(content.items()):
-                if row.get("NLGBEEIGDJP") != "Fetter" or row.get("OKAHIJCNNFM") != key or type(row.get("BMPENHIILJG")) is not int:
+                if row.get(category) != "Fetter" or row.get(item_key) != key or type(row.get(slot_field)) is not int:
                     raise ValueError("7.1 Voice Item shape")
-                slot, pointer, record_id = str(row["BMPENHIILJG"]), "/" + key, _id(run_id, "voice-item", path, key)
-                variants = row.get("GLDBLKKLJHP", [])
-                status = "present" if "GLDBLKKLJHP" in row else "missing"
+                slot, pointer, record_id = str(row[slot_field]), "/" + key, _id(run_id, "voice-item", path, key)
+                variants = row.get(variants_field, [])
+                status = "present" if variants_field in row else "missing"
                 if type(variants) is not list:
                     raise ValueError("Voice variants shape")
                 raw = _json(row)
@@ -233,9 +247,9 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
                 counts["voice_item"] += 1
                 counts["missing_variants"] += status == "missing"
                 for audio_ordinal, audio in enumerate(variants):
-                    audio_pointer = f"/{key}/GLDBLKKLJHP/{audio_ordinal}"
+                    audio_pointer = f"/{key}/{variants_field}/{audio_ordinal}"
                     audio_raw = _json(audio)
-                    expected = (_id(record_id, "audio", audio_ordinal), record_id, audio_ordinal, audio_pointer, audio["CFIKOCLOKGH"], audio["CCCECEDMIEI"], float(audio["EEJEGIEMJBL"]), audio_raw, _digest(audio_raw))
+                    expected = (_id(record_id, "audio", audio_ordinal), record_id, audio_ordinal, audio_pointer, audio[audio_path], audio[selector], float(audio[rate]), audio_raw, _digest(audio_raw))
                     _eq(conn.execute("SELECT * FROM foundation_audio_variant WHERE item_id=? AND ordinal=?", (record_id, audio_ordinal)).fetchone(), expected, "audio variant " + audio_pointer)
                     counts["audio"] += 1
         for slot, records in lut_slots.items():
@@ -247,24 +261,24 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
                 counts["voice_link"] += 1
         # Reconstruct all raw locator candidate sets from source rows. A candidate
         # is a physical occurrence, never a logical Character/Voice identity.
-        for basename in sorted(PRIMARY):
+        for basename in sorted(primary_fields):
             relative = "ExcelBinOutput/" + basename
             for ordinal, row, _ in array_records(source / relative):
                 row_id = primary_ids[(relative, ordinal)]
                 specs = []
                 if basename in ("FetterInfoExcelConfigData.json", "FetterStoryExcelConfigData.json", "FettersExcelConfigData.json"):
-                    specs.append(("avatarId", "source_avatar_id_candidate", row["avatarId"], "all 7.1 physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row["avatarId"]))]], False, False))
+                    specs.append(("avatarId", "source_avatar_id_candidate", row["avatarId"], f"all {game_version} physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row["avatarId"]))]], False, False))
                 if basename == "FettersExcelConfigData.json":
-                    specs.append(("voiceFile", "fetter_voice_slot_candidate", row["voiceFile"], "all 7.1 Fetter-category Voice LUT records with exact slot", [("lut", x[0], x[1], x[2]) for x in lut_slots[row["voiceFile"]]], False, False))
+                    specs.append(("voiceFile", "fetter_voice_slot_candidate", row["voiceFile"], f"all {game_version} Fetter-category Voice LUT records with exact slot", [("lut", x[0], x[1], x[2]) for x in lut_slots[row["voiceFile"]]], False, False))
                 if basename in ("AvatarCostumeExcelConfigData.json", "AvatarRenameExcelConfigData.json"):
                     field, kind = ("characterId", "costume_avatar_id_candidate") if basename.startswith("AvatarCostume") else ("relatedAvatarID", "rename_avatar_id_candidate")
-                    specs.append((field, kind, row[field], "all 7.1 physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row[field]))]], False, False))
+                    specs.append((field, kind, row[field], f"all {game_version} physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row[field]))]], False, False))
                 if basename == "ProfilePictureExcelConfigData.json":
-                    kind = row["NLAPNBMECDF"]
+                    kind = row[profile_field]
                     if kind == "PROFILE_PICTURE_UNLOCK_BY_AVATAR":
-                        specs.append(("unlockParam", "profile_unlock_avatar_candidate", row.get("unlockParam"), "all 7.1 physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row.get("unlockParam")))]], False, False))
+                        specs.append(("unlockParam", "profile_unlock_avatar_candidate", row.get("unlockParam"), f"all {game_version} physical AvatarExcel rows with exact id", [("primary", *x) for x in index[("ExcelBinOutput/AvatarExcelConfigData.json", "id", str(row.get("unlockParam")))]], False, False))
                     elif kind == "PROFILE_PICTURE_UNLOCK_BY_COSTUME":
-                        specs.append(("unlockParam", "profile_unlock_costume_candidate", row.get("unlockParam"), "all 7.1 physical AvatarCostume rows with exact skinId", [("primary", *x) for x in index[("ExcelBinOutput/AvatarCostumeExcelConfigData.json", "skinId", str(row.get("unlockParam")))]], False, False))
+                        specs.append(("unlockParam", "profile_unlock_costume_candidate", row.get("unlockParam"), f"all {game_version} physical AvatarCostume rows with exact skinId", [("primary", *x) for x in index[("ExcelBinOutput/AvatarCostumeExcelConfigData.json", "skinId", str(row.get("unlockParam")))]], False, False))
                     elif kind == "PROFILE_PICTURE_UNLOCK_BY_DEFAULT":
                         specs.append(("unlockParam", "profile_unlock_default_observation", row.get("unlockParam"), "no physical target required", [], False, True))
                     else:
@@ -305,7 +319,7 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
             "candidates": counts["candidates"],
         }
         expected_release = {
-            "contract": "character-7.1-physical-foundation-v1",
+            "contract": f"character-{game_version}-physical-foundation-v1",
             "snapshot_id": SNAPSHOT,
             "source_commit": COMMIT,
             "source_tree": TREE,
@@ -329,4 +343,4 @@ def verify(source_root: str | Path, scope_path: str | Path, artifact_path: str |
     for suffix in ("-wal", "-shm", "-journal"):
         if Path(str(artifact) + suffix).exists():
             raise ValueError("SQLite sidecar after verify: " + suffix)
-    return {"status": "PASS", "contract": "character-7.1-physical-foundation-independent-verifier-v1", "artifact": seal, "source_scope_sha256": sha(scope_file), "parser_build_id": parser_id, "ingest_run_id": run_id, "table_counts": actual_counts, "observed_counts": dict(sorted(counts.items())), "silent_skips": 0, "wrong_cross_snapshot_identity_merges": 0}
+    return {"status": "PASS", "contract": f"character-{game_version}-physical-foundation-independent-verifier-v1", "artifact": seal, "source_scope_sha256": sha(scope_file), "parser_build_id": parser_id, "ingest_run_id": run_id, "table_counts": actual_counts, "observed_counts": dict(sorted(counts.items())), "silent_skips": 0, "wrong_cross_snapshot_identity_merges": 0}

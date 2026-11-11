@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tomllib
@@ -15,8 +14,9 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 UPSTREAM = 'https://github.com/DimbreathBot/AnimeGameData.git'
-SOURCE = '9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99'
-TREE = 'aa578c08c402af39b41f1ffc95124d10f5410272'
+SOURCE_VERSION = '7.2'
+SOURCE = 'd54f6f0d423ded9d055bb740a3e5f3aa8f2667f1'
+TREE = '5b334e711319726c504da95dbfe6ebb26baaa7d3'
 HISTORY = '26df1dfbdf05a82bbb1d97506859f3e1c40718d8'
 SERVER = 'genshin-lore-research71'
 PEAK = 22_000_000_000
@@ -91,16 +91,12 @@ def configure_codex(root, python, config):
 
 
 def headroom(root):
-    # Reuse the same ownership-aware accounting and policy as the builders.
-    from genshin_lore.batch_space import broad_inventory
-    from genshin_lore.storage_policy import PROJECT_HARD_LIMIT_BYTES
+    from genshin_lore.storage_policy import available_headroom
 
-    current = broad_inventory(root)
-    remaining = PROJECT_HARD_LIMIT_BYTES - current.allocated_bytes
-    free = shutil.disk_usage(root).free
-    print(f'Project allocated: {current.allocated_bytes}; budget remaining: {remaining}; disk free: {free}', flush=True)
-    if remaining < PEAK or free < PEAK + 1_000_000_000:
-        raise ValueError('Full build requires 22 GB project headroom and 23 GB disk free after setup inputs. No data deleted.')
+    remaining = available_headroom(root, root)
+    print(f'Available build storage after disk reserve and optional local policy: {remaining}', flush=True)
+    if remaining < PEAK:
+        raise ValueError('Full build requires 22 GB additional storage plus 1 GB disk reserve after setup inputs. Check disk free or an explicitly selected local policy. No data deleted.')
     return remaining
 
 
@@ -134,9 +130,10 @@ def install(root, *, jobs=2):
 
 
 def finish(root, python, jobs):
-    source = root / 'data' / 'AnimeGameData'
+    # Versioned paths leave earlier installer sources and build receipts intact.
+    source = root / 'data' / f'AnimeGameData-{SOURCE_VERSION}'
     historical = root / 'data' / 'AnimeGameData-history'
-    output = root / 'data' / 'rebuilt'
+    output = root / 'data' / f'rebuilt-{SOURCE_VERSION}'
     cache = root / 'data' / 'model-cache'
     config = output / 'runtime-config.json'
     headroom(root)
@@ -144,7 +141,8 @@ def finish(root, python, jobs):
     checkout(historical, HISTORY)
     run([python, root / 'scripts' / 'maintenance' / 'fetch_semantic_model.py', '--cache-root', cache])
     # Always enter the existing coordinator: it alone qualifies stage reuse.
-    run([python, root / 'scripts' / 'build.py', '--source', source,
+    run([python, root / 'scripts' / 'build.py', '--source-version', SOURCE_VERSION,
+         '--source', source,
          '--historical-source', historical, '--output-root', output,
          '--model-cache', cache, '--available-allocated-bytes', headroom(root),
          '--stage', 'all', '--jobs', jobs])

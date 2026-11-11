@@ -37,7 +37,7 @@ def test_body_before_names_is_global_and_every_page_has_exact_once_coverage(keyw
     assert len(items) == len({i['evidence_ref'] for i in items}) == 39
     assert [i['evidence_ref'] for i in items] == [i['evidence_ref'] for i in q.search(q.corpus_ref, keyword, limit=100)['items']]
     assert all(keyword in i['snippet'] for i in items)
-    assert page['ranking']['mode'] == 'body-first-v1'
+    assert page['ranking']['mode'] == 'body-first-v2'
 
 
 def test_filters_and_old_cursor_are_not_reinterpreted():

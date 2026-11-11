@@ -134,7 +134,10 @@ def metadata(output_root, extra_paths, *, input_metadata_root, provenance_artifa
 def core_mappings(corpus_path):
     metadata_root = Path(corpus_path).resolve().parents[2]
     result = []
-    for name in ('m3-7.1-provider', 'special-core-7.1'):
+    from genshin_lore.source_versions import source_pin
+    manifest=json.loads(Path(corpus_path).read_text())
+    version,_,_=source_pin(manifest['snapshot']['id'])
+    for name in (f'm3-{version}-provider', f'special-core-{version}'):
         path = metadata_root/'manifests'/name/'accepted-exact-mappings-v1.json'
         result.extend(json.loads(path.read_text())['mappings'])
     if len(result) != 33:
@@ -190,7 +193,7 @@ def project_component(src, out, component, r0, counts, *, corpus_path):
         cs,ts,mapping = character(src,out,key,component,r0,cs,ts)
     elif mode == 'quest_review_binding':
         mapping = {r['occurrence_id']:r['id'] for r in out.execute(
-            "SELECT * FROM research_container WHERE source_key='7.1-quest_review_archive'")}
+            "SELECT * FROM research_container WHERE source_key=?", (key.split("-",1)[0]+"-quest_review_archive",))}
     elif mode != 'dependency_only':
         cs,ts,mapping = adapt(src,out,key,component,r0,cs,ts)
     if mode not in {'formal_compatible','core33','dependency_only','character_text'}:

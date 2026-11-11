@@ -23,9 +23,9 @@ DEPENDENCY_MANIFESTS = (
     REPO / 'manifests/narrative-7.1/runtime.json',
     REPO / 'manifests/quest-talk-7.1/standalone-candidate.json',
 )
-def dependency_manifests(metadata_root=None):
+def dependency_manifests(metadata_root=None, source_version="7.1"):
     base = Path(metadata_root) if metadata_root is not None else REPO
-    return tuple(base / p.relative_to(REPO) for p in DEPENDENCY_MANIFESTS)
+    return tuple(base / str(p.relative_to(REPO)).replace("7.1",source_version) for p in DEPENDENCY_MANIFESTS)
 
 
 def ident(*parts):
@@ -33,10 +33,15 @@ def ident(*parts):
     return 'native21-71:' + hashlib.sha256(payload).hexdigest()[:40]
 
 
-def _dependencies(metadata_root=None):
-    event, derived, npc, talk = [json.loads(path.read_text()) for path in dependency_manifests(metadata_root)]
+def _dependencies(metadata_root=None, source_version="7.1"):
+    event, derived, npc, talk = [json.loads(path.read_text()) for path in dependency_manifests(metadata_root,source_version)]
     quest = derived['components']['quest_narrative_archive'] if 'components' in derived else derived['quest_narrative_archive']
     n = npc['families']['npc']
+    if source_version == '7.2':
+        from .source_versions import PINS
+        snapshot = f'anime-game-data:{source_version}:{PINS[source_version][0]}'
+        if any(value != snapshot for value in (event.get('source_snapshot'), quest.get('source_snapshot'), n['release'].get('snapshot'), talk.get('source_snapshot'))):
+            raise ValueError('Native21 cross-snapshot dependency')
     expected = ((Path(event['artifact']['path_machine_local']), event['artifact']),
                 (Path(quest['artifact']['path_machine_local']), quest['artifact']),
                 (Path(n['artifact']['path_machine_local']), n['artifact']),
@@ -108,9 +113,9 @@ def _target_rows(root, source_rows, quest, npc, talk):
 def projection(root: Path, scope_path: Path, *, metadata_root=None):
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
-    if scope['contract'] != 'native21-7.1-versioned-scope-v1' or len(scope['sources']) != 37:
+    if scope['contract'] != 'native21-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1]) or len(scope['sources']) != 37:
         raise ValueError('Native21 selected source boundary')
-    event, quest, npc, talk = _dependencies(metadata_root)
+    event, quest, npc, talk = _dependencies(metadata_root,scope['snapshot_id'].split(':')[1])
     binding_path = REPO / scope['event13_snez_binding']
     if sha(binding_path) != scope['event13_snez_binding_sha256']:
         raise ValueError('Native21 Snez binding seal')
@@ -118,12 +123,12 @@ def projection(root: Path, scope_path: Path, *, metadata_root=None):
     if binding['snapshot'] != scope['snapshot_id']:
         raise ValueError('Native21 Snez snapshot')
     snez = {item['pointer']: item for item in binding['occurrences']}
-    if len(snez) != 9:
+    if len(snez) != (9 if scope['snapshot_id'].split(':')[1]=='7.1' else 14):
         raise ValueError('Native21 Snez denominator')
     implementation = {path.relative_to(REPO).as_posix(): sha(path) for path in
                       (Path(__file__), SCHEMA)}
     implementation.update({original.relative_to(REPO).as_posix(): sha(actual)
-                           for original, actual in zip(DEPENDENCY_MANIFESTS, dependency_manifests(metadata_root))})
+                           for original, actual in zip(DEPENDENCY_MANIFESTS, dependency_manifests(metadata_root,scope['snapshot_id'].split(':')[1]))})
     parser = ident('parser', implementation)
     run = ident('run', parser, sha(scope_path), scope['snapshot_id'])
     source_rows = []
@@ -142,7 +147,7 @@ def projection(root: Path, scope_path: Path, *, metadata_root=None):
                     if type(value) is not int:
                         raise ValueError('Native21 owner locator shape')
                     wanted_hashes.add(str(value))
-    if len(source_rows) != 1045:
+    if len(source_rows) != (1045 if scope['snapshot_id'].split(':')[1]=='7.1' else sum(s['source_row_count'] for s in scope['sources'])):
         raise ValueError('Native21 7.1 physical row denominator')
     target = _target_rows(root, source_rows, quest, npc, talk)
     maps = {}
@@ -219,11 +224,11 @@ def projection(root: Path, scope_path: Path, *, metadata_root=None):
     for table in TABLES:
         expected[table].sort()
     release = {
-        'contract': 'native21-7.1-physical-text-candidate-v1', 'snapshot': scope['snapshot_id'],
+        'contract': 'native21-7.1-physical-text-candidate-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]), 'snapshot': scope['snapshot_id'],
         'parser_build_id': parser, 'ingest_run_id': run, 'scope_sha256': sha(scope_path),
         'implementation': implementation, 'counts': {table: len(expected[table]) for table in TABLES},
         'text_states': dict(sorted(states.items())), 'relation_states': dict(sorted(relation_states.items())),
-        'snez_exact_reuse_count': 9, 'semantic_owner_mapping_unresolved_fields': 9,
+        'snez_exact_reuse_count': len(snez), 'semantic_owner_mapping_unresolved_fields': 9,
         'historical_exact_replacement': False, 'product_accepted': False,
     }
     return scope, expected, release
@@ -234,7 +239,7 @@ def build(root: Path, scope_path: Path, output: Path, *, metadata_root=None):
     scope = json.loads(scope_path.read_text())
     inputs = [('source_root', root), ('scope', scope_path), ('schema', SCHEMA)]
     inputs += [(str(i), root / item['path']) for i, item in enumerate(scope['files'])]
-    inputs += [(str(i), path) for i, path in enumerate(dependency_manifests(metadata_root))]
+    inputs += [(str(i), path) for i, path in enumerate(dependency_manifests(metadata_root,scope['snapshot_id'].split(':')[1]))]
     assert_output_paths(output, inputs=inputs)
     _, rows, release = projection(root, scope_path, metadata_root=metadata_root)
     fd, stage = create_private_staging(output, prefix='.native21-71-')

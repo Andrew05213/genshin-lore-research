@@ -137,7 +137,7 @@ def verify(root: Path, scope_path: Path, artifact: Path):
     root, scope_path, artifact = Path(root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
     check_files(root, scope)
-    if scope['contract'] != 'event13-7.1-physical-capability-v1' or len(scope['sources']) != 30:
+    if scope['contract'] != 'event13-7.1-physical-capability-v1'.replace('7.1',scope['snapshot_id'].split(':')[1]) or len(scope['sources']) != 30:
         raise ValueError('Event13 oracle scope')
     historical = json.loads((REPO / 'manifests/event-narrative/archive-wave-scope.json').read_text())
     if scope['historical_scope_sha256'] != sha(REPO / 'manifests/event-narrative/archive-wave-scope.json'):

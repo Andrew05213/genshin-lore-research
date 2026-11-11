@@ -18,11 +18,18 @@ TITLE_FIELDS = {
 def title_state(candidates: list[dict], *, source_kind: str, path: str, subtitle: str | None = None) -> dict:
     """Preserve physical candidates; identical strings do not merge them."""
     candidates = sorted(candidates, key=lambda x: (x["source_row_id"], x["title_text_id"]))
-    status = "unresolved" if not candidates else "resolved" if len(candidates) == 1 else "ambiguous"
-    title = candidates[0]["title"] if status == "resolved" else None
-    basis = candidates[0]["basis"] if status == "resolved" else None
+    if not candidates:
+        status = 'unresolved'
+    elif len(candidates) != 1:
+        status = 'ambiguous'
+    else:
+        status = 'candidate' if candidates[0].get('relation_unproven') else 'resolved'
+    title = candidates[0]["title"] if len(candidates) == 1 else None
+    basis = candidates[0]["basis"] if len(candidates) == 1 else None
     if title:
         label = f"《{title}》" if source_kind in ("book", "document") else f"「{title}」"
+        if status == 'candidate':
+            label = '候选' + label + '（书名与文件的关系未证实）'
         if subtitle:
             label += f"—「{subtitle}」"
     elif subtitle:
@@ -54,16 +61,14 @@ class ResearchSourceContext:
         self.document_db = document_db
         self._readable_cache: dict[tuple[str, str], list[dict]] = {}
 
-    def _readable_document_titles(self, path: str, file_sha256: str) -> list[dict]:
+    def _document_readables(self, query: str | None = None):
+        """Source paths carried by sealed candidates, without resolving ownership."""
         if self.document_db is None:
-            return []
-        key = path, file_sha256
-        if key in self._readable_cache:
-            return self._readable_cache[key]
-        query = """
-            SELECT DISTINCT d.id AS source_row_id, d.source_path AS document_path,
+            return
+        sql = """
+            SELECT d.id AS source_row_id, d.source_path AS document_path,
                    d.pointer AS document_pointer, rel.id AS relation_id,
-                   rel.status AS relation_status, rel.search_complete,
+                   rel.kind AS relation_kind, rel.status AS relation_status, rel.search_complete,
                    cand.target_seal_json, s.id AS slot_id, s.status AS slot_status,
                    t.id AS title_text_id, t.raw_text AS title,
                    t.source_path AS title_source_path, t.pointer AS title_pointer
@@ -72,20 +77,46 @@ class ResearchSourceContext:
               JOIN document_row d ON d.id=rel.row_id
               JOIN document_slot s ON s.row_id=d.id
               JOIN document_text t ON t.slot_id=s.id
-             WHERE cand.target_source_path=? AND rel.kind='localization_readable'
+             WHERE rel.kind IN ('localization_readable','document_localization')
                AND s.field='titleTextMapHash' AND s.locale='CHS'
         """
-        by_physical_title: dict[tuple[str, str], dict] = {}
-        for row in self.document_db.execute(query, (path,)):
-            if row["relation_status"] != "resolved" or not row["search_complete"] or row["slot_status"] != "resolved":
+        params = ()
+        if query is not None:
+            sql += ' AND instr(t.raw_text,?)>0'
+            params = (query,)
+        for row in self.document_db.execute(sql, params):
+            if row['slot_status'] != 'resolved':
                 continue
-            seal = json.loads(row["target_seal_json"])
+            seal = json.loads(row['target_seal_json'])
+            if row['relation_kind'] == 'localization_readable':
+                if row['relation_status'] == 'resolved' and row['search_complete']:
+                    yield row, seal, False, None
+            elif row['relation_status'] == 'mapping_unresolved':
+                for target in seal.get('candidate_readable_targets', []):
+                    if target['locale'] == 'CHS':
+                        yield row, target['target'], True, target
+
+    def readable_paths_for_title(self, query: str) -> list[str]:
+        return sorted({seal['path'] for _, seal, _, _ in self._document_readables(query)})
+
+    def _readable_document_titles(self, path: str, file_sha256: str) -> list[dict]:
+        if self.document_db is None:
+            return []
+        key = path, file_sha256
+        if key in self._readable_cache:
+            return self._readable_cache[key]
+        by_physical_title: dict[tuple[str, str], dict] = {}
+        for row, seal, unproven, locator in self._document_readables():
             if seal.get("path") != path or seal.get("sha256") != file_sha256:
                 continue
             title = row["title"]
             if not isinstance(title, str) or not title.strip():
                 continue
             physical_key = row["source_row_id"], row["title_text_id"]
+            if physical_key in by_physical_title:
+                if unproven:
+                    by_physical_title[physical_key].setdefault('navigation_candidates', []).append(locator)
+                    continue
             by_physical_title[physical_key] = {
                 "title": title,
                 "basis": "source-authored-document-title",
@@ -99,6 +130,10 @@ class ResearchSourceContext:
                 "readable_path": path,
                 "readable_file_sha256": file_sha256,
             }
+            if unproven:
+                by_physical_title[physical_key].update(relation_unproven=True,
+                    basis='source-authored title via unresolved physical Localization candidate; ownership not proven',
+                    navigation_candidates=[locator])
         result = list(by_physical_title.values())
         self._readable_cache[key] = result
         return result

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 import base64, hashlib, json, sqlite3, threading, time
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any
 from .research_index import sha256_file
@@ -22,6 +23,7 @@ MAX_WIRE = 262_144
 # payload.  Keep the data portion below 100 KiB so the full MCP envelope stays
 # under the 262,144-byte contract.
 SEARCH_DATA_BUDGET = 90_000
+MAX_SCOPE_CACHE_ENTRIES = 128
 
 
 class ResearchUnavailable(RuntimeError):
@@ -234,6 +236,10 @@ class ResearchQuery:
         self._target_contract_cache = {}
         self._adapter_identity_cache = {}
         self._lexical_scope_count_cache = {}
+        # Source-key sets belong only to this sealed, immutable DB connection.
+        # No persisted cache or TTL; a new corpus gets a fresh instance. Bound
+        # entries because callers may supply arbitrarily many locale/scopes.
+        self._scope_source_cache = OrderedDict()
         self.semantic = None
         self.lexicon = None
         self.production_retrieval = None
@@ -377,6 +383,7 @@ class ResearchQuery:
         return SemanticDiscovery(config, self.bindings, self.corpus_ref, index_sha256)
 
     def close(self):
+        self._scope_source_cache.clear()
         for c in self.sources.values():
             c.close()
         if self.lexicon:
@@ -800,25 +807,33 @@ class ResearchQuery:
             raise ResearchUnavailable("text R0 provenance drift")
         return str(got[row["text_column"]])
 
+    def _scope_source_keys(self, sql, parameters=()):
+        key = (sql, tuple(parameters))
+        with self.source_lock:
+            cached = self._scope_source_cache.get(key)
+            if cached is not None:
+                self._scope_source_cache.move_to_end(key)
+                return cached
+            sources = frozenset(row[0] for row in self.db.execute(sql, parameters))
+            self._scope_source_cache[key] = sources
+            if len(self._scope_source_cache) > MAX_SCOPE_CACHE_ENTRIES:
+                self._scope_source_cache.popitem(last=False)
+            return sources
+
     def _scope_coverage(self, families=None, locale=None):
         keys = set(self.components)
         unknown_families = []
         if families:
-            known = {
-                r[0]
-                for r in self.db.execute(
-                    "select distinct evidence_family from research_container"
-                )
-            }
+            families = tuple(sorted(set(families)))
+            known = self._scope_source_keys(
+                "select distinct evidence_family from research_container"
+            )
             unknown_families = sorted(set(families) - known)
-            keys = {
-                r[0]
-                for r in self.db.execute(
-                    "select distinct source_key from research_container where evidence_family in (%s)"
-                    % ",".join("?" * len(families)),
-                    tuple(families),
-                )
-            }
+            keys = self._scope_source_keys(
+                "select distinct source_key from research_container where evidence_family in (%s)"
+                % ",".join("?" * len(families)),
+                families,
+            )
         rows = [
             x
             for x in self.coverage
@@ -832,25 +847,12 @@ class ResearchQuery:
         unknown = []
         filtered = []
         if locale:
-            filtered = sorted(
-                {
-                    r[0]
-                    for r in self.db.execute(
-                        "select distinct source_key from research_text where locale=?",
-                        (locale,),
-                    )
-                    if r[0] in keys
-                }
-            )
-            unknown = sorted(
-                {
-                    r[0]
-                    for r in self.db.execute(
-                        "select distinct source_key from research_text where locale is null"
-                    )
-                    if r[0] in keys
-                }
-            )
+            filtered = sorted(self._scope_source_keys(
+                "select distinct source_key from research_text where locale=?", (locale,)
+            ) & keys)
+            unknown = sorted(self._scope_source_keys(
+                "select distinct source_key from research_text where locale is null"
+            ) & keys)
         unsupported.extend("family:" + x for x in unknown_families)
         return searched, sorted(set(unsupported)), unavailable, filtered, unknown
 
@@ -2469,6 +2471,11 @@ class ResearchQuery:
                     )
         if "npc_id" in cols and str(got["npc_id"]) != str(c["raw_target"]):
             raise ResearchUnavailable("relation candidate raw target drift")
+        return got
+
+    def _decorate_follow_candidate(self, relation, candidate, source_candidate, item):
+        """Optional presentation from the exact source row just rechecked."""
+        return item
 
     def follow(
         self,
@@ -2646,7 +2653,7 @@ class ResearchQuery:
                 (r["id"], ca, limit + 1),
             ).fetchall()
             for c in crows[:limit]:
-                self._recheck_candidate(r, c)
+                source_candidate = self._recheck_candidate(r, c)
                 target = self._target_ref(c) if resolve_targets else None
                 item = {
                     "target_evidence_ref": target,
@@ -2659,6 +2666,8 @@ class ResearchQuery:
                     "target_pointer": c["target_pointer"],
                     "raw_target": c["raw_target"],
                 }
+                if resolve_targets:
+                    item = self._decorate_follow_candidate(r, c, source_candidate, item)
                 if (
                     len(
                         json.dumps(

@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Iterator
 
 from .batch_m1_verifier import _iter_source_pairs
+from .source_versions import source_pin
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -106,13 +107,17 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
     report = json.loads(Path(report_path).read_text())
     contract_raw = Path(contract_path).read_bytes()
     contract = json.loads(contract_raw)
+    snapshot = contract["source_snapshot"]
+    game_version, commit, tree = source_pin(snapshot)
+    if contract.get("contract") != f"m3-{game_version}-ten-family-provider-input-v1":
+        raise ValueError("input format/source version mismatch")
     family = next((entry for entry in contract["families"] if entry["family"] == family_name), None)
-    if family is None or contract["source_snapshot"] != SNAPSHOT:
+    if family is None or contract.get("source_tree", tree) != tree:
         raise ValueError("frozen family/snapshot mismatch")
     if (_git(source, "rev-parse", "HEAD"), _git(source, "rev-parse", "HEAD^{tree}")) != (
-        SNAPSHOT.rsplit(":", 1)[1], TREE
+        snapshot.rsplit(":", 1)[1], tree
     ) or _git(source, "status", "--porcelain", "--untracked-files=all"):
-        raise ValueError("7.1 source pin or cleanliness failed")
+        raise ValueError("declared source pin or cleanliness failed")
     identities = {family["source_path"]: family["source_identity"]}
     identities.update({path: contract["textmap_sources"][path] for path in family["v2_textmap_paths"]})
     raw_files = {}
@@ -144,7 +149,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
         if (release["source_snapshot"], release["family"], release["source_file"],
                 release["frozen_input_contract_sha256"], release["schema_sha256"],
                 release["builder_implementation_sha256"]) != (
-            SNAPSHOT, family_name, family["source_path"], _sha(contract_raw),
+            snapshot, family_name, family["source_path"], _sha(contract_raw),
             _file_sha(SCHEMA), _file_sha(BUILDER)
         ):
             raise ValueError("release identity mismatch")
@@ -153,7 +158,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                 release["declared_key_fields"], release["declared_text_fields"],
                 release["product_accepted"], release["research_accepted"],
                 release["logical_identity_created"]) != (
-            "m3-7.1-family-provider-candidate-v1", SNAPSHOT.rsplit(":", 1)[1], TREE,
+            f"m3-{game_version}-family-provider-candidate-v1", snapshot.rsplit(":", 1)[1], tree,
             family["source_identity"]["sha256"],
             {path: contract["textmap_sources"][path]["sha256"]
              for path in family["v2_textmap_paths"]},
@@ -165,17 +170,17 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                        "textmap_input_cache": _file_sha(ROOT / "src/genshin_lore/textmap_input_cache.py")}
         observation = None
         if family["v2_textmap_paths"]:
-            tm_parser = "m3-71-textmap-parser:" + _id(
+            tm_parser = "m3-" + game_version.replace(".", "") + "-textmap-parser:" + _id(
                 "six-file-lexical-textmap-v2-input-cache", helper_shas["textmap_lexical_reader"],
                 helper_shas["textmap_input_cache"],
                 _file_sha(SCHEMA),
             )[:40]
-            tm_run = "m3-71-textmap-run:" + _id(
-                SNAPSHOT, tm_parser,
+            tm_run = "m3-" + game_version.replace(".", "") + "-textmap-run:" + _id(
+                snapshot, tm_parser,
                 [(path, contract["textmap_sources"][path]["sha256"])
                  for path in family["v2_textmap_paths"]],
             )[:40]
-            observation = {"snapshot_id": SNAPSHOT, "parser_build_id": tm_parser,
+            observation = {"snapshot_id": snapshot, "parser_build_id": tm_parser,
                            "ingest_run_id": tm_run,
                            "scope": "family-local exact six-file TextMap observation; no separate shard"}
         if release["parser_helper_sha256"] != helper_shas or release["textmap_observation"] != observation:
@@ -183,11 +188,11 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
         config = _j({"family": family_name, "source": family["source_path"],
                      "keys": family["key_observation_fields"], "text": family["v2_text_fields"],
                      "v1": family["v1_contract"], "v2": family["v2_contract"]})
-        parsers = {version: "m3-7.1-parser:" + _id("parser-v1", version, _file_sha(BUILDER),
+        parsers = {version: f"m3-{game_version}-parser:" + _id("parser-v1", version, _file_sha(BUILDER),
                                                      helper_shas, _file_sha(SCHEMA),
                                                      _sha(config.encode()))[:40]
                    for version in ("v1", "v2")}
-        runs = {version: "m3-7.1-run:" + _id("run-v1", SNAPSHOT, family_name, version,
+        runs = {version: f"m3-{game_version}-run:" + _id("run-v1", snapshot, family_name, version,
                                              parsers[version], _sha(contract_raw),
                                              family["source_identity"]["sha256"],
                                              [(path, contract["textmap_sources"][path]["sha256"])
@@ -233,18 +238,18 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                                              "text_resolutions", "text_candidates")})
         consumed = Counter()
         for ordinal, pointer, token, pairs, token_sha in source_rows:
-            v1_id = "m3-71-v1:" + _id(family_name, runs["v1"], family["source_path"], pointer, token_sha)[:40]
-            v2_id = "m3-71-v2:" + _id(family_name, runs["v2"], family["source_path"], pointer, token_sha)[:40]
+            v1_id = "m3-" + game_version.replace(".", "") + "-v1:" + _id(family_name, runs["v1"], family["source_path"], pointer, token_sha)[:40]
+            v2_id = "m3-" + game_version.replace(".", "") + "-v2:" + _id(family_name, runs["v2"], family["source_path"], pointer, token_sha)[:40]
             observations = [{"field": field, "pair_ordinal": index, "raw_value": value}
                             for index, (field, value) in enumerate(pairs) if field in key_fields]
             v1_actual = conn.execute("SELECT * FROM v1_row WHERE source_path=? AND source_ordinal=?",
                                      (family["source_path"], ordinal)).fetchone()
             v2_actual = conn.execute("SELECT * FROM v2_row WHERE source_path=? AND source_ordinal=?",
                                      (family["source_path"], ordinal)).fetchone()
-            if v1_actual != (v1_id, SNAPSHOT, parsers["v1"], runs["v1"], family["source_path"],
+            if v1_actual != (v1_id, snapshot, parsers["v1"], runs["v1"], family["source_path"],
                              ordinal, pointer, token, token_sha, _j(observations)):
                 raise ValueError("v1 physical row differs at ordinal " + str(ordinal))
-            if v2_actual != (v2_id, SNAPSHOT, parsers["v2"], runs["v2"], family["source_path"],
+            if v2_actual != (v2_id, snapshot, parsers["v2"], runs["v2"], family["source_path"],
                              ordinal, pointer, token, token_sha):
                 raise ValueError("v2 physical row differs at ordinal " + str(ordinal))
             counts["v1_rows"] += 1
@@ -257,7 +262,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                 if field not in text_fields:
                     continue
                 key = str(value)
-                owner_id = "m3-71-owner:" + _id(family_name, runs["v2"], v2_id, field, pair_ordinal)[:40]
+                owner_id = "m3-" + game_version.replace(".", "") + "-owner:" + _id(family_name, runs["v2"], v2_id, field, pair_ordinal)[:40]
                 per_locale = {locale: by_hash.get((locale, key), ()) for locale in LOCALES}
                 states = {locale: "missing" if not per_locale[locale] else
                           "resolved_unique" if len(per_locale[locale]) == 1 else "resolved_candidate_set"
@@ -270,7 +275,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                     raise ValueError("v2 text owner differs at " + pointer + ":" + field)
                 counts["text_owners"] += 1
                 for locale in LOCALES:
-                    resolution_id = "m3-71-resolution:" + _id(owner_id, locale)[:40]
+                    resolution_id = "m3-" + game_version.replace(".", "") + "-resolution:" + _id(owner_id, locale)[:40]
                     expected_resolution = (resolution_id, owner_id, locale, states[locale], len(per_locale[locale]))
                     if conn.execute("SELECT * FROM v2_resolution WHERE resolution_id=?", (resolution_id,)).fetchone() != expected_resolution:
                         raise ValueError("v2 TextMap resolution differs at " + pointer + ":" + field)
@@ -279,7 +284,7 @@ def verify(source_root: str | Path, family_name: str, artifact_path: str | Path,
                     for (tier, relative, pair_index, source_record_pointer,
                          text_pointer, key_json, text_json, text, key_sha,
                          text_sha, record_sha, rendered_sha) in per_locale[locale]:
-                        candidate_id = "m3-71-candidate:" + _id(owner_id, relative, pair_index)[:40]
+                        candidate_id = "m3-" + game_version.replace(".", "") + "-candidate:" + _id(owner_id, relative, pair_index)[:40]
                         expected_candidate = (candidate_id, owner_id, observation["snapshot_id"],
                                               observation["parser_build_id"],
                                               observation["ingest_run_id"],

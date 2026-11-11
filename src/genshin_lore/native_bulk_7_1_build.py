@@ -35,20 +35,23 @@ def identity(*parts: object) -> str:
 
 def _qualify(root: Path, scope_path: Path) -> tuple[dict, dict, str, str, str]:
     scope = json.loads(scope_path.read_text())
+    from .source_versions import scope_pin
+    version, commit, expected_tree = scope_pin(scope)
+    selection_path = SELECTION if version == '7.1' else f'manifests/native-archive-{version}/bulk-selection.json'
     head, tree = subprocess.check_output(
         ["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True
     ).splitlines()
-    if (head, tree) != (COMMIT, TREE) or subprocess.check_output(
+    if (head, tree) != (commit, expected_tree) or subprocess.check_output(
         ["git", "-C", str(root), "status", "--porcelain"]
     ):
         raise ValueError("exact clean 7.1 source checkout required")
     if (scope.get("source_commit"), scope.get("source_tree"), scope.get("snapshot_id")) != (
-        COMMIT, TREE, "anime-game-data:7.1:" + COMMIT
+        commit, expected_tree, f"anime-game-data:{version}:{commit}"
     ):
         raise ValueError("7.1 scope pin")
-    selection = json.loads((ROOT / SELECTION).read_text())
-    if (scope.get("selection_manifest") != SELECTION
-            or scope.get("selection_sha256") != sha(ROOT / SELECTION)
+    selection = json.loads((ROOT / selection_path).read_text())
+    if (scope.get("selection_manifest") != selection_path
+            or scope.get("selection_sha256") != sha(ROOT / selection_path)
             or scope.get("sources") != selection["sources"]
             or scope.get("languages") != selection["languages"]
             or scope.get("textmaps") != selection["textmaps"]):
@@ -64,17 +67,17 @@ def _qualify(root: Path, scope_path: Path) -> tuple[dict, dict, str, str, str]:
     for item in scope["files"]:
         path = root / item["path"]
         blob = subprocess.check_output(
-            ["git", "-C", str(root), "rev-parse", f"{COMMIT}:{item['path']}"], text=True
+            ["git", "-C", str(root), "rev-parse", f"{commit}:{item['path']}"], text=True
         ).strip()
         if (not path.is_file() or path.is_symlink() or path.stat().st_size != item["size_bytes"]
                 or sha(path) != item["sha256"] or git_blob(path) != blob or blob != item["blob"]):
             raise ValueError("source byte/blob drift: " + item["path"])
-    implementation = {name: sha(ROOT / name) for name in IMPLEMENTATION}
-    parser = "native-archive-7.1-parser:" + hashlib.sha256(
+    implementation = {name: sha(ROOT / name) for name in (*IMPLEMENTATION[:-1], selection_path)}
+    parser = f"native-archive-{version}-parser:" + hashlib.sha256(
         json.dumps(implementation, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()[:40]
     scope_sha = sha(scope_path)
-    run = "native-archive-7.1-run:" + hashlib.sha256(
+    run = f"native-archive-{version}-run:" + hashlib.sha256(
         (parser + ":" + scope_sha).encode()
     ).hexdigest()[:40]
     return scope, implementation, parser, scope_sha, run
@@ -160,10 +163,12 @@ def build(source_root: Path, scope_path: Path, output: Path) -> dict:
                               for suffix in ("-wal", "-shm", "-journal")):
         raise FileExistsError("output or SQLite sidecar already exists")
     scope, implementation, parser, scope_sha, run = _qualify(source_root, scope_path)
+    from .source_versions import source_pin
+    version, _, _ = source_pin(scope["snapshot_id"])
     rows, states, roles = _projection(source_root, scope, run)
     counts = {table: len(rows[table]) for table in TABLES}
     release = {
-        "contract": "native-bulk-7.1-standalone-v1", "family_contract_version": "native-archive-evidence-v1",
+        "contract": f"native-bulk-{version}-standalone-v1", "family_contract_version": "native-archive-evidence-v1",
         "snapshot_id": scope["snapshot_id"], "parser_build_id": parser, "run_id": run,
         "scope_sha256": scope_sha, "implementation": implementation,
         "counts": counts, "text_state_counts": dict(sorted(states.items())),

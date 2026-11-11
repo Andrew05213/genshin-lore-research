@@ -72,10 +72,13 @@ def schema(db: sqlite3.Connection) -> None:
 def verify(source: Path, artifact: Path, report: Path, *, manifest_path=None) -> dict:
     dependency_manifest = Path(manifest_path or MANIFEST)
     source, artifact, report = Path(source), Path(artifact), Path(report)
+    from genshin_lore.source_versions import source_pin
+    SNAPSHOT = json.loads(dependency_manifest.read_text())["components"]["quest_review_archive"]["source_snapshot"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
     check(subprocess.check_output(['git', '-C', str(source), 'rev-parse', 'HEAD', 'HEAD^{tree}'], text=True).splitlines() == [COMMIT, TREE], 'source pin')
     manifest = json.loads(report.read_text())
     release = manifest['release']
-    check(release['contract'] == 'quest-review-7.1-exact-target-binding-v2' and release['status'] == 'candidate' and release['snapshot'] == SNAPSHOT and release['product_accepted'] is False, 'release authority')
+    check(release['contract'] == f'quest-review-{version}-exact-target-binding-v2' and release['status'] == 'candidate' and release['snapshot'] == SNAPSHOT and release['product_accepted'] is False, 'release authority')
     check(artifact.stat().st_size == manifest['artifact']['size_bytes'] and sha(artifact) == manifest['artifact']['sha256'], 'artifact seal')
     accepted = json.loads(dependency_manifest.read_text())['components']
     qr_entry, qn_entry = accepted['quest_review_archive'], accepted['quest_narrative_archive']
@@ -119,7 +122,7 @@ def verify(source: Path, artifact: Path, report: Path, *, manifest_path=None) ->
         own_rows[occurrence] = (kind, path, pointer, native)
         if kind in ('review_group', 'review_tab'):
             own_lookup[native].append((path, pointer, native, 'quest_review_archive', qr_entry['contract'], qr_entry['parser_build_id'], row_run, occurrence, raw_sha, 'explicit_unresolved_same_value_navigation_candidate'))
-    check(len(own_rows) == 622, 'Review complete namespace')
+    check(len(own_rows) == {'7.1':622,'7.2':624}[version], 'Review complete namespace')
     expected_locators, expected_candidates = [], []
     summary_counts = defaultdict(int)
     for source_id, owner, role, pointer, raw, status, old_count in qr.execute('SELECT id,row_id,role,source_pointer,raw_value,status,candidate_count FROM locator ORDER BY id'):
@@ -143,11 +146,11 @@ def verify(source: Path, artifact: Path, report: Path, *, manifest_path=None) ->
         for hit in hits:
             target_path,target_pointer,target_native,family,contract,target_parser,target_run,occurrence,raw_sha,locator_kind = hit
             expected_candidates.append((key('candidate',bound_id,target_run,occurrence),bound_id,family,contract,target_parser,target_run,occurrence,target_path,target_pointer,target_native,raw_sha,locator_kind))
-    check(dict(summary_counts) == {'summary_locators':606,'summary_candidates':544,'member_locators':11,'member_candidates':16}, 'Review 617/560 denominator')
+    check(dict(summary_counts) == {'summary_locators':606,'summary_candidates':544,'member_locators':11 if version=='7.1' else 12,'member_candidates':16 if version=='7.1' else 18}, 'Review 617/560 denominator')
     seals = {'bound_locator': rowset(db,'bound_locator',expected_locators),'bound_candidate': rowset(db,'bound_candidate',expected_candidates)}
-    check(release['counts'] == {'bound_locator':617,'bound_candidate':560,**dict(summary_counts)} and release['relation_status'] == 'mapping_unresolved' and release['search_complete'] is False and release['logical_relation_closure'] is False, 'release semantics')
+    check(release['counts'] == {'bound_locator':617 if version=='7.1' else 618,'bound_candidate':560 if version=='7.1' else 562,**dict(summary_counts)} and release['relation_status'] == 'mapping_unresolved' and release['search_complete'] is False and release['logical_relation_closure'] is False, 'release semantics')
     qr.close();qn.close();db.close()
-    return {'verdict':'PASS','artifact':manifest['artifact'],'counts':release['counts'],'logical_seals':seals,'full_questexcel_target_rows_checked':target_count,'summary_zero_candidates':62,'second_hop_full_recheck':560,'ambiguous_auto_selection':0,'logical_relation_closure':False}
+    return {'verdict':'PASS','artifact':manifest['artifact'],'counts':release['counts'],'logical_seals':seals,'full_questexcel_target_rows_checked':target_count,'summary_zero_candidates':62,'second_hop_full_recheck':len(expected_candidates),'ambiguous_auto_selection':0,'logical_relation_closure':False}
 
 
 if __name__ == '__main__':

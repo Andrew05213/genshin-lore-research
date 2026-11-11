@@ -38,8 +38,8 @@ def ident(prefix, *parts):
     return prefix + ":" + sha(canon(parts).encode())[:40]
 
 
-def blobs(root):
-    raw = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", COMMIT, "--", "Readable"])
+def blobs(root, commit=COMMIT):
+    raw = subprocess.check_output(["git", "-C", str(root), "ls-tree", "-r", "-z", commit, "--", "Readable"])
     result = {}
     for entry in raw.split(b"\0"):
         if entry:
@@ -83,13 +83,16 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
     r0_artifact, document_artifact = Path(r0_artifact).resolve(), Path(document_artifact).resolve()
     scope_raw = scope_path.read_bytes()
     scope = json.loads(scope_raw)
+    from .source_versions import source_pin
+    SNAPSHOT = scope["snapshot_id"]
+    version, COMMIT, TREE = source_pin(SNAPSHOT)
     if (scope["source_commit"], scope["source_tree"], scope["snapshot_id"]) != (COMMIT, TREE, SNAPSHOT):
         raise ValueError("Readable 7.1 source scope")
     if subprocess.check_output(["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"], text=True).splitlines() != [COMMIT, TREE]:
         raise ValueError("Readable 7.1 source checkout pin")
     if subprocess.check_output(["git", "-C", str(root), "status", "--porcelain=v1", "--untracked-files=all"], text=True).strip():
         raise ValueError("Readable 7.1 source checkout dirty")
-    tree = blobs(root)
+    tree = blobs(root, COMMIT)
     seal = sha((json.dumps(sorted(tree.items()), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n").encode())
     if len(tree) != scope["readable"]["file_count"] or seal != scope["readable"]["path_blob_set_sha256"]:
         raise ValueError("Readable 7.1 denominator")
@@ -100,7 +103,8 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
         raise ValueError("7.1 R0 dependency seal")
     if document_report["artifact"] != {"size_bytes": document_artifact.stat().st_size, "sha256": file_sha(document_artifact)}:
         raise ValueError("7.1 Document dependency seal")
-    if document_report["snapshot_id"] != SNAPSHOT or document_report["contract"] != "document-7.1-evidence-v1":
+    document_contract = 'document-7.2-evidence-v2' if version == '7.2' else 'document-7.1-evidence-v1'
+    if document_report["snapshot_id"] != SNAPSHOT or document_report["contract"] != document_contract:
         raise ValueError("7.1 Document dependency snapshot")
     r0 = sqlite3.connect("file:" + str(r0_artifact) + "?mode=ro&immutable=1", uri=True)
     r0_rows = r0.execute("SELECT relative_path,source_file_id,source_sha256,snapshot_id,ingest_run_id FROM source_file WHERE root='Readable'").fetchall()
@@ -180,7 +184,7 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
                 target = "Readable/" + value[len("ART/UI/Readable/"):] + ".txt"
                 add_relation("source_localization", None, None, None, f"localization:{ordinal}",
                              "ExcelBinOutput/LocalizationExcelConfigData.json", f"/{ordinal}/{key}",
-                             "localization_readable_path", value, "all pinned 7.1 Readable paths; exact exported path + .txt", target)
+                             "localization_readable_path", value, f"all pinned {version} Readable paths; exact exported path + .txt", target)
         document = sqlite3.connect("file:" + str(document_artifact) + "?mode=ro&immutable=1", uri=True)
         document.row_factory = sqlite3.Row
         release = json.loads(document.execute("SELECT manifest_json FROM document_release WHERE id=1").fetchone()[0])
@@ -199,7 +203,7 @@ def build(source_root, scope_path, output, r0_artifact, document_artifact, docum
         tables = ("readable_file", "readable_line", "readable_relation", "readable_candidate")
         logical_seals = logical(db, tables)
         release = {
-            "contract": "readable-7.1-evidence-v1", "snapshot_id": SNAPSHOT,
+            "contract": f"readable-{version}-evidence-v1", "snapshot_id": SNAPSHOT,
             "parser_build_id": parser_id, "run_id": run_id, "scope_sha256": sha(scope_raw),
             "implementation": implementation,
             "r0_dependency": scope["r0_dependency"], "document_dependency": document_report["artifact"],

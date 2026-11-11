@@ -123,7 +123,7 @@ def _compare(conn: sqlite3.Connection, table: str, expected: list[tuple]) -> int
     return len(actual)
 
 
-def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> dict:
+def verify(source_root: str | Path, family: str, artifact_path: str | Path, *, contract_path=INPUT) -> dict:
     source = Path(source_root).resolve()
     artifact = Path(artifact_path).resolve()
     if not artifact.is_file() or artifact.is_symlink():
@@ -131,9 +131,13 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
     for suffix in ("-wal", "-shm", "-journal"):
         if Path(str(artifact) + suffix).exists():
             raise ValueError("SQLite sidecar exists: " + suffix)
-    frozen_raw = INPUT.read_bytes()
+    frozen_raw = Path(contract_path).read_bytes()
     frozen = json.loads(frozen_raw)
-    if frozen["contract"] != "special-core-7.1-provider-input-v1" or frozen["contract_count"] != 13:
+    from .source_versions import source_pin
+    game_version, commit, tree = source_pin(frozen['source_snapshot'])
+    if (frozen['source_commit'],frozen['source_tree']) != (commit,tree):
+        raise ValueError('source contract pin mismatch')
+    if frozen["contract"] != f"special-core-{game_version}-provider-input-v1" or frozen["contract_count"] != 13:
         raise ValueError("frozen input contract drift")
     rule = next((item for item in frozen["contracts"] if item["family"] == family), None)
     if rule is None or rule["kind"] != "M5C_WAVE02":
@@ -218,10 +222,10 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
     builder_sha = _file_sha(BUILDER)
     schema_sha = _file_sha(SCHEMA)
     contract_sha = _sha(frozen_raw)
-    parser = "special-core-71-parser:" + _id("m5c-v1", family, rule["provider_contract"],
+    parser = "special-core-" + game_version.replace(".", "") + "-parser:" + _id("m5c-v1", family, rule["provider_contract"],
                                                builder_sha, schema_sha, contract_sha)
     seals = [(path, frozen["source_files"][path]["sha256"]) for path in paths]
-    run = "special-core-71-run:" + _id(frozen["source_snapshot"], parser, seals)
+    run = "special-core-" + game_version.replace(".", "") + "-run:" + _id(frozen["source_snapshot"], parser, seals)
     counts: Counter[str] = Counter()
     for row in primary:
         ordinal, pointer, data = row["ordinal"], row["pointer"], row["value"]
@@ -311,7 +315,7 @@ def verify(source_root: str | Path, family: str, artifact_path: str | Path) -> d
                         raw_key, raw_text_json, text, key_sha, text_sha, record_sha))
                     counts["text_candidates"] += 1
     release = {
-        "contract": "special-core-7.1-m5c-provider-candidate-v1",
+        "contract": f"special-core-{game_version}-m5c-provider-candidate-v1",
         "family": family, "provider_contract": rule["provider_contract"],
         "source_snapshot": frozen["source_snapshot"], "source_commit": frozen["source_commit"],
         "source_tree": frozen["source_tree"], "parser_build_id": parser, "ingest_run_id": run,

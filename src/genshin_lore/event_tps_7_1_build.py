@@ -43,7 +43,7 @@ def project(source_root, scope_path):
     scope = json.loads(scope_path.read_text())
     historical = json.loads(OLD.read_text())
     check_files(source_root, scope)
-    if (scope['contract'] != 'event-tps-7.1-versioned-scope-v1'
+    if (scope['contract'] != 'event-tps-7.1-versioned-scope-v1'.replace('7.1', scope['snapshot_id'].split(':')[1])
             or scope['historical_scope_sha256'] != sha(OLD)
             or scope['family_contract_version'] != 'event-narrative-evidence-v3'
             or scope['languages'] != historical['languages']
@@ -74,7 +74,7 @@ def project(source_root, scope_path):
         for _, row, _ in records:
             for _, locator, _ in owner_observations(row, item['text_owners']):
                 wanted.add(str(locator))
-    if sum(map(len, physical.values())) != 507:
+    if sum(map(len, physical.values())) != (507 if scope['snapshot_id'].split(':')[1] == '7.1' else 559):
         raise ValueError('TPS historical six-array denominator')
     textmap = defaultdict(list)
     for locale in scope['languages']:

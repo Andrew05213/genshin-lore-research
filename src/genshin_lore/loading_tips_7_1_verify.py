@@ -25,6 +25,8 @@ def _identity(*values: object) -> str:
 def verify(source_root: Path, scope_path: Path, artifact: Path, *, runtime_manifest: Path | None = None) -> dict:
     source_root, scope_path, artifact = Path(source_root), Path(scope_path), Path(artifact)
     scope = json.loads(scope_path.read_text())
+    from .source_versions import source_pin
+    version, _, _ = source_pin(scope["snapshot_id"])
     check_scope(source_root, scope)
     if any(Path(str(artifact) + suffix).exists() for suffix in ("-wal", "-shm", "-journal")):
         raise ValueError("LoadingTips SQLite sidecar")
@@ -76,7 +78,7 @@ def verify(source_root: Path, scope_path: Path, artifact: Path, *, runtime_manif
                     ))
     for table in TABLES:
         expected[table].sort()
-    release = {"contract": "loading-tips-7.1-standalone-v1",
+    release = {"contract": f"loading-tips-{version}-standalone-v1",
                "family_contract_version": "loading-tips-evidence-v1",
                "snapshot_id": scope["snapshot_id"], "parser_build_id": parser,
                "run_id": run, "scope_sha256": scope_sha,

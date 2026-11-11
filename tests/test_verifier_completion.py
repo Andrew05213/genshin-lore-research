@@ -66,7 +66,7 @@ def event_fixture(tmp_path, monkeypatch):
              for p in [s['path'] for s in sources]+maps]
     scope = tmp_path/'scope.json'
     scope.write_text(json.dumps({'contract':'event13-7.1-physical-capability-v1',
-        'snapshot_id':'synthetic-snapshot','historical_scope_sha256':builder.sha(history),
+        'snapshot_id':'anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99','historical_scope_sha256':builder.sha(history),
         'sources':sources,'files':files}))
 
     def fixture_bytes(root, declaration):

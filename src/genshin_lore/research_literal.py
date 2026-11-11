@@ -5,6 +5,13 @@ remain source-bound; old-order cursors cannot be reinterpreted.
 """
 import json
 
+ORDERING_VERSION = 'body-first-v2'
+TITLE_FIELDS = frozenset({
+    'titleTextMapHash', 'storyTitleTextMapHash', 'storyTitle2TextMapHash',
+    'voiceTitleTextMapHash', 'MainQuestTitle', 'SubQuestTitle', 'ChapterTitle',
+    'title', 'Title', 'storyTitleLockedTextMapHash', 'voiceTitleLockedTextMapHash',
+})
+
 # Declared body slots, not inferred ownership. Unknown slots remain searchable.
 BODY_FIELDS = frozenset({
     'descTextMapHash', 'avatarDetailTextMapHash', 'storyContextTextMapHash',
@@ -30,7 +37,7 @@ def literal_search(q, query, locale, families, source_prefix, limit, cursor, *, 
         "families": families,
         "source_prefix": source_prefix,
         "limit": limit,
-        "ordering": "body-first-v1",
+        "ordering": ORDERING_VERSION,
     }
     if name_anchor:
         scope['name_anchor'] = True
@@ -50,7 +57,7 @@ def literal_search(q, query, locale, families, source_prefix, limit, cursor, *, 
         where.append("substr(t.text_source_path,1,length(?))=?")
         args.extend((source_prefix, source_prefix))
     names = "(lower(coalesce(t.owner_field,'')) like '%name%' or t.owner_field='SpeakerKnown')"
-    titles = "(t.owner_field in ('titleTextMapHash','storyTitleTextMapHash','storyTitle2TextMapHash','voiceTitleTextMapHash','MainQuestTitle','SubQuestTitle','ChapterTitle','title','Title'))"
+    titles = "(t.owner_field in (%s))" % ','.join("'" + field + "'" for field in sorted(TITLE_FIELDS))
     fields = ",".join("'" + field + "'" for field in sorted(BODY_FIELDS))
     substantive = f"(t.owner_field in ({fields}) or (t.evidence_family='readable_archive' and trim(t.raw_text)<>''))"
     rank = f"case when t.raw_text=? and {titles} then 0 when {substantive} then 1 when {titles} then 2 when not {names} then 3 when t.raw_text=? then 4 else 5 end"
@@ -142,7 +149,7 @@ def literal_search(q, query, locale, families, source_prefix, limit, cursor, *, 
         "locale_unknown_scopes": unknown,
         "partial": bool(unsupported or unavailable or (locale and unknown)),
         "ranking": {
-            "mode": "body-first-v1",
+            "mode": ORDERING_VERSION,
             "preserves_physical_occurrences": True,
         },
     }

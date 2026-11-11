@@ -134,15 +134,19 @@ def _guard(conn: sqlite3.Connection) -> None:
                 BEGIN SELECT RAISE(ABORT,'immutable historical special evidence'); END""")
 
 
-def build(source_root: str | Path, family: str, output_path: str | Path) -> dict:
+def build(source_root: str | Path, family: str, output_path: str | Path, *, contract_path=INPUT, rules_path=RULES) -> dict:
     if family not in ("world_archive", "quest_codex_archive"):
         raise ValueError("historical family not supported")
     root = Path(source_root).resolve()
     output = Path(output_path).resolve()
-    frozen_raw = INPUT.read_bytes()
+    frozen_raw = Path(contract_path).read_bytes()
     frozen = json.loads(frozen_raw)
-    rules_raw = RULES.read_bytes()
+    rules_raw = Path(rules_path).read_bytes()
     rules = json.loads(rules_raw)
+    from .source_versions import source_pin
+    game_version, commit, tree = source_pin(frozen['source_snapshot'])
+    if (frozen['source_commit'],frozen['source_tree']) != (commit,tree):
+        raise ValueError('source contract pin mismatch')
     if frozen["contract_count"] != 13 or rules["source_snapshot"] != frozen["source_snapshot"]:
         raise ValueError("historical special input identity mismatch")
     boundary = next(item for item in frozen["contracts"] if item["family"] == family)
@@ -192,10 +196,10 @@ def build(source_root: str | Path, family: str, output_path: str | Path) -> dict
                 physical[spec["target"]], spec["target_field"])
     builder_sha = _file_sha(Path(__file__))
     schema_sha = _file_sha(SCHEMA)
-    parser = "historical-special-71-parser:" + _id(family, boundary["provider_contract"], builder_sha,
+    parser = "historical-special-" + game_version.replace(".", "") + "-parser:" + _id(family, boundary["provider_contract"], builder_sha,
                                                       schema_sha, _sha(frozen_raw), _sha(rules_raw))
     seals = [(path, frozen["source_files"][path]["sha256"]) for path in sorted(files)]
-    run = "historical-special-71-run:" + _id(frozen["source_snapshot"], parser, seals)
+    run = "historical-special-" + game_version.replace(".", "") + "-run:" + _id(frozen["source_snapshot"], parser, seals)
     output.parent.mkdir(parents=True, exist_ok=True)
     fd = os.open(output, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
     stat = os.fstat(fd)

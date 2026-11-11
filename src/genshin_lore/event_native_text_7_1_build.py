@@ -30,7 +30,7 @@ def identities(scope_path: Path) -> tuple[str, str]:
 def project(source: Path, scope_path: Path) -> tuple[dict, dict, dict]:
     scope = json.loads(scope_path.read_text())
     check_files(source, scope)
-    if (scope['contract'] != 'event-native-text-wave-7.1-exact-scope-v1'
+    if (scope['contract'] != 'event-native-text-wave-7.1-exact-scope-v1'.replace('7.1',scope['snapshot_id'].split(':')[1])
             or scope['historical_scope'] != 'manifests/event-narrative/native-text-archive-wave-scope.json'
             or scope['historical_scope_sha256'] != sha(ROOT / scope['historical_scope'])
             or len(scope['sources']) != 16 or len(scope['files']) != 22):

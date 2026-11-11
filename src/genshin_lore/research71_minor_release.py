@@ -65,6 +65,8 @@ class ReleasedSuccessor71(SuccessorResearch71):
         # Deliberately do not invoke either prepublication constructor.
         ResearchQuery.__init__(self, corpus, bindings, index, profile,
                                allow_prepublication_profile=False)
+        from .source_versions import source_pin
+        self.source_version, _, _ = source_pin(self.manifest['snapshot']['id'])
         if self.unavailable:
             self.close()
             raise ResearchUnavailable('published minor dependencies unavailable')

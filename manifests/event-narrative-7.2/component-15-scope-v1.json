@@ -1,0 +1,349 @@
+{
+  "boundaries": [
+    "activity_photograph_narrative_archive",
+    "echo_shell_archive"
+  ],
+  "contract": "event-photo-echo-7.2-versioned-source-v1",
+  "corpus_complete": false,
+  "coverage": "bounded physical union of source-authored root/page selectors; selectors disagree, no logical activity/order equivalence",
+  "cross_family_relations": false,
+  "external_relation_candidates": [],
+  "family_contract_version": "event-narrative-evidence-v3",
+  "field_renames": {
+    "DLGNPIDJDAD": "CMFMODONCGJ",
+    "EINGJLOCLJO": "OPBFJNLJJKA",
+    "FLKPLMMNLFL": "FJBMJKLCDDN",
+    "HPAMAMOHMMM": "PAFDMIMKIAO",
+    "KDLEHDLHHOD": "CECCFAAFGNM",
+    "NPDJPIBIDDG": "IDNBLPICFGM"
+  },
+  "files": [
+    {
+      "blob": "a6ffe830b69f43fd1c1721c13b631d56588c862a",
+      "path": "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+      "sha256": "f89033b93d3d997b50b65897f9f130b2f5bd88fedac310400aacff3a1f11815c",
+      "size_bytes": 893
+    },
+    {
+      "blob": "b47c6d1b8b3b8d146abbc7c9ba9af3a4f46ca671",
+      "path": "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+      "sha256": "5d7aeb742587f8c19ed9613bda2893de3408f917b85242cf2f90b3d7c40d5e79",
+      "size_bytes": 640
+    },
+    {
+      "blob": "0d32cab8a6384d7885ad8cc86e528b8e5a331427",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "sha256": "b81a90680cb59572fa4e59c81b57efb9f305d2839e5599f20d451962e3a05a2f",
+      "size_bytes": 154249
+    },
+    {
+      "blob": "81a0ef965028393d629311a3ffe6968755235250",
+      "path": "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+      "sha256": "f2ab146adee40e4e1a33b2aad62dd23326f3161b82a15faeae26f61e369460f8",
+      "size_bytes": 7443
+    },
+    {
+      "blob": "801e54cf37d9bb1463ad970326d0bfbc8bf278b8",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "sha256": "92b5518a7dd4af32849dd7b22e7035b521b7ef5b4a4857c319ee0f74eeb9d974",
+      "size_bytes": 21980
+    },
+    {
+      "blob": "bedafdbd2b9933fff62cfc260ed39a347626ca64",
+      "path": "ExcelBinOutput/EchoShellStoryExcelConfigData.json",
+      "sha256": "eba462a60625efff46402467ab0629d486c816f36c399a8a3bfbb3f3bcca23d9",
+      "size_bytes": 236
+    },
+    {
+      "blob": "36402b3d0a69fcdb61e0de6d4d71b24284d9444c",
+      "path": "TextMap/TextMapCHS.json",
+      "sha256": "73baefa9cf59b3aef0f1fa5cabbea8381626ee81928759447f882ae44f4c0e70",
+      "size_bytes": 51627413
+    },
+    {
+      "blob": "c2335ec073b58d285717cad955a6540e7a37e9bc",
+      "path": "TextMap/TextMapEN.json",
+      "sha256": "0ae6c026902275d7e1fbdeec829b9d29e991170e520c23770963520ff723987d",
+      "size_bytes": 57677319
+    },
+    {
+      "blob": "eede0b3880c0b26349c57031685e31c33b4c0098",
+      "path": "TextMap/TextMapJP.json",
+      "sha256": "cb06d2a39d7e726df8cc97849d276b2aa93b11de06b0fc85491c85d5dac3e178",
+      "size_bytes": 65714239
+    },
+    {
+      "blob": "24b00075beac6e6ccba95829f1ca0e7a5a6e7c4f",
+      "path": "TextMap/TextMap_MediumCHS.json",
+      "sha256": "8f611ecc6ee0954ed04598e31ccc4da867782b57ae1ceac0ab968b86ee7f6f7b",
+      "size_bytes": 19104964
+    },
+    {
+      "blob": "465719906988e84a5d30ab101732c34eac5bad20",
+      "path": "TextMap/TextMap_MediumEN.json",
+      "sha256": "8e0255ecc6fd5b848cae5d2cd9675886c1656884d0fc7bc07ae3ae3cbbc69087",
+      "size_bytes": 21026913
+    },
+    {
+      "blob": "8909e129d6cfc8b1654a47f7f7366e8150bbc242",
+      "path": "TextMap/TextMap_MediumJP.json",
+      "sha256": "b893e617a7259528e06898cd45e7bf7c1f9d2462bb0f494cd36c17a36faa181d",
+      "size_bytes": 23433099
+    }
+  ],
+  "full_7_0": false,
+  "full_activity": false,
+  "full_echo_shell_gameplay": false,
+  "full_photograph_gameplay": false,
+  "full_quest": false,
+  "full_talk": false,
+  "historical_scope_sha256": "8103d7125fe3dd47d29538dcb2c8970b163e88edafc410b8c7985f114f6137a3",
+  "languages": [
+    "CHS",
+    "EN",
+    "JP"
+  ],
+  "ordering_contract": {
+    "narrative_chronology_inferred": false,
+    "source_order_fields_retained_raw": true
+  },
+  "preparation": {
+    "previous_snapshot": "anime-game-data:7.1:9587d1afbd9ab0419cdd00dc05ecd114b9e3fe99",
+    "raw_field_correspondences": {
+      "EHLBLMHEAAB": "CMFMODONCGJ",
+      "ELJEELOLFPI": "IDNBLPICFGM",
+      "ICMKPBCEJJB": "PAFDMIMKIAO",
+      "JOLGNPDDIJK": "FJBMJKLCDDN",
+      "JPAAHMBJGOJ": "CECCFAAFGNM",
+      "PKPHBGMFODP": "OPBFJNLJJKA"
+    },
+    "semantic_roles_inferred": false,
+    "status": "source_contract_generated_not_qualified"
+  },
+  "row_denominator": {
+    "activity_photograph_page": 6,
+    "activity_photograph_position": 24,
+    "activity_photograph_position_extension": 24,
+    "activity_photograph_root": 1,
+    "echo_shell": 53,
+    "echo_shell_story": 4
+  },
+  "selector_status": "disjoint_root_and_page_physical_union_not_logical_order",
+  "snapshot_id": "anime-game-data:7.2:d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_commit": "d54f6f0d423ded9d055bb740a3e5f3aa8f2667f1",
+  "source_selection_rule": "root JPAAHMBJGOJ equals page JOLGNPDDIJK union and extension id set; select matching position id rows",
+  "source_tree": "5b334e711319726c504da95dbfe6ebb26baaa7d3",
+  "sources": [
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "CECCFAAFGNM",
+          "relation_kind": "source_authored_root_position_reference",
+          "shape": "array_scalar",
+          "target_kind": "activity_photograph_position"
+        }
+      ],
+      "kind": "activity_photograph_root",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": []
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "FJBMJKLCDDN",
+          "relation_kind": "source_authored_page_position_reference",
+          "shape": "array_scalar",
+          "target_kind": "activity_photograph_position"
+        }
+      ],
+      "kind": "activity_photograph_page",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPageExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "descTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [
+        {
+          "field": "id",
+          "relation_kind": "source_local_position_extension_reference",
+          "shape": "scalar",
+          "target_kind": "activity_photograph_position_extension"
+        }
+      ],
+      "kind": "activity_photograph_position",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPosExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "selected_native_ids": [
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "selection_field": "id",
+      "text_owners": [
+        {
+          "field": "posTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireTitleInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "requireDescInActivityPageTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcInviteDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "npcCommentDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "rootNodeDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "photoCheckSubNodeDesc",
+          "role_status": "resolved",
+          "shape": "array"
+        },
+        {
+          "field": "presetCheckSubDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "activity_photograph_narrative_archive",
+      "internal_relations": [],
+      "kind": "activity_photograph_position_extension",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/ActivityPhotographPosExtendExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "CMFMODONCGJ",
+          "role_status": "mapping_unresolved",
+          "shape": "array"
+        },
+        {
+          "field": "OPBFJNLJJKA",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "PAFDMIMKIAO",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "IDNBLPICFGM",
+          "role_status": "mapping_unresolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_archive",
+      "internal_relations": [
+        {
+          "field": "storyId",
+          "relation_kind": "source_authored_story_reference",
+          "shape": "scalar_optional",
+          "target_kind": "echo_shell_story"
+        }
+      ],
+      "kind": "echo_shell",
+      "native_id_field": "id",
+      "path": "ExcelBinOutput/EchoShellExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "text_owners": [
+        {
+          "field": "dungeonPassedLockTipTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTipContentTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "markTipTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "voiceDescTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        },
+        {
+          "field": "voiceTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    },
+    {
+      "boundary": "echo_shell_archive",
+      "internal_relations": [],
+      "kind": "echo_shell_story",
+      "native_id_field": null,
+      "path": "ExcelBinOutput/EchoShellStoryExcelConfigData.json",
+      "relation_lookup_field": "id",
+      "relation_lookup_field_optional": true,
+      "text_owners": [
+        {
+          "field": "storyTitleTextMapHash",
+          "role_status": "resolved",
+          "shape": "scalar"
+        }
+      ]
+    }
+  ],
+  "talk_candidates": []
+}
