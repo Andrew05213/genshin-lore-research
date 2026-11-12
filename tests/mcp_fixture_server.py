@@ -21,6 +21,9 @@ def main():
     parser.add_argument('--search-body-padding', type=int, default=45_000)
     parser.add_argument('--search-padding', type=int, default=0)
     parser.add_argument('--search-target-bytes', type=int, default=0)
+    parser.add_argument('--paged-physical', action='store_true')
+    parser.add_argument('--read-delay', type=float, default=0)
+    parser.add_argument('--fail-inspect-once', action='store_true')
     args = parser.parse_args()
     paths = load_runtime_paths(args.config)
     if args.domain_npc or args.large_search:
@@ -51,7 +54,11 @@ def main():
         query.search = search
     else:
         bodies = ['synthetic-'+str(i)+':'+'x'*45_000 for i in range(3)] if args.large_dialogue else None
-        query, parents, _ = fixture(bodies)
+        query, parents, add_text = fixture(bodies)
+        if args.paged_physical:
+            for locale in ('EN', 'JP'):
+                add_text('dialog', parents[0], 0, 'talkContentTextMapHash',
+                         'same synthetic text', locale=locale)
         anchor = query._container_ref(parents[0])
     # A fixture advertises its explicitly generated deployment identity, not
     # an accepted product. Actual body read/inspect use the synthetic source DB.
@@ -65,6 +72,30 @@ def main():
     query.unavailable = []
     query.db.execute("INSERT INTO research_text_fts(research_text_fts) VALUES('rebuild')")
     query.citation_handoff = CitationHandoff(args.config.parent/'handoff')
+    # Transport recovery probes retain the real source read/inspect paths.
+    # Defaults are unchanged for the existing fixture users.
+    if args.read_delay:
+        import functools
+        import time
+        original_read = query.read
+        @functools.wraps(original_read)
+        def delayed_read(*a, **kw):
+            time.sleep(args.read_delay)
+            return original_read(*a, **kw)
+        query.read = delayed_read
+    if args.fail_inspect_once:
+        import functools
+        from genshin_lore.research_query import ResearchUnavailable
+        original_inspect = query.inspect
+        pending_failure = True
+        @functools.wraps(original_inspect)
+        def inspect_once(*a, **kw):
+            nonlocal pending_failure
+            if pending_failure:
+                pending_failure = False
+                raise ResearchUnavailable('synthetic one-shot inspection failure')
+            return original_inspect(*a, **kw)
+        query.inspect = inspect_once
     server = create_server(query, source_cards=args.config.parent/'source-cards')
     _avoid_broken_anyio_worker_threads(server)
     try:
