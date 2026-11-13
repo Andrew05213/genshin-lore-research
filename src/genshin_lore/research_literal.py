@@ -75,9 +75,27 @@ def literal_search(q, query, locale, families, source_prefix, limit, cursor, *, 
         args = [*rank_args, query, *args]
     # Diversify identical display text only AFTER applying scope filters. Every
     # physical occurrence stays in the result, including subsequent pages.
-    filtered = f"select * from ({inner}) t where {filters}"
-    varied = f"select t.*,row_number() over (partition by research_rank,locale,raw_text order by id) repeat_rank from ({filtered}) t"
-    sql = f"select * from ({varied}) t where research_rank>? or (research_rank=? and (repeat_rank>? or (repeat_rank=? and id>?))) order by research_rank,repeat_rank,id limit ?"
+    # Keep provenance and other wide columns out of both sorts. Scope filters
+    # still see the full row, and the window still sees every scoped match.
+    filtered = f"select id,locale,raw_text,research_rank from ({inner}) t where {filters}"
+    varied = (
+        "select id,research_rank,row_number() over "
+        "(partition by research_rank,locale,raw_text order by id) repeat_rank "
+        f"from ({filtered}) t"
+    )
+    page = (
+        f"select id,research_rank,repeat_rank from ({varied}) t where "
+        "research_rank>? or (research_rank=? and "
+        "(repeat_rank>? or (repeat_rank=? and id>?))) "
+        "order by research_rank,repeat_rank,id limit ?"
+    )
+    # Hydrate only the bounded page, in the original cursor order. Source
+    # rechecks and byte-budget continuation below require the complete rows.
+    sql = (
+        f"select t.*,p.research_rank,p.repeat_rank from ({page}) p "
+        "join research_text t on t.id=p.id "
+        "order by p.research_rank,p.repeat_rank,p.id"
+    )
     args.extend((int(after['rank']), int(after['rank']), int(after['repeat']),
                  int(after['repeat']), int(after['id']), limit+1))
     rows = q.db.execute(sql, args).fetchall()

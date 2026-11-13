@@ -46,6 +46,23 @@ def test_same_text_across_locales_and_pages_keeps_exact_source_identity():
         assert inspected['evidence_ref'] == hit['evidence_ref']
 
 
+def test_page_hydration_preserves_every_source_field_before_recheck():
+    q = indexed_fixture()
+    expected = {r['id']: dict(r) for r in q.db.execute('SELECT * FROM research_text')}
+    original_recheck = q._recheck_text
+    rechecked = []
+
+    def check_complete_row(row):
+        assert {field: row[field] for field in expected[row['id']]} == expected[row['id']]
+        rechecked.append(q._text_ref(row))
+        return original_recheck(row)
+
+    q._recheck_text = check_complete_row
+    hits = all_hits(q, limit=1)
+    assert rechecked == [hit['evidence_ref'] for hit in hits]
+    assert len(rechecked) == len(expected)
+
+
 def test_literal_search_reuses_coverage_cache_but_checks_live_availability():
     q = indexed_fixture()
     traced = []
