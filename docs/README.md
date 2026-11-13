@@ -28,6 +28,7 @@
 | [对白阅读](guides/reading-dialogue.md) | 来源角色、局部对白图、前驱、续读与任务标题候选 |
 | [剧情研究 Skill](../.agents/skills/genshin-lore-research/SKILL.md) | Codex 项目内发现、关键词调查、上下文、引用及解释/预测纪律 |
 | [Research 阅读展示](reviews/research-reading-experience.md) | 正文优先面板、紧凑对白分页、短引用与实际来源核对范围 |
+| [正文优先排序试用](reviews/body-first-search.md) | 取页前排序、同文延后、版本绑定 cursor 和八词实际 MCP 对照 |
 | [持久来源卡](reviews/persistent-research-sources.md) | 私有 Markdown/JSON 引用交付、默认发现减载、人物分组和实际验证边界 |
 | [Research 响应精简](reviews/compact-research-context.md) | 搜索/导航短定位、实际正文与引用等价、响应字节对照及客户端边界 |
 | [调查查询性能](history/research-query-performance.md) | 标题查询、连接内覆盖缓存、原生 Windows 同条件 MCP A/B 与验证边界 |

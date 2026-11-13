@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import re
 from urllib.parse import quote
+from ..research_literal import BODY_FIELDS, TITLE_FIELDS
 
 READING_PAGE_BYTES = 160_000  # leaves room for scoped citation metadata under MCP's 256 KiB cap
 
@@ -22,12 +23,6 @@ CHARACTER_TITLE_FIELDS = {'storyTitleTextMapHash', 'storyTitle2TextMapHash', 'vo
 # Display hints for fields already declared by the source adapters/readers.
 # Unknown fields stay unclassified; these labels never upgrade source proof.
 NAME_FIELDS = {'nameTextMapHash', 'avatarName', 'name', 'Name', 'SpeakerKnown'}
-TITLE_FIELDS = CHARACTER_TITLE_FIELDS | {'MainQuestTitle', 'SubQuestTitle', 'ChapterTitle',
-    'titleTextMapHash', 'title', 'Title', 'storyTitleLockedTextMapHash', 'voiceTitleLockedTextMapHash'}
-BODY_FIELDS = CHARACTER_BODY_FIELDS | {'body', 'talkContentTextMapHash', 'contentTextMapHash',
-    'stepDescTextMapHash', 'MainQuestDesp', 'reviewTextMapHash', 'markDescTextMapHash',
-    'voiceDescTextMapHash', 'markTipContentTextMapHash', 'cgDesTextMapHash', 'newsTextTextMapHash',
-    'talkContent/0', 'talkContent/1'}
 
 
 def check_detail(detail):
@@ -190,6 +185,9 @@ def search_groups(panel):
             by_title.setdefault(title, []).append(pointer)
     for title in panel['title_matches']:
         by_title.setdefault(title['title'], []).append({'item_index': title['item_index']})
+    for source in panel.get('body_sources', []):
+        if source.get('title'):
+            by_title.setdefault(source['title'], []).append({'item_index': source['item_index']})
     return {'categories': groups,
             'by_material_type': [{'material_type': kind, 'matches': pointers}
                                  for kind, pointers in by_material.items()],
@@ -202,7 +200,8 @@ def character_reading(service, query, locale):
     """At most one literal family lookup and two already-supported navigation hops."""
     families = sorted({c['family'] for c in service.components.values() if c.get('adapter') == 'character_text'})
     if not families: return [], []
-    anchors = service.search(service.corpus_ref, query, locale, families, limit=3)['items']
+    from ..research_literal import literal_search
+    anchors = literal_search(service, query, locale, families, None, 3, None, name_anchor=True)['items']
     exact = [a for a in anchors if a.get('snippet') == query and a.get('owner_field') == 'nameTextMapHash']
     if not exact: return [], []
     anchor = exact[0]['evidence_ref']
@@ -239,7 +238,7 @@ def search_reading(service, result, query, locale, *, filters=False):
     names, bodies, actions = [], [], []
     seen = set()
     preview_omission = None
-    body_indexes, titles, other = [], [], []
+    body_indexes, titles, other, body_sources = [], [], [], []
     for index, item in enumerate(result.get('items', [])):
         field = item.get('owner_field')
         if field in TITLE_FIELDS:
@@ -250,6 +249,11 @@ def search_reading(service, result, query, locale, *, filters=False):
             continue
         if field in BODY_FIELDS or field in BODY_LABELS:
             body_indexes.append(index)
+            title = item.get('source_context', {}).get('display_title')
+            body_sources.append({'item_index': index, 'title': title})
+            actions.append({'tool': 'read_evidence', 'arguments': {
+                'corpus_ref': service.corpus_ref, 'evidence_ref': item['evidence_ref']},
+                'reason': 'read this literal body hit before further keyword searches'})
             continue
         if field not in NAME_FIELDS:
             other.append({'item_index': index, 'owner_field': field, 'field_role': 'unclassified'})
@@ -291,7 +295,33 @@ def search_reading(service, result, query, locale, *, filters=False):
         character_bodies, character_actions = character_reading(service, query, locale or 'CHS')
         bodies = character_bodies + bodies
         actions = character_actions + actions
-    panel = {'body_previews': bodies, 'body_item_indexes': body_indexes, 'name_matches': names,
+        # A body-first page need not contain a name slot. Discover exact NPC
+        # anchors in one bounded, declared-family lookup, never a fuzzy join.
+        npc_families = sorted({c['family'] for c in service.components.values()
+                               if c.get('family') == 'npc_archive'})
+        if npc_families and not names:
+            from ..research_literal import literal_search
+            anchors = literal_search(service, query, locale or 'CHS', npc_families, None, 3, None, name_anchor=True)['items']
+            for anchor in anchors:
+                if anchor.get('owner_field') not in NAME_FIELDS or anchor.get('snippet') != query:
+                    continue
+                actions.append({'tool': 'read_evidence', 'arguments': {
+                    'corpus_ref': service.corpus_ref, 'evidence_ref': anchor['evidence_ref'],
+                    'view': 'dialogue', 'locale': locale or 'CHS', 'limit': 3},
+                    'reason': 'separate exact-name anchor; source-labelled candidates, not unique identity'})
+    # Display ordering only. Keep each physical preview and its proof intact.
+    bodies.sort(key=lambda b: (0 if b.get('material_type') == 'character_story_or_profile' else
+                              1 if b.get('speaker_label') else 2 if b.get('material_type') == 'voice' else 3))
+    # First expose distinct ways into material, then remaining exact locators.
+    primary, remaining, purposes = [], [], set()
+    for action in actions:
+        purpose = (action['tool'], action['arguments'].get('view', 'physical'))
+        if purpose in purposes:
+            remaining.append(action)
+        else:
+            purposes.add(purpose); primary.append(action)
+    actions = primary + remaining
+    panel = {'body_previews': bodies, 'body_item_indexes': body_indexes, 'body_sources': body_sources, 'name_matches': names,
             'title_matches': titles, 'other_matches': other, 'text_groups': text_groups(bodies),
             **({'omission_reason': preview_omission} if preview_omission else {}),
             'next_actions': actions[:3], 'preview_scope': 'current search page; unfiltered exact name: at most three speech nodes plus two Character navigation targets. Not exhaustive; follow scopes differ from search hits.',

@@ -45,6 +45,7 @@ def fixture(dialog_bodies=None):
     q.coverage = []
     q._scope_source_cache = OrderedDict()
     q.source_lock = threading.RLock()
+    q.unavailable = []
 
     def physical(key, ordinal, native, original):
         src = sources[key]; raw = json.dumps(original, ensure_ascii=False, sort_keys=True)
